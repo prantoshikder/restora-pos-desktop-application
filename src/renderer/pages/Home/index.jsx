@@ -1,8 +1,8 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import Sidebar from '../../components/partials/Sidebar/index';
-import Footer from './../../components/partials/Footer/index';
-import Header from './../../components/partials/Header/index';
+import Sidebar from '../../components/partials/Sidebar';
+import Footer from './../../components/partials/Footer';
+import Header from './../../components/partials/Header';
 import './Home.style.scss';
 
 const Home = () => {
@@ -16,6 +16,7 @@ const Home = () => {
           </Col>
 
           <Col lg={10}>
+            <h1>Home</h1>
             <Footer />
           </Col>
         </Row>
