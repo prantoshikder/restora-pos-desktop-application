@@ -1,12 +1,32 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import FoodLists from 'renderer/components/FoodLists';
 
 const Home = () => {
   return (
-    <div>
-      <h1>This is Home</h1>
-      <Button>I am a button</Button>
-    </div>
+    <Container fluid>
+      <Row>
+        <Col md={3}>
+          <h1>Categories</h1>
+        </Col>
+        <Col md={9}>
+          <h1>Food list</h1>
+          <Row>
+            <Col md={8}>
+              <Row>
+                <input type="text" placeholder="Search" />
+              </Row>
+              <Row>
+                <FoodLists />
+              </Row>
+            </Col>
+            <Col md={4}>
+              <h2>Grand Total</h2>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
