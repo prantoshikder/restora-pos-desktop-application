@@ -14,20 +14,21 @@ const Home = () => {
         <Col lg={2}>
           <Sidebar />
         </Col>
-        <Col md={10}>
-          <h1>Food list</h1>
+        <Col md={10} className="mt-3">
           <Row>
             <Col md={8}>
-              <Row>
-                <input type="text" placeholder="Search" />
+              <Row className="search-food-wrapper">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="form-control"
+                />
               </Row>
               <Row>
                 <FoodLists />
               </Row>
             </Col>
-            <Col md={4}>
-              <h2>Grand Total</h2>
-            </Col>
+            <Col md={4}></Col>
           </Row>
           <Footer />
         </Col>
