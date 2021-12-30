@@ -1,12 +1,26 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import Sidebar from '../../components/partials/Sidebar/index';
+import Footer from './../../components/partials/Footer/index';
+import Header from './../../components/partials/Header/index';
+import './Home.style.scss';
 
 const Home = () => {
   return (
-    <div>
-      <h1>This is Home</h1>
-      <Button>I am a button</Button>
-    </div>
+    <>
+      <Container fluid className="p-0">
+        <Header />
+        <Row className="pos-system">
+          <Col lg={2}>
+            <Sidebar />
+          </Col>
+
+          <Col lg={10}>
+            <Footer />
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 
