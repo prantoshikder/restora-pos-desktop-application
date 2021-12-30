@@ -1,5 +1,3 @@
-import { faHome } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
@@ -8,10 +6,6 @@ const Header = () => {
     <div>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container fluid>
-          <Navbar.Brand href="#home">
-            <FontAwesomeIcon icon={faHome} />
-          </Navbar.Brand>
-
           {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
           <Navbar.Collapse id="responsive-navbar-nav">
