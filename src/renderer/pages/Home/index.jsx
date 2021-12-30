@@ -1,20 +1,20 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import FoodLists from 'renderer/components/FoodLists';
 import Sidebar from '../../components/partials/Sidebar';
 import Footer from './../../components/partials/Footer';
 import Header from './../../components/partials/Header';
 import './Home.style.scss';
-import FoodLists from 'renderer/components/FoodLists';
-
 
 const Home = () => {
   return (
-    <Container fluid>
-      <Row>
-        <Col md={3}>
-          <h1>Categories</h1>
+    <Container fluid className="p-0">
+      <Header />
+      <Row className="pos-system">
+        <Col lg={2}>
+          <Sidebar />
         </Col>
-        <Col md={9}>
+        <Col md={10}>
           <h1>Food list</h1>
           <Row>
             <Col md={8}>
@@ -29,6 +29,7 @@ const Home = () => {
               <h2>Grand Total</h2>
             </Col>
           </Row>
+          <Footer />
         </Col>
       </Row>
     </Container>
