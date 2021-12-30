@@ -8,22 +8,20 @@ import './AddCategory.style.scss';
 
 const AddCategory = () => {
   return (
-    <div>
-      <Container fluid className="p-0">
-        <Header />
-        <Row className="foodManage-system">
-          <Col lg={2}>
-            <Sidebar />
-          </Col>
+    <Container fluid className="p-0">
+      <Header />
+      <Row className="foodManage-system">
+        <Col lg={2}>
+          <Sidebar />
+        </Col>
 
-          <Col lg={10}>
-            <h1>Add Category</h1>
-            <AddNewCategory />
-            <Footer />
-          </Col>
-        </Row>
-      </Container>
-    </div>
+        <Col lg={10}>
+          <h1>Add Category</h1>
+          <AddNewCategory />
+          <Footer />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
