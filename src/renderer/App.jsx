@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import AddCategory from './pages/foodManagement/manageCategory/AddCategory';
 import Home from './pages/Home';

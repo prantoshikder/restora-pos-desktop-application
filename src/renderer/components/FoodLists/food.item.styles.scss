@@ -1,0 +1,14 @@
+.food-card {
+  // position: relative;
+  .food-image {
+    position: relative;
+    top: -12px;
+    left: -12px;
+    img {
+      border-radius: 0.25rem;
+    }
+  }
+  .card-body {
+    padding: 0.5rem 0.8rem;
+  }
+}

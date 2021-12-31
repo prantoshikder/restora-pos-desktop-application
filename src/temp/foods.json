@@ -1,0 +1,39 @@
+{
+  "foods": [
+    {
+      "id": 1,
+      "name": "Doosa",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-7.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Doosa 2",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/How-to-Make-the-Best-Guacamole-Recipe-web-7.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Doosa 3",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Doosa 4",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/assets/img/banner/2021-09-01/r.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Doosa",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/How-to-Make-the-Best-Guacamole-Recipe-web-7.jpg"
+    }
+  ]
+}
