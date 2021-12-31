@@ -24,7 +24,7 @@ const Sidebar = () => {
           <SubMenu title="Food Management">
             <SubMenu title="Manage Category">
               <MenuItem>
-                <Link to="/addCategory">Add Category</Link>
+                <Link to="/add_category">Add Category</Link>
               </MenuItem>
               <MenuItem>Category List</MenuItem>
             </SubMenu>

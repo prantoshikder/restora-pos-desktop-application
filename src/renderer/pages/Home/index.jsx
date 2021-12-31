@@ -7,21 +7,19 @@ import './Home.style.scss';
 
 const Home = () => {
   return (
-    <>
-      <Container fluid className="p-0">
-        <Header />
-        <Row className="pos-system">
-          <Col lg={2}>
-            <Sidebar />
-          </Col>
+    <Container fluid className="p-0">
+      <Header />
+      <Row className="pos-system">
+        <Col lg={2}>
+          <Sidebar />
+        </Col>
 
-          <Col lg={10}>
-            <h1>Home</h1>
-            <Footer />
-          </Col>
-        </Row>
-      </Container>
-    </>
+        <Col lg={10}>
+          <h1>Home</h1>
+          <Footer />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
