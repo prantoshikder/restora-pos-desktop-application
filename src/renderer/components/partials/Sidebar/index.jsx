@@ -16,9 +16,12 @@ const Sidebar = () => {
             <FontAwesomeIcon icon={faHome} />
             <Link to="/">Home</Link>
           </MenuItem>
+
           <MenuItem>
-            <FontAwesomeIcon icon={faChartLine} />
-            Report
+            <Link to="/report">
+              <FontAwesomeIcon icon={faChartLine} />
+              Report
+            </Link>
           </MenuItem>
 
           <SubMenu title="Food Management">
@@ -46,8 +49,9 @@ const Sidebar = () => {
           </SubMenu>
 
           <SubMenu title="Setting">
-            <MenuItem>Component 1</MenuItem>
-            <MenuItem>Component 2</MenuItem>
+            <MenuItem>
+              <Link to="/application_setting">Application Setting</Link>
+            </MenuItem>
           </SubMenu>
         </Menu>
       </ProSidebar>

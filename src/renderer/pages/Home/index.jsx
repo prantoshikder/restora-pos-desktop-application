@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import FoodLists from 'renderer/components/FoodLists';
 import Sidebar from '../../components/partials/Sidebar';
-import Footer from './../../components/partials/Footer';
 import Header from './../../components/partials/Header';
 import './Home.style.scss';
 
@@ -29,7 +28,6 @@ const Home = () => {
               <h2>Grand Total</h2>
             </Col>
           </Row>
-          <Footer />
         </Col>
       </Row>
     </Container>
