@@ -36,7 +36,12 @@ const AddNewCategory = () => {
                 Parent Category
               </Form.Label>
               <Col lg={8}>
-                <Form.Control placeholder="Parent Category" />
+                <Form.Select aria-label="Parent Category">
+                  <option>Select Option</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </Form.Select>
               </Col>
             </Form.Group>
 
@@ -94,6 +99,7 @@ const AddNewCategory = () => {
               inline
               label="offer"
               name="offer"
+              className="offer-checkbox"
               onChange={handleOffer}
               // type={type}
               // id={`inline-${type}-1`}
