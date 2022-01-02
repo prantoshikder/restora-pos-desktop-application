@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Sidebar from '../../components/partials/Sidebar';
 import Footer from './../../components/partials/Footer';
@@ -28,7 +29,9 @@ const Home = () => {
                 <FoodLists />
               </Row>
             </Col>
-            <Col md={4}></Col>
+            <Col md={4}>
+              <Cart />
+            </Col>
           </Row>
           <Footer />
         </Col>
