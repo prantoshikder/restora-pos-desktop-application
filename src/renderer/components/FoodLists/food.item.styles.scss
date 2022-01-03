@@ -1,4 +1,6 @@
 .food-card {
+  margin-bottom: 1.5rem;
+  cursor: pointer;
   // position: relative;
   .food-image {
     position: relative;
@@ -9,6 +11,11 @@
     }
   }
   .card-body {
-    padding: 0.5rem 0.8rem;
+    padding: 0 0.8rem 0.5rem;
+
+    .h5 {
+      font-size: 1rem;
+      margin: 0;
+    }
   }
 }

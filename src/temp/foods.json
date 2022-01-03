@@ -15,6 +15,20 @@
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/How-to-Make-the-Best-Guacamole-Recipe-web-7.jpg"
     },
     {
+      "id": 8,
+      "name": "Doosa",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-7.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Doosa 2",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/How-to-Make-the-Best-Guacamole-Recipe-web-7.jpg"
+    },
+    {
       "id": 3,
       "name": "Doosa 3",
       "price": 33.99,
@@ -26,7 +40,14 @@
       "name": "Doosa 4",
       "price": 33.99,
       "variant": "Medium",
-      "image": "https://restorapos.com/newrpos/assets/img/banner/2021-09-01/r.jpg"
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Doosa 6",
+      "price": 33.99,
+      "variant": "Medium",
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 5,

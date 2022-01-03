@@ -4,9 +4,13 @@ import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import './food.item.styles.scss';
 
 const FoodItem = ({ item }) => {
+  const handleFoodItem = (item) => {
+    console.log(item);
+  };
+
   return (
     <Col md={2}>
-      <Card className="food-card">
+      <Card className="food-card" onClick={() => handleFoodItem(item)}>
         <div className="food-image">
           {item?.image ? (
             <Card.Img variant="top" src={item.image} />
