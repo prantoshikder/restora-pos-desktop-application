@@ -1,10 +1,12 @@
+import { CloseOutlined } from '@ant-design/icons';
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import './Header.style.scss';
 
 const Header = () => {
   return (
-    <div>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <>
+      <Navbar collapseOnSelect expand="lg" className="navbar">
         <Container fluid>
           {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
@@ -17,16 +19,16 @@ const Header = () => {
               <Nav.Link href="#onlineOrder">Online Order</Nav.Link>
               <Nav.Link href="#todayOrder">Today Order</Nav.Link>
             </Nav>
-            {/* <Nav>
-              <Nav.Link href="#deets">More deets</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
-                Dank memes
+
+            <Nav>
+              <Nav.Link href="#deets">
+                <CloseOutlined />
               </Nav.Link>
-            </Nav> */}
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </div>
+    </>
   );
 };
 

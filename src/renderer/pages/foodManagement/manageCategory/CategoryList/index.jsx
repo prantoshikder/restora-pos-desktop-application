@@ -1,10 +1,23 @@
 import React from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import AllCategoryList from './../../../../components/AllCategoryList';
+import Header from './../../../../components/partials/Header';
+import Sidebar from './../../../../components/partials/Sidebar';
 
 const CategoryList = () => {
   return (
-    <div>
-      <h1>CategoryList</h1>
-    </div>
+    <Container fluid className="p-0">
+      <Header />
+      <Row className="foodManage-system">
+        <Col lg={2}>
+          <Sidebar />
+        </Col>
+
+        <Col lg={10}>
+          <AllCategoryList />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
