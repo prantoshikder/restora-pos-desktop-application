@@ -174,7 +174,7 @@ const AddNewCategory = () => {
             >
               <Input
                 type="color"
-                size="large"
+                size="medium"
                 name="color"
                 value={categories.categoryBackgroundColor}
                 onChange={(e) =>

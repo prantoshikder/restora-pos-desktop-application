@@ -19,7 +19,9 @@ const AddCategory = () => {
         </Col>
 
         <Col lg={10}>
-          <Heading title="Item Category" />
+          <div className="content_header">
+            <Heading title="Item Category" />
+          </div>
           <AddNewCategory />
         </Col>
       </Row>
