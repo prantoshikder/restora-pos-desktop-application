@@ -1,7 +1,34 @@
-.add-new-category{
+.add_new_category{
   padding: 1rem 4rem;
-  border: 1px solid #ccc;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
-.offer-checkbox{
-  margin-left: 5rem;
+.ant-form-item{
+  font-weight: 500;
+}
+.offer_date_select{
+  // display: flex;
+  // justify-content: space-between;
+}
+.button_group{
+  display: flex;
+  justify-content: flex-end;
+}
+.resetBtn{
+  margin-right: 1rem;
+  padding: 0.3rem 2rem;
+  background-color: #3a95e4;
+  border-color: #3b7cb4;
+  color: #fff;
+  transition: all 0.3s linear;
+}
+.save_btn{
+  padding: 0.3rem 2rem;
+  background-color: #37a000;
+  border-color: #318d01;
+  color: #fff;
+  transition: all 0.3s linear;
+}
+.save_btn:hover{
+  background-color: #37a000;
+  border-color: #318d01;
 }
