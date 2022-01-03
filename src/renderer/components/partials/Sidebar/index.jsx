@@ -13,13 +13,13 @@ const Sidebar = () => {
       <ProSidebar>
         <Menu iconShape="square">
           <MenuItem>
-            <FontAwesomeIcon icon={faHome} />
+            <FontAwesomeIcon className="sidebar_icon" icon={faHome} />
             <Link to="/">Home</Link>
           </MenuItem>
 
           <MenuItem>
             <Link to="/report">
-              <FontAwesomeIcon icon={faChartLine} />
+              <FontAwesomeIcon className="sidebar_icon" icon={faChartLine} />
               Report
             </Link>
           </MenuItem>

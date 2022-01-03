@@ -186,7 +186,14 @@ const AddNewCategory = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Upload Category Image">
+            <Form.Item
+              label="Upload Category Image"
+              tooltip={{
+                title:
+                  'Use only .jpg,.jpeg,.gif and .png Images & Image size: 60 X 60',
+                icon: <InfoCircleOutlined />,
+              }}
+            >
               <Row>
                 <Col lg={8}>
                   <Form.Item
@@ -216,7 +223,8 @@ const AddNewCategory = () => {
             <Form.Item
               label="Category Icon"
               tooltip={{
-                title: 'Add category icon',
+                title:
+                  'Use only .jpg,.jpeg,.gif and .png Images & Icon size: 28 X 26',
                 icon: <InfoCircleOutlined />,
               }}
             >
