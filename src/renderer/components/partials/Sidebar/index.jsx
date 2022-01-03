@@ -1,60 +1,90 @@
-/* eslint-disable */
-import { faChartLine, faHome } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChartLine,
+  faCog,
+  faCube,
+  faHome,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import { Menu, MenuItem, ProSidebar, SubMenu } from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
+import { Menu } from 'antd';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.style.scss';
 
-const Sidebar = () => {
+const { SubMenu } = Menu;
+// submenu keys of first level
+const rootSubmenuKeys = ['food_management', 'setting'];
+
+const Sidebar = ({ home }) => {
+  const [openKeys, setOpenKeys] = useState(['home']);
+
+  const onOpenChange = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
+
   return (
     <div className="sidebar">
-      <ProSidebar>
-        <Menu iconShape="square">
-          <MenuItem>
-            <FontAwesomeIcon icon={faHome} />
-            <Link to="/">Home</Link>
-          </MenuItem>
+      <Menu
+        theme="dark"
+        style={{
+          height: '100%',
+        }}
+        mode="inline"
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+      >
+        <Menu.Item key="home" icon={<FontAwesomeIcon icon={faHome} />}>
+          <Link to="/">Home</Link>
+        </Menu.Item>
 
-          <MenuItem>
-            <Link to="/report">
-              <FontAwesomeIcon icon={faChartLine} />
-              Report
-            </Link>
-          </MenuItem>
+        <Menu.Item key="report" icon={<FontAwesomeIcon icon={faChartLine} />}>
+          <Link to="/report">Report</Link>
+        </Menu.Item>
 
-          <SubMenu title="Food Management">
-            <SubMenu title="Manage Category">
-              <MenuItem>
-                <Link to="/add_category">Add Category</Link>
-              </MenuItem>
-              <MenuItem>Category List</MenuItem>
-            </SubMenu>
-
-            <SubMenu title="Manage Food">
-              <MenuItem>Add Food</MenuItem>
-              <MenuItem>Food List</MenuItem>
-              <MenuItem>Add Group Item</MenuItem>
-              <MenuItem>Food Variant</MenuItem>
-              <MenuItem>Food Availability</MenuItem>
-              <MenuItem>Menu Type</MenuItem>
-            </SubMenu>
-
-            <SubMenu title="Manage Add-ons">
-              <MenuItem>Add Add-ons</MenuItem>
-              <MenuItem>Add-ons List</MenuItem>
-              <MenuItem>Add-ons Assign List</MenuItem>
-            </SubMenu>
+        <SubMenu
+          key="food_management"
+          title="Food Management"
+          icon={<FontAwesomeIcon icon={faCube} />}
+        >
+          <SubMenu key="manage_category" title="Manage Category">
+            <Menu.Item key="manage_category:1">
+              <Link to="/add_category">Add Category</Link>
+            </Menu.Item>
+            <Menu.Item key="manage_category:2">
+              <Link to="/category_list">Category List</Link>
+            </Menu.Item>
           </SubMenu>
 
-          <SubMenu title="Setting">
-            <MenuItem>
-              <Link to="/application_setting">Application Setting</Link>
-            </MenuItem>
+          <SubMenu key="manage_food" title="Manage Food">
+            <Menu.Item key="manage_food:1">Add Food</Menu.Item>
+            <Menu.Item key="manage_food:2">Food List</Menu.Item>
+            <Menu.Item key="manage_food:3">Add Group Item</Menu.Item>
+            <Menu.Item key="manage_food:4">Food Variant</Menu.Item>
+            <Menu.Item key="manage_food:5">Food Availability</Menu.Item>
+            <Menu.Item key="manage_food:6">Menu Type</Menu.Item>
           </SubMenu>
-        </Menu>
-      </ProSidebar>
+
+          <SubMenu key="manage_addons" title="Manage Add-ons">
+            <Menu.Item key="manage_addons:1">Add Add-ons</Menu.Item>
+            <Menu.Item key="manage_addons:2">Add-ons Lists</Menu.Item>
+            <Menu.Item key="manage_addons:3">Add-ons Assign List</Menu.Item>
+          </SubMenu>
+        </SubMenu>
+
+        <SubMenu
+          key="setting"
+          title="Setting"
+          icon={<FontAwesomeIcon icon={faCog} />}
+        >
+          <Menu.Item key="application_setting:1">
+            <Link to="/application_setting">Application Setting</Link>
+          </Menu.Item>
+        </SubMenu>
+      </Menu>
     </div>
   );
 };
