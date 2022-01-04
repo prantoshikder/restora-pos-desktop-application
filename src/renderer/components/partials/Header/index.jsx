@@ -1,9 +1,12 @@
 import { CloseOutlined } from '@ant-design/icons';
-import React from 'react';
+import { Modal } from 'antd';
+import React, { useState } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import './Header.style.scss';
 
 const Header = () => {
+  const [visible, setVisible] = useState(false);
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="navbar">
@@ -21,13 +24,27 @@ const Header = () => {
             </Nav>
 
             <Nav className="right_navbar">
-              <Nav.Link href="#deets">
+              <Nav.Link href="#deets" onClick={() => setVisible(true)}>
                 <CloseOutlined />
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      <Modal
+        title="Modal 1000px width"
+        centered
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={null}
+        width={700}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
     </>
   );
 };
