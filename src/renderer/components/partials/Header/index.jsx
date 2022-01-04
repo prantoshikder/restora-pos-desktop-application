@@ -1,7 +1,7 @@
-import { CloseOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import React, { useState } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
 const Header = () => {
@@ -25,7 +25,8 @@ const Header = () => {
 
             <Nav className="right_navbar">
               <Nav.Link href="#deets" onClick={() => setVisible(true)}>
-                <CloseOutlined />
+                <img src={cashRegisterIcon} alt="Cash Register" />
+                {/* <CloseOutlined /> */}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
