@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Table } from 'antd';
 import React, { useState } from 'react';
-import './AllCategoryList.style.scss';
+import './AllFoodList.style.scss';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -19,7 +19,7 @@ const rowSelection = {
   },
 };
 
-const AllCategoryList = () => {
+const AllFoodList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -41,13 +41,25 @@ const AllCategoryList = () => {
       title: 'Category Name',
       dataIndex: 'categoryName',
       key: 'categoryName',
-      width: '30%',
+      width: '25%',
     },
     {
-      title: 'Parent Menu',
-      dataIndex: 'parentMenu',
-      key: 'parentMenu',
+      title: 'Food Name',
+      dataIndex: 'foodName',
+      key: 'foodName',
       width: '20%',
+    },
+    {
+      title: 'Components',
+      dataIndex: 'components',
+      key: 'components',
+      width: '15%',
+    },
+    {
+      title: 'Vat',
+      dataIndex: 'vat',
+      key: 'vat',
+      width: '10%',
     },
     {
       title: 'Status',
@@ -81,7 +93,9 @@ const AllCategoryList = () => {
       categoryImage:
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Soup N Salads',
-      parentMenu: 'Soup (Thai)',
+      foodName: 'Soup (Thai)',
+      components: '',
+      vat: '0.00%',
       status: 'Active',
     },
     {
@@ -89,7 +103,9 @@ const AllCategoryList = () => {
       categoryImage:
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Salad (Thai)',
-      parentMenu: 'Chicken item',
+      foodName: 'Chicken item',
+      components: '',
+      vat: '0.00%',
       status: 'Active',
     },
     {
@@ -97,7 +113,9 @@ const AllCategoryList = () => {
       categoryImage:
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Prawn & Fish Dishes',
-      parentMenu: 'indian',
+      foodName: 'indian',
+      components: 'chili, nuts',
+      vat: '0.00%',
       status: 'Active',
     },
     {
@@ -105,7 +123,9 @@ const AllCategoryList = () => {
       categoryImage:
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Oven Roasted Eggplant',
-      parentMenu: 'thai',
+      foodName: 'thai',
+      components: '',
+      vat: '0.00%',
       status: 'Active',
     },
     {
@@ -113,7 +133,9 @@ const AllCategoryList = () => {
       categoryImage:
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Maxican spicy',
-      parentMenu: 'Chicken item',
+      foodName: 'Chicken item',
+      components: 'chili, nuts',
+      vat: '0.00%',
       status: 'Active',
     },
   ];
@@ -163,4 +185,4 @@ const AllCategoryList = () => {
   );
 };
 
-export default AllCategoryList;
+export default AllFoodList;

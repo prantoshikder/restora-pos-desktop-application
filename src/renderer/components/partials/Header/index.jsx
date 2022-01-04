@@ -1,5 +1,6 @@
-import { CloseOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import './Header.style.scss';
@@ -23,11 +24,11 @@ const Header = () => {
               <Nav.Link href="#todayOrder">Today Order</Nav.Link>
             </Nav>
 
-            <Nav className="right_navbar">
-              <Nav.Link href="#deets" onClick={() => setVisible(true)}>
-                <CloseOutlined />
-              </Nav.Link>
-            </Nav>
+            <div className="right_navbar">
+              <Button type="primary" onClick={() => setVisible(true)} danger>
+                <FontAwesomeIcon icon={faTimes} />
+              </Button>
+            </div>
           </Navbar.Collapse>
         </Container>
       </Navbar>
