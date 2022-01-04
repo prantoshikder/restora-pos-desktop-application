@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FileAddOutlined } from '@ant-design/icons';
 import React from 'react';
 {
   /* <i class="fas fa-notes-medical"></i> */
@@ -7,7 +7,7 @@ const CartItem = ({ item }) => {
   return (
     <tr>
       <td>
-        <FontAwesomeIcon icon={['fas', 'fa-notes-medical']} />
+        <FileAddOutlined />
       </td>
       <td>Pizza</td>
       <td>Large</td>
