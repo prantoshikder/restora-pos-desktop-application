@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -80,16 +80,7 @@ const AddNewCategory = () => {
   };
 
   const handleReset = () => {
-    setCategories({
-      categoryName: '',
-      parentCategory: '',
-      categoryImage: '',
-      categoryIcon: '',
-      categoryStatus: '',
-      categoryOfferStart: '',
-      categoryOfferEnd: '',
-      categoryBackgroundColor: '',
-    });
+    form.resetFields();
 
     message.success({
       content: 'Reset done',
@@ -117,7 +108,7 @@ const AddNewCategory = () => {
   };
 
   return (
-    <Container className="add_new_category">
+    <div className="add_new_category">
       <Title level={3}>Add Category</Title>
       <Form
         form={form}
@@ -206,7 +197,7 @@ const AddNewCategory = () => {
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
-                      <p className="ant-upload-text">
+                      <p className="ant-upload-hint">
                         Click or drag file to this area to upload
                       </p>
                     </Upload.Dragger>
@@ -240,7 +231,7 @@ const AddNewCategory = () => {
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
-                      <p className="ant-upload-text">
+                      <p className="ant-upload-hint">
                         Please, select category icon
                       </p>
                     </Upload.Dragger>
@@ -287,6 +278,7 @@ const AddNewCategory = () => {
                 placeholder="Select an Option"
                 value={categories.categoryStatus}
                 onChange={handleChangeStatus}
+                defaultValue={{ key: 'active' }}
                 size="large"
                 allowClear
               >
@@ -313,7 +305,7 @@ const AddNewCategory = () => {
           </Col>
         </Row>
       </Form>
-    </Container>
+    </div>
   );
 };
 
