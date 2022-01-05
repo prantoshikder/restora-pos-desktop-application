@@ -1,8 +1,7 @@
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import React, { useState } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
 const Header = () => {
@@ -24,11 +23,15 @@ const Header = () => {
               <Nav.Link href="#todayOrder">Today Order</Nav.Link>
             </Nav>
 
-            <div className="right_navbar">
-              <Button type="primary" onClick={() => setVisible(true)} danger>
-                <FontAwesomeIcon icon={faTimes} />
-              </Button>
-            </div>
+            <Nav className="right_navbar">
+              <Nav.Link
+                href="#deets"
+                onClick={() => setVisible(true)}
+                title="Cash Register"
+              >
+                <img src={cashRegisterIcon} alt="Cash Register" />
+              </Nav.Link>
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
