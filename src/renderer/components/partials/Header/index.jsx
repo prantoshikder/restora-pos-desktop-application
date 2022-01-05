@@ -24,7 +24,11 @@ const Header = () => {
             </Nav>
 
             <Nav className="right_navbar">
-              <Nav.Link href="#deets" onClick={() => setVisible(true)}>
+              <Nav.Link
+                href="#deets"
+                onClick={() => setVisible(true)}
+                title="Cash Register"
+              >
                 <img src={cashRegisterIcon} alt="Cash Register" />
               </Nav.Link>
             </Nav>
