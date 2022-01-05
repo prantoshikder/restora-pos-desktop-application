@@ -1,3 +1,35 @@
+.cart-wrapper {
+  position: relative;
+}
+
+.note-icon {
+  span {
+    color: #40a9ff;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+}
+
+.quantity {
+  width: 50px;
+}
+.delete-icon {
+  span {
+    cursor: pointer;
+    color: #fff;
+    border-color: #ff4d4f;
+    color: #ff4d4f;
+    font-size: 1.5rem;
+  }
+}
+
+.cart-footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
 .btn-wrapper {
   display: flex;
   grid-gap: 10px;

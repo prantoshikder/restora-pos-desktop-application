@@ -1,4 +1,4 @@
-import { FileAddOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
 import React from 'react';
 {
   /* <i class="fas fa-notes-medical"></i> */
@@ -6,14 +6,19 @@ import React from 'react';
 const CartItem = ({ item }) => {
   return (
     <tr>
-      <td>
+      <td className="note-icon">
         <FileAddOutlined />
+        Prawn on Toast or Prawn Ball
       </td>
       <td>Pizza</td>
       <td>Large</td>
-      <td>$19.99</td>
+      <td>
+        <input className="quantity" type="number" value={1} />
+      </td>
       <td>2</td>
-      <td>Delete</td>
+      <td className="delete-icon">
+        <DeleteOutlined />
+      </td>
     </tr>
   );
 };
