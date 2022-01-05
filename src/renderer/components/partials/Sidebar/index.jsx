@@ -41,10 +41,6 @@ const Sidebar = ({ home }) => {
           <Link to="/">Home</Link>
         </Menu.Item>
 
-        <Menu.Item key="report" icon={<FontAwesomeIcon icon={faChartLine} />}>
-          <Link to="/report">Report</Link>
-        </Menu.Item>
-
         <SubMenu
           key="food_management"
           title="Food Management"
@@ -60,8 +56,12 @@ const Sidebar = ({ home }) => {
           </SubMenu>
 
           <SubMenu key="manage_food" title="Manage Food">
-            <Menu.Item key="manage_food:1">Add Food</Menu.Item>
-            <Menu.Item key="manage_food:2">Food List</Menu.Item>
+            <Menu.Item key="manage_food:1">
+              <Link to="/add_food">Add Food</Link>
+            </Menu.Item>
+            <Menu.Item key="manage_food:2">
+              <Link to="/food_list">Food List</Link>
+            </Menu.Item>
             <Menu.Item key="manage_food:3">Add Group Item</Menu.Item>
             <Menu.Item key="manage_food:4">Food Variant</Menu.Item>
             <Menu.Item key="manage_food:5">Food Availability</Menu.Item>
@@ -84,6 +84,10 @@ const Sidebar = ({ home }) => {
             <Link to="/application_setting">Application Setting</Link>
           </Menu.Item>
         </SubMenu>
+
+        <Menu.Item key="report" icon={<FontAwesomeIcon icon={faChartLine} />}>
+          <Link to="/report">Report</Link>
+        </Menu.Item>
       </Menu>
     </div>
   );

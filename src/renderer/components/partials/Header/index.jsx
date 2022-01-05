@@ -26,7 +26,6 @@ const Header = () => {
             <Nav className="right_navbar">
               <Nav.Link href="#deets" onClick={() => setVisible(true)}>
                 <img src={cashRegisterIcon} alt="Cash Register" />
-                {/* <CloseOutlined /> */}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
