@@ -6,7 +6,7 @@ import CartTop from './CartTop';
 
 const Cart = () => {
   return (
-    <div>
+    <div className="cart-wrapper">
       <CartTop />
       <CartItems />
       <CartBottom />

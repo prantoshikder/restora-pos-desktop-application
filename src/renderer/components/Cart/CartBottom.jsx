@@ -11,7 +11,7 @@ const CartBottom = () => {
   const handlePlaceOrder = () => {};
 
   return (
-    <>
+    <div className="cart-footer">
       <div className="grand-total mb-2">
         <span>Grand Total</span>
         <div>
@@ -19,19 +19,22 @@ const CartBottom = () => {
           <span>1876451.00</span>
         </div>
       </div>
+
       <div className="btn-wrapper">
         <Button
           type="primary"
           danger
           onClick={handleCancelCartItems}
           className="d-flex align-item-center justify-content-center"
+          size="large"
         >
           <DeleteOutlined />
         </Button>
-        <Button type="primary" onClick={handleQuickOrder}>
+        <Button type="primary" onClick={handleQuickOrder} size="large">
           Quick Ordedr
         </Button>
         <Button
+          size="large"
           type="primary"
           className="light-blue"
           onClick={handlePlaceOrder}
@@ -39,7 +42,7 @@ const CartBottom = () => {
           Place Order
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 
