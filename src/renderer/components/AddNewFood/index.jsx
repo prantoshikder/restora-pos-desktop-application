@@ -34,6 +34,11 @@ const AddNewFood = () => {
   const [menuType, setMenuType] = useState('');
   const [packageOffer, setPackageOffer] = useState('');
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handleSelectCategory = () => {};
   const handleKitchenSelect = () => {};
 
@@ -119,11 +124,6 @@ const AddNewFood = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <div className="add_new_food">

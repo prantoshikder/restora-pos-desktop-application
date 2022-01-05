@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal, Select } from 'antd';
 import React, { useState } from 'react';
 import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
@@ -91,15 +92,17 @@ const Header = () => {
                 <Input.TextArea placeholder="Opening Note" size="large" />
               </Form.Item>
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Form.Item>
                 <Button
                   type="primary"
-                  htmlType="submit"
                   style={{ marginRight: '1rem' }}
+                  onClick={() => setVisible(false)}
                 >
-                  Dashboard
+                  <Link className="dashboard" to="/">
+                    Dashboard
+                  </Link>
                 </Button>
-                <Button type="primary" htmlType="submit">
+                <Button className="add-opening-balance-btn" htmlType="submit">
                   Add Opening Balance
                 </Button>
               </Form.Item>
