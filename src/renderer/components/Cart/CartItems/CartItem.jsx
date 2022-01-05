@@ -1,25 +1,79 @@
 import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
-import React from 'react';
+import { Button, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { Col, Modal, Row } from 'react-bootstrap';
 {
   /* <i class="fas fa-notes-medical"></i> */
 }
 const CartItem = ({ item }) => {
+  const [form] = Form.useForm();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleUpdateNote = () => {
+    message.success({
+      content: 'Added Food Note successfully ',
+      className: 'custom-class',
+      duration: 1,
+      style: {
+        marginTop: '5vh',
+        float: 'right',
+      },
+    });
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
   return (
-    <tr>
-      <td className="note-icon">
-        <FileAddOutlined />
-        Prawn on Toast or Prawn Ball
-      </td>
-      <td>Pizza</td>
-      <td>Large</td>
-      <td>
-        <input className="quantity" type="number" value={1} />
-      </td>
-      <td>2</td>
-      <td className="delete-icon">
-        <DeleteOutlined />
-      </td>
-    </tr>
+    <>
+      <tr>
+        <td className="note-icon">
+          <FileAddOutlined onClick={handleShow} />
+          Prawn on Toast or Prawn Ball
+        </td>
+        <td>Pizza</td>
+        <td>Large</td>
+        <td>
+          <input className="quantity" type="number" value={1} />
+        </td>
+        <td>2</td>
+        <td className="delete-icon">
+          <DeleteOutlined />
+        </td>
+      </tr>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Food Note</Modal.Title>
+        </Modal.Header>
+
+        <Row>
+          <Col lg={{ span: 10, offset: 1 }}>
+            <Form
+              form={form}
+              onFinish={handleUpdateNote}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Form.Item label="Food Note" name="foodNote">
+                <Input.TextArea placeholder="Opening Note" size="large" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button className="note-btn" htmlType="submit">
+                  Update Note
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Modal>
+    </>
   );
 };
 
