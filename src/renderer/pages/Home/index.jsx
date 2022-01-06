@@ -16,9 +16,9 @@ const Home = () => {
           <Col lg={2}>
             <Sidebar />
           </Col>
-          <Col md={10} className="mt-3">
+          <Col lg={10} className="mt-3">
             <Row>
-              <Col md={7}>
+              <Col lg={7}>
                 <Row className="search-food-wrapper">
                   <input
                     type="text"
@@ -30,7 +30,7 @@ const Home = () => {
                   <FoodLists />
                 </Row>
               </Col>
-              <Col md={5}>
+              <Col lg={5}>
                 <Cart />
               </Col>
             </Row>

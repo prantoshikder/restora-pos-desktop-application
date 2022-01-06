@@ -53,13 +53,13 @@ const Header = () => {
       </Navbar>
 
       <Modal
-        title="Start Register"
+        title="Cash Register"
         centered
         visible={visible}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={null}
-        width={700}
+        width={650}
       >
         <Row>
           <Col lg={{ span: 10, offset: 1 }}>
