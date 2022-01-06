@@ -30,9 +30,11 @@ const CartBottom = () => {
         >
           <DeleteOutlined />
         </Button>
+
         <Button type="primary" onClick={handleQuickOrder} size="large">
           Quick Ordedr
         </Button>
+
         <Button
           size="large"
           type="primary"

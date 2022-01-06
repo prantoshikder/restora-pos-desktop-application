@@ -1,5 +1,5 @@
 import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 {
@@ -12,7 +12,21 @@ const CartItem = ({ item }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const handleDeleteItem = () => {
+    message.success({
+      content: 'Successfully Delete Item',
+      className: 'custom-class',
+      duration: 1,
+      style: {
+        marginTop: '5vh',
+        float: 'right',
+      },
+    });
+  };
+
   const handleUpdateNote = () => {
+    form.resetFields();
+    setShow(false);
     message.success({
       content: 'Added Food Note successfully ',
       className: 'custom-class',
@@ -42,7 +56,7 @@ const CartItem = ({ item }) => {
         </td>
         <td>2</td>
         <td className="delete-icon">
-          <DeleteOutlined />
+          <DeleteOutlined onClick={handleDeleteItem} />
         </td>
       </tr>
 
