@@ -103,7 +103,7 @@ const ApplicationSetting = () => {
   };
 
   return (
-    <div className="add_new_category">
+    <div className="application_setting">
       <Title level={3}>Application Settings</Title>
       <Form
         form={form}
@@ -164,25 +164,31 @@ const ApplicationSetting = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Available On" name="availableOn">
-              <Input
-                placeholder="Available On"
-                value={setting.availableOn}
-                onChange={(e) =>
-                  setSetting({ ...setting, availableOn: e.target.value })
-                }
-              />
-            </Form.Item>
+            <div className="d-flex">
+              <Form.Item label="Available On" name="availableOn">
+                <Input
+                  placeholder="Available On"
+                  value={setting.availableOn}
+                  onChange={(e) =>
+                    setSetting({ ...setting, availableOn: e.target.value })
+                  }
+                />
+              </Form.Item>
 
-            <Form.Item label="Closing Time" name="closingTime">
-              <Input
-                placeholder="Closing Time"
-                value={setting.closingTime}
-                onChange={(e) =>
-                  setSetting({ ...setting, closingTime: e.target.value })
-                }
-              />
-            </Form.Item>
+              <Form.Item
+                label="Closing Time"
+                name="closingTime"
+                style={{ marginLeft: 'auto' }}
+              >
+                <Input
+                  placeholder="Closing Time"
+                  value={setting.closingTime}
+                  onChange={(e) =>
+                    setSetting({ ...setting, closingTime: e.target.value })
+                  }
+                />
+              </Form.Item>
+            </div>
 
             <Form.Item name="discountType" label="Discount Type">
               <Select
@@ -207,6 +213,7 @@ const ApplicationSetting = () => {
                 }
               />
             </Form.Item>
+
             <Form.Item label="Service Change" name="serviceChange">
               <Input
                 placeholder="Service Change"
@@ -216,9 +223,7 @@ const ApplicationSetting = () => {
                 }
               />
             </Form.Item>
-          </Col>
 
-          <Col lg={6}>
             <Form.Item
               label="Select Service Charge Type"
               name="selectServiceChargeType"
@@ -250,7 +255,7 @@ const ApplicationSetting = () => {
               <Form.Item
                 label="tinOrVatNumber"
                 name="tinOrVatNumber"
-                style={{ marginLeft: '3rem' }}
+                style={{ marginLeft: 'auto' }}
               >
                 <Input
                   placeholder="tinOrVatNumber"
@@ -261,7 +266,9 @@ const ApplicationSetting = () => {
                 />
               </Form.Item>
             </div>
+          </Col>
 
+          <Col lg={6}>
             <Form.Item label="Currency" name="currency">
               <Select
                 placeholder="Select an Option"
@@ -302,41 +309,47 @@ const ApplicationSetting = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Date Formate" name="dateFormate">
-              <Select
-                placeholder="Select an Option"
-                value={setting.dateFormate}
-                onChange={changeDateFormate}
-                // defaultValue={{ key: 'active' }}
+            <div className="d-flex">
+              <Form.Item label="Date Formate" name="dateFormate">
+                <Select
+                  placeholder="Select an Option"
+                  value={setting.dateFormate}
+                  onChange={changeDateFormate}
+                  // defaultValue={{ key: 'active' }}
 
-                allowClear
+                  allowClear
+                >
+                  <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
+                  <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
+                  <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
+                  <Option value="yyyy-mm-dd">yyyy-mm-dd</Option>
+                  <Option value="mm/dd/yyyy">mm/dd/yyyy</Option>
+                  <Option value="dd M,yyyy">dd M,yyyy</Option>
+                  <Option value="dd MM,yyyy">dd MM,yyyy</Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Time Zone"
+                name="timeZone"
+                style={{ marginLeft: 'auto' }}
               >
-                <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
-                <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
-                <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
-                <Option value="yyyy-mm-dd">yyyy-mm-dd</Option>
-                <Option value="mm/dd/yyyy">mm/dd/yyyy</Option>
-                <Option value="dd M,yyyy">dd M,yyyy</Option>
-                <Option value="dd MM,yyyy">dd MM,yyyy</Option>
-              </Select>
-            </Form.Item>
+                <Select
+                  placeholder="Select an Option"
+                  value={setting.timeZone}
+                  onChange={changeTimeZone}
+                  // defaultValue={{ key: 'active' }}
 
-            <Form.Item label="Time Zone" name="timeZone">
-              <Select
-                placeholder="Select an Option"
-                value={setting.timeZone}
-                onChange={changeTimeZone}
-                // defaultValue={{ key: 'active' }}
-
-                allowClear
-              >
-                <Option value="asiaDhaka">Asia/Dhaka</Option>
-                <Option value="asiaThimbu">Asia/Thimbu</Option>
-                <Option value="asiaJakarta">Asia/Jakarta</Option>
-                <Option value="asiaOmsk">Asia/Omsk</Option>
-                <Option value="asiaHovd">Asia/Hovd</Option>
-              </Select>
-            </Form.Item>
+                  allowClear
+                >
+                  <Option value="asiaDhaka">Asia/Dhaka</Option>
+                  <Option value="asiaThimbu">Asia/Thimbu</Option>
+                  <Option value="asiaJakarta">Asia/Jakarta</Option>
+                  <Option value="asiaOmsk">Asia/Omsk</Option>
+                  <Option value="asiaHovd">Asia/Hovd</Option>
+                </Select>
+              </Form.Item>
+            </div>
 
             <Form.Item
               label="Application Alignment"
@@ -358,6 +371,7 @@ const ApplicationSetting = () => {
             <Form.Item label="Powered By Text">
               <Input.TextArea
                 placeholder="Powered By Text"
+                rows={9}
                 value={setting.poweredByText}
                 onChange={(e) =>
                   setSetting({ ...setting, poweredByText: e.target.value })
@@ -368,6 +382,7 @@ const ApplicationSetting = () => {
             <Form.Item label="Footer Text">
               <Input.TextArea
                 placeholder="Footer Text"
+                rows={9}
                 value={setting.footerText}
                 onChange={(e) =>
                   setSetting({ ...setting, footerText: e.target.value })

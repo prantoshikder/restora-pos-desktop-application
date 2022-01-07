@@ -289,16 +289,16 @@ const AddNewCategory = () => {
 
             <div className="button_group">
               <Button
-                type="primary"
-                className="resetBtn"
+                type="danger"
                 style={{
-                  marginRight: '0.6rem',
+                  marginRight: '1rem',
                 }}
+                // className="resetBtn"
                 onClick={handleReset}
               >
                 Reset
               </Button>
-              <Button type="primary" className="save_btn" htmlType="submit">
+              <Button type="primary" htmlType="submit">
                 Submit
               </Button>
             </div>

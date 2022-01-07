@@ -4,12 +4,13 @@ import Heading from 'renderer/components/Heading';
 import AddNewFood from './../../../../components/AddNewFood';
 import Header from './../../../../components/partials/Header';
 import Sidebar from './../../../../components/partials/Sidebar';
+import './AddFood.style.scss';
 
 const AddFood = () => {
   return (
     <Container fluid className="p-0">
       <Header />
-      <Row className="foodManage-system">
+      <Row className="foodManage_system">
         <Col lg={2}>
           <Sidebar />
         </Col>

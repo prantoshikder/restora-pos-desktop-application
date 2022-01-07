@@ -9,7 +9,7 @@ const ApplicationSettings = () => {
   return (
     <Container fluid className="p-0">
       <Header />
-      <Row className="pos-system">
+      <Row>
         <Col lg={2}>
           <Sidebar />
         </Col>
