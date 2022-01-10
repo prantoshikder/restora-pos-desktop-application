@@ -1,13 +1,13 @@
 import React from 'react';
-import SystemMenu from '../partials/SystemMenu';
+
+const styles = {
+  mainContent: {
+    paddingTop: '1.9rem',
+  },
+};
 
 const Layout = ({ children }) => {
-  return (
-    <>
-      <SystemMenu />
-      {children}
-    </>
-  );
+  return <div className={styles.mainContent}>{children}</div>;
 };
 
 export default Layout;

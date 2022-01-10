@@ -7,7 +7,7 @@ import Sidebar from './../../../../components/partials/Sidebar';
 
 const AddonsList = () => {
   return (
-    <Container fluid className="p-0">
+    <Container fluid className="px-0 main-wrapper">
       <Header />
       <Row className="foodManage_system">
         <Col lg={2}>

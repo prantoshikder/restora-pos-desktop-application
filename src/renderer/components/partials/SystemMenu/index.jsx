@@ -8,7 +8,7 @@ const { SubMenu, Item } = Menu;
 const { Header, Content, Footer } = Layout;
 
 const SystemMenu = () => {
-  const getExternaleLink = (url) => {
+  const getExternalLink = (url) => {
     // shell.openExternal(url);
   };
 
@@ -48,7 +48,7 @@ const SystemMenu = () => {
           <Menu.Item
             key="submenu_help:1"
             onClick={() =>
-              getExternaleLink('https://www.bdtask.com/contact.php')
+              getExternalLink('https://www.bdtask.com/contact.php')
             }
           >
             Contact

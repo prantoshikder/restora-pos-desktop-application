@@ -12,7 +12,7 @@ import './Sidebar.style.scss';
 
 const { SubMenu } = Menu;
 // submenu keys of first level
-const rootSubmenuKeys = ['food_management', 'setting'];
+const rootSubmenuKeys = ['food_management', 'setting', 'report'];
 
 const Sidebar = ({ home }) => {
   const [openKeys, setOpenKeys] = useState(['home']);
@@ -26,6 +26,10 @@ const Sidebar = ({ home }) => {
     }
   };
 
+  const onClick = (e) => {
+    console.log('e', e);
+  };
+
   return (
     <div className="sidebar">
       <Menu
@@ -33,6 +37,7 @@ const Sidebar = ({ home }) => {
         style={{
           height: '100%',
         }}
+        onClick={onClick}
         mode="inline"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
@@ -110,11 +115,11 @@ const Sidebar = ({ home }) => {
           title="Report"
           icon={<FontAwesomeIcon icon={faChartLine} />}
         >
-          <Menu.Item key="report">
+          <Menu.Item key="salesReport">
             <Link to="/sales_report">Sales Report</Link>
           </Menu.Item>
 
-          <Menu.Item key="report">
+          <Menu.Item key="itemsSalesReport">
             <Link to="/items_sales_report">Items Sales Report</Link>
           </Menu.Item>
         </SubMenu>
