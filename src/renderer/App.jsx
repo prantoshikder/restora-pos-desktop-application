@@ -1,4 +1,5 @@
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
+import SystemMenu from './components/partials/SystemMenu';
 import AddAddons from './pages/foodManagement/manageAddons/AddAddons';
 import AddonsAssignList from './pages/foodManagement/manageAddons/AddonsAssignList';
 import AddonsList from './pages/foodManagement/manageAddons/AddonsList';
@@ -17,6 +18,7 @@ import ApplicationSettings from './pages/settings/ApplicationSettings';
 export default function App() {
   return (
     <Router>
+      <SystemMenu />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/add_category" element={<AddCategory />} />

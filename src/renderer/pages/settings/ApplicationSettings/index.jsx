@@ -7,7 +7,7 @@ import Sidebar from './../../../components/partials/Sidebar';
 
 const ApplicationSettings = () => {
   return (
-    <Container fluid className="p-0">
+    <Container fluid className="px-0 main-wrapper">
       <Header />
       <Row>
         <Col lg={2}>

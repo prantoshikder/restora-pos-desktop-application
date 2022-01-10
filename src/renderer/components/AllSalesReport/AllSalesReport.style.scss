@@ -1,0 +1,25 @@
+.group_btn{
+  margin-left: 1.5rem;
+}
+.search_btn,
+.search_btn:focus,
+.search_btn:hover{
+  background-color: #37a000;
+  border-color: #318d01;
+  color: #fff;
+  font-weight: 500;
+}
+.print_btn,
+.print_btn:focus,
+.print_btn:hover{
+  background-color: #ffb61e;
+  border-color: #e1a21e;
+  color: #fff;
+  font-weight: 500;
+  margin-left: 0.7rem;
+}
+
+.search_content{
+  text-align: center;
+  margin-bottom: 2rem;
+}
