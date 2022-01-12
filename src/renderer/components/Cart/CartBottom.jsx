@@ -1,4 +1,3 @@
-import { DeleteOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React from 'react';
 import './cart.styles.scss';
@@ -13,7 +12,9 @@ const CartBottom = () => {
   return (
     <div className="cart-footer">
       <div className="grand-total mb-2">
-        <span>Grand Total</span>
+        <div>
+          <span>Grand Total</span>
+        </div>
         <div>
           <span>$</span>
           <span>1876451.00</span>
@@ -25,20 +26,25 @@ const CartBottom = () => {
           type="primary"
           danger
           onClick={handleCancelCartItems}
-          className="d-flex align-item-center justify-content-center"
+          className="delete-selected-item group-btn"
           size="large"
         >
-          <DeleteOutlined />
+          Cancel
         </Button>
 
-        <Button type="primary" onClick={handleQuickOrder} size="large">
+        <Button
+          type="primary"
+          className="quick-order-btn group-btn"
+          onClick={handleQuickOrder}
+          size="large"
+        >
           Quick Ordedr
         </Button>
 
         <Button
           size="large"
           type="primary"
-          className="light-blue"
+          className="place-order-btn group-btn"
           onClick={handlePlaceOrder}
         >
           Place Order

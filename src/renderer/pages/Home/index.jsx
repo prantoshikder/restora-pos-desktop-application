@@ -2,8 +2,8 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
-import Sidebar from '../../components/partials/Sidebar';
 import Header from './../../components/partials/Header';
+import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
 const Home = () => {
@@ -12,7 +12,8 @@ const Home = () => {
       <Header />
       <Row className="pos-system">
         <Col lg={2}>
-          <Sidebar />
+          {/* <Sidebar /> */}
+          <PosSidebar />
         </Col>
         <Col lg={10} className="mt-3">
           <Row>

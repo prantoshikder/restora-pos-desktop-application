@@ -204,6 +204,7 @@ const FoodVariantList = () => {
                   placeholder="Select Option"
                   onChange={handleChangeFoodVariant}
                   value={foodName}
+                  size="large"
                   allowClear
                 >
                   <Option value="pizza">Pizza</Option>
@@ -224,7 +225,7 @@ const FoodVariantList = () => {
                   },
                 ]}
               >
-                <Input placeholder="Add Variant" />
+                <Input placeholder="Add Variant" size="large" />
               </Form.Item>
 
               <Form.Item
@@ -234,7 +235,7 @@ const FoodVariantList = () => {
                   { required: true, message: 'Please input your price!' },
                 ]}
               >
-                <Input placeholder="Price" />
+                <Input placeholder="Price" size="large" />
               </Form.Item>
 
               <Form.Item>

@@ -1,0 +1,11 @@
+.pos_sidebar{
+  height: calc(100vh - 100px);
+  overflow-y: scroll;
+  .btn_wrapper{
+  }
+  button{
+    background-color: #000;
+    width: 100%;
+    text-align: left;
+  }
+}

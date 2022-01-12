@@ -212,7 +212,7 @@ const MenuTypeList = () => {
                   },
                 ]}
               >
-                <Input placeholder="Menu Type" />
+                <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
               <Form.Item
