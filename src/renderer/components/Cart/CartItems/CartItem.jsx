@@ -8,6 +8,7 @@ import { Col, Modal, Row } from 'react-bootstrap';
 const CartItem = ({ item }) => {
   const [form] = Form.useForm();
   const [show, setShow] = useState(false);
+  const [itemQuantity, setItemQuantity] = useState(1);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -42,6 +43,13 @@ const CartItem = ({ item }) => {
     console.log('Failed:', errorInfo);
   };
 
+  const handleItemQuantity = (e) => {
+    const value = e.target.value;
+    if (Number(value) === 0) return;
+
+    setItemQuantity(value);
+  };
+
   return (
     <>
       <tr>
@@ -50,9 +58,14 @@ const CartItem = ({ item }) => {
           Prawn on Toast or Prawn Ball
         </td>
         <td>Pizza</td>
-        <td>Large</td>
+        <td>$99.99</td>
         <td>
-          <input className="quantity" type="number" value={1} />
+          <Input
+            className="quantity"
+            type="number"
+            value={itemQuantity}
+            onChange={handleItemQuantity}
+          />
         </td>
         <td>2</td>
         <td className="delete-icon">
