@@ -202,6 +202,7 @@ const AllAddonsAssignList = () => {
               >
                 <Select
                   placeholder="Select Option"
+                  size="large"
                   onChange={changeAddonsName}
                   value={addonsName}
                   allowClear
@@ -226,6 +227,7 @@ const AllAddonsAssignList = () => {
               >
                 <Select
                   placeholder="Select Option"
+                  size="large"
                   onChange={changeFoodName}
                   value={foodName}
                   allowClear

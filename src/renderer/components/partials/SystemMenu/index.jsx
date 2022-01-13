@@ -21,7 +21,9 @@ const SystemMenu = () => {
           className="system_submenus"
           popupOffset={[0, 0]}
         >
-          <Menu.Item key="foods">Foods</Menu.Item>
+          <Menu.Item key="foods">
+            <Link to="/add_category">Foods</Link>
+          </Menu.Item>
           <Menu.Item key="food_addons">Food Addons</Menu.Item>
           <Menu.Item key="food_category">
             <Link to="/food-management">Food Management</Link>

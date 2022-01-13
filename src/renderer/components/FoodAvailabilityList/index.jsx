@@ -209,6 +209,7 @@ const FoodAvailabilityList = () => {
               >
                 <Select
                   placeholder="Select Option"
+                  size="large"
                   onChange={changeFoodName}
                   value={foodName}
                   allowClear
@@ -237,6 +238,7 @@ const FoodAvailabilityList = () => {
               >
                 <Select
                   placeholder="Select Option"
+                  size="large"
                   onChange={changeAvailableDay}
                   value={availableDay}
                   allowClear
@@ -261,6 +263,7 @@ const FoodAvailabilityList = () => {
                 >
                   <TimePicker
                     placeholder="From Time"
+                    size="large"
                     defaultValue={moment('12:08:23', 'HH:mm:ss')}
                   />
                 </Form.Item>
@@ -275,6 +278,7 @@ const FoodAvailabilityList = () => {
                 >
                   <TimePicker
                     placeholder="To Time"
+                    size="large"
                     defaultValue={moment('12:08:23', 'HH:mm:ss')}
                   />
                 </Form.Item>
