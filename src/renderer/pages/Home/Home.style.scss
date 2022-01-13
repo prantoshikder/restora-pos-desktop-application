@@ -1,5 +1,5 @@
 .pos-system {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
 }
 .search-food-wrapper {
   margin-bottom: 2rem;
