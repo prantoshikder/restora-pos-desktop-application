@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="main-wrapper">
       <Header />
-      <Container fluid className="m-1">
+      <Container fluid>
         <Row className="pos-system">
           <Col lg={2} className="mt-3">
             <PosSidebar />
