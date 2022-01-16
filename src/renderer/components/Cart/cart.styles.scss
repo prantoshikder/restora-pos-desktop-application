@@ -45,7 +45,7 @@
 }
 .group-btn{
   font-size: 17px;
-  padding: 0px 25px;
+  padding: 0px 35px;
   border-radius: 8px;
   margin-right: 3px;
   font-weight: 600;
@@ -55,27 +55,30 @@
 .delete-selected-item:focus {
   background-color: #e5343d;
   border-color: #bf2d35;
+  height: 3.2rem;
 }
 .quick-order-btn,
 .quick-order-btn:hover,
 .quick-order-btn:focus {
   background-color: #428bca;
   border-color: #3b7cb4;
+  height: 3.2rem;
 }
 .place-order-btn,
 .place-order-btn:hover,
 .place-order-btn:focus {
   background-color: #37a000;
   border-color: #318d01;
+  height: 3.2rem;
 }
 
 .grand-total {
   display: flex;
-  padding: 10px 15px;
+  padding: 12px 15px;
   justify-content: space-between;
   color: #fff;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 10px;
   border-radius: 8px;
   background-color: #ffa69e;
