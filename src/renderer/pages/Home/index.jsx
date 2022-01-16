@@ -8,34 +8,35 @@ import './Home.style.scss';
 
 const Home = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
+    <div className="main-wrapper">
       <Header />
-      <Row className="pos-system">
-        <Col lg={2}>
-          {/* <Sidebar /> */}
-          <PosSidebar />
-        </Col>
-        <Col lg={10} className="mt-3">
-          <Row>
-            <Col lg={7}>
-              <Row className="search-food-wrapper">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="form-control"
-                />
-              </Row>
-              <Row>
-                <FoodLists />
-              </Row>
-            </Col>
-            <Col lg={5}>
-              <Cart />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </Container>
+      <Container fluid className="m-1">
+        <Row className="pos-system">
+          <Col lg={2}>
+            <PosSidebar />
+          </Col>
+          <Col lg={10} className="mt-3">
+            <Row>
+              <Col lg={7}>
+                <Row className="search-food-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="form-control"
+                  />
+                </Row>
+                <Row>
+                  <FoodLists />
+                </Row>
+              </Col>
+              <Col lg={5}>
+                <Cart />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
