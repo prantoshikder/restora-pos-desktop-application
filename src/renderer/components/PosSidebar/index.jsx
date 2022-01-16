@@ -9,60 +9,65 @@ const PosSidebar = () => {
         <Button size="large" type="primary">
           All
         </Button>
-
         <Button size="large" type="primary">
-          Test
+          Fast Food Item
+        </Button>
+        <Button size="large" type="primary">
+          Thai
+        </Button>
+        <Button size="large" type="primary">
+          Soup(Thai)
+        </Button>
+        <Button size="large" type="primary">
+          Chicken Fry
+        </Button>
+        <Button size="large" type="primary">
+          Burger
+        </Button>
+        <Button size="large" type="primary">
+          Pizza
+        </Button>
+        <Button size="large" type="primary">
+          Rice
+        </Button>
+        <Button size="large" type="primary">
+          ITalian
+        </Button>
+        <Button size="large" type="primary">
+          Indian
+        </Button>
+        <Button size="large" type="primary">
+          Chinese Vegetables
+        </Button>
+        <Button size="large" type="primary">
+          Arabic
+        </Button>
+        <Button size="large" type="primary">
+          Maxican
+        </Button>
+        <Button size="large" type="primary">
+          Prawn & Fish Fry
+        </Button>
+        <Button size="large" type="primary">
+          Chowmein
+        </Button>
+        <Button size="large" type="primary">
+          Grill & Deep Fried
+        </Button>
+        <Button size="large" type="primary">
+          Chicken Sharma
+        </Button>
+        <Button size="large" type="primary">
+          Beef(Thai)
+        </Button>
+        <Button size="large" type="primary">
+          Salad
         </Button>
         <Button size="large" type="primary">
           New
         </Button>
         <Button size="large" type="primary">
           Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          Test
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          Test
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          Test
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
         </Button>
       </div>
     </div>

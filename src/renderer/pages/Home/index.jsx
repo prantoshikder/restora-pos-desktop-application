@@ -12,18 +12,20 @@ const Home = () => {
       <Header />
       <Container fluid className="m-1">
         <Row className="pos-system">
-          <Col lg={2}>
+          <Col lg={2} className="mt-3">
             <PosSidebar />
           </Col>
           <Col lg={10} className="mt-3">
             <Row>
               <Col lg={7}>
-                <Row className="search-food-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="form-control"
-                  />
+                <Row className="search-food-wrapper justify-content-md-center">
+                  <Col lg={8}>
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      className="form-control"
+                    />
+                  </Col>
                 </Row>
                 <Row>
                   <FoodLists />
