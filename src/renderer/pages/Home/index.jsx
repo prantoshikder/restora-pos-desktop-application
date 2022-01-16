@@ -8,12 +8,11 @@ import './Home.style.scss';
 
 const Home = () => {
   return (
-    <div fluid className="main-wrapper">
-      <Container fluid className="main-wrapper">
-        <Header />
+    <div className="main-wrapper">
+      <Header />
+      <Container fluid className="m-1">
         <Row className="pos-system">
           <Col lg={2}>
-            {/* <Sidebar /> */}
             <PosSidebar />
           </Col>
           <Col lg={10} className="mt-3">
