@@ -9,30 +9,7 @@ const PosSidebar = () => {
         <Button size="large" type="primary">
           All
         </Button>
-        <Button size="large" type="primary">
-          Test
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
-        <Button size="large" type="primary">
-          Test
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
-        </Button>
-        <Button size="large" type="primary">
-          All
-        </Button>
+
         <Button size="large" type="primary">
           Test
         </Button>

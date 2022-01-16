@@ -1,15 +1,22 @@
 .navbar {
   background-color: #f7f7f7;
   border-bottom: 1px solid #e1e6ef;
+  padding: 0 8px;
 }
-.navbar-expand-lg .navbar-nav .nav-link {
-  padding: 0.7rem 1.6rem;
-  margin-right: 0.5rem;
-  border-radius: 8px;
-  color: #fff !important;
-  font-size: 1.2rem;
-  font-weight: 500;
+
+.navbar-expand-lg {
+  .navbar-nav {
+    .nav-link {
+      padding: 0.7rem 1.6rem;
+      margin-right: 0.5rem;
+      border-radius: 8px;
+      color: #fff !important;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
 }
+
 .navbar-expand-lg .navbar-nav .nav-link:first-child {
   background-color: #2d8fff;
 }
@@ -48,7 +55,7 @@
   }
 }
 
-.dashboard{
+.dashboard {
   text-decoration: none;
 }
 
