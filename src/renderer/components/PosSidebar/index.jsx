@@ -22,6 +22,18 @@ const PosSidebar = () => {
           Chicken Fry
         </Button>
         <Button size="large" type="primary">
+          Prawn & Fish Fry
+        </Button>
+        <Button size="large" type="primary">
+          Chowmein
+        </Button>
+        <Button size="large" type="primary">
+          Grill & Deep Fried
+        </Button>
+        <Button size="large" type="primary">
+          Chicken Sharma
+        </Button>
+        <Button size="large" type="primary">
           Burger
         </Button>
         <Button size="large" type="primary">
@@ -31,7 +43,7 @@ const PosSidebar = () => {
           Rice
         </Button>
         <Button size="large" type="primary">
-          ITalian
+          Italian
         </Button>
         <Button size="large" type="primary">
           Indian
@@ -45,29 +57,12 @@ const PosSidebar = () => {
         <Button size="large" type="primary">
           Maxican
         </Button>
-        <Button size="large" type="primary">
-          Prawn & Fish Fry
-        </Button>
-        <Button size="large" type="primary">
-          Chowmein
-        </Button>
-        <Button size="large" type="primary">
-          Grill & Deep Fried
-        </Button>
-        <Button size="large" type="primary">
-          Chicken Sharma
-        </Button>
+
         <Button size="large" type="primary">
           Beef(Thai)
         </Button>
         <Button size="large" type="primary">
           Salad
-        </Button>
-        <Button size="large" type="primary">
-          New
-        </Button>
-        <Button size="large" type="primary">
-          Demo
         </Button>
       </div>
     </div>
