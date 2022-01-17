@@ -3,12 +3,16 @@
   padding-right: 0;
   padding-left: 0;
 }
+.pos-wrapper {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
 
 .grand-total {
   color: $color-white;
   background-color: $color-blue;
 }
 
-a{
+a {
   text-decoration: none;
 }
