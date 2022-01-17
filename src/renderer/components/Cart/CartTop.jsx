@@ -1,3 +1,4 @@
+import { Form, Input } from 'antd';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 
@@ -5,14 +6,113 @@ const CartTop = () => {
   return (
     <div className="form-content">
       <div className="banner-card">
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. A, iure.
-          Earum commodi pariatur, ut est harum quaerat, obcaecati magnam ratione
-          sequi rem fuga? Eos veniam distinctio veritatis illo repellat tempore!
-        </p>
         <Row className="search-food-wrapper justify-content-md-center">
-          <Col lg={8}>
-            <input type="text" placeholder="Search" className="form-control" />
+          <Col lg={6}>
+            <Form.Item
+              label="Category name"
+              name="categoryName"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
+              <Input
+                placeholder="Category Name"
+                size="large"
+                // value={categories.categoryName}
+                // onChange={(e) =>
+                //   setCategories({ ...categories, categoryName: e.target.value })
+                // }
+              />
+            </Form.Item>
+          </Col>
+          <Col lg={6}>
+            <Form.Item
+              label="Category name"
+              name="categoryName"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
+              <Input
+                placeholder="Category Name"
+                size="large"
+                // value={categories.categoryName}
+                // onChange={(e) =>
+                //   setCategories({ ...categories, categoryName: e.target.value })
+                // }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row className="search-food-wrapper justify-content-md-center">
+          <Col lg={4}>
+            <Form.Item
+              label="Category name"
+              name="categoryName"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
+              <Input
+                placeholder="Category Name"
+                size="large"
+                // value={categories.categoryName}
+                // onChange={(e) =>
+                //   setCategories({ ...categories, categoryName: e.target.value })
+                // }
+              />
+            </Form.Item>
+          </Col>
+          <Col lg={4}>
+            <Form.Item
+              label="Category name"
+              name="categoryName"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
+              <Input
+                placeholder="Category Name"
+                size="large"
+                // value={categories.categoryName}
+                // onChange={(e) =>
+                //   setCategories({ ...categories, categoryName: e.target.value })
+                // }
+              />
+            </Form.Item>
+          </Col>
+          <Col lg={4}>
+            <Form.Item
+              label="Category name"
+              name="categoryName"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
+              <Input
+                placeholder="Category Name"
+                size="large"
+                // value={categories.categoryName}
+                // onChange={(e) =>
+                //   setCategories({ ...categories, categoryName: e.target.value })
+                // }
+              />
+            </Form.Item>
           </Col>
         </Row>
       </div>
