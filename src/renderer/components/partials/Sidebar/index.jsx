@@ -108,6 +108,14 @@ const Sidebar = ({ home }) => {
           <Menu.Item key="application_setting:1">
             <Link to="/application_setting">Application Setting</Link>
           </Menu.Item>
+
+          <Menu.Item key="currency:2">
+            <Link to="/currency">Currency</Link>
+          </Menu.Item>
+
+          <Menu.Item key="language:2">
+            <Link to="/language">Language</Link>
+          </Menu.Item>
         </SubMenu>
 
         <SubMenu

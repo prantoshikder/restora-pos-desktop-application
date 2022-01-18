@@ -3,10 +3,9 @@ import { Card, Col } from 'react-bootstrap';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import './food.item.styles.scss';
 
-const FoodItem = ({ item, setSelectedItem, selectedItem }) => {
+const FoodItem = ({ item, setCartItems, cartItems }) => {
   const handleFoodItem = (item) => {
-    console.log(item);
-    setSelectedItem([...selectedItem, item]);
+    setCartItems([...cartItems, item]);
   };
 
   return (

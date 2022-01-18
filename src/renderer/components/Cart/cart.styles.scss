@@ -39,6 +39,14 @@
   border: 1px solid #e0e0e0;
 }
 
+
+
+// .custom{
+//   .ant-form-item-label > label{
+//     color: #fff;
+//   }
+// }
+
 .banner-card{
   background-image: url(../../../../assets/corner-3.png);
   background-size: contain;
@@ -55,8 +63,8 @@
 }
 
 .select-product-item{
-  height: 470px;
-  margin-bottom: 2rem;
+  height: 415px;
+  margin-bottom: 1rem;
   background-color: #fff;
   .product-item-table{
     .empty-cart{
@@ -93,7 +101,7 @@
 }
 
 .product-list-table{
-  height: 470px;
+  height: 415px;
   overflow-y: auto;
 }
 
@@ -118,9 +126,7 @@
 }
 
 .cart-footer {
-  // margin-top: calc(100vh - 700px);
   width: 100%;
-  // bottom: 0;
 }
 
 .btn-wrapper {
