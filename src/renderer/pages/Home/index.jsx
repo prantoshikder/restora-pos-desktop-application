@@ -12,12 +12,13 @@ const Home = () => {
   return (
     <div className="main-wrapper">
       <Header />
-      <Container fluid>
+      <Container fluid className="pos-wrapper">
         <Row className="pos-system">
-          <Col lg={2} className="mt-3">
+          <Col lg={2}>
             <PosSidebar />
           </Col>
-          <Col lg={10} className="mt-3">
+
+          <Col lg={10}>
             <Row>
               <Col lg={7}>
                 <Row className="search-food-wrapper justify-content-md-center">
@@ -36,6 +37,7 @@ const Home = () => {
                   />
                 </Row>
               </Col>
+
               <Col lg={5}>
                 <Cart
                   setSelectedItem={setSelectedItem}
