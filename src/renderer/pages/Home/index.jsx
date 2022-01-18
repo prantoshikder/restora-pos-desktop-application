@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
@@ -7,6 +7,8 @@ import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
 const Home = () => {
+  const [selectedItem, setSelectedItem] = useState([]);
+
   return (
     <div className="main-wrapper">
       <Header />
@@ -27,12 +29,18 @@ const Home = () => {
                     />
                   </Col>
                 </Row>
-                <Row>
-                  <FoodLists />
+                <Row className="foodList-wrapper">
+                  <FoodLists
+                    setSelectedItem={setSelectedItem}
+                    selectedItem={selectedItem}
+                  />
                 </Row>
               </Col>
               <Col lg={5}>
-                <Cart />
+                <Cart
+                  setSelectedItem={setSelectedItem}
+                  selectedItem={selectedItem}
+                />
               </Col>
             </Row>
           </Col>
