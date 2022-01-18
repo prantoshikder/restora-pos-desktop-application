@@ -1,16 +1,19 @@
 import {
-  DeleteOutlined,
   FileAddOutlined,
   PlusCircleOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
-import { Button, Form, Input, message, Select } from 'antd';
+import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Form, Input, message, Select, TimePicker } from 'antd';
+import moment from 'moment';
 import { default as React, default as React, useState } from 'react';
 import { Col, Modal, Row, Table } from 'react-bootstrap';
 import './cart.styles.scss';
 
 const { Option } = Select;
 
-const Cart = () => {
+const Cart = ({ selectedItem, setSelectedItem }) => {
   const [form] = Form.useForm();
   const [foodNote] = Form.useForm();
   const [show, setShow] = useState(false);
@@ -21,8 +24,10 @@ const Cart = () => {
 
   const selectCustomerName = () => {};
   const selectCustomerType = () => {};
+  const selectWaiter = () => {};
+  const selectTableNum = () => {};
 
-  const handleDeleteItem = () => {
+  const handleDeleteItem = (id) => {
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -32,6 +37,9 @@ const Cart = () => {
         float: 'right',
       },
     });
+
+    setSelectedItem(selectedItem.filter((item) => item.id !== id));
+    return;
   };
 
   const handleSubmit = () => {
@@ -49,6 +57,7 @@ const Cart = () => {
   };
 
   const handleCancelCartItems = () => {};
+  const handleCalculation = () => {};
 
   const handleQuickOrder = () => {};
 
@@ -78,6 +87,8 @@ const Cart = () => {
 
     setItemQuantity(value);
   };
+
+  console.log('selectedItem1', selectedItem?.length);
 
   return (
     <div className="cart-wrapper">
@@ -155,28 +166,61 @@ const Cart = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Waiter is required',
+                      message: 'Waiter name is required',
                     },
                   ]}
                 >
-                  <Input placeholder="Waiter" size="large" />
+                  <Select
+                    placeholder="Select Waiter"
+                    onChange={selectWaiter}
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="kabir">Kabir</Option>
+                    <Option value="junayed">Junayed</Option>
+                    <Option value="devid">Devid</Option>
+                    <Option value="smith">Smith</Option>
+                  </Select>
                 </Form.Item>
               </Col>
-              <Col lg={4}>
+
+              <Col lg={2}>
+                <Button
+                  size="large"
+                  type="primary"
+                  className="add-customer"
+                  // onClick={handlePlaceOrder}
+                >
+                  Person
+                </Button>
+              </Col>
+
+              <Col lg={3}>
                 <Form.Item
                   label="Table"
                   name="table"
                   rules={[
                     {
                       required: true,
-                      message: 'Table is required',
+                      message: 'Table no is required',
                     },
                   ]}
                 >
-                  <Input placeholder="Table" size="large" />
+                  <Select
+                    placeholder="Select Table"
+                    onChange={selectTableNum}
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="1">1</Option>
+                    <Option value="2">2</Option>
+                    <Option value="3">3</Option>
+                    <Option value="4">4</Option>
+                  </Select>
                 </Form.Item>
               </Col>
-              <Col lg={4}>
+
+              <Col lg={3}>
                 <Form.Item
                   label="Cooking Time"
                   name="cookingTime"
@@ -187,7 +231,10 @@ const Cart = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Cooking Time" size="large" />
+                  <TimePicker
+                    defaultValue={moment('00:00:00', 'HH:mm:ss')}
+                    size="large"
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -195,40 +242,59 @@ const Cart = () => {
         </div>
 
         {/* <CartItems /> */}
-        <Table striped bordered>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Variant Name</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="note-icon">
-                <FileAddOutlined onClick={handleShow} />
-                Prawn on Toast or Prawn Ball
-              </td>
-              <td>Pizza</td>
-              <td>$99.99</td>
-              <td>
-                <Input
-                  className="quantity"
-                  type="number"
-                  value={itemQuantity}
-                  onChange={handleItemQuantity}
-                />
-              </td>
-              <td>2</td>
-              <td className="delete-icon">
-                <DeleteOutlined onClick={handleDeleteItem} />
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+        <div className="select-product-item">
+          <div className="product-item-table">
+            {selectedItem?.length === 0 ? (
+              <div className="empty-cart">
+                <div className="empty-cart-item">
+                  <ShoppingCartOutlined />
+                </div>
+              </div>
+            ) : (
+              <div className="product-list-table">
+                <Table className="custom-table" striped>
+                  <thead align="center">
+                    <tr>
+                      <th>Item</th>
+                      <th>Variant Name</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Total</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="single-product-item">
+                    {selectedItem?.map((item) => (
+                      <tr align="center">
+                        <td align="left" className="note-icon">
+                          <FileAddOutlined onClick={handleShow} />
+                          {item?.name}
+                        </td>
+                        <td>{item?.variant}</td>
+                        <td>${item?.price}</td>
+                        <td>
+                          <Input
+                            className="quantity"
+                            type="number"
+                            value={itemQuantity}
+                            onChange={handleItemQuantity}
+                          />
+                        </td>
+                        <td>2</td>
+                        <td className="delete-icon">
+                          <FontAwesomeIcon
+                            icon={faTrashAlt}
+                            onClick={() => handleDeleteItem(item?.id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* CartBottom */}
 
@@ -246,7 +312,15 @@ const Cart = () => {
           <div className="btn-wrapper">
             <Button
               type="primary"
-              danger
+              onClick={handleCalculation}
+              className="calculator group-btn"
+              size="large"
+            >
+              <FontAwesomeIcon icon={faCalculator} />
+            </Button>
+
+            <Button
+              type="primary"
               onClick={handleCancelCartItems}
               className="delete-selected-item group-btn"
               size="large"
@@ -260,7 +334,7 @@ const Cart = () => {
               onClick={handleQuickOrder}
               size="large"
             >
-              Quick Ordedr
+              Quick Order
             </Button>
 
             <Button
