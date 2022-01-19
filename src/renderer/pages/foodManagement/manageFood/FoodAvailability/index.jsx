@@ -13,7 +13,7 @@ const FoodAvailability = () => {
           <Sidebar />
         </Col>
         <Col md={10}>
-          <Heading title="Item Food" />
+          <Heading title="Food Availability" />
           <FoodAvailabilityList />
         </Col>
       </div>

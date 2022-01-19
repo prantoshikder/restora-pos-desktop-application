@@ -8,7 +8,7 @@
 }
 
 .pos_system{
-  min-height: calc(100vh - 112px);
+  min-height: calc(100vh - 30px);
 }
 
 .grand-total {
@@ -26,9 +26,12 @@ a {
 .item-center {
   align-items: center;
 }
-.content-center{
+.content-end {
+  justify-content: end;
+}
+.content-center {
   justify-content: center;
 }
-.content-between{
+.content-between {
   justify-content: space-between;
 }

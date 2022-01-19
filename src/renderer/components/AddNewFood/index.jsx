@@ -1,8 +1,4 @@
-import {
-  InfoCircleOutlined,
-  PictureOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -13,17 +9,15 @@ import {
   Select,
   Space,
   TimePicker,
-  Typography,
   Upload,
 } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { Col, Modal, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import './AddNewFood.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title } = Typography;
 
 const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
 
@@ -33,11 +27,6 @@ const AddNewFood = () => {
   const [value, setValue] = useState('active');
   const [menuType, setMenuType] = useState('');
   const [packageOffer, setPackageOffer] = useState('');
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const handleSelectCategory = () => {};
   const handleKitchenSelect = () => {};
@@ -127,13 +116,6 @@ const AddNewFood = () => {
 
   return (
     <div className="add_new_food">
-      <div className="d-flex justify-content-between align-item-center">
-        <Title level={3}>Item Food</Title>
-        <Button type="primary" className="bulk_upload_btn" onClick={handleShow}>
-          <PlusCircleOutlined />
-          Bulk Upload
-        </Button>
-      </div>
       <Form
         form={form}
         onFinish={handleSubmit}
@@ -344,17 +326,6 @@ const AddNewFood = () => {
           </Col>
         </Row>
       </Form>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Bulk Upload</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          Category, kitchen, Food Name, Description, status, VariantName, Price
-          Demo, Italian, Dosa, Delicious Food, Active, Small, 60
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

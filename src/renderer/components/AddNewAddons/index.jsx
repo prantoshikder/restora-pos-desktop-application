@@ -53,7 +53,6 @@ const AddNewAddons = () => {
 
   return (
     <div className="add_new_addons">
-      <Title level={3}>Add Add-ons</Title>
       <Form
         form={form}
         layout="vertical"

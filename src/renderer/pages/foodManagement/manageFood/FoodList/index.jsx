@@ -14,7 +14,7 @@ const FoodList = () => {
         </Col>
 
         <Col lg={10}>
-          <Heading title="Item Food" />
+          <Heading title="Food List" />
           <AllFoodList />
         </Col>
       </div>
