@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SystemMenu from './components/partials/SystemMenu';
 import Currency from './pages/Currency';
@@ -18,11 +19,13 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
+  const [direction, setDirection] = useState('ltr');
+
   return (
     <Router>
-      <SystemMenu />
+      <SystemMenu direction={direction} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home direction={direction} />} />
         <Route path="/add_category" element={<AddCategory />} />
         <Route path="/category_list" element={<CategoryList />} />
         <Route path="/add_food" element={<AddFood />} />

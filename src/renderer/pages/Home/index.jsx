@@ -1,24 +1,24 @@
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Row } from 'antd';
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from './../../components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
-const Home = () => {
+const Home = ({ direction }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [direction, setDirection] = useState('rtl');
 
   return (
     <div className="main-wrapper">
-      <ConfigProvider direction={direction}>
-        <Header />
-        <Container fluid className="pos-wrapper">
+      <Header direction={direction} />
+
+      <Container fluid className="pos-wrapper">
+        <ConfigProvider direction={direction}>
           <Row className="pos-system">
             <Col lg={2}>
-              <PosSidebar />
+              <PosSidebar direction={direction} />
             </Col>
 
             <Col lg={10}>
@@ -35,25 +35,19 @@ const Home = () => {
                   </Row>
                   <Row className="foodList-wrapper">
                     <FoodLists
-                      setSelectedItem={setSelectedItem}
-                      selectedItem={selectedItem}
+                      setCartItems={setCartItems}
+                      cartItems={cartItems}
                     />
-                  </Col>
-                </Row>
-                <Row className="foodList-wrapper">
-                  <FoodLists
-                    setCartItems={setCartItems}
-                    cartItems={cartItems}
-                  />
-                </Row>
-              </Col>
+                  </Row>
+                </Col>
 
-              <Col lg={5}>
-                <Cart setCartItems={setCartItems} cartItems={cartItems} />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+                <Col lg={5}>
+                  <Cart setCartItems={setCartItems} cartItems={cartItems} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </ConfigProvider>
       </Container>
     </div>
   );
