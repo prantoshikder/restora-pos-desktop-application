@@ -1,16 +1,14 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
-import Header from '../../../components/partials/Header';
 import Sidebar from '../../../components/partials/Sidebar';
 import AllSalesReport from './../../../components/AllSalesReport';
 import './SalesReport.style.scss';
 
 const SalesReport = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row className="report">
+    <Container fluid className="main-wrapper">
+      <div className="flex pos_system">
         <Col lg={2}>
           <Sidebar />
         </Col>
@@ -18,7 +16,7 @@ const SalesReport = () => {
           <Heading title="Reports" />
           <AllSalesReport />
         </Col>
-      </Row>
+      </div>
     </Container>
   );
 };

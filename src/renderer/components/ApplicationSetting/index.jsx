@@ -306,9 +306,9 @@ const ApplicationSetting = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Vat Setting" name="vatSetting">
+            <Form.Item label="Vat Setting(%)" name="vatSetting">
               <Input
-                placeholder="Vat Setting"
+                placeholder="0:00"
                 size="large"
                 value={setting.vatSetting}
                 onChange={(e) =>
@@ -317,9 +317,9 @@ const ApplicationSetting = () => {
               />
             </Form.Item>
 
-            <Form.Item label="tinOrVatNumber" name="tinOrVatNumber">
+            <Form.Item label="Tin Or Vat Number" name="tinOrVatNumber">
               <Input
-                placeholder="tinOrVatNumber"
+                placeholder="000000"
                 size="large"
                 value={setting.tinOrVatNumber}
                 onChange={(e) =>

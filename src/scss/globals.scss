@@ -7,6 +7,10 @@
   padding-top: 15px;
 }
 
+.pos_system{
+  min-height: calc(100vh - 112px);
+}
+
 .grand-total {
   color: $color-white;
   background-color: $color-blue;
@@ -14,4 +18,17 @@
 
 a {
   text-decoration: none;
+}
+
+.flex {
+  display: flex;
+}
+.item-center {
+  align-items: center;
+}
+.content-center{
+  justify-content: center;
+}
+.content-between{
+  justify-content: space-between;
 }
