@@ -12,7 +12,7 @@ const ItemSalesReport = () => {
           <Sidebar />
         </Col>
         <Col md={10}>
-          <Heading title="Reports" />
+          <Heading title="Items Sales Report" />
           <AllItemSalesReport />
         </Col>
       </div>

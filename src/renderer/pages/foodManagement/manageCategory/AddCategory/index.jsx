@@ -14,7 +14,7 @@ const AddCategory = () => {
         </Col>
 
         <Col lg={10}>
-          <Heading title="Item Category" />
+          <Heading title="Add Category" />
           <AddNewCategory />
         </Col>
       </div>

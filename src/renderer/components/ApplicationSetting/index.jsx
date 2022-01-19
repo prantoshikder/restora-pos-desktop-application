@@ -116,7 +116,6 @@ const ApplicationSetting = () => {
 
   return (
     <div className="application_setting">
-      <Title level={3}>Application Settings</Title>
       <Form
         form={form}
         layout="vertical"

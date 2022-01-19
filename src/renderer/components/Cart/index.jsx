@@ -72,12 +72,52 @@ const Cart = ({ cartItems, setCartItems }) => {
 
   const handleSubmit = () => {
     console.log('cartData', cartData);
-    message.success({
-      content: 'Order successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: { marginTop: '5vh', float: 'right' },
-    });
+    if (!cartData.customerName) {
+      message.error({
+        content: 'Customer Name is required',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+      return;
+    } else if (!cartData.customerType) {
+      message.error({
+        content: 'Customer Type is required is required',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+      return;
+    } else if (!cartData.waiter) {
+      message.error({
+        content: 'Waiter name is required is required',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+      return;
+    } else if (!cartData.table) {
+      message.error({
+        content: 'Table no is required is required',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+      return;
+    } else if (!cartData.cookingTime) {
+      message.error({
+        content: 'Cooking Time is required is required',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+      return;
+    }
+
+    // message.success({
+    //   content: 'Order Done',
+    //   className: 'custom-class',
+    //   duration: 1,
+    //   style: { marginTop: '5vh', float: 'right' },
+    // });
+
+    form.resetFields();
+    setCartItems('');
   };
 
   const handleResetAll = () => {
@@ -94,19 +134,7 @@ const Cart = ({ cartItems, setCartItems }) => {
 
   const handleCalculation = () => {};
 
-  const handleQuickOrder = () => {
-    console.log('cartData', cartData);
-
-    message.success({
-      content: 'Order Done',
-      className: 'custom-class',
-      duration: 1,
-      style: { marginTop: '5vh', float: 'right' },
-    });
-
-    form.resetFields();
-    setCartItems('');
-  };
+  const handleQuickOrder = () => {};
 
   const handlePlaceOrder = () => {};
 
@@ -147,18 +175,7 @@ const Cart = ({ cartItems, setCartItems }) => {
           <div className="banner-card">
             <Row>
               <Col lg={5}>
-                <Form.Item
-                  label="Customer Name"
-                  // className="custom"
-                  name="customerName"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Customer Name is required',
-                    },
-                  ]}
-                  required
-                >
+                <Form.Item label="Customer Name *" name="customerName">
                   <Select
                     placeholder="Select a Customer Name"
                     value={cartData.customerName}
@@ -178,17 +195,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Button>
               </Col>
               <Col lg={6}>
-                <Form.Item
-                  label="Customer Type"
-                  name="customerType"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Customer Type is required',
-                    },
-                  ]}
-                  required
-                >
+                <Form.Item label="Customer Type *" name="customerType">
                   <Select
                     placeholder="Select a Customer Name"
                     value={cartData.customerType}
@@ -206,17 +213,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             </Row>
             <Row className="justify-content-md-center mt-2">
               <Col lg={4}>
-                <Form.Item
-                  label="Waiter"
-                  name="waiter"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Waiter name is required',
-                    },
-                  ]}
-                  required
-                >
+                <Form.Item label="Waiter *" name="waiter">
                   <Select
                     placeholder="Select Waiter"
                     value={cartData.waiter}
@@ -244,17 +241,7 @@ const Cart = ({ cartItems, setCartItems }) => {
               </Col>
 
               <Col lg={3}>
-                <Form.Item
-                  label="Table"
-                  name="table"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Table no is required',
-                    },
-                  ]}
-                  required
-                >
+                <Form.Item label="Table *" name="table">
                   <Select
                     placeholder="Select Table"
                     value={cartData.table}
@@ -271,17 +258,7 @@ const Cart = ({ cartItems, setCartItems }) => {
               </Col>
 
               <Col lg={3}>
-                <Form.Item
-                  label="Cooking Time"
-                  name="cookingTime"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Cooking Time is required',
-                    },
-                  ]}
-                  required
-                >
+                <Form.Item label="Cooking Time *" name="cookingTime">
                   <TimePicker
                     defaultValue={moment('00:00:00', 'HH:mm:ss')}
                     size="large"

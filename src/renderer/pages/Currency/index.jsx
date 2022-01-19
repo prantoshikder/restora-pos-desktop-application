@@ -37,7 +37,7 @@ const Currency = () => {
             <Sidebar />
           </Col>
           <Col md={10}>
-            <div className="flex item-center">
+            <div className="flex item-center content-between">
               <Heading title="Currency" />
               <Button
                 type="primary"

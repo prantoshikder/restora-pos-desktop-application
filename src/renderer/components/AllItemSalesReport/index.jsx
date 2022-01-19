@@ -107,17 +107,13 @@ const AllItemSalesReport = () => {
 
   return (
     <>
-      <div style={{ borderBottom: '1px solid #e5e5e5', marginRight: '1.5rem' }}>
-        <Title level={3}>Items Sales Report</Title>
-      </div>
-
       <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
           borderRadius: '0.2rem',
           border: '1px solid #e5e5e5',
-          marginRight: '1.5rem',
+          margin: '0rem 1.5rem',
           display: 'flex',
         }}
       >
@@ -174,7 +170,7 @@ const AllItemSalesReport = () => {
           marginTop: '1rem',
           borderRadius: '0.2rem',
           border: '1px solid #e5e5e5',
-          marginRight: '1.5rem',
+          margin: '0rem 1.5rem',
           display: 'block',
         }}
       >

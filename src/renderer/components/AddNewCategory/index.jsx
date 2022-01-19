@@ -109,7 +109,6 @@ const AddNewCategory = () => {
 
   return (
     <div className="add_new_category">
-      <Title level={3}>Add Category</Title>
       <Form
         form={form}
         layout="vertical"

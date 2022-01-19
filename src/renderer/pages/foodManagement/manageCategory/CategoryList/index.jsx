@@ -14,7 +14,7 @@ const CategoryList = () => {
         </Col>
 
         <Col lg={10}>
-          <Heading title="Item Category" />
+          <Heading title="Category List" />
           <AllCategoryList />
         </Col>
       </div>

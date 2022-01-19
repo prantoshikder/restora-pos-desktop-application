@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Container } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
+import LanguageList from 'renderer/components/LanguageList';
 import Sidebar from './../../components/partials/Sidebar';
 
 const Language = () => {
@@ -13,6 +14,7 @@ const Language = () => {
           </Col>
           <Col lg={10}>
             <Heading title="Language" />
+            <LanguageList />
           </Col>
         </div>
       </Container>
