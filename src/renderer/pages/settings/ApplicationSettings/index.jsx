@@ -1,15 +1,13 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
 import ApplicationSetting from './../../../components/ApplicationSetting';
-import Header from './../../../components/partials/Header';
 import Sidebar from './../../../components/partials/Sidebar';
 
 const ApplicationSettings = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row>
+    <Container fluid className="main-wrapper">
+      <div className="flex pos_system">
         <Col lg={2}>
           <Sidebar />
         </Col>
@@ -17,7 +15,7 @@ const ApplicationSettings = () => {
           <Heading title="Setting" />
           <ApplicationSetting />
         </Col>
-      </Row>
+      </div>
     </Container>
   );
 };

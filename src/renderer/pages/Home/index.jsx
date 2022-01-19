@@ -7,7 +7,7 @@ import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
 const Home = () => {
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   return (
     <div className="main-wrapper">
@@ -32,17 +32,14 @@ const Home = () => {
                 </Row>
                 <Row className="foodList-wrapper">
                   <FoodLists
-                    setSelectedItem={setSelectedItem}
-                    selectedItem={selectedItem}
+                    setCartItems={setCartItems}
+                    cartItems={cartItems}
                   />
                 </Row>
               </Col>
 
               <Col lg={5}>
-                <Cart
-                  setSelectedItem={setSelectedItem}
-                  selectedItem={selectedItem}
-                />
+                <Cart setCartItems={setCartItems} cartItems={cartItems} />
               </Col>
             </Row>
           </Col>

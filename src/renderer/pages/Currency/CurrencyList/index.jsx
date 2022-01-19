@@ -1,7 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Image, message, Space, Table } from 'antd';
+import { Button, message, Space, Table } from 'antd';
 import React, { useState } from 'react';
-import './AllFoodList.style.scss';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -19,47 +18,22 @@ const rowSelection = {
   },
 };
 
-const AllFoodList = () => {
+const CurrencyList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const columns = [
     {
-      title: 'Image',
-      dataIndex: 'categoryImage',
-      key: 'categoryImage',
-      render: (text, record) => (
-        <Image
-          src={record.categoryImage}
-          width="50px"
-          height="50px"
-          className="category-image"
-        />
-      ),
-    },
-    {
       title: 'Category Name',
       dataIndex: 'categoryName',
       key: 'categoryName',
-      width: '25%',
+      width: '30%',
     },
     {
-      title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      title: 'Parent Menu',
+      dataIndex: 'parentMenu',
+      key: 'parentMenu',
       width: '20%',
-    },
-    {
-      title: 'Components',
-      dataIndex: 'components',
-      key: 'components',
-      width: '15%',
-    },
-    {
-      title: 'Vat',
-      dataIndex: 'vat',
-      key: 'vat',
-      width: '10%',
     },
     {
       title: 'Status',
@@ -90,52 +64,32 @@ const AllFoodList = () => {
   const data = [
     {
       key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Soup N Salads',
-      foodName: 'Soup (Thai)',
-      components: '',
-      vat: '0.00%',
+      parentMenu: 'Soup (Thai)',
       status: 'Active',
     },
     {
       key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Salad (Thai)',
-      foodName: 'Chicken item',
-      components: '',
-      vat: '0.00%',
+      parentMenu: 'Chicken item',
       status: 'Active',
     },
     {
       key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Prawn & Fish Dishes',
-      foodName: 'indian',
-      components: 'chili, nuts',
-      vat: '0.00%',
+      parentMenu: 'indian',
       status: 'Active',
     },
     {
       key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Oven Roasted Eggplant',
-      foodName: 'thai',
-      components: '',
-      vat: '0.00%',
+      parentMenu: 'thai',
       status: 'Active',
     },
     {
       key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Maxican spicy',
-      foodName: 'Chicken item',
-      components: 'chili, nuts',
-      vat: '0.00%',
+      parentMenu: 'Chicken item',
       status: 'Active',
     },
   ];
@@ -170,7 +124,7 @@ const AllFoodList = () => {
     <div
       style={{
         backgroundColor: '#f7f7f7',
-        margin: '0rem 1.5rem',
+        marginRight: '1.5rem',
         padding: '2rem',
         boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
       }}
@@ -185,4 +139,4 @@ const AllFoodList = () => {
   );
 };
 
-export default AllFoodList;
+export default CurrencyList;

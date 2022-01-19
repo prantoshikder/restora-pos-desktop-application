@@ -1,6 +1,13 @@
 .pos-system {
   min-height: calc(100vh - 142px);
 }
+
+.foodList-wrapper{
+  height: calc(100vh - 190px);
+  overflow-y: auto;
+  // padding-top: 15px;
+}
+
 .search-food-wrapper {
-  margin-bottom: 2rem;
+  margin-bottom: 0.8rem;
 }
