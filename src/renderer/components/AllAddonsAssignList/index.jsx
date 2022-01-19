@@ -151,9 +151,7 @@ const AllAddonsAssignList = () => {
     <>
       <div
         style={{
-          backgroundColor: '#f7f7f7',
           margin: '0rem 1.5rem',
-          padding: '2rem',
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >

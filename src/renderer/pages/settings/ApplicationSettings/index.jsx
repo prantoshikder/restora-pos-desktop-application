@@ -12,7 +12,7 @@ const ApplicationSettings = () => {
           <Sidebar />
         </Col>
         <Col md={10}>
-          <Heading title="Setting" />
+          <Heading title="Application Settings" />
           <ApplicationSetting />
         </Col>
       </div>

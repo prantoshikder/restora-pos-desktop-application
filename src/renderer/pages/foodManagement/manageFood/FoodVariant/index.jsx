@@ -13,7 +13,7 @@ const FoodVariant = () => {
           <Sidebar />
         </Col>
         <Col md={10}>
-          <Heading title="Item Food" />
+          <Heading title="Food Variant" />
           <FoodVariantList />
         </Col>
       </div>

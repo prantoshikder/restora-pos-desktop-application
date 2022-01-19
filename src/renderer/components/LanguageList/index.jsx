@@ -1,4 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, message, Space, Table } from 'antd';
 import React, { useState } from 'react';
 
@@ -18,39 +20,20 @@ const rowSelection = {
   },
 };
 
-const CurrencyList = () => {
+const LanguageList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState(false);
 
   const columns = [
     {
-      title: 'Currency Name',
-      dataIndex: 'currencyName',
-      key: 'currencyName',
-      width: '20%',
+      title: 'Language',
+      dataIndex: 'language',
+      key: 'language',
+      width: '60%',
     },
     {
-      title: 'Currency Icon',
-      dataIndex: 'currencyIcon',
-      key: 'currencyIcon',
-      width: '20%',
-    },
-    {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
-      width: '15%',
-    },
-    {
-      title: 'Conversion Rate',
-      dataIndex: 'conversionRate',
-      key: 'conversionRate',
-      width: '20%',
-    },
-    {
-      title: 'Action',
+      title: <FontAwesomeIcon icon={faCogs} />,
       dataIndex: 'action',
-      width: '20%',
+      width: '30%',
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
@@ -70,36 +53,23 @@ const CurrencyList = () => {
   const data = [
     {
       key: 1,
-      currencyName: 'USD',
-      currencyIcon: '	©',
-      position: 'Left',
-      conversionRate: '5.00',
+      language: 'USD',
     },
     {
       key: 2,
-      currencyName: 'BDT',
-      currencyIcon: '$',
-      position: 'Right',
-      conversionRate: '0.50',
+      language: 'BDT',
     },
     {
       key: 3,
-      currencyName: 'INR',
-      currencyIcon: 'R',
-      position: 'Left',
-      conversionRate: '35.00',
+      language: 'INR',
     },
     {
       key: 4,
-      currencyName: 'BDT',
-      currencyIcon: '৳',
-      position: 'Right',
-      conversionRate: '1.00',
+      language: 'BDT',
     },
   ];
 
   function handleEditCurrency(record) {
-    setVisible(true);
     console.log('Edit', record);
     // message.success({
     //   content: 'Foods category added successfully ',
@@ -141,4 +111,4 @@ const CurrencyList = () => {
   );
 };
 
-export default CurrencyList;
+export default LanguageList;
