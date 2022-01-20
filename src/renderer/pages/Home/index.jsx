@@ -1,4 +1,4 @@
-import { Col, Input, Row } from 'antd';
+import { Col, ConfigProvider, Input, Row } from 'antd';
 import React, { useState } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
@@ -10,28 +10,25 @@ const Home = () => {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <div className="main_wrapper">
-      {/* <Header /> */}
-      <div className="pos_wrapper">
-        <div className="pos_system">
-          <Row gutter={25}>
-            <Col lg={4}>
-              <PosSidebar />
+    <div className="main-wrapper">
+      <Header direction={direction} />
+
+      <div className="pos-wrapper">
+        <ConfigProvider direction={direction}>
+          <Row className="pos-system">
+            <Col span={4}>
+              <PosSidebar direction={direction} />
             </Col>
 
-            <Col lg={20}>
-              <Row gutter={20}>
-                <Col lg={14}>
-                  <Row className="search-food-wrapper justify-center">
-                    <Col lg={24}>
-                      <Input
-                        type="text"
-                        placeholder="Search"
-                        className="form-control"
-                      />
+            <Col span={20}>
+              <Row>
+                <Col span={15}>
+                  <Row className="search-food-wrapper justify-content-md-center">
+                    <Col span={18} push={3}>
+                      <Input type="text" placeholder="Search" size="large" />
                     </Col>
                   </Row>
-                  <Row gutter={25} className="foodList-wrapper">
+                  <Row gutter={30} className="foodList-wrapper">
                     <FoodLists
                       setCartItems={setCartItems}
                       cartItems={cartItems}
@@ -39,13 +36,13 @@ const Home = () => {
                   </Row>
                 </Col>
 
-                <Col lg={10}>
+                <Col span={9}>
                   <Cart setCartItems={setCartItems} cartItems={cartItems} />
                 </Col>
               </Row>
             </Col>
           </Row>
-        </div>
+        </ConfigProvider>
       </div>
     </div>
   );
