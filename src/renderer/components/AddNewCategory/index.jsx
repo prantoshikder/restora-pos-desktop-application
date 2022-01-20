@@ -2,23 +2,22 @@ import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
+  Col,
   DatePicker,
   Form,
   Input,
   message,
+  Row,
   Select,
   Space,
-  Typography,
   Upload,
 } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title } = Typography;
 
 const AddNewCategory = () => {
   const [form] = Form.useForm();
@@ -116,8 +115,8 @@ const AddNewCategory = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row>
-          <Col lg={7}>
+        <Row gutter={40}>
+          <Col lg={14}>
             <Form.Item
               label="Category name"
               name="categoryName"
@@ -184,8 +183,8 @@ const AddNewCategory = () => {
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Row>
-                <Col lg={8}>
+              <Row gutter={10}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -202,14 +201,14 @@ const AddNewCategory = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
             </Form.Item>
           </Col>
 
-          <Col lg={5}>
+          <Col lg={10}>
             <Form.Item
               label="Category Icon"
               tooltip={{
@@ -218,8 +217,8 @@ const AddNewCategory = () => {
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Row>
-                <Col lg={8}>
+              <Row gutter={10}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -236,7 +235,7 @@ const AddNewCategory = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Icon</h4>
                 </Col>
               </Row>

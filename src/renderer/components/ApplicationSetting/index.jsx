@@ -1,16 +1,17 @@
 import { PictureOutlined } from '@ant-design/icons';
 import {
   Button,
+  Col,
   DatePicker,
   Form,
   Input,
   message,
+  Row,
   Select,
   Typography,
   Upload,
 } from 'antd';
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -123,8 +124,8 @@ const ApplicationSetting = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row>
-          <Col lg={6}>
+        <Row gutter={40}>
+          <Col lg={13}>
             <Form.Item label="Application Title" name="applicationTitle">
               <Input
                 placeholder="Application Title"
@@ -181,8 +182,8 @@ const ApplicationSetting = () => {
             </Form.Item>
 
             <Form.Item label="Favicon">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={10}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -199,15 +200,15 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
             </Form.Item>
 
             <Form.Item label="Logo">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={10}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -224,7 +225,7 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
@@ -288,7 +289,7 @@ const ApplicationSetting = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={6}>
+          <Col lg={11}>
             <Form.Item
               label="Select Service Charge Type"
               name="selectServiceChargeType"

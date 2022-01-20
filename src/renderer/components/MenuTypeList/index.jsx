@@ -7,20 +7,19 @@ import {
 } from '@ant-design/icons';
 import {
   Button,
+  Col,
   Form,
   Input,
   message,
   Modal,
+  Row,
   Select,
   Space,
   Table,
-  Typography,
   Upload,
 } from 'antd';
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 
-const { Title } = Typography;
 const { Option } = Select;
 const { Dragger } = Upload;
 
@@ -192,7 +191,7 @@ const MenuTypeList = () => {
         width={650}
       >
         <Row>
-          <Col lg={{ span: 10, offset: 1 }}>
+          <Col lg={24}>
             <Form
               form={form}
               onFinish={handleSubmit}

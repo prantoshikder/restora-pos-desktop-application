@@ -1,7 +1,6 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
 import Sidebar from './../../components/partials/Sidebar';
 import './Currency.styles.scss';
@@ -31,27 +30,29 @@ const Currency = () => {
 
   return (
     <>
-      <Container fluid className="main-wrapper">
-        <div className="flex pos_system">
-          <Col lg={2}>
-            <Sidebar />
-          </Col>
-          <Col md={10}>
-            <div className="flex item-center content-between">
-              <Heading title="Currency" />
-              <Button
-                type="primary"
-                className="bulk_upload_btn"
-                onClick={() => setVisible(true)}
-              >
-                <PlusCircleOutlined />
-                Add Currency
-              </Button>
-            </div>
-            <CurrencyList />
-          </Col>
+      <div className="main_wrapper">
+        <div className="pos_system">
+          <Row>
+            <Col lg={3}>
+              <Sidebar />
+            </Col>
+            <Col md={21}>
+              <div className="flex item_center content_between">
+                <Heading title="Currency" />
+                <Button
+                  type="primary"
+                  className="bulk_upload_btn"
+                  onClick={() => setVisible(true)}
+                >
+                  <PlusCircleOutlined />
+                  Add Currency
+                </Button>
+              </div>
+              <CurrencyList />
+            </Col>
+          </Row>
         </div>
-      </Container>
+      </div>
 
       <Modal
         title="Add Currency"
@@ -62,7 +63,7 @@ const Currency = () => {
         width={650}
       >
         <Row>
-          <Col lg={{ span: 10, offset: 1 }}>
+          <Col lg={24}>
             <Form
               form={form}
               onFinish={handleSubmit}

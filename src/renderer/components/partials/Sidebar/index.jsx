@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import './Sidebar.style.scss';
 
 const { SubMenu } = Menu;
-// submenu keys of first level
 const rootSubmenuKeys = ['food_management', 'setting', 'report'];
 
 const Sidebar = ({ home }) => {
