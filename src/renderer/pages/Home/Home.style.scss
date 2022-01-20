@@ -2,12 +2,12 @@
   min-height: calc(100vh - 142px);
 }
 
-.foodList-wrapper{
+.foodItems_wrapper{
   height: calc(100vh - 190px);
   overflow-y: auto;
-  // padding-top: 15px;
+  padding-left: 1rem;
 }
 
-.search-food-wrapper {
+.search_food_wrapper {
   margin-bottom: 0.8rem;
 }

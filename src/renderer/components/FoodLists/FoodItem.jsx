@@ -10,18 +10,15 @@ const FoodItem = ({ item, setCartItems, cartItems }) => {
 
   return (
     <Col lg={4}>
-      <div className="food-card" onClick={() => handleFoodItem(item)}>
-        <div className="food-image">
+      <div className="food_card" onClick={() => handleFoodItem(item)}>
+        <div className="food_image">
           {item?.image ? (
             <img variant="top" src={item.image} />
           ) : (
             <img variant="top" src={foodPlaceholder} />
           )}
         </div>
-        {/* <Card.Body>
-          <Card.Title>{item.name}</Card.Title>
-        </Card.Body> */}
-        <div>
+        <div className="card_body">
           <p>{item.name}</p>
         </div>
       </div>
