@@ -1,4 +1,4 @@
-import { Card, Col } from 'antd';
+import { Col } from 'antd';
 import React from 'react';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import './food.item.styles.scss';
@@ -21,9 +21,9 @@ const FoodItem = ({ item, setCartItems, cartItems }) => {
         {/* <Card.Body>
           <Card.Title>{item.name}</Card.Title>
         </Card.Body> */}
-        <Card>
+        <div>
           <p>{item.name}</p>
-        </Card>
+        </div>
       </div>
     </Col>
   );

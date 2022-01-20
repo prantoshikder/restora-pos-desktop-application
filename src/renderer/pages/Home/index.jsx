@@ -1,39 +1,37 @@
-import { ConfigProvider, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import React, { useState } from 'react';
-import { Col, Container } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
-import Header from './../../components/partials/Header';
+// import Header from './../../components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
-const Home = ({ direction }) => {
+const Home = () => {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <div className="main-wrapper">
-      <Header direction={direction} />
-
-      <Container fluid className="pos-wrapper">
-        <ConfigProvider direction={direction}>
-          <Row className="pos-system">
-            <Col lg={2}>
-              <PosSidebar direction={direction} />
+    <div className="main_wrapper">
+      {/* <Header /> */}
+      <div className="pos_wrapper">
+        <div className="pos_system">
+          <Row gutter={25}>
+            <Col lg={4}>
+              <PosSidebar />
             </Col>
 
-            <Col lg={10}>
-              <Row>
-                <Col lg={7}>
-                  <Row className="search-food-wrapper justify-content-md-center">
-                    <Col lg={8}>
-                      <input
+            <Col lg={20}>
+              <Row gutter={20}>
+                <Col lg={14}>
+                  <Row className="search-food-wrapper justify-center">
+                    <Col lg={24}>
+                      <Input
                         type="text"
                         placeholder="Search"
                         className="form-control"
                       />
                     </Col>
                   </Row>
-                  <Row className="foodList-wrapper">
+                  <Row gutter={25} className="foodList-wrapper">
                     <FoodLists
                       setCartItems={setCartItems}
                       cartItems={cartItems}
@@ -41,14 +39,14 @@ const Home = ({ direction }) => {
                   </Row>
                 </Col>
 
-                <Col lg={5}>
+                <Col lg={10}>
                   <Cart setCartItems={setCartItems} cartItems={cartItems} />
                 </Col>
               </Row>
             </Col>
           </Row>
-        </ConfigProvider>
-      </Container>
+        </div>
+      </div>
     </div>
   );
 };
