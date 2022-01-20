@@ -18,28 +18,34 @@ const rowSelection = {
   },
 };
 
-const AllAddonsList = () => {
+const CurrencyList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const columns = [
     {
-      title: 'Add-ons Name',
-      dataIndex: 'addonsName',
-      key: 'addonsName',
-      width: '40%',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      width: '25%',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
+      title: 'Currency Name',
+      dataIndex: 'currencyName',
+      key: 'currencyName',
       width: '20%',
-      key: 'status',
+    },
+    {
+      title: 'Currency Icon',
+      dataIndex: 'currencyIcon',
+      key: 'currencyIcon',
+      width: '20%',
+    },
+    {
+      title: 'Position',
+      dataIndex: 'position',
+      key: 'position',
+      width: '15%',
+    },
+    {
+      title: 'Conversion Rate',
+      dataIndex: 'conversionRate',
+      key: 'conversionRate',
+      width: '20%',
     },
     {
       title: 'Action',
@@ -48,11 +54,11 @@ const AllAddonsList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditCurrency(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteCurrency(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -64,37 +70,35 @@ const AllAddonsList = () => {
   const data = [
     {
       key: 1,
-      addonsName: 'Coffee',
-      price: '$ 70.00',
-      status: 'Active',
+      currencyName: 'USD',
+      currencyIcon: '	©',
+      position: 'Left',
+      conversionRate: '5.00',
     },
     {
       key: 2,
-      addonsName: 'chocolate milk shake',
-      price: '$ 100.00',
-      status: 'Active',
+      currencyName: 'BDT',
+      currencyIcon: '$',
+      position: 'Right',
+      conversionRate: '0.50',
     },
     {
       key: 3,
-      addonsName: 'Drinks',
-      price: '$ 200.00',
-      status: 'Active',
+      currencyName: 'INR',
+      currencyIcon: 'R',
+      position: 'Left',
+      conversionRate: '35.00',
     },
     {
       key: 4,
-      addonsName: 'Souse',
-      price: '$ 150.00',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      addonsName: 'Butter',
-      price: '$ 90.00',
-      status: 'Active',
+      currencyName: 'BDT',
+      currencyIcon: '৳',
+      position: 'Right',
+      conversionRate: '1.00',
     },
   ];
 
-  function handleEditCategory(record) {
+  function handleEditCurrency(record) {
     setVisible(true);
     console.log('Edit', record);
     // message.success({
@@ -107,7 +111,7 @@ const AllAddonsList = () => {
     //   },
     // });
   }
-  function handleDeleteCategory(record) {
+  function handleDeleteCurrency(record) {
     console.log('Delete', record);
     message.success({
       content: 'Foods category added successfully ',
@@ -137,4 +141,4 @@ const AllAddonsList = () => {
   );
 };
 
-export default AllAddonsList;
+export default CurrencyList;

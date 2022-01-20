@@ -5,17 +5,18 @@ import {
 } from '@ant-design/icons';
 import {
   Button,
+  Col,
   Form,
   Input,
   message,
   Modal,
+  Row,
   Select,
   Space,
   Table,
   Typography,
 } from 'antd';
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -151,9 +152,7 @@ const FoodVariantList = () => {
     <>
       <div
         style={{
-          backgroundColor: '#f7f7f7',
-          marginRight: '1.5rem',
-          padding: '2rem',
+          margin: '0rem 1.5rem',
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >
@@ -185,7 +184,7 @@ const FoodVariantList = () => {
         width={650}
       >
         <Row>
-          <Col lg={{ span: 10, offset: 1 }}>
+          <Col lg={24}>
             <Form
               form={form}
               onFinish={handleSubmit}

@@ -1,21 +1,40 @@
 .food-card {
-  margin-bottom: 1.5rem;
+  margin: 14px 0;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
   cursor: pointer;
-  // position: relative;
   .food-image {
     position: relative;
     top: -12px;
     left: -12px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 18%) 0px 2px 4px;
+    border: 1px solid transparent;
+
     img {
-      border-radius: 0.25rem;
+      width: 100%;
+      height: 100px;
+      margin: auto;
+      object-fit: cover;
+      border-radius: 8px;
     }
   }
   .card-body {
     padding: 0 0.8rem 0.5rem;
 
     .h5 {
-      font-size: 1rem;
+      font-size: 15px;
       margin: 0;
+      font-weight: 600;
+      line-height: 14px;
+      -webkit-line-clamp: 2;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      overflow: hidden;
+      height: 28px;
     }
   }
 }

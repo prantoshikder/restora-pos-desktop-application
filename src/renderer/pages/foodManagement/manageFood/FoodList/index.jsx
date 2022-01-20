@@ -1,26 +1,26 @@
+import { Col, Row } from 'antd';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
 import AllFoodList from './../../../../components/AllFoodList';
-import Header from './../../../../components/partials/Header';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './FoodList.style.scss';
 
 const FoodList = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row className="foodManage_system">
-        <Col lg={2}>
-          <Sidebar />
-        </Col>
+    <div className="main_wrapper">
+      <div className="pos_system">
+        <Row>
+          <Col lg={3}>
+            <Sidebar />
+          </Col>
 
-        <Col lg={10}>
-          <Heading title="Item Food" />
-          <AllFoodList />
-        </Col>
-      </Row>
-    </Container>
+          <Col lg={21}>
+            <Heading title="Food List" />
+            <AllFoodList />
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 };
 

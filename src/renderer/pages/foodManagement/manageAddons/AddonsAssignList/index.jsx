@@ -1,26 +1,26 @@
+import { Col, Row } from 'antd';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import AllAddonsAssignList from 'renderer/components/AllAddonsAssignList';
 import Heading from 'renderer/components/Heading';
-import Header from 'renderer/components/partials/Header';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './AddonsAssignList.style.scss';
 
 const AddonsAssignList = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row className="foodManage_system">
-        <Col lg={2}>
-          <Sidebar />
-        </Col>
+    <div className="main_wrapper">
+      <div className=" pos_system">
+        <Row>
+          <Col lg={3}>
+            <Sidebar />
+          </Col>
 
-        <Col lg={10}>
-          <Heading title="Menu Addons" />
-          <AllAddonsAssignList />
-        </Col>
-      </Row>
-    </Container>
+          <Col lg={21}>
+            <Heading title="Add-ons Assign List" />
+            <AllAddonsAssignList />
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 };
 

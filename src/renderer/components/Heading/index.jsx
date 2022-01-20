@@ -6,7 +6,7 @@ const { Title } = Typography;
 
 const Heading = ({ title, ...rest }) => {
   return (
-    <Title className="heading" {...rest}>
+    <Title level={3} className="heading" {...rest}>
       {title}
     </Title>
   );

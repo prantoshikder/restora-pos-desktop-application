@@ -1,4 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, message, Space, Table } from 'antd';
 import React, { useState } from 'react';
 
@@ -18,41 +20,28 @@ const rowSelection = {
   },
 };
 
-const AllAddonsList = () => {
+const LanguageList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState(false);
 
   const columns = [
     {
-      title: 'Add-ons Name',
-      dataIndex: 'addonsName',
-      key: 'addonsName',
-      width: '40%',
+      title: 'Language',
+      dataIndex: 'language',
+      key: 'language',
+      width: '60%',
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      width: '25%',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      width: '20%',
-      key: 'status',
-    },
-    {
-      title: 'Action',
+      title: <FontAwesomeIcon icon={faCogs} />,
       dataIndex: 'action',
-      width: '20%',
+      width: '30%',
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditCurrency(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteCurrency(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -64,38 +53,23 @@ const AllAddonsList = () => {
   const data = [
     {
       key: 1,
-      addonsName: 'Coffee',
-      price: '$ 70.00',
-      status: 'Active',
+      language: 'USD',
     },
     {
       key: 2,
-      addonsName: 'chocolate milk shake',
-      price: '$ 100.00',
-      status: 'Active',
+      language: 'BDT',
     },
     {
       key: 3,
-      addonsName: 'Drinks',
-      price: '$ 200.00',
-      status: 'Active',
+      language: 'INR',
     },
     {
       key: 4,
-      addonsName: 'Souse',
-      price: '$ 150.00',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      addonsName: 'Butter',
-      price: '$ 90.00',
-      status: 'Active',
+      language: 'BDT',
     },
   ];
 
-  function handleEditCategory(record) {
-    setVisible(true);
+  function handleEditCurrency(record) {
     console.log('Edit', record);
     // message.success({
     //   content: 'Foods category added successfully ',
@@ -107,7 +81,7 @@ const AllAddonsList = () => {
     //   },
     // });
   }
-  function handleDeleteCategory(record) {
+  function handleDeleteCurrency(record) {
     console.log('Delete', record);
     message.success({
       content: 'Foods category added successfully ',
@@ -137,4 +111,4 @@ const AllAddonsList = () => {
   );
 };
 
-export default AllAddonsList;
+export default LanguageList;

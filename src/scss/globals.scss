@@ -1,7 +1,19 @@
-.main-wrapper {
+*{
+  margin: 0px;
+  padding: 0px;
+  outline: none;
+}
+.main_wrapper {
   padding-top: 1.9rem;
   padding-right: 0;
   padding-left: 0;
+}
+.pos_wrapper {
+  padding-top: 15px;
+}
+
+.pos_system{
+  min-height: calc(100vh - 30px);
 }
 
 .grand-total {
@@ -9,6 +21,22 @@
   background-color: $color-blue;
 }
 
-a{
+a {
   text-decoration: none;
+}
+
+.flex {
+  display: flex;
+}
+.item_center {
+  align-items: center;
+}
+.content-end {
+  justify-content: end;
+}
+.content-center {
+  justify-content: center;
+}
+.content_between {
+  justify-content: space-between;
 }

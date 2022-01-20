@@ -15,26 +15,22 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllItemSalesReport = () => {
-  // Date Picker
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
   };
 
   const handleChangeStatus = (value) => {
     console.log('value', value);
-    // setCategories({ ...categories, categoryStatus: value });
   };
 
   const handleOfferStart = (value, dateString) => {
     console.log('value', value);
     console.log('dateString', dateString);
-    // setCategories({ ...categories, categoryOfferStart: value });
   };
 
   const handleOfferEnd = (value, dateString) => {
     console.log('value', value);
     console.log('dateString', dateString);
-    // setCategories({ ...categories, categoryOfferEnd: value });
   };
 
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -107,17 +103,13 @@ const AllItemSalesReport = () => {
 
   return (
     <>
-      <div style={{ borderBottom: '1px solid #e5e5e5', marginRight: '1.5rem' }}>
-        <Title level={3}>Items Sales Report</Title>
-      </div>
-
       <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
           borderRadius: '0.2rem',
           border: '1px solid #e5e5e5',
-          marginRight: '1.5rem',
+          margin: '0rem 1.5rem',
           display: 'flex',
         }}
       >
@@ -129,7 +121,7 @@ const AllItemSalesReport = () => {
                   format="DD-MM-YYYY"
                   placeholder="From"
                   disabledDate={disabledDate}
-                  // value={categories.categoryOfferStart}
+                  // value={}
                   onChange={handleOfferStart}
                 />
               </Form.Item>
@@ -139,7 +131,7 @@ const AllItemSalesReport = () => {
                   format="DD-MM-YYYY"
                   placeholder="To"
                   disabledDate={disabledDate}
-                  // value={categories.categoryOfferEnd}
+                  // value={}
                   onChange={handleOfferEnd}
                 />
               </Form.Item>
@@ -150,9 +142,8 @@ const AllItemSalesReport = () => {
         <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
-            // value={categories.categoryStatus}
+            // value={}
             onChange={handleChangeStatus}
-            // defaultValue={{ key: 'active' }}
             allowClear
           >
             <Option value="chicken">Chicken</Option>
@@ -174,7 +165,7 @@ const AllItemSalesReport = () => {
           marginTop: '1rem',
           borderRadius: '0.2rem',
           border: '1px solid #e5e5e5',
-          marginRight: '1.5rem',
+          margin: '0rem 1.5rem',
           display: 'block',
         }}
       >
@@ -187,7 +178,6 @@ const AllItemSalesReport = () => {
 
         <div
           style={{
-            // backgroundColor: '#f7f7f7',
             padding: '2rem',
             boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
           }}

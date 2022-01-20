@@ -1,26 +1,61 @@
-import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Modal, Row, Typography } from 'antd';
+import React, { useState } from 'react';
 import Heading from 'renderer/components/Heading';
 import AddNewFood from './../../../../components/AddNewFood';
-import Header from './../../../../components/partials/Header';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './AddFood.style.scss';
 
-const AddFood = () => {
-  return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row className="foodManage_system">
-        <Col lg={2}>
-          <Sidebar />
-        </Col>
+const { Text } = Typography;
 
-        <Col lg={10}>
-          <Heading title="Add Food" />
-          <AddNewFood />
-        </Col>
-      </Row>
-    </Container>
+const AddFood = () => {
+  const [show, setShow] = useState(false);
+
+  const [visible, setVisible] = useState(false);
+
+  const handleShow = () => setVisible(true);
+
+  return (
+    <>
+      <div className="main_wrapper">
+        <div className="pos_system">
+          <Row>
+            <Col lg={3}>
+              <Sidebar />
+            </Col>
+
+            <Col lg={21}>
+              <div className="flex content_between item_center">
+                <Heading title="Add Food" />
+                <Button
+                  type="primary"
+                  className="bulk_upload_btn"
+                  onClick={handleShow}
+                >
+                  <PlusCircleOutlined />
+                  Bulk Upload
+                </Button>
+              </div>
+              <AddNewFood />
+            </Col>
+          </Row>
+        </div>
+      </div>
+
+      <Modal
+        title="Bulk Upload"
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={null}
+        width={650}
+      >
+        <Text>
+          Category, kitchen, Food Name, Description, status, VariantName, Price
+          Demo, Italian, Dosa, Delicious Food, Active, Small, 60
+        </Text>
+      </Modal>
+    </>
   );
 };
 

@@ -1,29 +1,24 @@
-import {
-  InfoCircleOutlined,
-  PictureOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
+  Col,
   DatePicker,
   Form,
   Input,
   message,
+  Row,
   Select,
   Space,
   TimePicker,
-  Typography,
   Upload,
 } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { Col, Modal, Row } from 'react-bootstrap';
 import './AddNewFood.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title } = Typography;
 
 const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
 
@@ -33,11 +28,6 @@ const AddNewFood = () => {
   const [value, setValue] = useState('active');
   const [menuType, setMenuType] = useState('');
   const [packageOffer, setPackageOffer] = useState('');
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const handleSelectCategory = () => {};
   const handleKitchenSelect = () => {};
@@ -127,13 +117,6 @@ const AddNewFood = () => {
 
   return (
     <div className="add_new_food">
-      <div className="d-flex justify-content-between align-item-center">
-        <Title level={3}>Item Food</Title>
-        <Button type="primary" className="bulk_upload_btn" onClick={handleShow}>
-          <PlusCircleOutlined />
-          Bulk Upload
-        </Button>
-      </div>
       <Form
         form={form}
         onFinish={handleSubmit}
@@ -141,8 +124,8 @@ const AddNewFood = () => {
         autoComplete="off"
         layout="vertical"
       >
-        <Row>
-          <Col lg={7}>
+        <Row gutter={40}>
+          <Col lg={14}>
             <Form.Item name="category" label="Category">
               <Select
                 placeholder="Select a category"
@@ -207,8 +190,8 @@ const AddNewFood = () => {
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Row>
-                <Col lg={8}>
+              <Row gutter={10}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -225,136 +208,123 @@ const AddNewFood = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
             </Form.Item>
           </Col>
 
-          <Col lg={5}>
-            <div style={{ paddingLeft: '2rem' }}>
-              <Form.Item
-                label="Vat"
-                tooltip={{
-                  title: 'Vat are always calculate percent like:5 means:5%',
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input placeholder="Vat" size="large" />
+          <Col lg={10}>
+            <Form.Item
+              label="Vat"
+              tooltip={{
+                title: 'Vat are always calculate percent like:5 means:5%',
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <Input placeholder="Vat" size="large" />
+            </Form.Item>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Form.Item name="offer" valuePropName="checked">
+                <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
               </Form.Item>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Form.Item name="offer" valuePropName="checked">
-                  <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
-                </Form.Item>
-
-                <Form.Item name="special" valuePropName="checked">
-                  <Checkbox onChange={handleSpecial}>Special</Checkbox>
-                </Form.Item>
-              </div>
-
-              <Form.Item name="customQuantity" valuePropName="checked">
-                <Checkbox onChange={customQuantity}>Custom Quantity</Checkbox>
-              </Form.Item>
-
-              {packageOffer && (
-                <>
-                  <Form.Item
-                    label="Offer Rate"
-                    tooltip={{
-                      title:
-                        'Offer Rate Must ba a number. It a Percentage Like: if 5% then put 5',
-                      icon: <InfoCircleOutlined />,
-                    }}
-                  >
-                    <Input placeholder="Vat" size="large" />
-                  </Form.Item>
-
-                  <Space direction="vertical" size={12}>
-                    <div className="offer_date_select">
-                      <Form.Item label="Offer Start Date">
-                        <DatePicker
-                          format="DD-MM-YYYY"
-                          placeholder="Offer Start Date"
-                          disabledDate={disabledDate}
-                          // value={categories.categoryOfferStart}
-                          onChange={handleOfferStart}
-                        />
-                      </Form.Item>
-
-                      <Form.Item label="Offer End Date">
-                        <DatePicker
-                          format="DD-MM-YYYY"
-                          placeholder="Offer End Date"
-                          disabledDate={disabledDate}
-                          // value={categories.categoryOfferEnd}
-                          onChange={handleOfferEnd}
-                        />
-                      </Form.Item>
-                    </div>
-                  </Space>
-                </>
-              )}
-
-              <Form.Item label="Cooking Time" name="cookingTime">
-                <TimePicker
-                  defaultValue={moment('12:08', format)}
-                  format={format}
-                />
-                {/* <Input placeholder="0:00" size="large" /> */}
-              </Form.Item>
-
-              <Form.Item label="Menu Type" valuePropName="checked">
-                <Checkbox.Group
-                  options={plainOptions}
-                  onChange={changesMenuType}
-                />
-              </Form.Item>
-
-              <Form.Item name="status" label="Status">
-                <Select
-                  placeholder="Select an Option"
-                  onChange={handleChangeStatus}
-                  value={value}
-                  defaultValue={{ key: 'active' }}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="active">Active</Option>
-                  <Option value="inactive">Inactive</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="danger"
-                  style={{
-                    marginRight: '1rem',
-                  }}
-                  onClick={handleReset}
-                >
-                  Reset
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
+              <Form.Item name="special" valuePropName="checked">
+                <Checkbox onChange={handleSpecial}>Special</Checkbox>
               </Form.Item>
             </div>
+
+            <Form.Item name="customQuantity" valuePropName="checked">
+              <Checkbox onChange={customQuantity}>Custom Quantity</Checkbox>
+            </Form.Item>
+
+            {packageOffer && (
+              <>
+                <Form.Item
+                  label="Offer Rate"
+                  tooltip={{
+                    title:
+                      'Offer Rate Must ba a number. It a Percentage Like: if 5% then put 5',
+                    icon: <InfoCircleOutlined />,
+                  }}
+                >
+                  <Input placeholder="Vat" size="large" />
+                </Form.Item>
+
+                <Space direction="vertical" size={12}>
+                  <div className="offer_date_select">
+                    <Form.Item label="Offer Start Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer Start Date"
+                        disabledDate={disabledDate}
+                        // value={categories.categoryOfferStart}
+                        onChange={handleOfferStart}
+                      />
+                    </Form.Item>
+
+                    <Form.Item label="Offer End Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer End Date"
+                        disabledDate={disabledDate}
+                        // value={categories.categoryOfferEnd}
+                        onChange={handleOfferEnd}
+                      />
+                    </Form.Item>
+                  </div>
+                </Space>
+              </>
+            )}
+
+            <Form.Item label="Cooking Time" name="cookingTime">
+              <TimePicker
+                defaultValue={moment('12:08', format)}
+                format={format}
+              />
+              {/* <Input placeholder="0:00" size="large" /> */}
+            </Form.Item>
+
+            <Form.Item label="Menu Type" valuePropName="checked">
+              <Checkbox.Group
+                options={plainOptions}
+                onChange={changesMenuType}
+              />
+            </Form.Item>
+
+            <Form.Item name="status" label="Status">
+              <Select
+                placeholder="Select an Option"
+                onChange={handleChangeStatus}
+                value={value}
+                defaultValue={{ key: 'active' }}
+                size="large"
+                allowClear
+              >
+                <Option value="active">Active</Option>
+                <Option value="inactive">Inactive</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="danger"
+                style={{
+                  marginRight: '1rem',
+                }}
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
           </Col>
         </Row>
       </Form>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Bulk Upload</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          Category, kitchen, Food Name, Description, status, VariantName, Price
-          Demo, Italian, Dosa, Delicious Food, Active, Small, 60
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

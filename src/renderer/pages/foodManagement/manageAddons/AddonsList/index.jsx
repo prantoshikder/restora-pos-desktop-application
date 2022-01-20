@@ -1,25 +1,25 @@
+import { Col, Row } from 'antd';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
-import Header from 'renderer/components/partials/Header';
 import AllAddonsList from './../../../../components/AllAddonsList';
 import Sidebar from './../../../../components/partials/Sidebar';
 
 const AddonsList = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row className="foodManage_system">
-        <Col lg={2}>
-          <Sidebar />
-        </Col>
+    <div className="main_wrapper">
+      <div className="pos_system">
+        <Row>
+          <Col lg={3}>
+            <Sidebar />
+          </Col>
 
-        <Col lg={10}>
-          <Heading title="Menu Addons" />
-          <AllAddonsList />
-        </Col>
-      </Row>
-    </Container>
+          <Col lg={21}>
+            <Heading title="Add-ons List" />
+            <AllAddonsList />
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 };
 

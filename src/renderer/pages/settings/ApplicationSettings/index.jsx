@@ -1,24 +1,24 @@
+import { Col, Row } from 'antd';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import Heading from 'renderer/components/Heading';
 import ApplicationSetting from './../../../components/ApplicationSetting';
-import Header from './../../../components/partials/Header';
 import Sidebar from './../../../components/partials/Sidebar';
 
 const ApplicationSettings = () => {
   return (
-    <Container fluid className="px-0 main-wrapper">
-      <Header />
-      <Row>
-        <Col lg={2}>
-          <Sidebar />
-        </Col>
-        <Col md={10}>
-          <Heading title="Setting" />
-          <ApplicationSetting />
-        </Col>
-      </Row>
-    </Container>
+    <div className="main_wrapper">
+      <div className="pos_system">
+        <Row>
+          <Col lg={3}>
+            <Sidebar />
+          </Col>
+          <Col md={21}>
+            <Heading title="Application Settings" />
+            <ApplicationSetting />
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 };
 

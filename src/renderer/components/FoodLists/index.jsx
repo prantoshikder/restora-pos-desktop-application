@@ -2,11 +2,16 @@ import React from 'react';
 import foodLists from '../../../temp/foods.json';
 import FoodItem from './FoodItem';
 
-const FoodLists = () => {
+const FoodLists = ({ setCartItems, cartItems }) => {
   return (
     <>
       {foodLists.foods.map((item) => (
-        <FoodItem key={item.id} item={item} />
+        <FoodItem
+          setCartItems={setCartItems}
+          cartItems={cartItems}
+          key={item.id}
+          item={item}
+        />
       ))}
     </>
   );

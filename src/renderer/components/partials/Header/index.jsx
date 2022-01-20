@@ -1,11 +1,22 @@
-import { Button, Form, Input, Modal, Select } from 'antd';
+import {
+  Button,
+  ConfigProvider,
+  Form,
+  Input,
+  Menu,
+  Modal,
+  Row,
+  Select,
+} from 'antd';
 import React, { useState } from 'react';
-import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
-const Header = () => {
+const { SubMenu } = Menu;
+
+const Header = ({ direction }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState('');
@@ -25,91 +36,117 @@ const Header = () => {
 
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" className="navbar">
-        <Container fluid>
-          {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
+      <ConfigProvider direction={direction}>
+        <Row>
+          <div className="pos_header">
+            <div>
+              <Button type="primary" size="large" className="pos_btn new_order">
+                New Order
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn on_going_order"
+              >
+                On Going Order
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn kitchen_status"
+              >
+                Kitchen Status
+              </Button>
+              <Button type="primary" size="large" className="pos_btn qr_order">
+                QR Order
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn online_order"
+              >
+                Online Order
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn today_order"
+              >
+                Today Order
+              </Button>
+            </div>
 
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto left_navbar">
-              <Nav.Link href="#newOrder">New Order</Nav.Link>
-              <Nav.Link href="#onGoingOrder">On Going Order</Nav.Link>
-              <Nav.Link href="#kitchenStatus">Kitchen Status</Nav.Link>
-              <Nav.Link href="#qrOrder">QR Order</Nav.Link>
-              <Nav.Link href="#onlineOrder">Online Order</Nav.Link>
-              <Nav.Link href="#todayOrder">Today Order</Nav.Link>
-            </Nav>
-
-            <Nav className="right_navbar">
-              <Nav.Link
-                href="#!"
+            <div className="right_panel_wrapper">
+              <div
                 onClick={() => setVisible(true)}
                 title="Cash Register"
+                className="image_icon"
               >
                 <img src={cashRegisterIcon} alt="Cash Register" />
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Modal
-        title="Cash Register"
-        centered
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        footer={null}
-        width={650}
-      >
-        <Row>
-          <Col lg={{ span: 10, offset: 1 }}>
-            <Form
-              form={form}
-              onFinish={handleCashRegister}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              layout="vertical"
-            >
-              <Form.Item name="counterNumber" label="Counter Number">
-                <Select
-                  placeholder="Select Counter No"
-                  onChange={handleChangeStatus}
-                  value={value}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="0">0</Option>
-                  <Option value="2">2</Option>
-                  <Option value="3">3</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item label="Total Amount" name="totalAmount">
-                <Input placeholder="Amount" size="large" />
-              </Form.Item>
-
-              <Form.Item label="Notes" name="notes">
-                <Input.TextArea placeholder="Opening Note" size="large" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  style={{ marginRight: '1rem' }}
-                  onClick={() => setVisible(false)}
-                >
-                  <Link className="dashboard" to="/">
-                    Dashboard
-                  </Link>
-                </Button>
-                <Button className="add-opening-balance-btn" htmlType="submit">
-                  Add Opening Balance
-                </Button>
-              </Form.Item>
-            </Form>
-          </Col>
+              </div>
+            </div>
+          </div>
         </Row>
-      </Modal>
+
+        <Modal
+          title="Cash Register"
+          centered
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          footer={null}
+          width={650}
+        >
+          <Row>
+            <Col lg={{ span: 10, offset: 1 }}>
+              <Form
+                form={form}
+                onFinish={handleCashRegister}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+                layout="vertical"
+              >
+                <Form.Item name="counterNumber" label="Counter Number">
+                  <Select
+                    placeholder="Select Counter No"
+                    onChange={handleChangeStatus}
+                    value={value}
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="0">0</Option>
+                    <Option value="2">2</Option>
+                    <Option value="3">3</Option>
+                  </Select>
+                </Form.Item>
+
+                <Form.Item label="Total Amount" name="totalAmount">
+                  <Input placeholder="Amount" size="large" />
+                </Form.Item>
+
+                <Form.Item label="Notes" name="notes">
+                  <Input.TextArea placeholder="Opening Note" size="large" />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    style={{ marginRight: '1rem' }}
+                    onClick={() => setVisible(false)}
+                  >
+                    <Link className="dashboard" to="/">
+                      Dashboard
+                    </Link>
+                  </Button>
+                  <Button className="add-opening-balance-btn" htmlType="submit">
+                    Add Opening Balance
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
+        </Modal>
+      </ConfigProvider>
     </>
   );
 };
