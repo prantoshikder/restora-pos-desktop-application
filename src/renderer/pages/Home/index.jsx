@@ -2,7 +2,7 @@ import { Col, ConfigProvider, Input, Row } from 'antd';
 import React, { useState } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
-import Header from './../../components/partials/Header';
+import Header from 'renderer/components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
@@ -10,33 +10,36 @@ const Home = ({ direction }) => {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <div className="main-wrapper">
+    <div className="main_wrapper">
       <Header direction={direction} />
 
-      <div className="pos-wrapper">
+      <div className="pos_wrapper">
         <ConfigProvider direction={direction}>
-          <Row className="pos-system">
-            <Col span={4}>
+          <Row className="pos_system">
+            <Col lg={4}>
               <PosSidebar direction={direction} />
             </Col>
 
-            <Col span={20}>
+            <Col lg={20}>
               <Row>
-                <Col span={15}>
-                  <Row className="search-food-wrapper justify-content-md-center">
-                    <Col span={18} push={3}>
+                <Col lg={14}>
+                  <Row className="search_food_wrapper">
+                    <Col lg={18} push={3}>
                       <Input type="text" placeholder="Search" size="large" />
                     </Col>
                   </Row>
-                  <Row gutter={30} className="foodList-wrapper">
-                    <FoodLists
-                      setCartItems={setCartItems}
-                      cartItems={cartItems}
-                    />
-                  </Row>
+
+                  <div className="foodItems_wrapper">
+                    <Row className="foodList_wrapper">
+                      <FoodLists
+                        setCartItems={setCartItems}
+                        cartItems={cartItems}
+                      />
+                    </Row>
+                  </div>
                 </Col>
 
-                <Col span={9}>
+                <Col lg={10}>
                   <Cart setCartItems={setCartItems} cartItems={cartItems} />
                 </Col>
               </Row>

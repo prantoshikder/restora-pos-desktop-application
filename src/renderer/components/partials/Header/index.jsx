@@ -1,5 +1,6 @@
 import {
   Button,
+  Col,
   ConfigProvider,
   Form,
   Input,
@@ -9,7 +10,6 @@ import {
   Select,
 } from 'antd';
 import React, { useState } from 'react';
-import { Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
@@ -98,7 +98,7 @@ const Header = ({ direction }) => {
           width={650}
         >
           <Row>
-            <Col lg={{ span: 10, offset: 1 }}>
+            <Col lg={24}>
               <Form
                 form={form}
                 onFinish={handleCashRegister}
