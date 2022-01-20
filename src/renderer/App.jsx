@@ -22,6 +22,7 @@ export default function App() {
   const [direction, setDirection] = useState('rtl');
 
   return (
+
     <Router>
       <SystemMenu direction={direction} />
       <Routes>
@@ -76,5 +77,7 @@ export default function App() {
         />
       </Routes>
     </Router>
+
   );
+
 }

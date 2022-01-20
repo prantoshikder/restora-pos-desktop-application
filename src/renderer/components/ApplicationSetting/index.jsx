@@ -1,17 +1,16 @@
 import { PictureOutlined } from '@ant-design/icons';
 import {
   Button,
-  Col,
   DatePicker,
   Form,
   Input,
   message,
-  Row,
   Select,
   Typography,
   Upload,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -19,8 +18,20 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const ApplicationSetting = () => {
-  const [form] = Form.useForm();
 
+  window.api.send("getSettingDataFromDB", { "status": true });
+
+  const [settingsData, setSettingsData] = useState({})
+
+  // recieve data from main process
+  useEffect(() => {
+    window.api.once("sendSettingDataFromMain", (settingsData) => {
+      setSettingsData(settingsData[0])
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", settingsData[0]);
+    });
+  }, [])
+
+  const [form] = Form.useForm();
   const [setting, setSetting] = useState({
     applicationTitle: '',
     storeName: '',
@@ -86,9 +97,13 @@ const ApplicationSetting = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+  console.log('setting>>>>>', setting);
 
   const handleSubmit = () => {
-    console.log('setting', setting);
+    // get form value
+
+    // send data to the main process
+    window.api.send("getSettingDataFromDB", setting);
 
     message.success({
       content: 'Settings done successfully',
@@ -117,6 +132,7 @@ const ApplicationSetting = () => {
 
   return (
     <div className="application_setting">
+      <Title level={3}>Application Settings</Title>
       <Form
         form={form}
         layout="vertical"
@@ -124,8 +140,8 @@ const ApplicationSetting = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row gutter={40}>
-          <Col lg={13}>
+        <Row>
+          <Col lg={6}>
             <Form.Item label="Application Title" name="applicationTitle">
               <Input
                 placeholder="Application Title"
@@ -182,8 +198,8 @@ const ApplicationSetting = () => {
             </Form.Item>
 
             <Form.Item label="Favicon">
-              <Row gutter={10}>
-                <Col lg={16}>
+              <Row>
+                <Col lg={8}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -200,15 +216,15 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={4}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
             </Form.Item>
 
             <Form.Item label="Logo">
-              <Row gutter={10}>
-                <Col lg={16}>
+              <Row>
+                <Col lg={8}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -225,7 +241,7 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={4}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
@@ -289,7 +305,7 @@ const ApplicationSetting = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={11}>
+          <Col lg={6}>
             <Form.Item
               label="Select Service Charge Type"
               name="selectServiceChargeType"
@@ -306,9 +322,9 @@ const ApplicationSetting = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Vat Setting(%)" name="vatSetting">
+            <Form.Item label="Vat Setting" name="vatSetting">
               <Input
-                placeholder="0:00"
+                placeholder="Vat Setting"
                 size="large"
                 value={setting.vatSetting}
                 onChange={(e) =>
@@ -317,9 +333,9 @@ const ApplicationSetting = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Tin Or Vat Number" name="tinOrVatNumber">
+            <Form.Item label="tinOrVatNumber" name="tinOrVatNumber">
               <Input
-                placeholder="000000"
+                placeholder="tinOrVatNumber"
                 size="large"
                 value={setting.tinOrVatNumber}
                 onChange={(e) =>
