@@ -16,6 +16,11 @@ import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+const sqlite3 = require('sqlite3').verbose();
+
+
+var dbPath = app.getPath('userData')
+
 
 export default class AppUpdater {
   constructor() {
@@ -27,11 +32,95 @@ export default class AppUpdater {
 
 let mainWindow;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
+ipcMain.on("getSettingDataFromDB", (event, args) => {
+
+  let { status } = args
+
+  let settingSqlQ = `select * from setting`
+
+
+  if (status) {
+
+    // Create DB connection
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+
+      db.all(settingSqlQ, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send("sendSettingDataFromMain", rows);
+      })
+
+    })
+
+    db.close()
+
+  }
+  else {
+    console.log("else!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+    let { applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText } = args
+    // Create DB connection
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+
+      db.run(`DROP TABLE IF EXISTS setting`)
+        .run(
+        `CREATE TABLE IF NOT EXISTS setting (
+          "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+          "title" varchar(255),
+          "storename" varchar(100),
+          "address" TEXT,
+          "email" varchar(255),
+          "phone" varchar(25),
+          "logo" varchar(255),
+          "favicon" varchar(100),
+          "opentime" varchar(255),
+          "closetime" varchar(255),
+          "vat" REAL,
+          "vattinno" varchar(30),
+          "discount_type" INT,
+          "discountrate" REAL,
+          "servicecharge" REAL,
+          "service_chargeType" INT,
+          "currency" INT,
+          "min_prepare_time" varchar(50),
+          "language" varchar(100),
+          "timezone" varchar(150),
+          "dateformat" TEXT,
+          "site_align" varchar(50),
+          "powerbytxt" TEXT,
+          "footer_text" varchar(255)
+        )`
+        )
+        .run(
+          `INSERT INTO setting
+          ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
+            currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
+          VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
+          [applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText],
+          function (err) {
+            if (err) {
+              console.log("Error message", err.message);
+              return;
+            }
+
+            console.log(`row inserted ${this.applicationTitle}`);
+          }
+        )
+        // .all(settingSqlQ, [], (err, rows)=>{
+        //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
+        //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
+        // })
+
+    })
+
+    db.close()
+
+  }
+
 });
+
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

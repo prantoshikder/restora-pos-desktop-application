@@ -22,6 +22,7 @@ export default function App() {
   const [direction, setDirection] = useState('ltr');
 
   return (
+
     <Router>
       <SystemMenu direction={direction} />
       <Routes>
@@ -43,5 +44,7 @@ export default function App() {
         <Route path="/items_sales_report" element={<ItemSalesReport />} />
       </Routes>
     </Router>
+
   );
+
 }
