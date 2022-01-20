@@ -1,8 +1,8 @@
+import { Col, Input, Row } from 'antd';
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
-import Header from './../../components/partials/Header';
+// import Header from './../../components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
@@ -10,41 +10,43 @@ const Home = () => {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <div className="main-wrapper">
-      <Header />
-      <Container fluid className="pos-wrapper">
-        <Row className="pos-system">
-          <Col lg={2}>
-            <PosSidebar />
-          </Col>
+    <div className="main_wrapper">
+      {/* <Header /> */}
+      <div className="pos_wrapper">
+        <div className="pos_system">
+          <Row gutter={10}>
+            <Col lg={4}>
+              <PosSidebar />
+            </Col>
 
-          <Col lg={10}>
-            <Row>
-              <Col lg={7}>
-                <Row className="search-food-wrapper justify-content-md-center">
-                  <Col lg={8}>
-                    <input
-                      type="text"
-                      placeholder="Search"
-                      className="form-control"
+            <Col lg={20}>
+              <Row gutter={20}>
+                <Col lg={14}>
+                  <Row className="search-food-wrapper justify-center">
+                    <Col lg={24}>
+                      <Input
+                        type="text"
+                        placeholder="Search"
+                        className="form-control"
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="foodList-wrapper">
+                    <FoodLists
+                      setCartItems={setCartItems}
+                      cartItems={cartItems}
                     />
-                  </Col>
-                </Row>
-                <Row className="foodList-wrapper">
-                  <FoodLists
-                    setCartItems={setCartItems}
-                    cartItems={cartItems}
-                  />
-                </Row>
-              </Col>
+                  </Row>
+                </Col>
 
-              <Col lg={5}>
-                <Cart setCartItems={setCartItems} cartItems={cartItems} />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Container>
+                <Col lg={10}>
+                  <Cart setCartItems={setCartItems} cartItems={cartItems} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </div>
+      </div>
     </div>
   );
 };

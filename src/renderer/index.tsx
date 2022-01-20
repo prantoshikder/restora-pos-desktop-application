@@ -1,5 +1,4 @@
 import 'antd/dist/antd.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { render } from 'react-dom';
 import '../scss/styles.scss';
 import App from './App';

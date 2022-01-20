@@ -1,6 +1,14 @@
-import { Button, Form, Input, message, Select, Typography } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  Typography,
+} from 'antd';
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import './AddNewAddons.style.scss';
 
 const { Option } = Select;
@@ -60,8 +68,8 @@ const AddNewAddons = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row>
-          <Col lg={7}>
+        <Row gutter={40}>
+          <Col lg={14}>
             <Form.Item
               label="Add-ons Name"
               name="addonsName"
@@ -103,7 +111,7 @@ const AddNewAddons = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={5}>
+          <Col lg={10}>
             <Form.Item name="status" label="Status">
               <Select
                 placeholder="Select an Option"
