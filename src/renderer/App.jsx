@@ -16,7 +16,9 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
+
   return (
+
     <Router>
       <SystemMenu />
       <Routes>
@@ -36,5 +38,7 @@ export default function App() {
         <Route path="/application_setting" element={<ApplicationSettings />} />
       </Routes>
     </Router>
+
   );
+
 }

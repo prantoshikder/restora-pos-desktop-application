@@ -1,23 +1,24 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    myPing() {
-      ipcRenderer.send('ipc-example', 'ping');
-    },
-    on(channel, func) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.on(channel, (event, ...args) => func(...args));
-      }
-    },
-    once(channel, func) {
-      const validChannels = ['ipc-example'];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.once(channel, (event, ...args) => func(...args));
-      }
-    },
+contextBridge.exposeInMainWorld(
+  "api", {
+  send: (channel, data) => {
+    let validChannels = ["getSettingDataFromDB"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
   },
-});
+  once: (channel, func) => {
+    let validChannels = ["sendSettingDataFromMain"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+  // dataExchange: (channel, func) => {
+  //   let validChannels = ["sendSettingDbDataFromMain"];
+  //   if (validChannels.includes(channel)) {
+  //     ipcRenderer.once(channel, (event, ...args) => func(...args));
+  //   }
+  // }
+}
+);

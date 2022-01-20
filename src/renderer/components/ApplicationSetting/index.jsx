@@ -9,7 +9,7 @@ import {
   Typography,
   Upload,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import './ApplicationSetting.style.scss';
 
@@ -18,8 +18,20 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const ApplicationSetting = () => {
-  const [form] = Form.useForm();
 
+  window.api.send("getSettingDataFromDB", { "status": true });
+
+  const [settingsData, setSettingsData] = useState({})
+
+  // recieve data from main process
+  useEffect(() => {
+    window.api.once("sendSettingDataFromMain", (settingsData) => {
+      setSettingsData(settingsData[0])
+      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", settingsData[0].title);
+    });
+  }, [])
+
+  const [form] = Form.useForm();
   const [setting, setSetting] = useState({
     applicationTitle: '',
     storeName: '',
@@ -85,9 +97,13 @@ const ApplicationSetting = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+  console.log('setting>>>>>', setting);
 
   const handleSubmit = () => {
-    console.log('setting', setting);
+    // get form value
+
+    // send data to the main process
+    window.api.send("getSettingDataFromDB", setting);
 
     message.success({
       content: 'Settings done successfully',
