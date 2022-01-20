@@ -19,10 +19,7 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
-<<<<<<< HEAD
-=======
   const [direction, setDirection] = useState('ltr');
->>>>>>> 88249573cfac3e7d149f73b0808f9fadd73dcd9f
 
   return (
 
