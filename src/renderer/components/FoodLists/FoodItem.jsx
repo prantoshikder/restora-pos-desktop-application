@@ -1,5 +1,5 @@
+import { Card, Col } from 'antd';
 import React from 'react';
-import { Card, Col } from 'react-bootstrap';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import './food.item.styles.scss';
 
@@ -9,19 +9,22 @@ const FoodItem = ({ item, setCartItems, cartItems }) => {
   };
 
   return (
-    <Col md={2}>
-      <Card className="food-card" onClick={() => handleFoodItem(item)}>
+    <Col lg={4}>
+      <div className="food-card" onClick={() => handleFoodItem(item)}>
         <div className="food-image">
           {item?.image ? (
-            <Card.Img variant="top" src={item.image} />
+            <img variant="top" src={item.image} />
           ) : (
-            <Card.Img variant="top" src={foodPlaceholder} />
+            <img variant="top" src={foodPlaceholder} />
           )}
         </div>
-        <Card.Body>
+        {/* <Card.Body>
           <Card.Title>{item.name}</Card.Title>
-        </Card.Body>
-      </Card>
+        </Card.Body> */}
+        <Card>
+          <p>{item.name}</p>
+        </Card>
+      </div>
     </Col>
   );
 };

@@ -1,9 +1,14 @@
-.main-wrapper {
+*{
+  margin: 0px;
+  padding: 0px;
+  outline: none;
+}
+.main_wrapper {
   padding-top: 1.9rem;
   padding-right: 0;
   padding-left: 0;
 }
-.pos-wrapper {
+.pos_wrapper {
   padding-top: 15px;
 }
 
@@ -23,7 +28,7 @@ a {
 .flex {
   display: flex;
 }
-.item-center {
+.item_center {
   align-items: center;
 }
 .content-end {
@@ -32,6 +37,6 @@ a {
 .content-center {
   justify-content: center;
 }
-.content-between {
+.content_between {
   justify-content: space-between;
 }

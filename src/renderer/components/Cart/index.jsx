@@ -5,10 +5,18 @@ import {
 } from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Form, Input, message, Select, TimePicker } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  TimePicker,
+} from 'antd';
 import moment from 'moment';
 import { default as React, default as React, useEffect, useState } from 'react';
-import { Col, Modal, Row, Table } from 'react-bootstrap';
 import './cart.styles.scss';
 
 const { Option } = Select;
@@ -174,7 +182,7 @@ const Cart = ({ cartItems, setCartItems }) => {
         <div className="form-content">
           <div className="banner-card">
             <Row>
-              <Col lg={5}>
+              <Col lg={10}>
                 <Form.Item label="Customer Name *" name="customerName">
                   <Select
                     placeholder="Select a Customer Name"
@@ -189,12 +197,12 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={1}>
+              <Col lg={4}>
                 <Button className="add-customer">
                   <PlusCircleOutlined />
                 </Button>
               </Col>
-              <Col lg={6}>
+              <Col lg={10}>
                 <Form.Item label="Customer Type *" name="customerType">
                   <Select
                     placeholder="Select a Customer Name"
@@ -211,8 +219,8 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row className="justify-content-md-center mt-2">
-              <Col lg={4}>
+            <Row className="justify-center">
+              <Col lg={6}>
                 <Form.Item label="Waiter *" name="waiter">
                   <Select
                     placeholder="Select Waiter"
@@ -229,7 +237,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={2}>
+              <Col lg={3}>
                 <Button
                   size="large"
                   type="primary"
@@ -240,7 +248,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Button>
               </Col>
 
-              <Col lg={3}>
+              <Col lg={7}>
                 <Form.Item label="Table *" name="table">
                   <Select
                     placeholder="Select Table"
@@ -257,7 +265,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={3}>
+              <Col lg={8}>
                 <Form.Item label="Cooking Time *" name="cookingTime">
                   <TimePicker
                     defaultValue={moment('00:00:00', 'HH:mm:ss')}
@@ -282,7 +290,7 @@ const Cart = ({ cartItems, setCartItems }) => {
               </div>
             ) : (
               <div className="product-list-table">
-                <Table className="custom-table" striped>
+                <table className="custom-table" striped>
                   <thead align="center">
                     <tr>
                       <th>Item</th>
@@ -320,7 +328,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                       </tr>
                     ))}
                   </tbody>
-                </Table>
+                </table>
               </div>
             )}
           </div>
@@ -329,14 +337,14 @@ const Cart = ({ cartItems, setCartItems }) => {
         {/* CartBottom */}
         <div className="cart-footer">
           <div className="service-charge">
-            <Table bordered>
+            <table bordered>
               <tbody size="small">
                 <tr>
                   <td>Vat/Tax:</td>
                   <td>Service Charge(%):</td>
                 </tr>
               </tbody>
-            </Table>
+            </table>
           </div>
           <div className="grand-total mb-2">
             <div>
@@ -392,7 +400,7 @@ const Cart = ({ cartItems, setCartItems }) => {
 
       {/* <CartBottom /> */}
 
-      <Modal show={show} onHide={handleClose}>
+      {/* <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Food Note</Modal.Title>
         </Modal.Header>
@@ -420,7 +428,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             </Form>
           </Col>
         </Row>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
