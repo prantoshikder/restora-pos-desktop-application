@@ -1,30 +1,32 @@
-import { Col, Input, Row } from 'antd';
+import { ConfigProvider, Row } from 'antd';
 import React, { useState } from 'react';
+import { Col, Container } from 'react-bootstrap';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
-// import Header from './../../components/partials/Header';
+import Header from './../../components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
-const Home = () => {
+const Home = ({ direction }) => {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <div className="main_wrapper">
-      {/* <Header /> */}
-      <div className="pos_wrapper">
-        <div className="pos_system">
-          <Row gutter={10}>
-            <Col lg={4}>
-              <PosSidebar />
+    <div className="main-wrapper">
+      <Header direction={direction} />
+
+      <Container fluid className="pos-wrapper">
+        <ConfigProvider direction={direction}>
+          <Row className="pos-system">
+            <Col lg={2}>
+              <PosSidebar direction={direction} />
             </Col>
 
-            <Col lg={20}>
-              <Row gutter={20}>
-                <Col lg={14}>
-                  <Row className="search-food-wrapper justify-center">
-                    <Col lg={24}>
-                      <Input
+            <Col lg={10}>
+              <Row>
+                <Col lg={7}>
+                  <Row className="search-food-wrapper justify-content-md-center">
+                    <Col lg={8}>
+                      <input
                         type="text"
                         placeholder="Search"
                         className="form-control"
@@ -39,14 +41,14 @@ const Home = () => {
                   </Row>
                 </Col>
 
-                <Col lg={10}>
+                <Col lg={5}>
                   <Cart setCartItems={setCartItems} cartItems={cartItems} />
                 </Col>
               </Row>
             </Col>
           </Row>
-        </div>
-      </div>
+        </ConfigProvider>
+      </Container>
     </div>
   );
 };
