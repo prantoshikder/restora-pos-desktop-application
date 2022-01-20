@@ -19,10 +19,9 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
-  const [direction, setDirection] = useState('rtl');
+  const [direction, setDirection] = useState('ltr');
 
   return (
-
     <Router>
       <SystemMenu direction={direction} />
       <Routes>
@@ -77,7 +76,5 @@ export default function App() {
         />
       </Routes>
     </Router>
-
   );
-
 }
