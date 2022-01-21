@@ -40,6 +40,9 @@ const Cart = ({ cartItems, setCartItems }) => {
     total: '',
   });
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const columns = [
     {
       title: 'Item',
@@ -50,25 +53,30 @@ const Cart = ({ cartItems, setCartItems }) => {
       title: 'Variant Name',
       dataIndex: 'variant',
       key: 'variant',
+      align: 'center',
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
+      align: 'center',
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      align: 'center',
     },
     {
       title: 'Total',
-      dataIndex: 'total',
+      dataIndex: 'price',
       key: 'total',
+      align: 'center',
     },
     {
       title: 'Action',
       key: 'action',
+      align: 'center',
       render: (text, record) => (
         <Space size="middle" className="delete_icon">
           <FontAwesomeIcon
@@ -79,9 +87,6 @@ const Cart = ({ cartItems, setCartItems }) => {
       ),
     },
   ];
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const selectCustomerName = (value) => {
     setCartData({ ...cartData, customerName: value });
@@ -116,7 +121,6 @@ const Cart = ({ cartItems, setCartItems }) => {
   };
 
   const handleSubmit = () => {
-    console.log('cartData', cartData);
     if (!cartData.customerName) {
       message.error({
         content: 'Customer Name is required',
@@ -153,6 +157,8 @@ const Cart = ({ cartItems, setCartItems }) => {
       });
       return;
     }
+
+    console.log('cartData', cartData);
 
     form.resetFields();
     setCartItems('');
@@ -205,7 +211,6 @@ const Cart = ({ cartItems, setCartItems }) => {
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <div className="form_content">
@@ -339,47 +344,8 @@ const Cart = ({ cartItems, setCartItems }) => {
                   columns={columns}
                   pagination={false}
                   dataSource={cartItems}
+                  className="custom_table"
                 />
-                {/* <table className="custom_table" striped>
-                  <thead align="center">
-                    <tr>
-                      <th>Item</th>
-                      <th>Variant Name</th>
-                      <th>Price</th>
-                      <th>Quantity</th>
-                      <th>Total</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="single_product_item">
-                    {cartItems?.map((item) => (
-                      <tr key={item?.id} align="center">
-                        <td align="left" className="note_icon">
-                          <FileAddOutlined onClick={handleShow} />
-                          {item?.name}
-                        </td>
-                        <td>{item?.variant}</td>
-                        <td>${item?.price}</td>
-                        <td>
-                          <Input
-                            className="quantity"
-                            type="number"
-                            value={itemQuantity}
-                            onChange={handleItemQuantity}
-                          />
-                        </td>
-                        <td>2</td>
-                        <td className="delete_icon">
-                          <FontAwesomeIcon
-                            icon={faTrashAlt}
-                            onClick={() => handleDeleteItem(item?.id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table> */}
               </div>
             )}
           </div>
