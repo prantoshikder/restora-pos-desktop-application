@@ -12,20 +12,23 @@ import FoodAvailability from './pages/foodManagement/manageFood/FoodAvailability
 import FoodList from './pages/foodManagement/manageFood/FoodList';
 import FoodVariant from './pages/foodManagement/manageFood/FoodVariant';
 import MenuType from './pages/foodManagement/manageFood/MenuType';
-import Home from './pages/Home';
+// import Home from './pages/Home';
 import Language from './pages/Language/';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
-  const [direction, setDirection] = useState('rtl');
+  const [direction, setDirection] = useState('ltr');
 
   return (
-
     <Router>
       <SystemMenu direction={direction} />
       <Routes>
+        {/* <Route
+          path="/"
+          element={<ApplicationSettings direction={direction} />}
+        /> */}
         <Route path="/" element={<Home direction={direction} />} />
         <Route
           path="/add_category"
@@ -77,7 +80,5 @@ export default function App() {
         />
       </Routes>
     </Router>
-
   );
-
 }

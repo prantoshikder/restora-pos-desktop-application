@@ -1,16 +1,17 @@
 import { PictureOutlined } from '@ant-design/icons';
 import {
   Button,
+  Col,
   DatePicker,
   Form,
   Input,
   message,
+  Row,
   Select,
   Typography,
   Upload,
 } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -18,23 +19,14 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const ApplicationSetting = () => {
-
-  window.api.send("getSettingDataFromDB", { "status": true });
-
-  const [settingsData, setSettingsData] = useState({})
-
-  // recieve data from main process
-  useEffect(() => {
-    window.api.once("sendSettingDataFromMain", (settingsData) => {
-      setSettingsData(settingsData[0])
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", settingsData[0]);
-    });
-  }, [])
+  window.api.send('getSettingDataFromDB', { status: true });
 
   const [form] = Form.useForm();
+  const [appSettingsData, setAppSettingsData] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [setting, setSetting] = useState({
-    applicationTitle: '',
-    storeName: '',
+    applicationTitle: appSettingsData?.title,
+    storeName: appSettingsData?.storename,
     address: '',
     emailAddress: '',
     phone: '',
@@ -55,6 +47,33 @@ const ApplicationSetting = () => {
     poweredByText: '',
     footerText: '',
   });
+
+  // recieve data from main process
+  useEffect(() => {
+    // window.api.once('sendSettingDataFromMain', (settingsData) => {
+    //   setSettingsData(settingsData[0]);
+    //   // setIsLoaded(true);
+    // });
+  }, [isLoaded]);
+
+  useEffect(() => {
+    // Codes here
+    getApplicationSettingsData().then((data) => {
+      setAppSettingsData(data);
+    });
+  }, [setting]);
+
+  function getApplicationSettingsData() {
+    return new Promise((resolve, reject) => {
+      window.api.once('sendSettingDataFromMain', (settingsData) => {
+        if (settingsData[0]) {
+          resolve(settingsData[0]);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
+    });
+  }
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -97,13 +116,13 @@ const ApplicationSetting = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-  console.log('setting>>>>>', setting);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     // get form value
+    e.preventDefault();
 
     // send data to the main process
-    window.api.send("getSettingDataFromDB", setting);
+    window.api.send('getSettingDataFromDB', setting);
 
     message.success({
       content: 'Settings done successfully',
@@ -130,6 +149,7 @@ const ApplicationSetting = () => {
     });
   };
 
+  console.log('setting', setting);
   return (
     <div className="application_setting">
       <Title level={3}>Application Settings</Title>
@@ -137,8 +157,25 @@ const ApplicationSetting = () => {
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
+        fields={[
+          {
+            name: ['applicationTitle'],
+            value: appSettingsData?.title,
+          },
+          {
+            name: ['storeName'],
+            value: appSettingsData?.storename,
+          },
+          {
+            name: ['address'],
+            value: appSettingsData?.storename,
+          },
+        ]}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        initialValues={{
+          ['applicationTitle']: appSettingsData?.title,
+        }}
       >
         <Row>
           <Col lg={6}>
@@ -146,7 +183,8 @@ const ApplicationSetting = () => {
               <Input
                 placeholder="Application Title"
                 size="large"
-                value={setting.applicationTitle}
+                defaultValue={appSettingsData?.title}
+                value={`${setting.applicationTitle}`}
                 onChange={(e) =>
                   setSetting({ ...setting, applicationTitle: e.target.value })
                 }
