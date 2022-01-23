@@ -3,238 +3,238 @@
     {
       "id": 1,
       "name": "Chicken Fry",
-      "price": 30.99,
+      "price": "৳ 30.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/fried_chicken-1024x536.png"
     },
     {
       "id": 2,
       "name": "Indian",
-      "price": 34.99,
+      "price": "৳ 34.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/CIB_1-1068x601.jpg"
     },
     {
       "id": 3,
       "name": "Prawn & Fish Dishes",
-      "price": 25.99,
+      "price": "৳ 25.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg"
     },
     {
       "id": 4,
       "name": "Chicken Kebab",
-      "price": 99,
+      "price": "৳ 99.00",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     },
     {
       "id": 5,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 55.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 6,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 7,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 8,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 9,
       "name": "Prawn & Fish Dishes",
-      "price": 25.99,
+      "price": "৳ 25.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg"
     },
     {
       "id": 10,
       "name": "Chicken Kebab",
-      "price": 99,
+      "price": "৳ 99.00",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     },
     {
       "id": 11,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 35.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 12,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 13,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 14,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 16,
       "name": "Chicken Kebab",
-      "price": 99,
+      "price": "৳ 99.00",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     },
     {
       "id": 17,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 35.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 18,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 19,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 20,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 21,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 35.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 22,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 23,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 24,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 26,
       "name": "Chicken Kebab",
-      "price": 99,
+      "price": "৳ 99.00",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     },
     {
       "id": 27,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 35.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 28,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 29,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 30,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 31,
       "name": "Chicken Kebab",
-      "price": 99,
+      "price": "৳ 99.00",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     },
     {
       "id": 32,
       "name": "Chaines Vegetables",
-      "price": 35,
+      "price": "৳ 35.00",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Easy-Taco-Recipe-Dinner-Board-4.jpg"
     },
     {
       "id": 33,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     },
     {
       "id": 34,
       "name": "Chicken Burger",
-      "price": 49.99,
+      "price": "৳ 49.99",
       "variant": "Medium",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/menu-6.jpg"
     },
     {
       "id": 35,
       "name": "Grill & Deep Fried",
-      "price": 44.99,
+      "price": "৳ 44.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1-39-500x426.jpeg"
     },
     {
       "id": 36,
       "name": "Chicken Wings",
-      "price": 33.99,
+      "price": "৳ 33.99",
       "variant": "Regular",
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/1550611553388.jpeg"
     }

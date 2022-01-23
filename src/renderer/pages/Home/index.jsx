@@ -1,5 +1,5 @@
 import { Col, ConfigProvider, Input, Row } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
@@ -7,7 +7,7 @@ import PosSidebar from './../../components/PosSidebar';
 import './Home.style.scss';
 
 const Home = ({ direction }) => {
-  const [cartItems, setCartItems] = useState([]);
+  // const [cartItems, setCartItems] = useState([]);
 
   return (
     <div className="main_wrapper">
@@ -31,16 +31,13 @@ const Home = ({ direction }) => {
 
                   <div className="foodItems_wrapper">
                     <Row className="foodList_wrapper">
-                      <FoodLists
-                        setCartItems={setCartItems}
-                        cartItems={cartItems}
-                      />
+                      <FoodLists />
                     </Row>
                   </div>
                 </Col>
 
                 <Col lg={10}>
-                  <Cart setCartItems={setCartItems} cartItems={cartItems} />
+                  <Cart />
                 </Col>
               </Row>
             </Col>

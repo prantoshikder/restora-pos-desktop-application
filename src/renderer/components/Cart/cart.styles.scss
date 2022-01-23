@@ -48,13 +48,10 @@
 }
 .delete_icon {
   svg {
-    background-color: #e5343d;
-    border-color: #bf2d35;
     align-items: center;
-    border-radius: 6px;
     font-size: 1.8rem;
     cursor: pointer;
-    color: #fff;
+    color: #e5343d;
     padding: 4px;
   }
 }
@@ -97,6 +94,12 @@
         white-space: nowrap;
         background-color: #fff;
         border: 1px solid #e0e0e0;
+
+        tr{
+          td{
+            padding: 6px 16px;
+          }
+        }
       }
     }
   }
@@ -106,6 +109,16 @@
   tr {
     background-color: #f1f1f1;
   }
+}
+
+.quantity_value{
+ width: 100%;
+ border-radius: 10px;
+ overflow: hidden;
+
+ div{
+   opacity: 1;
+ }
 }
 
 .add_customer, 
