@@ -18,9 +18,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 
-
-var dbPath = app.getPath('userData')
-
+var dbPath = app.getPath('userData');
 
 export default class AppUpdater {
   constructor() {
@@ -32,41 +30,57 @@ export default class AppUpdater {
 
 let mainWindow;
 
-ipcMain.on("getSettingDataFromDB", (event, args) => {
+ipcMain.on('getSettingDataFromDB', (event, args) => {
+  let { status } = args;
 
-  let { status } = args
-
-  let settingSqlQ = `select * from setting`
-
+  let settingSqlQ = `select * from setting`;
 
   if (status) {
-
     // Create DB connection
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-
       db.all(settingSqlQ, [], (err, rows) => {
         console.log(rows);
-        mainWindow.webContents.send("sendSettingDataFromMain", rows);
-      })
+        mainWindow.webContents.send('sendSettingDataFromMain', rows);
+      });
+    });
 
-    })
+    db.close();
+  } else {
+    console.log('else!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
-    db.close()
-
-  }
-  else {
-    console.log("else!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-    let { applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText } = args
+    let {
+      applicationTitle,
+      storeName,
+      address,
+      emailAddress,
+      phone,
+      logo,
+      favcon,
+      availableOn,
+      closingTime,
+      vatSetting,
+      tinOrVatNumber,
+      discountType,
+      discountRate,
+      serviceChange,
+      selectServiceChargeType,
+      currency,
+      deliveryTime,
+      language,
+      timeZone,
+      dateFormate,
+      applicationAlignment,
+      poweredByText,
+      footerText,
+    } = args;
     // Create DB connection
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
     db.serialize(() => {
-
       db.run(`DROP TABLE IF EXISTS setting`)
         .run(
-        `CREATE TABLE IF NOT EXISTS setting (
+          `CREATE TABLE IF NOT EXISTS setting (
           "id" INTEGER PRIMARY KEY AUTOINCREMENT,
           "title" varchar(255),
           "storename" varchar(100),
@@ -98,29 +112,49 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText],
+          [
+            applicationTitle,
+            storeName,
+            address,
+            emailAddress,
+            phone,
+            logo,
+            favcon,
+            availableOn,
+            closingTime,
+            vatSetting,
+            tinOrVatNumber,
+            discountType,
+            discountRate,
+            serviceChange,
+            selectServiceChargeType,
+            currency,
+            deliveryTime,
+            language,
+            timeZone,
+            dateFormate,
+            applicationAlignment,
+            poweredByText,
+            footerText,
+          ],
           function (err) {
             if (err) {
-              console.log("Error message", err.message);
+              console.log('Error message', err.message);
               return;
             }
 
             console.log(`row inserted ${this.applicationTitle}`);
           }
-        )
-        // .all(settingSqlQ, [], (err, rows)=>{
-        //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
-        //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
-        // })
+        );
+      // .all(settingSqlQ, [], (err, rows)=>{
+      //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
+      //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
+      // })
+    });
 
-    })
-
-    db.close()
-
+    db.close();
   }
-
 });
-
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -162,13 +196,15 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1500,
-    height: 1000,
+    // width: 1500,
+    // height: 1000,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  mainWindow.maximize();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

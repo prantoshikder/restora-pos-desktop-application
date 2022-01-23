@@ -1,14 +1,15 @@
-.food-card {
-  margin: 14px 0;
+.food_card {
+  margin: 12px;
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
   cursor: pointer;
-  .food-image {
+
+  .food_image {
     position: relative;
     top: -12px;
     left: -12px;
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: rgb(0 0 0 / 18%) 0px 2px 4px;
     border: 1px solid transparent;
@@ -21,10 +22,10 @@
       border-radius: 8px;
     }
   }
-  .card-body {
+  .card_body {
     padding: 0 0.8rem 0.5rem;
 
-    .h5 {
+    p {
       font-size: 15px;
       margin: 0;
       font-weight: 600;

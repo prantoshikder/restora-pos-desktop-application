@@ -1,8 +1,4 @@
-import {
-  FileAddOutlined,
-  PlusCircleOutlined,
-  ShoppingCartOutlined,
-} from '@ant-design/icons';
+import { PlusCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -10,22 +6,39 @@ import {
   Col,
   Form,
   Input,
+  InputNumber,
   message,
+  Modal,
   Row,
   Select,
+  Space,
+  Table,
   TimePicker,
 } from 'antd';
 import moment from 'moment';
-import { default as React, default as React, useEffect, useState } from 'react';
+import {
+  default as React,
+  default as React,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
-const Cart = ({ cartItems, setCartItems }) => {
+const Cart = () => {
   const [form] = Form.useForm();
+  const [addCustomer] = Form.useForm();
   const [foodNote] = Form.useForm();
   const [show, setShow] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [itemQuantity, setItemQuantity] = useState(1);
+  const [quantityValue, setQuantityValue] = useState(1);
+
+  const { cartItems, setCartItems } = useContext(ContextData);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -45,6 +58,72 @@ const Cart = ({ cartItems, setCartItems }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const changeQuantityValue = (value) => {
+    if (value < 1) {
+      message.error({
+        content: 'At list added one item',
+        className: 'custom-class',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+    } else {
+      setQuantityValue(value);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Item',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Variant Name',
+      dataIndex: 'variant',
+      key: 'variant',
+      align: 'center',
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      align: 'center',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
+      width: '10%',
+      render: (text, record) => (
+        <InputNumber
+          value={quantityValue}
+          onChange={changeQuantityValue}
+          className="quantity_value"
+        />
+      ),
+    },
+    {
+      title: 'Total',
+      dataIndex: 'price',
+      key: 'total',
+      align: 'center',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      align: 'center',
+      render: (text, record) => (
+        <Space size="middle" className="delete_icon">
+          <FontAwesomeIcon
+            icon={faTrashAlt}
+            onClick={() => handleDeleteItem(record)}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   const selectCustomerName = (value) => {
     setCartData({ ...cartData, customerName: value });
@@ -66,7 +145,8 @@ const Cart = ({ cartItems, setCartItems }) => {
     setCartData({ ...cartData, cookingTime: value });
   };
 
-  const handleDeleteItem = (id) => {
+  const handleDeleteItem = (item) => {
+    console.log('item1', item);
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -74,12 +154,13 @@ const Cart = ({ cartItems, setCartItems }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    item.isSelected = false;
+
+    setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
     return;
   };
 
   const handleSubmit = () => {
-    console.log('cartData', cartData);
     if (!cartData.customerName) {
       message.error({
         content: 'Customer Name is required',
@@ -117,12 +198,7 @@ const Cart = ({ cartItems, setCartItems }) => {
       return;
     }
 
-    // message.success({
-    //   content: 'Order Done',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: { marginTop: '5vh', float: 'right' },
-    // });
+    console.log('cartData', cartData);
 
     form.resetFields();
     setCartItems('');
@@ -169,21 +245,29 @@ const Cart = ({ cartItems, setCartItems }) => {
     setItemQuantity(value);
   };
 
+  const handleAddCustomer = () => {
+    setVisible(true);
+  };
+
+  const submitCustomer = () => {};
+
   return (
-    <div className="cart-wrapper">
+    <div className="cart_wrapper">
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        {/* Cart Top */}
-        <div className="form-content">
-          <div className="banner-card">
-            <Row>
-              <Col lg={10}>
-                <Form.Item label="Customer Name *" name="customerName">
+        <div className="form_content">
+          <div className="banner_card">
+            <Row gutter={30}>
+              <Col lg={11}>
+                <Form.Item
+                  label="Customer Name *"
+                  className="custom_level"
+                  name="customerName"
+                >
                   <Select
                     placeholder="Select a Customer Name"
                     value={cartData.customerName}
@@ -197,13 +281,21 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={4}>
-                <Button className="add-customer">
+              <Col lg={2}>
+                <Button
+                  className="add_customer"
+                  onClick={() => handleAddCustomer()}
+                >
                   <PlusCircleOutlined />
                 </Button>
               </Col>
-              <Col lg={10}>
-                <Form.Item label="Customer Type *" name="customerType">
+
+              <Col lg={11}>
+                <Form.Item
+                  label="Customer Type *"
+                  className="custom_level"
+                  name="customerType"
+                >
                   <Select
                     placeholder="Select a Customer Name"
                     value={cartData.customerType}
@@ -219,9 +311,14 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row className="justify-center">
-              <Col lg={6}>
-                <Form.Item label="Waiter *" name="waiter">
+
+            <Row gutter={30}>
+              <Col lg={7}>
+                <Form.Item
+                  label="Waiter *"
+                  className="custom_level"
+                  name="waiter"
+                >
                   <Select
                     placeholder="Select Waiter"
                     value={cartData.waiter}
@@ -238,18 +335,17 @@ const Cart = ({ cartItems, setCartItems }) => {
               </Col>
 
               <Col lg={3}>
-                <Button
-                  size="large"
-                  type="primary"
-                  className="add-customer"
-                  // onClick={handlePlaceOrder}
-                >
+                <Button size="large" type="primary" className="add_customer">
                   Person
                 </Button>
               </Col>
 
               <Col lg={7}>
-                <Form.Item label="Table *" name="table">
+                <Form.Item
+                  label="Table *"
+                  className="custom_level"
+                  name="table"
+                >
                   <Select
                     placeholder="Select Table"
                     value={cartData.table}
@@ -265,8 +361,12 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={8}>
-                <Form.Item label="Cooking Time *" name="cookingTime">
+              <Col lg={7}>
+                <Form.Item
+                  label="Cooking Time *"
+                  className="custom_level"
+                  name="cookingTime"
+                >
                   <TimePicker
                     defaultValue={moment('00:00:00', 'HH:mm:ss')}
                     size="large"
@@ -279,63 +379,28 @@ const Cart = ({ cartItems, setCartItems }) => {
           </div>
         </div>
 
-        {/* <CartItems /> */}
-        <div className="select-product-item">
-          <div className="product-item-table">
+        <div className="select_product_item">
+          <div className="product_item_table">
             {cartItems?.length === 0 ? (
               <div className="empty-cart">
-                <div className="empty-cart-item">
+                <div className="empty_cart_item">
                   <ShoppingCartOutlined />
                 </div>
               </div>
             ) : (
-              <div className="product-list-table">
-                <table className="custom-table" striped>
-                  <thead align="center">
-                    <tr>
-                      <th>Item</th>
-                      <th>Variant Name</th>
-                      <th>Price</th>
-                      <th>Quantity</th>
-                      <th>Total</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="single-product-item">
-                    {cartItems?.map((item) => (
-                      <tr key={item?.id} align="center">
-                        <td align="left" className="note-icon">
-                          <FileAddOutlined onClick={handleShow} />
-                          {item?.name}
-                        </td>
-                        <td>{item?.variant}</td>
-                        <td>${item?.price}</td>
-                        <td>
-                          <Input
-                            className="quantity"
-                            type="number"
-                            value={itemQuantity}
-                            onChange={handleItemQuantity}
-                          />
-                        </td>
-                        <td>2</td>
-                        <td className="delete-icon">
-                          <FontAwesomeIcon
-                            icon={faTrashAlt}
-                            onClick={() => handleDeleteItem(item?.id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="product_list_table">
+                <Table
+                  columns={columns}
+                  pagination={false}
+                  dataSource={cartItems}
+                  className="custom_table"
+                />
               </div>
             )}
           </div>
         </div>
 
-        {/* CartBottom */}
-        <div className="cart-footer">
+        <div className="cart_footer">
           <div className="service-charge">
             <table bordered>
               <tbody size="small">
@@ -346,7 +411,8 @@ const Cart = ({ cartItems, setCartItems }) => {
               </tbody>
             </table>
           </div>
-          <div className="grand-total mb-2">
+
+          <div className="grand_total">
             <div>
               <span>Grand Total</span>
             </div>
@@ -356,11 +422,11 @@ const Cart = ({ cartItems, setCartItems }) => {
             </div>
           </div>
 
-          <div className="btn-wrapper">
+          <div className="cartBtn_wrapper">
             <Button
               type="primary"
               onClick={handleCalculation}
-              className="calculator group-btn"
+              className="calculator cartGroup_btn"
               size="large"
             >
               <FontAwesomeIcon icon={faCalculator} />
@@ -369,7 +435,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             <Button
               type="primary"
               onClick={handleResetAll}
-              className="delete-selected-item group-btn"
+              className="delete_selected_item cartGroup_btn"
               size="large"
             >
               Cancel
@@ -378,7 +444,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             <Button
               type="primary"
               htmlType="submit"
-              className="quick-order-btn group-btn"
+              className="quick_order_btn cartGroup_btn"
               onClick={handleQuickOrder}
               size="large"
             >
@@ -389,7 +455,7 @@ const Cart = ({ cartItems, setCartItems }) => {
               size="large"
               type="primary"
               htmlType="submit"
-              className="place-order-btn group-btn"
+              className="place_order_btn cartGroup_btn"
               onClick={handlePlaceOrder}
             >
               Place Order
@@ -398,37 +464,83 @@ const Cart = ({ cartItems, setCartItems }) => {
         </div>
       </Form>
 
-      {/* <CartBottom /> */}
-
-      {/* <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Food Note</Modal.Title>
-        </Modal.Header>
-
+      <Modal
+        title="Add Variant"
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={null}
+        width={650}
+      >
         <Row>
-          <Col lg={{ span: 10, offset: 1 }}>
+          <Col lg={24}>
             <Form
-              form={foodNote}
-              onFinish={handleUpdateNote}
+              form={addCustomer}
+              onFinish={submitCustomer}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
-              <div>
-                <Form.Item label="Food Note" name="foodNote">
-                  <Input.TextArea placeholder="Opening Note" size="large" />
-                </Form.Item>
+              <Form.Item
+                label="Customer Name"
+                name="customerName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Customer Name!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Name" size="large" />
+              </Form.Item>
 
-                <Form.Item>
-                  <Button className="note-btn" htmlType="submit">
-                    Update Note
-                  </Button>
-                </Form.Item>
-              </div>
+              <Form.Item
+                label="Email Address"
+                name="customerName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Email Address!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Email" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="Mobile "
+                name="mobile"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Mobile!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Mobile" size="large" />
+              </Form.Item>
+
+              <Form.Item label="Address" name="address">
+                <TextArea placeholder="Customer Address" size="large" />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="danger"
+                  style={{
+                    marginRight: '1rem',
+                  }}
+                  onClick={() => setVisible(false)}
+                >
+                  Close
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
             </Form>
           </Col>
         </Row>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };

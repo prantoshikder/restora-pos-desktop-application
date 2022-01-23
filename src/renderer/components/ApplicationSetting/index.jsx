@@ -8,7 +8,6 @@ import {
   message,
   Row,
   Select,
-  Typography,
   Upload,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +15,6 @@ import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title } = Typography;
 
 const ApplicationSetting = () => {
   window.api.send('getSettingDataFromDB', { status: true });
@@ -152,7 +150,6 @@ const ApplicationSetting = () => {
   console.log('setting', setting);
   return (
     <div className="application_setting">
-      <Title level={3}>Application Settings</Title>
       <Form
         form={form}
         layout="vertical"
@@ -177,8 +174,8 @@ const ApplicationSetting = () => {
           ['applicationTitle']: appSettingsData?.title,
         }}
       >
-        <Row>
-          <Col lg={6}>
+        <Row gutter={20}>
+          <Col lg={13}>
             <Form.Item label="Application Title" name="applicationTitle">
               <Input
                 placeholder="Application Title"
@@ -236,8 +233,8 @@ const ApplicationSetting = () => {
             </Form.Item>
 
             <Form.Item label="Favicon">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={20}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -254,15 +251,15 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
             </Form.Item>
 
             <Form.Item label="Logo">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={20}>
+                <Col lg={16}>
                   <Form.Item
                     name="dragger"
                     valuePropName="fileList"
@@ -279,7 +276,7 @@ const ApplicationSetting = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
               </Row>
@@ -343,7 +340,7 @@ const ApplicationSetting = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={6}>
+          <Col lg={11}>
             <Form.Item
               label="Select Service Charge Type"
               name="selectServiceChargeType"
