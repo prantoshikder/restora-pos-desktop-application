@@ -111,6 +111,16 @@
   }
 }
 
+.quantity_value{
+ width: 100%;
+ border-radius: 10px;
+ overflow: hidden;
+
+ div{
+   opacity: 1;
+ }
+}
+
 .add_customer, 
 .add_customer:hover,
 .add_customer:focus{

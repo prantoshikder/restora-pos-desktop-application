@@ -1,19 +1,23 @@
 import { Col } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
+import { ContextData } from './../../contextApi';
 import './food.item.styles.scss';
 
-const FoodItem = ({ item, setCartItems, cartItems }) => {
+const FoodItem = ({ item }) => {
+  const { cartItems, setCartItems } = useContext(ContextData);
+
   const handleFoodItem = (e, item) => {
     if (!item.isSelected) {
       item.isSelected = true;
       e.currentTarget.style.border = '2px solid #297600';
+      setCartItems([...cartItems, item]);
     } else {
       item.isSelected = false;
       e.currentTarget.style.border = '';
+      setCartItems(cartItems.filter((cartId) => cartId.id !== item.id));
+      return;
     }
-
-    setCartItems([...cartItems, item]);
   };
 
   return (

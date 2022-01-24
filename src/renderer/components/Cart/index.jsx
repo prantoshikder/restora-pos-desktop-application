@@ -5,7 +5,10 @@ import {
   Button,
   Col,
   Form,
+  Input,
+  InputNumber,
   message,
+  Modal,
   Row,
   Select,
   Space,
@@ -13,16 +16,29 @@ import {
   TimePicker,
 } from 'antd';
 import moment from 'moment';
-import { default as React, default as React, useEffect, useState } from 'react';
+import {
+  default as React,
+  default as React,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
-const Cart = ({ cartItems, setCartItems }) => {
+const Cart = () => {
   const [form] = Form.useForm();
+  const [addCustomer] = Form.useForm();
   const [foodNote] = Form.useForm();
   const [show, setShow] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [itemQuantity, setItemQuantity] = useState(1);
+  const [quantityValue, setQuantityValue] = useState(1);
+
+  const { cartItems, setCartItems } = useContext(ContextData);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -42,6 +58,19 @@ const Cart = ({ cartItems, setCartItems }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const changeQuantityValue = (value) => {
+    if (value < 1) {
+      message.error({
+        content: 'At list added one item',
+        className: 'custom-class',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+    } else {
+      setQuantityValue(value);
+    }
+  };
 
   const columns = [
     {
@@ -66,6 +95,14 @@ const Cart = ({ cartItems, setCartItems }) => {
       dataIndex: 'quantity',
       key: 'quantity',
       align: 'center',
+      width: '10%',
+      render: (text, record) => (
+        <InputNumber
+          value={quantityValue}
+          onChange={changeQuantityValue}
+          className="quantity_value"
+        />
+      ),
     },
     {
       title: 'Total',
@@ -81,7 +118,7 @@ const Cart = ({ cartItems, setCartItems }) => {
         <Space size="middle" className="delete_icon">
           <FontAwesomeIcon
             icon={faTrashAlt}
-            onClick={() => handleDeleteItem(record.id)}
+            onClick={() => handleDeleteItem(record)}
           />
         </Space>
       ),
@@ -108,7 +145,8 @@ const Cart = ({ cartItems, setCartItems }) => {
     setCartData({ ...cartData, cookingTime: value });
   };
 
-  const handleDeleteItem = (id) => {
+  const handleDeleteItem = (item) => {
+    console.log('item1', item);
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -116,7 +154,9 @@ const Cart = ({ cartItems, setCartItems }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    item.isSelected = false;
+
+    setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
     return;
   };
 
@@ -205,6 +245,12 @@ const Cart = ({ cartItems, setCartItems }) => {
     setItemQuantity(value);
   };
 
+  const handleAddCustomer = () => {
+    setVisible(true);
+  };
+
+  const submitCustomer = () => {};
+
   return (
     <div className="cart_wrapper">
       <Form
@@ -236,7 +282,10 @@ const Cart = ({ cartItems, setCartItems }) => {
               </Col>
 
               <Col lg={2}>
-                <Button className="add_customer">
+                <Button
+                  className="add_customer"
+                  onClick={() => handleAddCustomer()}
+                >
                   <PlusCircleOutlined />
                 </Button>
               </Col>
@@ -414,6 +463,84 @@ const Cart = ({ cartItems, setCartItems }) => {
           </div>
         </div>
       </Form>
+
+      <Modal
+        title="Add Variant"
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={null}
+        width={650}
+      >
+        <Row>
+          <Col lg={24}>
+            <Form
+              form={addCustomer}
+              onFinish={submitCustomer}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Form.Item
+                label="Customer Name"
+                name="customerName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Customer Name!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Name" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="Email Address"
+                name="customerName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Email Address!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Email" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="Mobile "
+                name="mobile"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Mobile!',
+                  },
+                ]}
+              >
+                <Input placeholder="Customer Mobile" size="large" />
+              </Form.Item>
+
+              <Form.Item label="Address" name="address">
+                <TextArea placeholder="Customer Address" size="large" />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="danger"
+                  style={{
+                    marginRight: '1rem',
+                  }}
+                  onClick={() => setVisible(false)}
+                >
+                  Close
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 };
