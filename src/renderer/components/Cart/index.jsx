@@ -25,6 +25,7 @@ import {
 } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
+import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -34,9 +35,10 @@ const Cart = () => {
   const [addCustomer] = Form.useForm();
   const [foodNote] = Form.useForm();
   const [show, setShow] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [itemQuantity, setItemQuantity] = useState(1);
   const [quantityValue, setQuantityValue] = useState(1);
+  const [visible, setVisible] = useState(false);
+  const [warmingModal, setWarmingModal] = useState(false);
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
@@ -161,6 +163,7 @@ const Cart = () => {
   };
 
   const handleSubmit = () => {
+    setWarmingModal(true);
     if (!cartData.customerName) {
       message.error({
         content: 'Customer Name is required',
@@ -220,7 +223,9 @@ const Cart = () => {
 
   const handleQuickOrder = () => {};
 
-  const handlePlaceOrder = () => {};
+  const handlePlaceOrder = () => {
+    setWarmingModal(true);
+  };
 
   const handleUpdateNote = () => {
     foodNote.resetFields();
@@ -424,7 +429,6 @@ const Cart = () => {
 
           <div className="cartBtn_wrapper">
             <Button
-              type="primary"
               onClick={handleCalculation}
               className="calculator cartGroup_btn"
               size="large"
@@ -433,7 +437,6 @@ const Cart = () => {
             </Button>
 
             <Button
-              type="primary"
               onClick={handleResetAll}
               className="delete_selected_item cartGroup_btn"
               size="large"
@@ -442,7 +445,6 @@ const Cart = () => {
             </Button>
 
             <Button
-              type="primary"
               htmlType="submit"
               className="quick_order_btn cartGroup_btn"
               onClick={handleQuickOrder}
@@ -453,7 +455,6 @@ const Cart = () => {
 
             <Button
               size="large"
-              type="primary"
               htmlType="submit"
               className="place_order_btn cartGroup_btn"
               onClick={handlePlaceOrder}
@@ -541,6 +542,11 @@ const Cart = () => {
           </Col>
         </Row>
       </Modal>
+
+      <WarmingModal
+        setWarmingModal={setWarmingModal}
+        warmingModal={warmingModal}
+      />
     </div>
   );
 };
