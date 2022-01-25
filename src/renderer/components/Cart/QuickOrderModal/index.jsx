@@ -1,16 +1,15 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
 import React from 'react';
-import './WarmingModal.styles.scss';
 
 const { Text } = Typography;
 
-const WarmingModal = ({ warmingModal, setWarmingModal }) => {
+const QuickOrderModal = ({ quickOrderModal, setQuickOrderModal }) => {
   return (
     <Modal
-      visible={warmingModal}
-      onOk={() => setWarmingModal(false)}
-      onCancel={() => setWarmingModal(false)}
+      visible={quickOrderModal}
+      onOk={() => setQuickOrderModal(false)}
+      onCancel={() => setQuickOrderModal(false)}
       footer={null}
       width={400}
     >
@@ -18,30 +17,27 @@ const WarmingModal = ({ warmingModal, setWarmingModal }) => {
         <Col lg={24}>
           <div className="text_center">
             <div className="warning_icon">
-              <ExclamationCircleOutlined />
+              <CheckCircleOutlined />
             </div>
-            <h1>Order Failed!!!</h1>
-            <Text>
-              Order not placed due to some reason. Please Try Again!!!. Thank
-              You !!!
-            </Text>
+            <h1>Order Placed Successfully</h1>
+            <Text>Do you Want to Print Invoice???</Text>
             <div className="flex content_center group_button">
               <Button
                 type="danger"
                 style={{
                   marginRight: '1rem',
                 }}
-                onClick={() => setWarmingModal(false)}
+                onClick={() => setQuickOrderModal(false)}
               >
-                Cancel
+                No
               </Button>
 
               <Button
                 type="primary"
                 htmlType="submit"
-                onClick={() => setWarmingModal(false)}
+                // onClick={() => setWarmingModal(false)}
               >
-                Yes, Cancel
+                Yes
               </Button>
             </div>
           </div>
@@ -51,4 +47,4 @@ const WarmingModal = ({ warmingModal, setWarmingModal }) => {
   );
 };
 
-export default WarmingModal;
+export default QuickOrderModal;
