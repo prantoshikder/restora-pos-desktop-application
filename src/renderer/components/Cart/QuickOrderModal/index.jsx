@@ -1,15 +1,33 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 
 const { Text } = Typography;
 
-const QuickOrderModal = ({ quickOrderModal, setQuickOrderModal }) => {
+const ConfirmOrderModal = ({
+  confirmOrder,
+  setConfirmOrder,
+  confirmBtn,
+  printId,
+}) => {
+  const [quickOrder, setQuickOrder] = useState(false);
+  const [placeOrder, setPlaceOrder] = useState(false);
+
+  const quickOrderModal = () => {};
+
+  const placeOrderModal = () => {
+    const printContents = document.getElementById(printId).innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  };
+
   return (
     <Modal
-      visible={quickOrderModal}
-      onOk={() => setQuickOrderModal(false)}
-      onCancel={() => setQuickOrderModal(false)}
+      visible={confirmOrder}
+      onOk={() => setConfirmOrder(false)}
+      onCancel={() => setConfirmOrder(false)}
       footer={null}
       width={400}
     >
@@ -27,18 +45,28 @@ const QuickOrderModal = ({ quickOrderModal, setQuickOrderModal }) => {
                 style={{
                   marginRight: '1rem',
                 }}
-                onClick={() => setQuickOrderModal(false)}
+                onClick={() => setConfirmOrder(false)}
               >
                 No
               </Button>
 
-              <Button
-                type="primary"
-                htmlType="submit"
-                // onClick={() => setWarmingModal(false)}
-              >
-                Yes
-              </Button>
+              {confirmBtn === 'quickOrder' ? (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={quickOrderModal}
+                >
+                  Yes
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={placeOrderModal}
+                >
+                  Yes
+                </Button>
+              )}
             </div>
           </div>
         </Col>
@@ -47,4 +75,4 @@ const QuickOrderModal = ({ quickOrderModal, setQuickOrderModal }) => {
   );
 };
 
-export default QuickOrderModal;
+export default ConfirmOrderModal;

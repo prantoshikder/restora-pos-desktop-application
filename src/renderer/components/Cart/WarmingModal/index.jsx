@@ -3,7 +3,7 @@ import { Button, Col, Modal, Row, Typography } from 'antd';
 import React from 'react';
 import './WarmingModal.styles.scss';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const WarmingModal = ({ warmingModal, setWarmingModal }) => {
   return (
@@ -20,11 +20,14 @@ const WarmingModal = ({ warmingModal, setWarmingModal }) => {
             <div className="warning_icon">
               <ExclamationCircleOutlined />
             </div>
-            <h1>Order Failed!!!</h1>
+
+            <Title level={2}>Order Failed!!!</Title>
+
             <Text>
               Order not placed due to some reason. Please Try Again!!!. Thank
               You !!!
             </Text>
+
             <div className="flex content_center group_button">
               <Button
                 type="danger"
@@ -34,14 +37,6 @@ const WarmingModal = ({ warmingModal, setWarmingModal }) => {
                 onClick={() => setWarmingModal(false)}
               >
                 Cancel
-              </Button>
-
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={() => setWarmingModal(false)}
-              >
-                Yes, Cancel
               </Button>
             </div>
           </div>

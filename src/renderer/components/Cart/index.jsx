@@ -18,7 +18,6 @@ import {
 import moment from 'moment';
 import {
   default as React,
-  default as React,
   useContext,
   useEffect,
   useRef,
@@ -26,7 +25,7 @@ import {
 } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
-import QuickOrderModal from './QuickOrderModal';
+import ConfirmOrderModal from './QuickOrderModal';
 import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
@@ -41,11 +40,11 @@ const Cart = () => {
 
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [itemQuantity, setItemQuantity] = useState(1);
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState(false);
 
-  const [quickOrderModal, setQuickOrderModal] = useState(false);
+  const [confirmBtn, setConfirmBtn] = useState('');
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
@@ -193,7 +192,8 @@ const Cart = () => {
         'quickOrderBtnRef',
         quickOrderBtnRef.current.getAttribute('data-orderBtn')
       );
-      setQuickOrderModal(true);
+      setConfirmBtn(quickOrderBtnRef.current.getAttribute('data-orderBtn'));
+      setConfirmOrder(true);
       // form.resetFields();
       // setCartItems('');
     }
@@ -207,7 +207,8 @@ const Cart = () => {
         'placeOrderBtnRef',
         placeOrderBtnRef.current.getAttribute('data-orderBtn')
       );
-      setQuickOrderModal(true);
+      setConfirmBtn(placeOrderBtnRef.current.getAttribute('data-orderBtn'));
+      setConfirmOrder(true);
       // form.resetFields();
       // setCartItems('');
     }
@@ -227,13 +228,6 @@ const Cart = () => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
-  };
-
-  const handleItemQuantity = (e) => {
-    const value = e.target.value;
-    if (Number(value) === 0) return;
-
-    setItemQuantity(value);
   };
 
   const handleAddCustomer = () => {
@@ -365,7 +359,7 @@ const Cart = () => {
           </div>
         </div>
 
-        <div className="select_product_item">
+        <div id="printId" className="select_product_item">
           <div className="product_item_table">
             {cartItems?.length === 0 ? (
               <div className="empty_cart">
@@ -531,9 +525,11 @@ const Cart = () => {
         warmingModal={warmingModal}
       />
 
-      <QuickOrderModal
-        quickOrderModal={quickOrderModal}
-        setQuickOrderModal={setQuickOrderModal}
+      <ConfirmOrderModal
+        confirmOrder={confirmOrder}
+        setConfirmOrder={setConfirmOrder}
+        confirmBtn={confirmBtn}
+        printId={'printId'}
       />
     </div>
   );
