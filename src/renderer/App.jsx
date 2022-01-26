@@ -28,12 +28,12 @@ export default function App() {
       <Router>
         <SystemMenu direction={direction} />
         <Routes>
-          {/* <Route
-          path="/"
-          element={<ApplicationSettings direction={direction} />}
-        /> */}
+          <Route
+            path="/"
+            element={<ApplicationSettings direction={direction} />}
+          />
 
-          <Route path="/" element={<Home direction={direction} />} />
+          {/* <Route path="/" element={<Home direction={direction} />} /> */}
 
           <Route
             path="/add_category"
