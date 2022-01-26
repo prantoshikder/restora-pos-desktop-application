@@ -1,73 +1,47 @@
-import { CheckCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Modal, Row, Typography } from 'antd';
-import React, { useState } from 'react';
+import { Col, Modal, Row, Typography } from 'antd';
+import React, { useContext } from 'react';
+import { ContextData } from './../../../contextApi';
+import './QuickOrderModal.style.scss';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
-const ConfirmOrderModal = ({
-  confirmOrder,
-  setConfirmOrder,
-  confirmBtn,
-  printId,
-}) => {
-  const [quickOrder, setQuickOrder] = useState(false);
-  const [placeOrder, setPlaceOrder] = useState(false);
-
-  const quickOrderModal = () => {};
-
-  const placeOrderModal = () => {
-    const printContents = document.getElementById(printId).innerHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-  };
+const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
+  const { cartItems, setCartItems } = useContext(ContextData);
 
   return (
     <Modal
-      visible={confirmOrder}
-      onOk={() => setConfirmOrder(false)}
-      onCancel={() => setConfirmOrder(false)}
+      title="Select Your Payment Method"
+      visible={quickOrder}
+      onOk={() => setQuickOrder(false)}
+      onCancel={() => setQuickOrder(false)}
       footer={null}
-      width={400}
+      width={1200}
     >
-      <Row>
-        <Col lg={24}>
-          <div className="text_center">
-            <div className="warning_icon">
-              <CheckCircleOutlined />
+      <Row className="order_wrapper">
+        <Col lg={8}>
+          <div className="order_summary">
+            <div className="order_summary_heading">
+              <Title level={5}>Order Summary</Title>
             </div>
-            <h1>Order Placed Successfully</h1>
-            <Text>Do you Want to Print Invoice???</Text>
-            <div className="flex content_center group_button">
-              <Button
-                type="danger"
-                style={{
-                  marginRight: '1rem',
-                }}
-                onClick={() => setConfirmOrder(false)}
-              >
-                No
-              </Button>
 
-              {confirmBtn === 'quickOrder' ? (
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  onClick={quickOrderModal}
-                >
-                  Yes
-                </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  onClick={placeOrderModal}
-                >
-                  Yes
-                </Button>
-              )}
+            <Title level={2}>Order Placed Successfully</Title>
+
+            {cartItems?.map((item) => (
+              <div className="flex content_between order_item" key={item?.id}>
+                <h3>{item?.name}</h3>
+                <h3>{item?.price}</h3>
+              </div>
+            ))}
+          </div>
+        </Col>
+
+        <Col lg={16}>
+          <div className="order_calculation">
+            <div className="order_calculation_heading">
+              <Title level={5}>Select Payment Type</Title>
             </div>
+            <Title level={2}>Order Payment Method Successfully</Title>
+            <Text>Do you Want to Print Invoice???</Text>
           </div>
         </Col>
       </Row>
@@ -75,4 +49,4 @@ const ConfirmOrderModal = ({
   );
 };
 
-export default ConfirmOrderModal;
+export default QuickOrderModal;

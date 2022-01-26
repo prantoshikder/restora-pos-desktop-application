@@ -25,7 +25,7 @@ import {
 } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
-import ConfirmOrderModal from './QuickOrderModal';
+import ConfirmOrderModal from './ConfirmOrderModal';
 import WarmingModal from './WarmingModal';
 
 const { Option } = Select;

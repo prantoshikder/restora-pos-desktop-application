@@ -1,0 +1,26 @@
+.order_wrapper{
+  box-shadow: 0 0 5px rgb(0 0 0 / 15%);
+  h5{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    text-align: center;
+  }
+}
+.order_summary_heading{
+  background: #e6e6e6;
+
+}
+
+.order_calculation{
+  .order_calculation_heading{
+    background: #f7f7f7;
+  }
+}
+
+.order_item{
+  padding: 10px 15px;
+  border-bottom: 1px dashed #ddd;
+}
