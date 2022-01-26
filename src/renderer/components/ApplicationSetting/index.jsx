@@ -23,29 +23,6 @@ const ApplicationSetting = () => {
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [defaultData, setDefaultData] = useState([]);
-  const [setting, setSetting] = useState({
-    applicationTitle: 'Munir',
-    storeName: 'BDTASK',
-    address: 'Mirpur 12',
-    emailAddress: '',
-    phone: '',
-    availableOn: '',
-    closingTime: '',
-    discountType: '',
-    discountRate: '',
-    serviceChange: '',
-    selectServiceChargeType: '',
-    vatSetting: '',
-    tinOrVatNumber: '',
-    deliveryTime: '',
-    currency: '',
-    language: '',
-    dateFormate: '',
-    timeZone: '',
-    applicationAlignment: '',
-    poweredByText: '',
-    footerText: '',
-  });
 
   useEffect(() => {
     getApplicationSettingsData().then((data) => {
@@ -151,41 +128,10 @@ const ApplicationSetting = () => {
   }
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
-  };
-
-  const fileList = [];
-
-  const handleDocumentType = (value) => {
-    setSetting({ ...setting, categoryStatus: value });
-  };
-
-  const handleSelectServiceCharge = (value) => {
-    setSetting({ ...setting, selectServiceChargeType: value });
-  };
-
-  const handleCurrency = (value) => {
-    setSetting({ ...setting, currency: value });
-  };
-
-  const handleLanguageSet = (value) => {
-    setSetting({ ...setting, language: value });
-  };
-
-  const changeDateFormate = (value) => {
-    setSetting({ ...setting, dateFormate: value });
-  };
-
-  const changeTimeZone = (value) => {
-    setSetting({ ...setting, timeZone: value });
-  };
-
-  const changeApplicationAlignment = (value) => {
-    setSetting({ ...setting, applicationAlignment: value });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -193,7 +139,6 @@ const ApplicationSetting = () => {
   };
 
   const handleSubmit = (e) => {
-    // get form value
     // e.preventDefault();
 
     const settingsValue = {};
@@ -202,13 +147,8 @@ const ApplicationSetting = () => {
       settingsValue[data.name[0]] = data.value;
     }
 
-    console.log('settingsValue', settingsValue);
-
-    // console.log('defaultData', defaultData);
-    // return;
-
     // send data to the main process
-    window.api.send('getSettingDataFromDB', setting);
+    window.api.send('getSettingDataFromDB', settingsValue);
 
     message.success({
       content: 'Settings done successfully',
@@ -328,60 +268,26 @@ const ApplicationSetting = () => {
             </Form.Item>
 
             <Form.Item label="Available On" name="opentime">
-              <Input
-                placeholder="Available On"
-                size="large"
-                value={setting.availableOn}
-                onChange={(e) =>
-                  setSetting({ ...setting, availableOn: e.target.value })
-                }
-              />
+              <Input placeholder="Available On" size="large" />
             </Form.Item>
 
             <Form.Item label="Closing Time" name="closetime">
-              <Input
-                placeholder="Closing Time"
-                size="large"
-                value={setting.closingTime}
-                onChange={(e) =>
-                  setSetting({ ...setting, closingTime: e.target.value })
-                }
-              />
+              <Input placeholder="Closing Time" size="large" />
             </Form.Item>
 
             <Form.Item name="discount_type" label="Discount Type">
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.discountType}
-                onChange={handleDocumentType}
-                allowClear
-              >
+              <Select placeholder="Select an Option" size="large" allowClear>
                 <Option value="1">Amount</Option>
                 <Option value="2">Percent</Option>
               </Select>
             </Form.Item>
 
             <Form.Item label="Discount Rate" name="discountrate">
-              <Input
-                placeholder="Discount Rate"
-                size="large"
-                value={setting.discountRate}
-                onChange={(e) =>
-                  setSetting({ ...setting, discountRate: e.target.value })
-                }
-              />
+              <Input placeholder="Discount Rate" size="large" />
             </Form.Item>
 
             <Form.Item label="Service Charge" name="servicecharge">
-              <Input
-                placeholder="Service Charge"
-                size="large"
-                value={setting.serviceChange}
-                onChange={(e) =>
-                  setSetting({ ...setting, serviceChange: e.target.value })
-                }
-              />
+              <Input placeholder="Service Charge" size="large" />
             </Form.Item>
           </Col>
 
@@ -390,74 +296,33 @@ const ApplicationSetting = () => {
               label="Select Service Charge Type"
               name="service_chargeType"
             >
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.selectServiceChargeType}
-                onChange={handleSelectServiceCharge}
-                allowClear
-              >
+              <Select placeholder="Select an Option" size="large" allowClear>
                 <Option value="amount">Amount</Option>
                 <Option value="percent">Percent</Option>
               </Select>
             </Form.Item>
 
             <Form.Item label="Vat Setting" name="vat">
-              <Input
-                placeholder="Vat Setting"
-                size="large"
-                value={setting.vatSetting}
-                onChange={(e) =>
-                  setSetting({ ...setting, vatSetting: e.target.value })
-                }
-              />
+              <Input placeholder="Vat Setting" size="large" />
             </Form.Item>
 
             <Form.Item label="Tin Number" name="vattinno">
-              <Input
-                placeholder="Tin Number"
-                size="large"
-                value={setting.tinOrVatNumber}
-                onChange={(e) =>
-                  setSetting({ ...setting, tinOrVatNumber: e.target.value })
-                }
-              />
+              <Input placeholder="Tin Number" size="large" />
             </Form.Item>
 
             <Form.Item label="Currency" name="currency">
-              <Select
-                placeholder="Select Currency"
-                size="large"
-                value={setting.currency}
-                onChange={handleCurrency}
-                allowClear
-              >
+              <Select placeholder="Select Currency" size="large" allowClear>
                 <Option value="amount">Amount</Option>
                 <Option value="percent">Percent</Option>
               </Select>
             </Form.Item>
 
             <Form.Item label="Delivery Time" name="min_prepare_time">
-              <Input
-                placeholder="Delivery Time"
-                size="large"
-                value={setting.deliveryTime}
-                onChange={(e) =>
-                  setSetting({ ...setting, deliveryTime: e.target.value })
-                }
-              />
+              <Input placeholder="Delivery Time" size="large" />
             </Form.Item>
 
             <Form.Item label="Language" name="language">
-              <Select
-                placeholder="Select Language"
-                size="large"
-                value={setting.language}
-                onChange={handleLanguageSet}
-                // defaultValue={{ key: 'active' }}
-
-                allowClear
-              >
+              <Select placeholder="Select Language" size="large" allowClear>
                 <Option value="english">English</Option>
                 <Option value="spanish">Spanish</Option>
                 <Option value="turkish">Turkish</Option>
@@ -467,15 +332,7 @@ const ApplicationSetting = () => {
 
             <div className="d-flex">
               <Form.Item label="Date Format" name="dateformat">
-                <Select
-                  placeholder="Select Your "
-                  size="large"
-                  value={setting.dateFormate}
-                  onChange={changeDateFormate}
-                  // defaultValue={{ key: 'active' }}
-
-                  allowClear
-                >
+                <Select placeholder="Select Your " size="large" allowClear>
                   <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
                   <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
                   <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
@@ -494,10 +351,6 @@ const ApplicationSetting = () => {
                 <Select
                   placeholder="Select Your Time zone"
                   size="large"
-                  value={setting.timezone}
-                  onChange={changeTimeZone}
-                  // defaultValue={{ key: 'active' }}
-
                   allowClear
                 >
                   <Option value="asiaDhaka">Asia/Dhaka</Option>
@@ -513,10 +366,6 @@ const ApplicationSetting = () => {
               <Select
                 placeholder="Select Application Alignment"
                 size="large"
-                value={setting.applicationAlignment}
-                onChange={changeApplicationAlignment}
-                // defaultValue={{ key: 'active' }}
-
                 allowClear
               >
                 <Option value="leftToRight">Left to Right</Option>
@@ -529,23 +378,11 @@ const ApplicationSetting = () => {
                 placeholder="Copyright Information"
                 size="large"
                 rows={2}
-                value={setting.poweredByText}
-                onChange={(e) =>
-                  setSetting({ ...setting, poweredByText: e.target.value })
-                }
               />
             </Form.Item>
 
             <Form.Item label="Footer Text" name="footer_text">
-              <Input.TextArea
-                placeholder="Footer Text"
-                size="large"
-                rows={2}
-                value={setting.footerText}
-                onChange={(e) =>
-                  setSetting({ ...setting, footerText: e.target.value })
-                }
-              />
+              <Input.TextArea placeholder="Footer Text" size="large" rows={2} />
             </Form.Item>
 
             <div className="button_group">

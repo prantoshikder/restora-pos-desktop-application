@@ -124,7 +124,7 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
             closetime,
             vat,
             vattinno,
-            parseInt(discount_type),
+            discount_type,
             discountrate,
             servicecharge,
             service_chargeType,
