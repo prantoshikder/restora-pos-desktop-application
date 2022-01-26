@@ -1,0 +1,78 @@
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Modal, Row, Typography } from 'antd';
+import React, { useState } from 'react';
+
+const { Text } = Typography;
+
+const ConfirmOrderModal = ({
+  confirmOrder,
+  setConfirmOrder,
+  confirmBtn,
+  printId,
+}) => {
+  const [quickOrder, setQuickOrder] = useState(false);
+  const [placeOrder, setPlaceOrder] = useState(false);
+
+  const quickOrderModal = () => {};
+
+  const placeOrderModal = () => {
+    const printContents = document.getElementById(printId).innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  };
+
+  return (
+    <Modal
+      visible={confirmOrder}
+      onOk={() => setConfirmOrder(false)}
+      onCancel={() => setConfirmOrder(false)}
+      footer={null}
+      width={400}
+    >
+      <Row>
+        <Col lg={24}>
+          <div className="text_center">
+            <div className="warning_icon">
+              <CheckCircleOutlined />
+            </div>
+            <h1>Order Placed Successfully</h1>
+            <Text>Do you Want to Print Invoice???</Text>
+            <div className="flex content_center group_button">
+              <Button
+                type="danger"
+                style={{
+                  marginRight: '1rem',
+                }}
+                onClick={() => setConfirmOrder(false)}
+              >
+                No
+              </Button>
+
+              {confirmBtn === 'quickOrder' ? (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={quickOrderModal}
+                >
+                  Yes
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={placeOrderModal}
+                >
+                  Yes
+                </Button>
+              )}
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </Modal>
+  );
+};
+
+export default ConfirmOrderModal;

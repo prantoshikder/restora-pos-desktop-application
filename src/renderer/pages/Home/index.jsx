@@ -1,13 +1,16 @@
 import { Col, ConfigProvider, Input, Row } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
 import PosSidebar from './../../components/PosSidebar';
+import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ direction }) => {
   // const [cartItems, setCartItems] = useState([]);
+
+  const { cartItems, setCartItems } = useContext(ContextData);
 
   return (
     <div className="main_wrapper">
@@ -31,13 +34,16 @@ const Home = ({ direction }) => {
 
                   <div className="foodItems_wrapper">
                     <Row className="foodList_wrapper">
-                      <FoodLists />
+                      <FoodLists
+                        setCartItems={setCartItems}
+                        cartItems={cartItems}
+                      />
                     </Row>
                   </div>
                 </Col>
 
                 <Col lg={10}>
-                  <Cart />
+                  <Cart setCartItems={setCartItems} cartItems={cartItems} />
                 </Col>
               </Row>
             </Col>

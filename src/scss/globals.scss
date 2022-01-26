@@ -16,7 +16,7 @@
   min-height: calc(100vh - 30px);
 }
 
-.grand-total {
+.grand_total {
   color: $color-white;
   background-color: $color-blue;
 }
@@ -31,12 +31,16 @@ a {
 .item_center {
   align-items: center;
 }
-.content-end {
+.content_end {
   justify-content: end;
 }
-.content-center {
+.content_center {
   justify-content: center;
 }
 .content_between {
   justify-content: space-between;
+}
+
+.text_center{
+  text-align: center;
 }

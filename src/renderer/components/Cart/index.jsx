@@ -18,27 +18,37 @@ import {
 import moment from 'moment';
 import {
   default as React,
-  default as React,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
+import ConfirmOrderModal from './QuickOrderModal';
+import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const Cart = () => {
+  const quickOrderBtnRef = useRef();
+  const placeOrderBtnRef = useRef();
   const [form] = Form.useForm();
-  const [addCustomer] = Form.useForm();
   const [foodNote] = Form.useForm();
+  const [addCustomer] = Form.useForm();
+
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [itemQuantity, setItemQuantity] = useState(1);
   const [quantityValue, setQuantityValue] = useState(1);
+  const [warmingModal, setWarmingModal] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState(false);
+
+  const [confirmBtn, setConfirmBtn] = useState('');
 
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  console.log('cartItems', cartItems);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -48,7 +58,7 @@ const Cart = () => {
     customerName: '',
     customerType: '',
     waiter: '',
-    table: '',
+    tableNo: '',
     cookingTime: '',
     cartItems,
     vat: '',
@@ -138,7 +148,7 @@ const Cart = () => {
   };
 
   const selectTableNum = (value) => {
-    setCartData({ ...cartData, table: value });
+    setCartData({ ...cartData, tableNo: value });
   };
 
   const selectTime = (value) => {
@@ -160,50 +170,6 @@ const Cart = () => {
     return;
   };
 
-  const handleSubmit = () => {
-    if (!cartData.customerName) {
-      message.error({
-        content: 'Customer Name is required',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-      return;
-    } else if (!cartData.customerType) {
-      message.error({
-        content: 'Customer Type is required is required',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-      return;
-    } else if (!cartData.waiter) {
-      message.error({
-        content: 'Waiter name is required is required',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-      return;
-    } else if (!cartData.table) {
-      message.error({
-        content: 'Table no is required is required',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-      return;
-    } else if (!cartData.cookingTime) {
-      message.error({
-        content: 'Cooking Time is required is required',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-      return;
-    }
-
-    console.log('cartData', cartData);
-
-    form.resetFields();
-    setCartItems('');
-  };
-
   const handleResetAll = () => {
     form.resetFields();
     setCartItems('');
@@ -218,9 +184,35 @@ const Cart = () => {
 
   const handleCalculation = () => {};
 
-  const handleQuickOrder = () => {};
+  const handleQuickOrder = () => {
+    if (cartItems?.length === 0) {
+      setWarmingModal(true);
+    } else {
+      console.log(
+        'quickOrderBtnRef',
+        quickOrderBtnRef.current.getAttribute('data-orderBtn')
+      );
+      setConfirmBtn(quickOrderBtnRef.current.getAttribute('data-orderBtn'));
+      setConfirmOrder(true);
+      // form.resetFields();
+      // setCartItems('');
+    }
+  };
 
-  const handlePlaceOrder = () => {};
+  const handlePlaceOrder = () => {
+    if (cartItems?.length === 0) {
+      setWarmingModal(true);
+    } else {
+      console.log(
+        'placeOrderBtnRef',
+        placeOrderBtnRef.current.getAttribute('data-orderBtn')
+      );
+      setConfirmBtn(placeOrderBtnRef.current.getAttribute('data-orderBtn'));
+      setConfirmOrder(true);
+      // form.resetFields();
+      // setCartItems('');
+    }
+  };
 
   const handleUpdateNote = () => {
     foodNote.resetFields();
@@ -238,13 +230,6 @@ const Cart = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const handleItemQuantity = (e) => {
-    const value = e.target.value;
-    if (Number(value) === 0) return;
-
-    setItemQuantity(value);
-  };
-
   const handleAddCustomer = () => {
     setVisible(true);
   };
@@ -253,18 +238,13 @@ const Cart = () => {
 
   return (
     <div className="cart_wrapper">
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        autoComplete="off"
-      >
+      <Form form={form} layout="vertical" autoComplete="off">
         <div className="form_content">
           <div className="banner_card">
             <Row gutter={30}>
               <Col lg={11}>
                 <Form.Item
-                  label="Customer Name *"
+                  label="Customer Name"
                   className="custom_level"
                   name="customerName"
                 >
@@ -292,7 +272,7 @@ const Cart = () => {
 
               <Col lg={11}>
                 <Form.Item
-                  label="Customer Type *"
+                  label="Customer Type"
                   className="custom_level"
                   name="customerType"
                 >
@@ -315,7 +295,7 @@ const Cart = () => {
             <Row gutter={30}>
               <Col lg={7}>
                 <Form.Item
-                  label="Waiter *"
+                  label="Waiter"
                   className="custom_level"
                   name="waiter"
                 >
@@ -342,13 +322,13 @@ const Cart = () => {
 
               <Col lg={7}>
                 <Form.Item
-                  label="Table *"
+                  label="Table"
                   className="custom_level"
-                  name="table"
+                  name="tableNo"
                 >
                   <Select
-                    placeholder="Select Table"
-                    value={cartData.table}
+                    placeholder="Select Table No"
+                    value={cartData.tableNo}
                     onChange={selectTableNum}
                     size="large"
                     allowClear
@@ -363,7 +343,7 @@ const Cart = () => {
 
               <Col lg={7}>
                 <Form.Item
-                  label="Cooking Time *"
+                  label="Cooking Time"
                   className="custom_level"
                   name="cookingTime"
                 >
@@ -379,10 +359,10 @@ const Cart = () => {
           </div>
         </div>
 
-        <div className="select_product_item">
+        <div id="printId" className="select_product_item">
           <div className="product_item_table">
             {cartItems?.length === 0 ? (
-              <div className="empty-cart">
+              <div className="empty_cart">
                 <div className="empty_cart_item">
                   <ShoppingCartOutlined />
                 </div>
@@ -401,8 +381,8 @@ const Cart = () => {
         </div>
 
         <div className="cart_footer">
-          <div className="service-charge">
-            <table bordered>
+          <div className="service_charge">
+            <table bordered="true">
               <tbody size="small">
                 <tr>
                   <td>Vat/Tax:</td>
@@ -424,7 +404,6 @@ const Cart = () => {
 
           <div className="cartBtn_wrapper">
             <Button
-              type="primary"
               onClick={handleCalculation}
               className="calculator cartGroup_btn"
               size="large"
@@ -433,30 +412,29 @@ const Cart = () => {
             </Button>
 
             <Button
-              type="primary"
-              onClick={handleResetAll}
-              className="delete_selected_item cartGroup_btn"
               size="large"
+              className="delete_selected_item cartGroup_btn"
+              onClick={handleResetAll}
             >
               Cancel
             </Button>
 
             <Button
-              type="primary"
-              htmlType="submit"
+              size="large"
               className="quick_order_btn cartGroup_btn"
               onClick={handleQuickOrder}
-              size="large"
+              data-orderBtn="quickOrder"
+              ref={quickOrderBtnRef}
             >
               Quick Order
             </Button>
 
             <Button
               size="large"
-              type="primary"
-              htmlType="submit"
               className="place_order_btn cartGroup_btn"
               onClick={handlePlaceOrder}
+              data-orderBtn="placeOrder"
+              ref={placeOrderBtnRef}
             >
               Place Order
             </Button>
@@ -541,6 +519,18 @@ const Cart = () => {
           </Col>
         </Row>
       </Modal>
+
+      <WarmingModal
+        setWarmingModal={setWarmingModal}
+        warmingModal={warmingModal}
+      />
+
+      <ConfirmOrderModal
+        confirmOrder={confirmOrder}
+        setConfirmOrder={setConfirmOrder}
+        confirmBtn={confirmBtn}
+        printId={'printId'}
+      />
     </div>
   );
 };
