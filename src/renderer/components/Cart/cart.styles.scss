@@ -115,6 +115,15 @@
  width: 100%;
  border-radius: 10px;
  overflow: hidden;
+ position: relative;
+ border-color: #416dea;
+
+ &::-webkit-outer-spin-button,
+&::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
 
  div{
    opacity: 1;
@@ -200,3 +209,13 @@
   border-color: #318d01;
   color: #fff;
 }
+
+.success_icon{
+  svg{
+    font-size: 5rem;
+    font-weight: 700;
+    color: #88d57f;
+  }
+}
+
+

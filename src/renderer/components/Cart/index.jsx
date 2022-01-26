@@ -1,4 +1,9 @@
-import { PlusCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  PlusCircleOutlined,
+  ShoppingCartOutlined,
+  UpOutlined,
+} from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,39 +21,28 @@ import {
   TimePicker,
 } from 'antd';
 import moment from 'moment';
-import {
-  default as React,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { default as React, useContext, useEffect, useState } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
-import ConfirmOrderModal from './QuickOrderModal';
+import ConfirmOrderModal from './ConfirmOrderModal';
 import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const Cart = () => {
-  const quickOrderBtnRef = useRef();
-  const placeOrderBtnRef = useRef();
   const [form] = Form.useForm();
   const [foodNote] = Form.useForm();
   const [addCustomer] = Form.useForm();
 
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  const [confirmBtn, setConfirmBtn] = useState('');
-
   const { cartItems, setCartItems } = useContext(ContextData);
-
-  console.log('cartItems', cartItems);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -69,7 +63,22 @@ const Cart = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const changeQuantityValue = (value) => {
+  const changeQuantityValue = (value, cartItem) => {
+    console.log(cartItem);
+    cartItem.quantity = 1;
+
+    const itemFind = cartItems.find((item) => item.id === cartItem.id);
+
+    const index = cartItems.indexOf(itemFind);
+
+    const newData = [
+      ...cartItems.slice(0, index),
+      cartItem,
+      ...cartItems.slice(index + 1),
+    ];
+
+    console.log('newData', newData);
+
     if (value < 1) {
       message.error({
         content: 'At list added one item',
@@ -80,6 +89,36 @@ const Cart = () => {
     } else {
       setQuantityValue(value);
     }
+  };
+
+  const increaseQuantity = (cartData) => {
+    const index = cartItems.indexOf(cartData);
+
+    const newQuantity = (cartData.quantity += 1);
+
+    const newData = [
+      ...cartItems.slice(0, index),
+      { ...cartData, quantity: newQuantity },
+      ...cartItems.slice(index + 1),
+    ];
+
+    console.log('newData', newData);
+    setQuantityValue(newQuantity);
+  };
+
+  const decreaseQuantity = (cartData) => {
+    const index = cartItems.indexOf(cartData);
+
+    const newQuantity = (cartData.quantity -= 1);
+
+    const newData = [
+      ...cartItems.slice(0, index),
+      { ...cartData, quantity: newQuantity },
+      ...cartItems.slice(index + 1),
+    ];
+
+    console.log('newData', newData);
+    setQuantityValue(newQuantity);
   };
 
   const columns = [
@@ -107,11 +146,38 @@ const Cart = () => {
       align: 'center',
       width: '10%',
       render: (text, record) => (
-        <InputNumber
-          value={quantityValue}
-          onChange={changeQuantityValue}
-          className="quantity_value"
-        />
+        <div>
+          <InputNumber
+            value={record.quantity}
+            onChange={(value) => {}}
+            className="quantity_value"
+            controls={false}
+          />
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              background: '#416dea',
+              color: '#fff',
+              borderColor: '#416dea',
+              position: 'absolute',
+              right: '1rem',
+              top: '7px',
+              borderRadius: '0px 8px 8px 0px',
+              fontSize: '10px',
+              width: '20px',
+              cursor: 'pointer',
+            }}
+          >
+            <span onClick={() => increaseQuantity(record)}>
+              <UpOutlined />
+            </span>
+            <span onClick={() => decreaseQuantity(record)}>
+              <DownOutlined />
+            </span>
+          </div>
+        </div>
       ),
     },
     {
@@ -156,7 +222,6 @@ const Cart = () => {
   };
 
   const handleDeleteItem = (item) => {
-    console.log('item1', item);
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -165,14 +230,13 @@ const Cart = () => {
     });
 
     item.isSelected = false;
-
     setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
     return;
   };
 
   const handleResetAll = () => {
     form.resetFields();
-    setCartItems('');
+    // setCartItems('');
 
     message.success({
       content: 'Reset successfully',
@@ -184,33 +248,17 @@ const Cart = () => {
 
   const handleCalculation = () => {};
 
-  const handleQuickOrder = () => {
+  const handleQuickOrder = (data) => {
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
-      console.log(
-        'quickOrderBtnRef',
-        quickOrderBtnRef.current.getAttribute('data-orderBtn')
-      );
-      setConfirmBtn(quickOrderBtnRef.current.getAttribute('data-orderBtn'));
-      setConfirmOrder(true);
-      // form.resetFields();
-      // setCartItems('');
-    }
-  };
-
-  const handlePlaceOrder = () => {
-    if (cartItems?.length === 0) {
-      setWarmingModal(true);
-    } else {
-      console.log(
-        'placeOrderBtnRef',
-        placeOrderBtnRef.current.getAttribute('data-orderBtn')
-      );
-      setConfirmBtn(placeOrderBtnRef.current.getAttribute('data-orderBtn'));
-      setConfirmOrder(true);
-      // form.resetFields();
-      // setCartItems('');
+      if (data === 'quickOrder') {
+        setConfirmBtn(data);
+        setConfirmOrder(true);
+      } else if (data === 'placeOrder') {
+        setConfirmBtn(data);
+        setConfirmOrder(true);
+      }
     }
   };
 
@@ -396,6 +444,7 @@ const Cart = () => {
             <div>
               <span>Grand Total</span>
             </div>
+
             <div>
               <span>$</span>
               <span>1876451.00</span>
@@ -422,9 +471,7 @@ const Cart = () => {
             <Button
               size="large"
               className="quick_order_btn cartGroup_btn"
-              onClick={handleQuickOrder}
-              data-orderBtn="quickOrder"
-              ref={quickOrderBtnRef}
+              onClick={() => handleQuickOrder('quickOrder')}
             >
               Quick Order
             </Button>
@@ -432,9 +479,7 @@ const Cart = () => {
             <Button
               size="large"
               className="place_order_btn cartGroup_btn"
-              onClick={handlePlaceOrder}
-              data-orderBtn="placeOrder"
-              ref={placeOrderBtnRef}
+              onClick={() => handleQuickOrder('placeOrder')}
             >
               Place Order
             </Button>
@@ -501,6 +546,7 @@ const Cart = () => {
               <Form.Item label="Address" name="address">
                 <TextArea placeholder="Customer Address" size="large" />
               </Form.Item>
+
               <Form.Item>
                 <Button
                   type="danger"
@@ -511,6 +557,7 @@ const Cart = () => {
                 >
                   Close
                 </Button>
+
                 <Button type="primary" htmlType="submit">
                   Submit
                 </Button>

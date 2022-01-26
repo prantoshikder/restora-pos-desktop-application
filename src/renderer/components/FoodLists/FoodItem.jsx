@@ -25,15 +25,12 @@ const FoodItem = ({ item }) => {
       <div className="food_card" onClick={(e) => handleFoodItem(e, item)}>
         <div className="food_image">
           {item?.image ? (
-            <img
-              variant="top"
-              src={item.image}
-              // onClick={(e) => handleFoodItem(e, item)}
-            />
+            <img variant="top" src={item.image} />
           ) : (
             <img variant="top" src={foodPlaceholder} />
           )}
         </div>
+
         <div className="card_body">
           <p>{item.name}</p>
         </div>
