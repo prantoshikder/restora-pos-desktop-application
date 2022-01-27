@@ -22,17 +22,21 @@ const ApplicationSetting = () => {
   window.api.send("getSettingDataFromDB", { "status": true });
 
   const [settingsData, setSettingsData] = useState({})
-
+  let dev = {}
   // recieve data from main process
   useEffect(() => {
-    window.api.once("sendSettingDataFromMain", (settingsData) => {
+
+    window.api.once("sendSettingDataFromMain", (eve, settingsData) => {
       setSettingsData(settingsData[0])
+      // dev.settingsData[0]
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", settingsData[0]);
     });
+
   }, [])
 
   const [form] = Form.useForm();
   const [setting, setSetting] = useState({
+
     applicationTitle: '',
     storeName: '',
     address: '',
@@ -54,6 +58,7 @@ const ApplicationSetting = () => {
     applicationAlignment: '',
     poweredByText: '',
     footerText: '',
+
   });
 
   const normFile = (e) => {

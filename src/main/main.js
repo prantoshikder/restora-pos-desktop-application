@@ -66,7 +66,7 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
 
       db.run(`DROP TABLE IF EXISTS setting`)
         .run(
-        `CREATE TABLE IF NOT EXISTS setting (
+          `CREATE TABLE IF NOT EXISTS setting (
           "id" INTEGER PRIMARY KEY AUTOINCREMENT,
           "title" varchar(255),
           "storename" varchar(100),
@@ -101,17 +101,17 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
           [applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText],
           function (err) {
             if (err) {
-              console.log("Error message", err.message);
+              console.log("Error message settings table ", err.message);
               return;
             }
 
             console.log(`row inserted ${this.applicationTitle}`);
           }
         )
-        // .all(settingSqlQ, [], (err, rows)=>{
-        //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
-        //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
-        // })
+      // .all(settingSqlQ, [], (err, rows)=>{
+      //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
+      //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
+      // })
 
     })
 
@@ -120,6 +120,90 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
   }
 
 });
+
+ipcMain.on("insertCategoryData", (event, args) => {
+
+  console.log({ args });
+
+  let { categoryName, parentCategory, categoryImage, categoryIcon, categoryStatus, categoryOfferStart, categoryOfferEnd, categoryBackgroundColor } = args
+
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  db.serialize(() => {
+
+    db.run(
+
+      `CREATE TABLE IF NOT EXISTS add_item_category (
+        'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'category_name' varchar(255),
+        'category_image' varchar(255),
+        'position' INT,
+        'category_is_active' INT,
+        'offer_start_date' DATE ,
+        'offer_end_date' DATE,
+        'isoffer' INT,
+        'category_color' varchar(50),
+        'category_icon' varchar(255),
+        'parent_id' INT,
+        'user_id_inserted' INT,
+        'user_id_updated' INT,
+        'user_id_locked' INT,
+        'date_inserted' DATETIME,
+        'date_updated' DATETIME,
+        'date_locked' DATETIME
+      )`
+    )
+      .run(
+        `INSERT INTO add_item_category (
+        category_name,
+        category_image,
+        category_is_active,
+        offer_start_date,
+        offer_end_date,
+        category_color,
+        category_icon,
+        parent_id
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
+        [categoryName, categoryImage, categoryStatus, categoryOfferStart, categoryOfferEnd, categoryBackgroundColor, categoryIcon, parentCategory],
+        function (err) {
+          if (err) {
+            console.log("Error message add category table ", err.message);
+            return;
+          }
+          console.log(`row inserted ${this.category_name}`);
+        }
+      )
+    // .all(settingSqlQ, [], (err, rows) => {
+    //   console.log(rows);
+    //   mainWindow.webContents.send("getCategoryData", rows);
+    // })
+
+  })
+
+  db.close()
+
+})
+
+ipcMain.on("sendResponseForCategory", (event, args) => {
+  let { status } = args
+
+  if (status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let settingSqlQ = `select * from add_item_category`
+
+    db.serialize(() => {
+      db.all(settingSqlQ, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send("sendCategoryData", rows);
+      })
+    })
+
+    db.close()
+
+  }
+
+})
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -161,14 +245,14 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1500,
-    height: 1000,
+
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  mainWindow.maximize()
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

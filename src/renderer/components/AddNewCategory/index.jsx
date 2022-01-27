@@ -95,6 +95,9 @@ const AddNewCategory = () => {
   const handleSubmit = () => {
     console.log('categories', categories);
 
+    window.add_category.send("insertCategoryData", categories);
+
+
     message.success({
       content: 'Foods category added successfully',
       className: 'custom-class',
