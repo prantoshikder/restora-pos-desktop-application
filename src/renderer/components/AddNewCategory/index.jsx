@@ -10,10 +10,10 @@ import {
   Row,
   Select,
   Space,
-  Upload
+  Upload,
 } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -25,45 +25,59 @@ const AddNewCategory = () => {
   const [form] = Form.useForm();
   const [packageOffer, setPackageOffer] = useState('');
   const [categories, setCategories] = useState([]);
+  const [offerStartDate, setOfferStartDate] = useState('');
+  const [offerEndDate, setOfferEndDate] = useState('');
 
   useEffect(() => {
-    getCategoriesData().then((data) => {
+    insertCategory().then((data) => {
       setCategories([
         {
-          name : ['category_name'],
+          name: ['category_name'],
           value: data?.category_name,
         },
         {
-          name : ['parent_id'],
+          name: ['parent_id'],
           value: data?.parent_id,
         },
         {
-          name : ['category_color'],
+          name: ['category_color'],
           value: data?.category_color,
         },
         {
-          name : ['category_image'],
+          name: ['category_image'],
           value: data?.category_image,
         },
         {
-          name : ['category_icon'],
+          name: ['category_icon'],
           value: data?.category_icon,
         },
+        // {
+        //   name: ['offer_start_date'],
+        //   value: data?.offer_start_date,
+        // },
+        // {
+        //   name: ['offer_end_date'],
+        //   value: data?.offer_end_date,
+        // },
         {
-          name : ['offer_start_date'],
-          value: data?.offer_start_date,
-        },
-        {
-          name : ['offer_end_date'],
-          value: data?.offer_end_date,
-        },
-        {
-          name : ['category_is_active'],
+          name: ['category_is_active'],
           value: data?.category_is_active,
         },
-      ])
-    }
-  }, [])
+      ]);
+    });
+  }, []);
+
+  function insertCategory() {
+    return new Promise((resolve, reject) => {
+      window.api.once('sendSettingDataFromMain', (settingsData) => {
+        if (settingsData[0]) {
+          resolve(settingsData[0]);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
+    });
+  }
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -103,16 +117,27 @@ const AddNewCategory = () => {
     });
   };
 
+  const handleChangeStartDate = (date, stringDate) => {
+    setOfferStartDate(stringDate);
+  };
+  const handleChangeEndDate = (date, stringDate) => {
+    setOfferEndDate(stringDate);
+  };
+
   const handleSubmit = () => {
     console.log('categories', categories);
 
-    const categoriesValue = {};
+    const newCategory = {};
 
-    for(const data of categories) {
-      categoriesValue[data.name[0]] = data.value;
+    for (const data of categories) {
+      newCategory[data.name[0]] = data.value;
     }
+    newCategory.offer_start_date = offerStartDate;
+    newCategory.offer_end_date = offerEndDate;
 
-    window.api.send("getCategoryData", categoriesValue)
+    console.log('newCategory', newCategory);
+
+    window.api.send('getCategoryData', newCategory);
 
     message.success({
       content: 'Foods category added successfully',
@@ -253,6 +278,7 @@ const AddNewCategory = () => {
                       format="DD-MM-YYYY"
                       placeholder="Offer Start Date"
                       disabledDate={disabledDate}
+                      onChange={handleChangeStartDate}
                     />
                   </Form.Item>
 
@@ -260,6 +286,7 @@ const AddNewCategory = () => {
                     <DatePicker
                       format="DD-MM-YYYY"
                       placeholder="Offer End Date"
+                      onChange={handleChangeEndDate}
                       disabledDate={disabledDate}
                     />
                   </Form.Item>
