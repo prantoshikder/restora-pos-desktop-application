@@ -6,12 +6,8 @@ import QuickOrderModal from '../QuickOrderModal';
 
 const { Text } = Typography;
 
-const ConfirmOrderModal = ({
-  confirmOrder,
-  setConfirmOrder,
-  confirmBtn,
-  printId,
-}) => {
+const ConfirmOrderModal = (props) => {
+  const { confirmOrder, setConfirmOrder, confirmBtn, printId } = props;
   const [quickOrder, setQuickOrder] = useState(false);
 
   const quickOrderModal = () => {

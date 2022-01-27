@@ -13,7 +13,7 @@ import FoodAvailability from './pages/foodManagement/manageFood/FoodAvailability
 import FoodList from './pages/foodManagement/manageFood/FoodList';
 import FoodVariant from './pages/foodManagement/manageFood/FoodVariant';
 import MenuType from './pages/foodManagement/manageFood/MenuType';
-// import Home from './pages/Home';
+import Home from './pages/Home';
 import Language from './pages/Language/';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
@@ -28,12 +28,12 @@ export default function App() {
       <Router>
         <SystemMenu direction={direction} />
         <Routes>
-          <Route
+          {/* <Route
             path="/"
             element={<ApplicationSettings direction={direction} />}
-          />
+          /> */}
 
-          {/* <Route path="/" element={<Home direction={direction} />} /> */}
+          <Route path="/" element={<Home direction={direction} />} />
 
           <Route
             path="/add_category"
