@@ -42,8 +42,10 @@ const ConfirmOrderModal = ({
               <div className="success_icon">
                 <CheckCircleOutlined />
               </div>
+
               <h1>Order Placed Successfully</h1>
               <Text>Do you Want to Print Invoice???</Text>
+
               <div className="flex content_center group_button">
                 <Button
                   type="danger"
@@ -56,19 +58,11 @@ const ConfirmOrderModal = ({
                 </Button>
 
                 {confirmBtn === 'quickOrder' ? (
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    onClick={quickOrderModal}
-                  >
+                  <Button type="primary" onClick={quickOrderModal}>
                     Yes
                   </Button>
                 ) : (
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    onClick={placeOrderModal}
-                  >
+                  <Button type="primary" onClick={placeOrderModal}>
                     Yes
                   </Button>
                 )}

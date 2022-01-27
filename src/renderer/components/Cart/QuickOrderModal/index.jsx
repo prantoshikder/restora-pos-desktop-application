@@ -24,7 +24,10 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
               <Title level={5}>Order Summary</Title>
             </div>
 
-            <Title level={2}>Order Placed Successfully</Title>
+            <div className="order_summary_heading">
+              <Title level={4}>Your Cart: {cartItems?.length} items</Title>
+              <Title level={4}>Order Placed Successfully</Title>
+            </div>
 
             {cartItems?.map((item) => (
               <div className="flex content_between order_item" key={item?.id}>
@@ -32,6 +35,12 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
                 <h3>{item?.price}</h3>
               </div>
             ))}
+
+            <div className="total_order">
+              <Title level={4}>Subtotal</Title>
+              <Title level={4}>Service Charge</Title>
+              <Title level={4}>GST @ 2%</Title>
+            </div>
           </div>
         </Col>
 
@@ -40,6 +49,7 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
             <div className="order_calculation_heading">
               <Title level={5}>Select Payment Type</Title>
             </div>
+
             <Title level={2}>Order Payment Method Successfully</Title>
             <Text>Do you Want to Print Invoice???</Text>
           </div>
