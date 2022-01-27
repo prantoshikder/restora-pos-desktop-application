@@ -1,24 +1,25 @@
 import { PictureOutlined } from '@ant-design/icons';
 import {
   Button,
+  Col,
   DatePicker,
   Form,
   Input,
   message,
+  Row,
   Select,
-  Typography,
   Upload,
 } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title } = Typography;
 
 const ApplicationSetting = () => {
+  window.api.send('getSettingDataFromDB', { status: true });
 
+<<<<<<< HEAD
   window.api.send("getSettingDataFromDB", { "status": true });
 
   const [settingsData, setSettingsData] = useState({})
@@ -60,55 +61,138 @@ const ApplicationSetting = () => {
     footerText: '',
 
   });
+=======
+  const [form] = Form.useForm();
+  const [appSettingsData, setAppSettingsData] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [defaultData, setDefaultData] = useState([]);
+
+  useEffect(() => {
+    getApplicationSettingsData().then((data) => {
+      setDefaultData([
+        {
+          name: ['title'],
+          value: data?.title,
+        },
+        {
+          name: ['storename'],
+          value: data?.storename,
+        },
+        {
+          name: ['address'],
+          value: data?.address,
+        },
+        {
+          name: ['email'],
+          value: data?.email,
+        },
+        {
+          name: ['phone'],
+          value: data?.phone,
+        },
+        {
+          name: ['favicon'],
+          value: data?.favicon,
+        },
+        {
+          name: ['opentime'],
+          value: data?.opentime,
+        },
+        {
+          name: ['closetime'],
+          value: data?.closetime,
+        },
+        {
+          name: ['discount_type'],
+          value: data?.discount_type,
+        },
+        {
+          name: ['discountrate'],
+          value: data?.discountrate,
+        },
+        {
+          name: ['servicecharge'],
+          value: data?.servicecharge,
+        },
+        {
+          name: ['service_chargeType'],
+          value: data?.service_chargeType,
+        },
+        {
+          name: ['vat'],
+          value: data?.vat,
+        },
+        {
+          name: ['vattinno'],
+          value: data?.vattinno,
+        },
+        {
+          name: ['currency'],
+          value: data?.currency,
+        },
+        {
+          name: ['min_prepare_time'],
+          value: data?.min_prepare_time,
+        },
+        {
+          name: ['language'],
+          value: data?.language,
+        },
+        {
+          name: ['dateformat'],
+          value: data?.dateformat,
+        },
+        {
+          name: ['timezone'],
+          value: data?.timezone,
+        },
+        {
+          name: ['site_align'],
+          value: data?.site_align,
+        },
+        {
+          name: ['powerbytxt'],
+          value: data?.powerbytxt,
+        },
+      ]);
+    });
+  }, []);
+
+  function getApplicationSettingsData() {
+    return new Promise((resolve, reject) => {
+      window.api.once('sendSettingDataFromMain', (settingsData) => {
+        if (settingsData[0]) {
+          resolve(settingsData[0]);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
+    });
+  }
+>>>>>>> master
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
 
-  const fileList = [];
-
-  const handleDocumentType = (value) => {
-    setSetting({ ...setting, categoryStatus: value });
-  };
-
-  const handleSelectServiceCharge = (value) => {
-    setSetting({ ...setting, selectServiceChargeType: value });
-  };
-
-  const handleCurrency = (value) => {
-    setSetting({ ...setting, currency: value });
-  };
-
-  const handleLanguageSet = (value) => {
-    setSetting({ ...setting, language: value });
-  };
-
-  const changeDateFormate = (value) => {
-    setSetting({ ...setting, dateFormate: value });
-  };
-
-  const changeTimeZone = (value) => {
-    setSetting({ ...setting, timeZone: value });
-  };
-
-  const changeApplicationAlignment = (value) => {
-    setSetting({ ...setting, applicationAlignment: value });
-  };
-
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-  console.log('setting>>>>>', setting);
 
-  const handleSubmit = () => {
-    // get form value
+  const handleSubmit = (e) => {
+    // e.preventDefault();
+
+    const settingsValue = {};
+
+    for (const data of defaultData) {
+      settingsValue[data.name[0]] = data.value;
+    }
 
     // send data to the main process
-    window.api.send("getSettingDataFromDB", setting);
+    window.api.send('getSettingDataFromDB', settingsValue);
 
     message.success({
       content: 'Settings done successfully',
@@ -137,76 +221,44 @@ const ApplicationSetting = () => {
 
   return (
     <div className="application_setting">
-      <Title level={3}>Application Settings</Title>
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
+        fields={defaultData}
+        onFieldsChange={(_, allFields) => {
+          setDefaultData(allFields);
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row>
-          <Col lg={6}>
-            <Form.Item label="Application Title" name="applicationTitle">
-              <Input
-                placeholder="Application Title"
-                size="large"
-                value={setting.applicationTitle}
-                onChange={(e) =>
-                  setSetting({ ...setting, applicationTitle: e.target.value })
-                }
-              />
+        <Row gutter={20}>
+          <Col lg={13}>
+            <Form.Item label="Application Title" name="title">
+              <Input placeholder="Application Title" size="large" />
             </Form.Item>
 
-            <Form.Item label="Store Name" name="storeName">
-              <Input
-                placeholder="Store Name"
-                size="large"
-                value={setting.storeName}
-                onChange={(e) =>
-                  setSetting({ ...setting, storeName: e.target.value })
-                }
-              />
+            <Form.Item label="Store Name" name="storename">
+              <Input placeholder="Store Name" size="large" />
             </Form.Item>
 
             <Form.Item label="Address" name="address">
-              <Input
-                placeholder="Address"
-                size="large"
-                value={setting.address}
-                onChange={(e) =>
-                  setSetting({ ...setting, address: e.target.value })
-                }
-              />
+              <Input placeholder="Address" size="large" />
             </Form.Item>
 
-            <Form.Item label="Email Address" name="emailAddress">
-              <Input
-                placeholder="Email Address"
-                size="large"
-                value={setting.emailAddress}
-                onChange={(e) =>
-                  setSetting({ ...setting, emailAddress: e.target.value })
-                }
-              />
+            <Form.Item label="Email Address" name="email">
+              <Input placeholder="Email Address" size="large" />
             </Form.Item>
 
             <Form.Item label="Phone" name="phone">
-              <Input
-                placeholder="Phone"
-                size="large"
-                value={setting.phone}
-                onChange={(e) =>
-                  setSetting({ ...setting, phone: e.target.value })
-                }
-              />
+              <Input placeholder="Phone" size="large" />
             </Form.Item>
 
             <Form.Item label="Favicon">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={20}>
+                <Col lg={16}>
                   <Form.Item
-                    name="dragger"
+                    name="favicon"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                     noStyle
@@ -216,22 +268,26 @@ const ApplicationSetting = () => {
                         <PictureOutlined />
                       </p>
                       <p className="ant-upload-hint">
-                        Click or drag file to this area to upload
+                        Click or drag a favicon to this area to upload
                       </p>
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
+                  {appSettingsData?.favicon && (
+                    <img src={appSettingsData?.favicon} alt="Favicon" />
+                  )}
+                  {/* <img src='../../../../assets/icon.ico' alt="Favicon" /> */}
                 </Col>
               </Row>
             </Form.Item>
 
             <Form.Item label="Logo">
-              <Row>
-                <Col lg={8}>
+              <Row gutter={20}>
+                <Col lg={16}>
                   <Form.Item
-                    name="dragger"
+                    name="logo"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                     noStyle
@@ -241,148 +297,76 @@ const ApplicationSetting = () => {
                         <PictureOutlined />
                       </p>
                       <p className="ant-upload-hint">
-                        Click or drag file to this area to upload
+                        Click or drag & drop a logo here to upload
                       </p>
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={4}>
+                <Col lg={8}>
                   <h4>Preview Image</h4>
+                  {appSettingsData?.logo && (
+                    <img src={appSettingsData?.logo} alt="Logo" />
+                  )}
                 </Col>
               </Row>
             </Form.Item>
 
-            <Form.Item label="Available On" name="availableOn">
-              <Input
-                placeholder="Available On"
-                size="large"
-                value={setting.availableOn}
-                onChange={(e) =>
-                  setSetting({ ...setting, availableOn: e.target.value })
-                }
-              />
+            <Form.Item label="Available On" name="opentime">
+              <Input placeholder="Available On" size="large" />
             </Form.Item>
 
-            <Form.Item label="Closing Time" name="closingTime">
-              <Input
-                placeholder="Closing Time"
-                size="large"
-                value={setting.closingTime}
-                onChange={(e) =>
-                  setSetting({ ...setting, closingTime: e.target.value })
-                }
-              />
+            <Form.Item label="Closing Time" name="closetime">
+              <Input placeholder="Closing Time" size="large" />
             </Form.Item>
 
-            <Form.Item name="discountType" label="Discount Type">
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.discountType}
-                onChange={handleDocumentType}
-                allowClear
-              >
-                <Option value="amount">Amount</Option>
-                <Option value="percent">Percent</Option>
+            <Form.Item name="discount_type" label="Discount Type">
+              <Select placeholder="Select an Option" size="large" allowClear>
+                <Option value="1">Amount</Option>
+                <Option value="2">Percent</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Discount Rate" name="discountRate">
-              <Input
-                placeholder="Discount Rate"
-                size="large"
-                value={setting.discountRate}
-                onChange={(e) =>
-                  setSetting({ ...setting, discountRate: e.target.value })
-                }
-              />
+            <Form.Item label="Discount Rate" name="discountrate">
+              <Input placeholder="Discount Rate" size="large" />
             </Form.Item>
 
-            <Form.Item label="Service Change" name="serviceChange">
-              <Input
-                placeholder="Service Change"
-                size="large"
-                value={setting.serviceChange}
-                onChange={(e) =>
-                  setSetting({ ...setting, serviceChange: e.target.value })
-                }
-              />
+            <Form.Item label="Service Charge" name="servicecharge">
+              <Input placeholder="Service Charge" size="large" />
             </Form.Item>
           </Col>
 
-          <Col lg={6}>
+          <Col lg={11}>
             <Form.Item
               label="Select Service Charge Type"
-              name="selectServiceChargeType"
+              name="service_chargeType"
             >
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.selectServiceChargeType}
-                onChange={handleSelectServiceCharge}
-                allowClear
-              >
+              <Select placeholder="Select an Option" size="large" allowClear>
                 <Option value="amount">Amount</Option>
                 <Option value="percent">Percent</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Vat Setting" name="vatSetting">
-              <Input
-                placeholder="Vat Setting"
-                size="large"
-                value={setting.vatSetting}
-                onChange={(e) =>
-                  setSetting({ ...setting, vatSetting: e.target.value })
-                }
-              />
+            <Form.Item label="Vat Setting" name="vat">
+              <Input placeholder="Vat Setting" size="large" />
             </Form.Item>
 
-            <Form.Item label="tinOrVatNumber" name="tinOrVatNumber">
-              <Input
-                placeholder="tinOrVatNumber"
-                size="large"
-                value={setting.tinOrVatNumber}
-                onChange={(e) =>
-                  setSetting({ ...setting, tinOrVatNumber: e.target.value })
-                }
-              />
+            <Form.Item label="Tin Number" name="vattinno">
+              <Input placeholder="Tin Number" size="large" />
             </Form.Item>
 
             <Form.Item label="Currency" name="currency">
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.currency}
-                onChange={handleCurrency}
-                allowClear
-              >
+              <Select placeholder="Select Currency" size="large" allowClear>
                 <Option value="amount">Amount</Option>
                 <Option value="percent">Percent</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Delivery Time" name="deliveryTime">
-              <Input
-                placeholder="Delivery Time"
-                size="large"
-                value={setting.deliveryTime}
-                onChange={(e) =>
-                  setSetting({ ...setting, deliveryTime: e.target.value })
-                }
-              />
+            <Form.Item label="Delivery Time" name="min_prepare_time">
+              <Input placeholder="Delivery Time" size="large" />
             </Form.Item>
 
             <Form.Item label="Language" name="language">
-              <Select
-                placeholder="Select an Option"
-                size="large"
-                value={setting.language}
-                onChange={handleLanguageSet}
-                // defaultValue={{ key: 'active' }}
-
-                allowClear
-              >
+              <Select placeholder="Select Language" size="large" allowClear>
                 <Option value="english">English</Option>
                 <Option value="spanish">Spanish</Option>
                 <Option value="turkish">Turkish</Option>
@@ -391,16 +375,8 @@ const ApplicationSetting = () => {
             </Form.Item>
 
             <div className="d-flex">
-              <Form.Item label="Date Formate" name="dateFormate">
-                <Select
-                  placeholder="Select an Option"
-                  size="large"
-                  value={setting.dateFormate}
-                  onChange={changeDateFormate}
-                  // defaultValue={{ key: 'active' }}
-
-                  allowClear
-                >
+              <Form.Item label="Date Format" name="dateformat">
+                <Select placeholder="Select Your " size="large" allowClear>
                   <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
                   <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
                   <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
@@ -413,16 +389,12 @@ const ApplicationSetting = () => {
 
               <Form.Item
                 label="Time Zone"
-                name="timeZone"
+                name="timezone"
                 style={{ marginLeft: 'auto' }}
               >
                 <Select
-                  placeholder="Select an Option"
+                  placeholder="Select Your Time zone"
                   size="large"
-                  value={setting.timeZone}
-                  onChange={changeTimeZone}
-                  // defaultValue={{ key: 'active' }}
-
                   allowClear
                 >
                   <Option value="asiaDhaka">Asia/Dhaka</Option>
@@ -434,17 +406,10 @@ const ApplicationSetting = () => {
               </Form.Item>
             </div>
 
-            <Form.Item
-              label="Application Alignment"
-              name="applicationAlignment"
-            >
+            <Form.Item label="Application Alignment" name="site_align">
               <Select
-                placeholder="Select an Option"
+                placeholder="Select Application Alignment"
                 size="large"
-                value={setting.applicationAlignment}
-                onChange={changeApplicationAlignment}
-                // defaultValue={{ key: 'active' }}
-
                 allowClear
               >
                 <Option value="leftToRight">Left to Right</Option>
@@ -452,28 +417,16 @@ const ApplicationSetting = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Powered By Text">
+            <Form.Item label="Copyright Information" name="powerbytxt">
               <Input.TextArea
-                placeholder="Powered By Text"
+                placeholder="Copyright Information"
                 size="large"
-                rows={8}
-                value={setting.poweredByText}
-                onChange={(e) =>
-                  setSetting({ ...setting, poweredByText: e.target.value })
-                }
+                rows={2}
               />
             </Form.Item>
 
-            <Form.Item label="Footer Text">
-              <Input.TextArea
-                placeholder="Footer Text"
-                size="large"
-                rows={8}
-                value={setting.footerText}
-                onChange={(e) =>
-                  setSetting({ ...setting, footerText: e.target.value })
-                }
-              />
+            <Form.Item label="Footer Text" name="footer_text">
+              <Input.TextArea placeholder="Footer Text" size="large" rows={2} />
             </Form.Item>
 
             <div className="button_group">

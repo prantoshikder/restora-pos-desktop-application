@@ -1,0 +1,55 @@
+.order_wrapper {
+  box-shadow: 0 0 5px rgb(0 0 0 / 15%);
+  height: 700px;
+  h5 {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    text-align: center;
+  }
+}
+.order_summary_heading {
+  background: #e6e6e6;
+}
+
+.total_order_amount {
+  background: #1aa25a;
+  padding: 15px;
+  margin-top: -7px;
+
+  h4 {
+    color: #fff;
+    margin: 0px;
+  }
+}
+
+.total_grand_item {
+  background: #bde9d2;
+  padding: 15px;
+
+  h4 {
+    color: #1aa25a;
+    margin: 0px;
+  }
+}
+
+.order_item {
+  padding: 10px 15px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.total_order {
+  padding: 10px 15px;
+  border-bottom: 1px dashed #ddd;
+  h4 {
+    font-size: 1rem;
+  }
+}
+
+.order_calculation {
+  .order_calculation_heading {
+    background: #f7f7f7;
+  }
+}

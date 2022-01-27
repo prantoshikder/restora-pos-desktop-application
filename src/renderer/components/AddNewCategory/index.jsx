@@ -13,30 +13,71 @@ import {
   Upload,
 } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AddNewCategory = () => {
+  window.api.send('getCategoryData', { status: true });
+
   const [form] = Form.useForm();
   const [packageOffer, setPackageOffer] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [offerStartDate, setOfferStartDate] = useState('');
+  const [offerEndDate, setOfferEndDate] = useState('');
 
-  const [categories, setCategories] = useState({
-    categoryName: '',
-    parentCategory: '',
-    categoryImage: '',
-    categoryIcon: '',
-    categoryStatus: 'active',
-    categoryOfferStart: '',
-    categoryOfferEnd: '',
-    categoryBackgroundColor: '#0f71c5',
-  });
+  useEffect(() => {
+    insertCategory().then((data) => {
+      setCategories([
+        {
+          name: ['category_name'],
+          value: data?.category_name,
+        },
+        {
+          name: ['parent_id'],
+          value: data?.parent_id,
+        },
+        {
+          name: ['category_color'],
+          value: data?.category_color,
+        },
+        {
+          name: ['category_image'],
+          value: data?.category_image,
+        },
+        {
+          name: ['category_icon'],
+          value: data?.category_icon,
+        },
+        // {
+        //   name: ['offer_start_date'],
+        //   value: data?.offer_start_date,
+        // },
+        // {
+        //   name: ['offer_end_date'],
+        //   value: data?.offer_end_date,
+        // },
+        {
+          name: ['category_is_active'],
+          value: data?.category_is_active,
+        },
+      ]);
+    });
+  }, []);
 
-  const handleSelectCategory = (value) => {
-    setCategories({ ...categories, parentCategory: value });
-  };
+  function insertCategory() {
+    return new Promise((resolve, reject) => {
+      window.api.once('sendSettingDataFromMain', (settingsData) => {
+        if (settingsData[0]) {
+          resolve(settingsData[0]);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
+    });
+  }
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -58,24 +99,8 @@ const AddNewCategory = () => {
     return current && current < moment().endOf('day');
   };
 
-  const handleChangeStatus = (value) => {
-    setCategories({ ...categories, categoryStatus: value });
-  };
-
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
-  };
-
-  const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
-    setCategories({ ...categories, categoryOfferStart: value });
-  };
-
-  const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
-    setCategories({ ...categories, categoryOfferEnd: value });
   };
 
   const handleReset = () => {
@@ -92,11 +117,32 @@ const AddNewCategory = () => {
     });
   };
 
+  const handleChangeStartDate = (date, stringDate) => {
+    setOfferStartDate(stringDate);
+  };
+  const handleChangeEndDate = (date, stringDate) => {
+    setOfferEndDate(stringDate);
+  };
+
   const handleSubmit = () => {
     console.log('categories', categories);
 
+<<<<<<< HEAD
     window.add_category.send("insertCategoryData", categories);
 
+=======
+    const newCategory = {};
+
+    for (const data of categories) {
+      newCategory[data.name[0]] = data.value;
+    }
+    newCategory.offer_start_date = offerStartDate;
+    newCategory.offer_end_date = offerEndDate;
+
+    console.log('newCategory', newCategory);
+
+    window.api.send('getCategoryData', newCategory);
+>>>>>>> master
 
     message.success({
       content: 'Foods category added successfully',
@@ -114,7 +160,11 @@ const AddNewCategory = () => {
       <Form
         form={form}
         layout="vertical"
+        fields={categories}
         onFinish={handleSubmit}
+        onFieldsChange={(_, allFields) => {
+          setCategories(allFields);
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
@@ -122,7 +172,7 @@ const AddNewCategory = () => {
           <Col lg={14}>
             <Form.Item
               label="Category name"
-              name="categoryName"
+              name="category_name"
               rules={[
                 {
                   required: true,
@@ -130,52 +180,29 @@ const AddNewCategory = () => {
                 },
               ]}
             >
-              <Input
-                placeholder="Category Name"
-                size="large"
-                value={categories.categoryName}
-                onChange={(e) =>
-                  setCategories({ ...categories, categoryName: e.target.value })
-                }
-              />
+              <Input placeholder="Category Name" size="large" />
             </Form.Item>
 
-            <Form.Item name="parent category" label="Parent Category">
-              <Select
-                placeholder="Select an Option"
-                value={categories.parentCategory}
-                onChange={handleSelectCategory}
-                size="large"
-                allowClear
-              >
-                <Option value="lunch_package">Lunch Package</Option>
-                <Option value="japanese">Japanese</Option>
-                <Option value="salad">Salad</Option>
-                <Option value="indian_food">Indian Food</Option>
-                <Option value="dinner_package">Dinner Package</Option>
+            <Form.Item name="parent_id" label="Parent Category">
+              <Select placeholder="Select an Option" size="large" allowClear>
+                <Option value="1">Lunch Package</Option>
+                <Option value="2">Japanese</Option>
+                <Option value="3">Salad</Option>
+                <Option value="4">Indian Food</Option>
+                <Option value="5">Dinner Package</Option>
               </Select>
             </Form.Item>
 
             <Form.Item
               label="Category Background Color"
+              name="category_color"
               tooltip={{
                 title:
                   'Change category menu background color that will be shown in the POS',
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Input
-                type="color"
-                size="medium"
-                name="color"
-                value={categories.categoryBackgroundColor}
-                onChange={(e) =>
-                  setCategories({
-                    ...categories,
-                    categoryBackgroundColor: e.target.value,
-                  })
-                }
-              />
+              <Input type="color" size="medium" />
             </Form.Item>
 
             <Form.Item
@@ -189,7 +216,7 @@ const AddNewCategory = () => {
               <Row gutter={10}>
                 <Col lg={16}>
                   <Form.Item
-                    name="dragger"
+                    name="category_image"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                     noStyle
@@ -223,7 +250,7 @@ const AddNewCategory = () => {
               <Row gutter={10}>
                 <Col lg={16}>
                   <Form.Item
-                    name="dragger"
+                    name="category_icon"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                     noStyle
@@ -244,47 +271,38 @@ const AddNewCategory = () => {
               </Row>
             </Form.Item>
 
-            <Form.Item name="offer" valuePropName="checked">
+            <Form.Item valuePropName="checked">
               <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
             </Form.Item>
 
             {packageOffer && (
               <Space direction="vertical" size={12}>
                 <div className="offer_date_select">
-                  <Form.Item label="Offer Start Date">
+                  <Form.Item name="offer_start_date" label="Offer Start Date">
                     <DatePicker
                       format="DD-MM-YYYY"
                       placeholder="Offer Start Date"
                       disabledDate={disabledDate}
-                      value={categories.categoryOfferStart}
-                      onChange={handleOfferStart}
+                      onChange={handleChangeStartDate}
                     />
                   </Form.Item>
 
-                  <Form.Item label="Offer End Date">
+                  <Form.Item name="offer_end_date" label="Offer End Date">
                     <DatePicker
                       format="DD-MM-YYYY"
                       placeholder="Offer End Date"
+                      onChange={handleChangeEndDate}
                       disabledDate={disabledDate}
-                      value={categories.categoryOfferEnd}
-                      onChange={handleOfferEnd}
                     />
                   </Form.Item>
                 </div>
               </Space>
             )}
 
-            <Form.Item name="status" label="Status">
-              <Select
-                placeholder="Select an Option"
-                value={categories.categoryStatus}
-                onChange={handleChangeStatus}
-                defaultValue={{ key: 'active' }}
-                size="large"
-                allowClear
-              >
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
+            <Form.Item name="category_is_active" label="Status">
+              <Select placeholder="Select an Option" size="large" allowClear>
+                <Option value="1">Active</Option>
+                <Option value="0">Inactive</Option>
               </Select>
             </Form.Item>
 

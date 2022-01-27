@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SystemMenu from './components/partials/SystemMenu';
+import { ContextData } from './contextApi';
 import Currency from './pages/Currency';
 import AddAddons from './pages/foodManagement/manageAddons/AddAddons';
 import AddonsAssignList from './pages/foodManagement/manageAddons/AddonsAssignList';
@@ -20,31 +21,79 @@ import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
   const [direction, setDirection] = useState('ltr');
+  const [cartItems, setCartItems] = useState([]);
 
   return (
+    <ContextData.Provider value={{ cartItems, setCartItems }}>
+      <Router>
+        <SystemMenu direction={direction} />
+        <Routes>
+          {/* <Route
+            path="/"
+            element={<ApplicationSettings direction={direction} />}
+          /> */}
 
-    <Router>
-      <SystemMenu direction={direction} />
-      <Routes>
-        <Route path="/" element={<Home direction={direction} />} />
-        <Route path="/add_category" element={<AddCategory />} />
-        <Route path="/category_list" element={<CategoryList />} />
-        <Route path="/add_food" element={<AddFood />} />
-        <Route path="/food_list" element={<FoodList />} />
-        <Route path="/food_variant" element={<FoodVariant />} />
-        <Route path="/food_availability" element={<FoodAvailability />} />
-        <Route path="/food_menuType" element={<MenuType />} />
-        <Route path="/add_addons" element={<AddAddons />} />
-        <Route path="/addons_list" element={<AddonsList />} />
-        <Route path="/addons_assign_list" element={<AddonsAssignList />} />
-        <Route path="/application_setting" element={<ApplicationSettings />} />
-        <Route path="/currency" element={<Currency />} />
-        <Route path="/language" element={<Language />} />
-        <Route path="/sales_report" element={<SalesReport />} />
-        <Route path="/items_sales_report" element={<ItemSalesReport />} />
-      </Routes>
-    </Router>
+          <Route path="/" element={<Home direction={direction} />} />
 
+          <Route
+            path="/add_category"
+            element={<AddCategory direction={direction} />}
+          />
+          <Route
+            path="/category_list"
+            element={<CategoryList direction={direction} />}
+          />
+          <Route path="/add_food" element={<AddFood direction={direction} />} />
+          <Route
+            path="/food_list"
+            element={<FoodList direction={direction} />}
+          />
+          <Route
+            path="/food_variant"
+            element={<FoodVariant direction={direction} />}
+          />
+          <Route
+            path="/food_availability"
+            element={<FoodAvailability direction={direction} />}
+          />
+          <Route
+            path="/food_menuType"
+            element={<MenuType direction={direction} />}
+          />
+          <Route
+            path="/add_addons"
+            element={<AddAddons direction={direction} />}
+          />
+          <Route
+            path="/addons_list"
+            element={<AddonsList direction={direction} />}
+          />
+          <Route
+            path="/addons_assign_list"
+            element={<AddonsAssignList direction={direction} />}
+          />
+          <Route
+            path="/application_setting"
+            element={<ApplicationSettings direction={direction} />}
+          />
+          <Route
+            path="/currency"
+            element={<Currency direction={direction} />}
+          />
+          <Route
+            path="/language"
+            element={<Language direction={direction} />}
+          />
+          <Route
+            path="/sales_report"
+            element={<SalesReport direction={direction} />}
+          />
+          <Route
+            path="/items_sales_report"
+            element={<ItemSalesReport direction={direction} />}
+          />
+        </Routes>
+      </Router>
+    </ContextData.Provider>
   );
-
 }

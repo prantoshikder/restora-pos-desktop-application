@@ -18,9 +18,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 
-
-var dbPath = app.getPath('userData')
-
+var dbPath = app.getPath('userData');
 
 export default class AppUpdater {
   constructor() {
@@ -32,38 +30,54 @@ export default class AppUpdater {
 
 let mainWindow;
 
-ipcMain.on("getSettingDataFromDB", (event, args) => {
+ipcMain.on('getSettingDataFromDB', (event, args) => {
+  let { status } = args;
 
-  let { status } = args
-
-  let settingSqlQ = `select * from setting`
-
+  let settingSqlQ = `select * from setting`;
 
   if (status) {
-
     // Create DB connection
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-
       db.all(settingSqlQ, [], (err, rows) => {
         console.log(rows);
-        mainWindow.webContents.send("sendSettingDataFromMain", rows);
-      })
+        mainWindow.webContents.send('sendSettingDataFromMain', rows);
+      });
+    });
 
-    })
+    db.close();
+  } else {
+    // const dType = parseInt(args.discount_type);
 
-    db.close()
-
-  }
-  else {
-    console.log("else!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-    let { applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText } = args
+    let {
+      title,
+      storename,
+      address,
+      email,
+      phone,
+      logo,
+      favcon,
+      opentime,
+      closetime,
+      vat,
+      vattinno,
+      discount_type,
+      discountrate,
+      servicecharge,
+      service_chargeType,
+      currency,
+      min_prepare_time,
+      language,
+      timezone,
+      dateformat,
+      site_align,
+      powerbytxt,
+      footer_text,
+    } = args;
     // Create DB connection
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
     db.serialize(() => {
-
       db.run(`DROP TABLE IF EXISTS setting`)
         .run(
           `CREATE TABLE IF NOT EXISTS setting (
@@ -98,7 +112,31 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [applicationTitle, storeName, address, emailAddress, phone, logo, favcon, availableOn, closingTime, vatSetting, tinOrVatNumber, discountType, discountRate, serviceChange, selectServiceChargeType, currency, deliveryTime, language, timeZone, dateFormate, applicationAlignment, poweredByText, footerText],
+          [
+            title,
+            storename,
+            address,
+            email,
+            phone,
+            logo,
+            favcon,
+            opentime,
+            closetime,
+            vat,
+            vattinno,
+            discount_type,
+            discountrate,
+            servicecharge,
+            service_chargeType,
+            currency,
+            min_prepare_time,
+            language,
+            timezone,
+            dateformat,
+            site_align,
+            powerbytxt,
+            footer_text,
+          ],
           function (err) {
             if (err) {
               console.log("Error message settings table ", err.message);
@@ -117,8 +155,8 @@ ipcMain.on("getSettingDataFromDB", (event, args) => {
 
     db.close()
 
+    db.close();
   }
-
 });
 
 ipcMain.on("insertCategoryData", (event, args) => {
@@ -245,7 +283,6 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
