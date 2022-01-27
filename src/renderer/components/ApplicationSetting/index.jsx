@@ -47,10 +47,10 @@ const ApplicationSetting = () => {
           name: ['phone'],
           value: data?.phone,
         },
-        // {
-        //   name: ['favicon'],
-        //   value: data?.favicon,
-        // },
+        {
+          name: ['favicon'],
+          value: data?.favicon,
+        },
         {
           name: ['opentime'],
           value: data?.opentime,
