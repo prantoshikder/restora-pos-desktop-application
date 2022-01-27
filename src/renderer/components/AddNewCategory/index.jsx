@@ -296,8 +296,8 @@ const AddNewCategory = () => {
 
             <Form.Item name="category_is_active" label="Status">
               <Select placeholder="Select an Option" size="large" allowClear>
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
+                <Option value="1">Active</Option>
+                <Option value="0">Inactive</Option>
               </Select>
             </Form.Item>
 
