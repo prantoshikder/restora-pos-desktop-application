@@ -21,7 +21,7 @@ import {
   TimePicker,
 } from 'antd';
 import moment from 'moment';
-import { default as React, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
@@ -43,6 +43,8 @@ const Cart = () => {
   const [confirmOrder, setConfirmOrder] = useState(false);
 
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  const [state, dispatch] = useReducer([]);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -102,6 +104,8 @@ const Cart = () => {
       ...cartItems.slice(index + 1),
     ];
 
+    dispatch(newData);
+
     console.log('newData', newData);
     setQuantityValue(newQuantity);
   };
@@ -154,22 +158,7 @@ const Cart = () => {
             controls={false}
           />
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              background: '#416dea',
-              color: '#fff',
-              borderColor: '#416dea',
-              position: 'absolute',
-              right: '1rem',
-              top: '7px',
-              borderRadius: '0px 8px 8px 0px',
-              fontSize: '10px',
-              width: '20px',
-              cursor: 'pointer',
-            }}
-          >
+          <div className="quantity_increase_decrease">
             <span onClick={() => increaseQuantity(record)}>
               <UpOutlined />
             </span>
@@ -446,8 +435,13 @@ const Cart = () => {
             </div>
 
             <div>
-              <span>$</span>
-              <span>1876451.00</span>
+              <span>
+                $
+                {cartItems.reduce(
+                  (prevPrice, currentPrice) => prevPrice + currentPrice.price,
+                  0
+                )}
+              </span>
             </div>
           </div>
 
