@@ -1,14 +1,26 @@
 import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, DatePicker, Form, Input, message, Row, Select, Space, Upload } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  Space,
+  Upload,
+} from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { insertData } from '../../../helpers';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AddNewCategory = () => {
-
   const [form] = Form.useForm();
   const [packageOffer, setPackageOffer] = useState('');
   const [categories, setCategories] = useState([]);
@@ -16,7 +28,7 @@ const AddNewCategory = () => {
   const [offerEndDate, setOfferEndDate] = useState('');
 
   useEffect(() => {
-    insertCategory().then((data) => {
+    insertData('sendSettingDataFromMain', window.api).then((data) => {
       setCategories([
         {
           name: ['category_name'],
@@ -53,18 +65,6 @@ const AddNewCategory = () => {
       ]);
     });
   }, []);
-
-  function insertCategory() {
-    return new Promise((resolve, reject) => {
-      window.api.once('sendSettingDataFromMain', (settingsData) => {
-        if (settingsData[0]) {
-          resolve(settingsData[0]);
-        } else {
-          reject(Error('No settings found'));
-        }
-      });
-    });
-  }
 
   const normFile = (e) => {
     console.log('Upload event:', e);

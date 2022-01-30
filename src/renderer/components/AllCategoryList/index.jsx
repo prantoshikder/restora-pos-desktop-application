@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
 const rowSelection = {
@@ -27,7 +28,7 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
-    getApplicationSettingsData()
+    getDataFromDatabase('sendCategoryData', window.get_category)
       .then((data) => {
         const categoryLists = data.map((element) => {
           if (element.category_is_active === 1) {
@@ -40,25 +41,7 @@ const AllCategoryList = () => {
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
-
-    // window.get_category.once('sendCategoryData', (eve, categoryData) => {
-    //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>', categoryData);
-    // });
   }, []);
-
-  console.log('categories', categories);
-
-  function getApplicationSettingsData() {
-    return new Promise((resolve, reject) => {
-      window.get_category.once('sendCategoryData', (categoryLists) => {
-        if (categoryLists) {
-          resolve(categoryLists);
-        } else {
-          reject(Error('No settings found'));
-        }
-      });
-    });
-  }
 
   const columns = [
     {
@@ -109,49 +92,6 @@ const AllCategoryList = () => {
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Soup N Salads',
-      parentMenu: 'Soup (Thai)',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Salad (Thai)',
-      parentMenu: 'Chicken item',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Prawn & Fish Dishes',
-      parentMenu: 'indian',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Oven Roasted Eggplant',
-      parentMenu: 'thai',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Maxican spicy',
-      parentMenu: 'Chicken item',
-      status: 'Active',
     },
   ];
 

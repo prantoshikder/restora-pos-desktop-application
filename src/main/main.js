@@ -32,7 +32,7 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
     db.serialize(() => {
       db.all(settingSqlQ, [], (err, rows) => {
         console.log(rows);
-        mainWindow.webContents.send('sendSettingDataFromMain', rows);
+        mainWindow.webContents.send('sendSettingDataFromMain', rows[0]);
       });
     });
     // DB connection close
@@ -227,7 +227,6 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
 
     db.serialize(() => {
       db.all(settingSqlQ, [], (err, rows) => {
-        console.log('rows from main', rows);
         mainWindow.webContents.send('sendCategoryData', rows);
       });
     });
