@@ -28,7 +28,17 @@ const AllCategoryList = () => {
 
   useEffect(() => {
     getApplicationSettingsData()
-      .then((data) => setCategories(data))
+      .then((data) => {
+        const categoryLists = data.map((element) => {
+          if (element.category_is_active === 1) {
+            return { ...element, category_is_active: 'Active' };
+          } else {
+            return { ...element, category_is_active: 'Inactive' };
+          }
+        });
+
+        setCategories(categoryLists);
+      })
       .catch((err) => console.log('error', err));
 
     // window.get_category.once('sendCategoryData', (eve, categoryData) => {
@@ -66,21 +76,21 @@ const AllCategoryList = () => {
     },
     {
       title: 'Category Name',
-      dataIndex: 'categoryName',
-      key: 'categoryName',
+      dataIndex: 'category_name',
+      key: 'category_name',
       width: '30%',
     },
     {
       title: 'Parent Menu',
-      dataIndex: 'parentMenu',
-      key: 'parentMenu',
+      dataIndex: 'parent_id',
+      key: 'parent_id',
       width: '20%',
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'category_is_active',
+      key: 'category_is_active',
       width: '15%',
-      key: 'status',
     },
     {
       title: 'Action',
@@ -181,7 +191,7 @@ const AllCategoryList = () => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        dataSource={categories}
         pagination={false}
       />
     </div>
