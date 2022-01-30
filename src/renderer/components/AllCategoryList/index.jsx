@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Table } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AllCategoryList.style.scss';
 
 const rowSelection = {
@@ -20,19 +20,35 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
-  window.get_category.send("sendResponseForCategory", { "status": true });
+  window.get_category.send('sendResponseForCategory', { status: true });
+
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState({});
-
+  const [categories, setCategories] = useState(null);
 
   useEffect(() => {
+    getApplicationSettingsData()
+      .then((data) => setCategories(data))
+      .catch((err) => console.log('error', err));
 
-    window.get_category.once("sendCategoryData", (eve, categoryData) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", categoryData);
+    // window.get_category.once('sendCategoryData', (eve, categoryData) => {
+    //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>', categoryData);
+    // });
+  }, []);
+
+  console.log('categories', categories);
+
+  function getApplicationSettingsData() {
+    return new Promise((resolve, reject) => {
+      window.get_category.once('sendCategoryData', (categoryLists) => {
+        if (categoryLists) {
+          resolve(categoryLists);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
     });
-
-  }, [])
-
+  }
 
   const columns = [
     {
