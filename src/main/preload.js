@@ -1,52 +1,41 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld(
-  "api", {
+contextBridge.exposeInMainWorld('api', {
   send: (channel, data) => {
-    let validChannels = ["getSettingDataFromDB"];
+    let validChannels = ['getSettingDataFromDB'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   once: (channel, func) => {
-    let validChannels = ["sendSettingDataFromMain"];
+    let validChannels = ['sendSettingDataFromMain'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
-
+  },
 });
 
-
-contextBridge.exposeInMainWorld(
-
-  "add_category", {
+contextBridge.exposeInMainWorld('add_category', {
   send: (channel, data) => {
-    let validChannels = ["insertCategoryData"];
+    let validChannels = ['insertCategoryData'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
-  }
-
+  },
 });
 
-
-contextBridge.exposeInMainWorld(
-
-  "get_category", {
+contextBridge.exposeInMainWorld('get_category', {
   send: (channel, data) => {
-    let validChannels = ["sendResponseForCategory"];
+    let validChannels = ['sendResponseForCategory'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
 
   once: (channel, func) => {
-    let validChannels = ["sendCategoryData"];
+    let validChannels = ['sendCategoryData'];
     if (validChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
-
+  },
 });
-
