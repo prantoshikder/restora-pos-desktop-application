@@ -41,6 +41,14 @@ const AllCategoryList = () => {
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
       window.get_category.once('sendCategoryData', (categoryLists) => {
+        const data = categoryLists.map((element) => {
+          if (element.category_is_active === 1) {
+            return { ...element, category_is_active: 'Active' };
+          } else {
+            return { ...element, category_is_active: 'Inactive' };
+          }
+        });
+
         if (categoryLists) {
           resolve(categoryLists);
         } else {
@@ -117,7 +125,7 @@ const AllCategoryList = () => {
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Salad (Thai)',
       parentMenu: 'Chicken item',
-      status: 'Active',
+      status: '0',
     },
     {
       key: 3,
@@ -125,7 +133,7 @@ const AllCategoryList = () => {
         'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
       categoryName: 'Prawn & Fish Dishes',
       parentMenu: 'indian',
-      status: 'Active',
+      status: '1',
     },
     {
       key: 4,

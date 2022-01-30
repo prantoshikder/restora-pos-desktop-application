@@ -11,6 +11,7 @@ import {
   Upload,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { getApplicationSettingsData } from '../../../helpers';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -25,7 +26,7 @@ const ApplicationSetting = () => {
   const [defaultData, setDefaultData] = useState([]);
 
   useEffect(() => {
-    getApplicationSettingsData().then((data) => {
+    getApplicationSettingsData('sendSettingDataFromMain').then((data) => {
       setDefaultData([
         {
           name: ['title'],
@@ -115,17 +116,17 @@ const ApplicationSetting = () => {
     });
   }, []);
 
-  function getApplicationSettingsData() {
-    return new Promise((resolve, reject) => {
-      window.api.once('sendSettingDataFromMain', (settingsData) => {
-        if (settingsData[0]) {
-          resolve(settingsData[0]);
-        } else {
-          reject(Error('No settings found'));
-        }
-      });
-    });
-  }
+  // function getApplicationSettingsData() {
+  //   return new Promise((resolve, reject) => {
+  //     window.api.once('sendSettingDataFromMain', (settingsData) => {
+  //       if (settingsData[0]) {
+  //         resolve(settingsData[0]);
+  //       } else {
+  //         reject(Error('No settings found'));
+  //       }
+  //     });
+  //   });
+  // }
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
