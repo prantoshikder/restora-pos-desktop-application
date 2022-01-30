@@ -34,7 +34,6 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld(
 
   "get_category", {
-
   send: (channel, data) => {
     let validChannels = ["sendResponseForCategory"];
     if (validChannels.includes(channel)) {

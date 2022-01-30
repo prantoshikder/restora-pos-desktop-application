@@ -1,17 +1,5 @@
 import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Row,
-  Select,
-  Space,
-  Upload,
-} from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Input, message, Row, Select, Space, Upload } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
@@ -20,7 +8,6 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AddNewCategory = () => {
-  window.api.send('getCategoryData', { status: true });
 
   const [form] = Form.useForm();
   const [packageOffer, setPackageOffer] = useState('');
@@ -125,12 +112,6 @@ const AddNewCategory = () => {
   };
 
   const handleSubmit = () => {
-    console.log('categories', categories);
-
-<<<<<<< HEAD
-    window.add_category.send("insertCategoryData", categories);
-
-=======
     const newCategory = {};
 
     for (const data of categories) {
@@ -141,8 +122,7 @@ const AddNewCategory = () => {
 
     console.log('newCategory', newCategory);
 
-    window.api.send('getCategoryData', newCategory);
->>>>>>> master
+    window.add_category.send('insertCategoryData', newCategory);
 
     message.success({
       content: 'Foods category added successfully',

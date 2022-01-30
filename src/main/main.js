@@ -1,13 +1,3 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
- */
 import 'core-js/stable';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
@@ -30,6 +20,7 @@ export default class AppUpdater {
 
 let mainWindow;
 
+// This is for settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
   let { status } = args;
 
@@ -44,10 +35,9 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
         mainWindow.webContents.send('sendSettingDataFromMain', rows);
       });
     });
-
+    // DB connection close
     db.close();
   } else {
-    // const dType = parseInt(args.discount_type);
 
     let {
       title,
@@ -152,25 +142,21 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
       // })
 
     })
-
-    db.close()
-
+    // DB connection close
     db.close();
   }
 });
 
+// Insert Category item data
 ipcMain.on("insertCategoryData", (event, args) => {
 
-  console.log({ args });
-
-  let { categoryName, parentCategory, categoryImage, categoryIcon, categoryStatus, categoryOfferStart, categoryOfferEnd, categoryBackgroundColor } = args
+  let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
   db.serialize(() => {
 
     db.run(
-
       `CREATE TABLE IF NOT EXISTS add_item_category (
         'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'category_name' varchar(255),
@@ -194,16 +180,16 @@ ipcMain.on("insertCategoryData", (event, args) => {
       .run(
         `INSERT INTO add_item_category (
         category_name,
+        parent_id,
         category_image,
+        category_icon,
         category_is_active,
         offer_start_date,
         offer_end_date,
-        category_color,
-        category_icon,
-        parent_id
+        category_color
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
-        [categoryName, categoryImage, categoryStatus, categoryOfferStart, categoryOfferEnd, categoryBackgroundColor, categoryIcon, parentCategory],
+        [category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
         function (err) {
           if (err) {
             console.log("Error message add category table ", err.message);
@@ -212,10 +198,6 @@ ipcMain.on("insertCategoryData", (event, args) => {
           console.log(`row inserted ${this.category_name}`);
         }
       )
-    // .all(settingSqlQ, [], (err, rows) => {
-    //   console.log(rows);
-    //   mainWindow.webContents.send("getCategoryData", rows);
-    // })
 
   })
 
@@ -223,10 +205,13 @@ ipcMain.on("insertCategoryData", (event, args) => {
 
 })
 
+// Send category item data
 ipcMain.on("sendResponseForCategory", (event, args) => {
   let { status } = args
+  console.log("%%%%%%%%%%%%", status);
 
   if (status) {
+
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let settingSqlQ = `select * from add_item_category`
 
