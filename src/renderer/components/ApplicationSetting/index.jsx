@@ -19,49 +19,6 @@ const { Option } = Select;
 const ApplicationSetting = () => {
   window.api.send('getSettingDataFromDB', { status: true });
 
-<<<<<<< HEAD
-  window.api.send("getSettingDataFromDB", { "status": true });
-
-  const [settingsData, setSettingsData] = useState({})
-  let dev = {}
-  // recieve data from main process
-  useEffect(() => {
-
-    window.api.once("sendSettingDataFromMain", (eve, settingsData) => {
-      setSettingsData(settingsData[0])
-      // dev.settingsData[0]
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", settingsData[0]);
-    });
-
-  }, [])
-
-  const [form] = Form.useForm();
-  const [setting, setSetting] = useState({
-
-    applicationTitle: '',
-    storeName: '',
-    address: '',
-    emailAddress: '',
-    phone: '',
-    availableOn: '',
-    closingTime: '',
-    discountType: '',
-    discountRate: '',
-    serviceChange: '',
-    selectServiceChargeType: '',
-    vatSetting: '',
-    tinOrVatNumber: '',
-    deliveryTime: '',
-    currency: '',
-    language: '',
-    dateFormate: '',
-    timeZone: '',
-    applicationAlignment: '',
-    poweredByText: '',
-    footerText: '',
-
-  });
-=======
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -169,7 +126,6 @@ const ApplicationSetting = () => {
       });
     });
   }
->>>>>>> master
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
