@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AllCategoryList.style.scss';
 
 const rowSelection = {
@@ -20,8 +20,19 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
+  window.get_category.send("sendResponseForCategory", { "status": true });
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState({});
+
+
+  useEffect(() => {
+
+    window.get_category.once("sendCategoryData", (eve, categoryData) => {
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", categoryData);
+    });
+
+  }, [])
+
 
   const columns = [
     {

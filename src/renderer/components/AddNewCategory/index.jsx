@@ -127,6 +127,10 @@ const AddNewCategory = () => {
   const handleSubmit = () => {
     console.log('categories', categories);
 
+<<<<<<< HEAD
+    window.add_category.send("insertCategoryData", categories);
+
+=======
     const newCategory = {};
 
     for (const data of categories) {
@@ -138,6 +142,7 @@ const AddNewCategory = () => {
     console.log('newCategory', newCategory);
 
     window.api.send('getCategoryData', newCategory);
+>>>>>>> master
 
     message.success({
       content: 'Foods category added successfully',

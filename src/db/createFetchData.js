@@ -141,3 +141,63 @@ module.exports.insertCategory = function (tableName, data) {
 //     });
 // }
 // getValues();
+
+
+CREATE TABLE IF NOT EXISTS add_item_category (
+  'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'category_name' varchar(255),
+  'category_image' varchar(255),
+  'position' INT,
+  'category_is_active' INT,
+  'offer_start_date' DATE ,
+  'offer_end_date' DATE,
+  'isoffer' INT,
+  'category_color' varchar(50),
+  'category_icon' varchar(255),
+  'parent_id' INT,
+  'user_id_inserted' INT,
+  'user_id_updated' INT,
+  'user_id_locked' INT,
+  'date_inserted' DATETIME,
+  'date_updated' DATETIME,
+  'date_locked' DATETIME
+)
+
+
+INSERT INTO add_item_category (
+	category_name,
+	category_image,
+	position,
+	category_is_active,
+	offer_start_date,
+	offer_end_date,
+	isoffer,
+	category_color,
+	category_icon,
+	parent_id,
+	user_id_inserted,
+	user_id_updated,
+	user_id_locked,
+	date_inserted,
+	date_updated,
+	date_locked
+)
+
+VALUES (
+'Snakes',
+'test/ok/test.txt',
+ 1,
+ 1,
+ '2007-01-01 10',
+ '2007-01-01 10',
+ 1, 
+ 'Green',
+ 'test/ok/test.txt',
+ 1,
+ 1,
+ 1,
+ 1,
+ '2007-01-01 10:00:00',
+ '2007-01-01 10:00:00',
+ '2007-01-01 10:00:00'
+ )

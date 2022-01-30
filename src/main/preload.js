@@ -13,12 +13,41 @@ contextBridge.exposeInMainWorld(
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
+  }
+
+});
+
+
+contextBridge.exposeInMainWorld(
+
+  "add_category", {
+  send: (channel, data) => {
+    let validChannels = ["insertCategoryData"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  }
+
+});
+
+
+contextBridge.exposeInMainWorld(
+
+  "get_category", {
+
+  send: (channel, data) => {
+    let validChannels = ["sendResponseForCategory"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
   },
-  // dataExchange: (channel, func) => {
-  //   let validChannels = ["sendSettingDbDataFromMain"];
-  //   if (validChannels.includes(channel)) {
-  //     ipcRenderer.once(channel, (event, ...args) => func(...args));
-  //   }
-  // }
-}
-);
+
+  once: (channel, func) => {
+    let validChannels = ["sendCategoryData"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    }
+  }
+
+});
+
