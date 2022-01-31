@@ -16,6 +16,7 @@ const SalesReport = ({ direction }) => {
             </Col>
             <Col md={21}>
               <Heading title="Sales Report" />
+
               <AllSalesReport />
             </Col>
           </Row>

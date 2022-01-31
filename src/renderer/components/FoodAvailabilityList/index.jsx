@@ -17,7 +17,6 @@ import {
   TimePicker,
   Typography,
 } from 'antd';
-import moment from 'moment';
 import React, { useState } from 'react';
 
 const { Title } = Typography;
@@ -104,15 +103,6 @@ const FoodAvailabilityList = () => {
   function handleEditCategory(record) {
     setVisible(true);
     console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
   }
 
   function handleDeleteCategory(record) {
@@ -179,6 +169,7 @@ const FoodAvailabilityList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={data}
           pagination={false}
+          rowKey={(record) => record.key}
         />
       </div>
 
@@ -260,11 +251,7 @@ const FoodAvailabilityList = () => {
                     { required: true, message: 'Please input your from time!' },
                   ]}
                 >
-                  <TimePicker
-                    placeholder="From Time"
-                    size="large"
-                    defaultValue={moment('12:08:23', 'HH:mm:ss')}
-                  />
+                  <TimePicker placeholder="From Time" size="large" />
                 </Form.Item>
 
                 <Form.Item
@@ -275,11 +262,7 @@ const FoodAvailabilityList = () => {
                     { required: true, message: 'Please input your to time!' },
                   ]}
                 >
-                  <TimePicker
-                    placeholder="To Time"
-                    size="large"
-                    defaultValue={moment('12:08:23', 'HH:mm:ss')}
-                  />
+                  <TimePicker placeholder="To Time" size="large" />
                 </Form.Item>
               </div>
 

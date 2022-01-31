@@ -33,7 +33,7 @@ const AllFoodList = () => {
           src={record.categoryImage}
           width="50px"
           height="50px"
-          className="category-image"
+          className="category_image"
         />
       ),
     },
@@ -143,15 +143,6 @@ const AllFoodList = () => {
   function handleEditCategory(record) {
     setVisible(true);
     console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
   }
   function handleDeleteCategory(record) {
     console.log('Delete', record);
@@ -178,6 +169,7 @@ const AllFoodList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={data}
         pagination={false}
+        rowKey={(record) => record.key}
       />
     </div>
   );

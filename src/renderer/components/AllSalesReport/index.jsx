@@ -252,6 +252,7 @@ const AllSalesReport = () => {
             bordered
             dataSource={data}
             pagination={false}
+            rowKey={(record) => record.key}
           />
         </div>
       </div>

@@ -16,6 +16,7 @@ const FoodVariant = ({ direction }) => {
             </Col>
             <Col md={21}>
               <Heading title="Food Variant" />
+
               <FoodVariantList />
             </Col>
           </Row>
