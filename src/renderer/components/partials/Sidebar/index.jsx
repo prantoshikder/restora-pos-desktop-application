@@ -25,9 +25,7 @@ const Sidebar = ({ home }) => {
     }
   };
 
-  const onClick = (e) => {
-    console.log('e', e);
-  };
+  const onClick = (e) => {};
 
   return (
     <div className="sidebar">

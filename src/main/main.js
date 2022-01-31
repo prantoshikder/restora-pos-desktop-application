@@ -65,7 +65,7 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.maximize()
+  mainWindow.maximize();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
@@ -299,8 +299,8 @@ ipcMain.on('insertCategoryData', (event, args) => {
 });
 
 // Send category item data
-ipcMain.on("sendResponseForCategory", (event, args) => {
-  let { status } = args
+ipcMain.on('sendResponseForCategory', (event, args) => {
+  let { status } = args;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -314,12 +314,11 @@ ipcMain.on("sendResponseForCategory", (event, args) => {
 
     db.close();
   }
-
-})
+});
 
 // Delete category data
-ipcMain.on("delete_category", (event, args) => {
-  let { id } = args
+ipcMain.on('delete_category', (event, args) => {
+  let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM item_category WHERE category_id = ?`, id, (err) => {
