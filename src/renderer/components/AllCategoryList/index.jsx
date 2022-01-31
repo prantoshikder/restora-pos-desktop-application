@@ -101,6 +101,8 @@ const AllCategoryList = () => {
   function handleEditCategory(record) {
     setVisible(true);
     console.log('Edit', record);
+    window.edit_category.send("edit_category", { 'id': 1 })
+
     // message.success({
     //   content: 'Foods category added successfully ',
     //   className: 'custom-class',

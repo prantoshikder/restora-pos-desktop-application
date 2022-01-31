@@ -322,18 +322,20 @@ ipcMain.on("delete_category", (event, args) => {
   let { id } = args
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
+    db.run(`DELETE FROM item_category WHERE category_id = ?`, id, (err) => {
       if (err) {
-        console.log(err)
+        mainWindow.webContents.send("delete_category_response", { 'status': err });
       }
       else {
-        mainWindow.webContents.send("delete_category_response", {'status': true});
+        mainWindow.webContents.send("delete_category_response", { 'status': true });
       }
     })
   })
   db.close()
 
 })
+
+
 
 
 app.on('window-all-closed', () => {
