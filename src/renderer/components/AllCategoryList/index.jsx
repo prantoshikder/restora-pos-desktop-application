@@ -6,6 +6,7 @@ import {
 import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route } from 'react-router-dom';
+import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
 const { confirm } = Modal;
@@ -33,7 +34,7 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
-    getApplicationSettingsData()
+    getDataFromDatabase('sendCategoryData', window.get_category)
       .then((data) => {
         const categoryLists = data.map((element) => {
           if (element.category_is_active === 1) {
@@ -46,10 +47,6 @@ const AllCategoryList = () => {
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
-
-    // window.get_category.once('sendCategoryData', (eve, categoryData) => {
-    //   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>', categoryData);
-    // });
   }, []);
 
   function getApplicationSettingsData() {
