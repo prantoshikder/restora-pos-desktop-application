@@ -25,7 +25,10 @@ const AllCategoryList = () => {
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState({});
-  const [categories, setCategories] = useState(null);
+
+  window.delete_category.once("delete_category_response", (event, args) => {
+    console.log("%%%%%%%%%%%%%%%%%%", { args });
+  })
 
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category)
@@ -110,8 +113,11 @@ const AllCategoryList = () => {
   }
   function handleDeleteCategory(record) {
     console.log('Delete', record);
+
+    window.delete_category.send("delete_category", { 'id': 3 })
+
     message.success({
-      content: 'Foods category added successfully ',
+      content: 'Foods category added successfully',
       className: 'custom-class',
       duration: 1,
       style: {
