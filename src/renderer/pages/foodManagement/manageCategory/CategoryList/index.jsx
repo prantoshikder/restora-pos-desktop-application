@@ -17,6 +17,7 @@ const CategoryList = ({ direction }) => {
 
             <Col lg={21}>
               <Heading title="Category List" />
+
               <AllCategoryList />
             </Col>
           </Row>

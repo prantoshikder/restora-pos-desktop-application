@@ -17,6 +17,7 @@ const AddonsAssignList = ({ direction }) => {
 
             <Col lg={21}>
               <Heading title="Add-ons Assign List" />
+
               <AllAddonsAssignList />
             </Col>
           </Row>

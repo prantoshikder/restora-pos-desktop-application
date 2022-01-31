@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { insertData } from '../../../helpers';
+import { useLocation } from 'react-router-dom';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -22,48 +22,48 @@ const { Option } = Select;
 
 const AddNewCategory = () => {
   const [form] = Form.useForm();
-  const [packageOffer, setPackageOffer] = useState('');
+  const { state } = useLocation();
+
   const [categories, setCategories] = useState([]);
-  const [offerStartDate, setOfferStartDate] = useState('');
+  const [packageOffer, setPackageOffer] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
+  const [offerStartDate, setOfferStartDate] = useState('');
 
   useEffect(() => {
-    insertData('sendSettingDataFromMain', window.api).then((data) => {
-      setCategories([
-        {
-          name: ['category_name'],
-          value: data?.category_name,
-        },
-        {
-          name: ['parent_id'],
-          value: data?.parent_id,
-        },
-        {
-          name: ['category_color'],
-          value: data?.category_color,
-        },
-        {
-          name: ['category_image'],
-          value: data?.category_image,
-        },
-        {
-          name: ['category_icon'],
-          value: data?.category_icon,
-        },
-        // {
-        //   name: ['offer_start_date'],
-        //   value: data?.offer_start_date,
-        // },
-        // {
-        //   name: ['offer_end_date'],
-        //   value: data?.offer_end_date,
-        // },
-        {
-          name: ['category_is_active'],
-          value: data?.category_is_active,
-        },
-      ]);
-    });
+    setCategories([
+      {
+        name: ['category_name'],
+        value: state?.category_name,
+      },
+      {
+        name: ['parent_id'],
+        value: state?.parent_id,
+      },
+      {
+        name: ['category_color'],
+        value: state?.category_color,
+      },
+      {
+        name: ['category_image'],
+        value: state?.category_image,
+      },
+      {
+        name: ['category_icon'],
+        value: state?.category_icon,
+      },
+      // {
+      //   name: ['offer_start_date'],
+      //   value: state?.offer_start_date,
+      // },
+      // {
+      //   name: ['offer_end_date'],
+      //   value: state?.offer_end_date,
+      // },
+      {
+        name: ['category_is_active'],
+        value: state?.category_is_active || 'Active',
+      },
+    ]);
   }, []);
 
   const normFile = (e) => {

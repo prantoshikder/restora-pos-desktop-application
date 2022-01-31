@@ -16,6 +16,7 @@ const FoodAvailability = ({ direction }) => {
             </Col>
             <Col md={21}>
               <Heading title="Food Availability" />
+
               <FoodAvailabilityList />
             </Col>
           </Row>

@@ -1,8 +1,15 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Image, message, Space, Table } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
+
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -24,11 +31,32 @@ const AllCategoryList = () => {
   window.get_category.send('sendResponseForCategory', { status: true });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [categories, setCategories] = useState(null);
   const [visible, setVisible] = useState({});
 
-  window.delete_category.once("delete_category_response", (event, args) => {
-    console.log("%%%%%%%%%%%%%%%%%%", { args });
-  })
+  window.delete_category.once('delete_category_response', ({ status }) => {
+    if (status) {
+      message.success({
+        content: 'Foods category added successfully ',
+        className: 'custom-class',
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+    } else {
+      message.error({
+        content: 'Something is wrong ',
+        className: 'custom-class',
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+    }
+  });
 
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category)
@@ -45,6 +73,53 @@ const AllCategoryList = () => {
       })
       .catch((err) => console.log('error', err));
   }, []);
+
+  function getApplicationSettingsData() {
+    return new Promise((resolve, reject) => {
+      window.get_category.once('sendCategoryData', (categoryLists) => {
+        if (categoryLists) {
+          resolve(categoryLists);
+        } else {
+          reject(Error('No settings found'));
+        }
+      });
+    });
+  }
+
+  let navigate = useNavigate();
+  const handleEditCategory = (categoryItem) => {
+    navigate('/add_category', { state: categoryItem });
+  };
+
+  const handleDeleteCategory = (categoryItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.delete_category.send('delete_category', {
+          id: categoryItem.category_id,
+        });
+
+        setCategories(
+          categories.filter(
+            (item) => item.category_id !== categoryItem.category_id
+          )
+        );
+        message.success({
+          content: 'Foods category added successfully ',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      },
+      onCancel() {},
+    });
+  };
 
   const columns = [
     {
@@ -89,6 +164,7 @@ const AllCategoryList = () => {
             <EditOutlined />
             Edit
           </Button>
+
           <Button type="danger" onClick={() => handleDeleteCategory(record)}>
             <DeleteOutlined />
             Delete
@@ -97,35 +173,6 @@ const AllCategoryList = () => {
       ),
     },
   ];
-
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
-  }
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-
-    window.delete_category.send("delete_category", { 'id': 3 })
-
-    message.success({
-      content: 'Foods category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-  }
 
   return (
     <div
@@ -139,6 +186,7 @@ const AllCategoryList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={categories}
         pagination={false}
+        rowKey={(record) => record.category_id}
       />
     </div>
   );

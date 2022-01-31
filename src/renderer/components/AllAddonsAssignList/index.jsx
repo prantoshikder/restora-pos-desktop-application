@@ -102,15 +102,6 @@ const AllAddonsAssignList = () => {
   function handleEditCategory(record) {
     setVisible(true);
     console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
   }
 
   function handleDeleteCategory(record) {
@@ -172,6 +163,7 @@ const AllAddonsAssignList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={data}
           pagination={false}
+          rowKey={(record) => record.key}
         />
       </div>
 

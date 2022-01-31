@@ -17,6 +17,7 @@ const FoodList = ({ direction }) => {
 
             <Col lg={21}>
               <Heading title="Food List" />
+
               <AllFoodList />
             </Col>
           </Row>
