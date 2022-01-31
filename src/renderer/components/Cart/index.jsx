@@ -20,7 +20,6 @@ import {
   Table,
   TimePicker,
 } from 'antd';
-import moment from 'moment';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
@@ -385,7 +384,6 @@ const Cart = () => {
                   name="cookingTime"
                 >
                   <TimePicker
-                    defaultValue={moment('00:00:00', 'HH:mm:ss')}
                     size="large"
                     value={cartData.cookingTime}
                     onChange={selectTime}
@@ -410,6 +408,7 @@ const Cart = () => {
                   columns={columns}
                   pagination={false}
                   dataSource={cartItems}
+                  rowKey={(record) => record.key}
                   className="custom_table"
                 />
               </div>

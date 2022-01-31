@@ -1,5 +1,17 @@
 import { InfoCircleOutlined, PictureOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, DatePicker, Form, Input, message, Row, Select, Space, Upload } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  Space,
+  Upload,
+} from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
@@ -8,7 +20,6 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AddNewCategory = () => {
-
   const [form] = Form.useForm();
   const [packageOffer, setPackageOffer] = useState('');
   const [categories, setCategories] = useState([]);

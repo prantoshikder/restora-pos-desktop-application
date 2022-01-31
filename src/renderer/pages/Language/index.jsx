@@ -16,6 +16,7 @@ const Language = ({ direction }) => {
               </Col>
               <Col lg={21}>
                 <Heading title="Language" />
+
                 <LanguageList />
               </Col>
             </Row>

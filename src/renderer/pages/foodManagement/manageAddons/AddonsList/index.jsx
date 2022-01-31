@@ -16,6 +16,7 @@ const AddonsList = ({ direction }) => {
 
             <Col lg={21}>
               <Heading title="Add-ons List" />
+
               <AllAddonsList />
             </Col>
           </Row>

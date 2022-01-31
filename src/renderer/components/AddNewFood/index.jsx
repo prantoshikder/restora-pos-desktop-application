@@ -280,10 +280,7 @@ const AddNewFood = () => {
             )}
 
             <Form.Item label="Cooking Time" name="cookingTime">
-              <TimePicker
-                defaultValue={moment('12:08', format)}
-                format={format}
-              />
+              <TimePicker format={format} />
               {/* <Input placeholder="0:00" size="large" /> */}
             </Form.Item>
 
@@ -299,7 +296,6 @@ const AddNewFood = () => {
                 placeholder="Select an Option"
                 onChange={handleChangeStatus}
                 value={value}
-                defaultValue={{ key: 'active' }}
                 size="large"
                 allowClear
               >

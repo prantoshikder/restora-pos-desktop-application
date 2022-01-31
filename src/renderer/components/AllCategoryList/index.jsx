@@ -1,7 +1,14 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Image, message, Space, Table } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Navigate, Route } from 'react-router-dom';
 import './AllCategoryList.style.scss';
+
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -23,7 +30,6 @@ const AllCategoryList = () => {
   window.get_category.send('sendResponseForCategory', { status: true });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState({});
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -46,8 +52,6 @@ const AllCategoryList = () => {
     // });
   }, []);
 
-  console.log('categories', categories);
-
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
       window.get_category.once('sendCategoryData', (categoryLists) => {
@@ -59,6 +63,37 @@ const AllCategoryList = () => {
       });
     });
   }
+
+  const handleEditCategory = (record) => {
+    console.log('Edit', record);
+    // <Redirect from="/category_list" to="/add_category" />;
+
+    return <Route path="/" element={<Navigate replace to="/add_category" />} />;
+  };
+
+  const showConfirm = (record) => {
+    confirm({
+      title: 'Are you sure to delete this items?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        setCategories(
+          categories.filter((item) => item.category_id !== record.category_id)
+        );
+        message.success({
+          content: 'Foods category added successfully ',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      },
+      onCancel() {},
+    });
+  };
 
   const columns = [
     {
@@ -103,7 +138,8 @@ const AllCategoryList = () => {
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+
+          <Button type="danger" onClick={() => showConfirm(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -111,75 +147,6 @@ const AllCategoryList = () => {
       ),
     },
   ];
-
-  const data = [
-    {
-      key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Soup N Salads',
-      parentMenu: 'Soup (Thai)',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Salad (Thai)',
-      parentMenu: 'Chicken item',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Prawn & Fish Dishes',
-      parentMenu: 'indian',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Oven Roasted Eggplant',
-      parentMenu: 'thai',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Maxican spicy',
-      parentMenu: 'Chicken item',
-      status: 'Active',
-    },
-  ];
-
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
-  }
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-  }
 
   return (
     <div
@@ -193,6 +160,7 @@ const AllCategoryList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={categories}
         pagination={false}
+        rowKey={(record) => record.category_id}
       />
     </div>
   );

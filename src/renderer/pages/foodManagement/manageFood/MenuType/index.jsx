@@ -16,6 +16,7 @@ const MenuType = ({ direction }) => {
             </Col>
             <Col md={21}>
               <Heading title="Menu Type" />
+
               <MenuTypeList />
             </Col>
           </Row>

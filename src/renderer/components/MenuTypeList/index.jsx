@@ -179,6 +179,7 @@ const MenuTypeList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={data}
           pagination={false}
+          rowKey={(record) => record.key}
         />
       </div>
 
