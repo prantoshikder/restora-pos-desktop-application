@@ -39,3 +39,22 @@ contextBridge.exposeInMainWorld('get_category', {
     }
   },
 });
+
+
+contextBridge.exposeInMainWorld(
+
+  "delete_category", {
+  send: (channel, data) => {
+    let validChannels = ["delete_category"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ["delete_category_response"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    }
+  }
+
+});
