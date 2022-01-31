@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Table } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
 const rowSelection = {
@@ -20,7 +21,8 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
-  window.get_category.send("sendResponseForCategory", { "status": true });
+  window.get_category.send('sendResponseForCategory', { status: true });
+
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState({});
 
@@ -29,13 +31,20 @@ const AllCategoryList = () => {
   })
 
   useEffect(() => {
+    getDataFromDatabase('sendCategoryData', window.get_category)
+      .then((data) => {
+        const categoryLists = data.map((element) => {
+          if (element.category_is_active === 1) {
+            return { ...element, category_is_active: 'Active' };
+          } else {
+            return { ...element, category_is_active: 'Inactive' };
+          }
+        });
 
-    window.get_category.once("sendCategoryData", (eve, categoryData) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", categoryData);
-    });
-
-  }, [])
-
+        setCategories(categoryLists);
+      })
+      .catch((err) => console.log('error', err));
+  }, []);
 
   const columns = [
     {
@@ -53,21 +62,21 @@ const AllCategoryList = () => {
     },
     {
       title: 'Category Name',
-      dataIndex: 'categoryName',
-      key: 'categoryName',
+      dataIndex: 'category_name',
+      key: 'category_name',
       width: '30%',
     },
     {
       title: 'Parent Menu',
-      dataIndex: 'parentMenu',
-      key: 'parentMenu',
+      dataIndex: 'parent_id',
+      key: 'parent_id',
       width: '20%',
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'category_is_active',
+      key: 'category_is_active',
       width: '15%',
-      key: 'status',
     },
     {
       title: 'Action',
@@ -86,49 +95,6 @@ const AllCategoryList = () => {
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Soup N Salads',
-      parentMenu: 'Soup (Thai)',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Salad (Thai)',
-      parentMenu: 'Chicken item',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Prawn & Fish Dishes',
-      parentMenu: 'indian',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Oven Roasted Eggplant',
-      parentMenu: 'thai',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Maxican spicy',
-      parentMenu: 'Chicken item',
-      status: 'Active',
     },
   ];
 
@@ -171,7 +137,7 @@ const AllCategoryList = () => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        dataSource={categories}
         pagination={false}
       />
     </div>
