@@ -27,6 +27,8 @@ const rowSelection = {
   },
 };
 
+console.log('hello');
+
 const AllCategoryList = () => {
   window.get_category.send('sendResponseForCategory', { status: true });
 
