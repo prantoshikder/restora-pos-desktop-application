@@ -28,11 +28,11 @@ const AddNewCategory = ({ state }) => {
   const [offerStartDate, setOfferStartDate] = useState('');
 
   // -----------------
-  window.add_category.once('after_insert_get_response', (args) => {
-    console.log('args', args);
-  });
 
   useEffect(() => {
+    window.add_category.once('after_insert_get_response', (args) => {
+      console.log('args', args);
+    });
     setCategories([
       {
         name: ['category_name'],
