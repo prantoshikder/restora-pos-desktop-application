@@ -229,73 +229,60 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
-  let {
-    category_name,
-    parent_id,
-    category_image,
-    category_icon,
-    category_is_active,
-    offer_start_date,
-    offer_end_date,
-    category_color,
-  } = args;
 
+  let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS add_item_category (
-        'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
-        'category_name' varchar(255),
-        'category_image' varchar(255),
-        'position' INT,
-        'category_is_active' INT,
-        'offer_start_date' DATE ,
-        'offer_end_date' DATE,
-        'isoffer' INT,
-        'category_color' varchar(50),
-        'category_icon' varchar(255),
-        'parent_id' INT,
-        'user_id_inserted' INT,
-        'user_id_updated' INT,
-        'user_id_locked' INT,
-        'date_inserted' DATETIME,
-        'date_updated' DATETIME,
-        'date_locked' DATETIME
-      )`
-    ).run(
-      `INSERT INTO add_item_category (
-        category_name,
-        parent_id,
-        category_image,
-        category_icon,
-        category_is_active,
-        offer_start_date,
-        offer_end_date,
-        category_color
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
-      [
-        category_name,
-        parent_id,
-        category_image,
-        category_icon,
-        category_is_active,
-        offer_start_date,
-        offer_end_date,
-        category_color,
-      ],
-      function (err) {
-        if (err) {
-          console.log('Error message add category table ', err.message);
-          return;
+  if (args.category_id !== undefined) {
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO add_item_category ( category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [args.category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        (err) => {
+          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'updated' })
+          // err ? console.log('Error message add category table ', err.message) : console.log(`row updated ${this.category_name}`)
         }
-        console.log(`row inserted ${this.category_name}`);
-      }
-    );
-  });
+      )
+    })
+
+  }
+  else {
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS add_item_category (
+          'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'category_name' varchar(255),
+          'category_image' varchar(255),
+          'position' INT,
+          'category_is_active' INT,
+          'offer_start_date' DATE ,
+          'offer_end_date' DATE,
+          'isoffer' INT,
+          'category_color' varchar(50),
+          'category_icon' varchar(255),
+          'parent_id' INT,
+          'user_id_inserted' INT,
+          'user_id_updated' INT,
+          'user_id_locked' INT,
+          'date_inserted' DATETIME,
+          'date_updated' DATETIME,
+          'date_locked' DATETIME
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO add_item_category ( category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
+        [category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        (err) => {
+          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'inserted' })
+          // err ? console.log('Error message add category table ', err.message) : console.log(`row inserted ${this.category_name}`)
+        }
+      );
+    });
+  }
 
   db.close();
+
 });
 
 // Send category item data
@@ -318,21 +305,23 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
 
 // Delete category data
 ipcMain.on('delete_category', (event, args) => {
+
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       if (err) {
-        console.log(err);
-      } else {
-        mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+        mainWindow.webContents.send("delete_category_response", { 'status': err });
       }
-    });
-  });
-  db.close();
-});
+      else {
+        mainWindow.webContents.send("delete_category_response", { 'status': true });
+      }
+    })
+  })
+  db.close()
+
+})
+
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

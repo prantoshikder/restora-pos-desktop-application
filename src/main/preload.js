@@ -1,3 +1,4 @@
+const { channel } = require('diagnostics_channel');
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
@@ -22,6 +23,12 @@ contextBridge.exposeInMainWorld('add_category', {
       ipcRenderer.send(channel, data);
     }
   },
+  once: (channel, func) => {
+    let validChannels = ['after_insert_get_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  }
 });
 
 contextBridge.exposeInMainWorld('get_category', {
@@ -40,21 +47,17 @@ contextBridge.exposeInMainWorld('get_category', {
   },
 });
 
-
-contextBridge.exposeInMainWorld(
-
-  "delete_category", {
+contextBridge.exposeInMainWorld('delete_category', {
   send: (channel, data) => {
-    let validChannels = ["delete_category"];
+    let validChannels = ['delete_category'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   once: (channel, func) => {
-    let validChannels = ["delete_category_response"];
+    let validChannels = ['delete_category_response'];
     if (validChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
-
+  },
 });

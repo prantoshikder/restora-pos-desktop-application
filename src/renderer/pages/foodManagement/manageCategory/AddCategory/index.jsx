@@ -1,11 +1,14 @@
 import { Col, ConfigProvider, Row } from 'antd';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import Heading from 'renderer/components/Heading';
 import AddNewCategory from './../../../../components/AddNewCategory';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './AddCategory.style.scss';
 
 const AddCategory = ({ direction }) => {
+  const { state } = useLocation();
+
   return (
     <div className="main_wrapper">
       <div className="pos_system">
@@ -16,9 +19,13 @@ const AddCategory = ({ direction }) => {
             </Col>
 
             <Col lg={21}>
-              <Heading title="Add Category" />
+              {state?.category_id ? (
+                <Heading title="Update Category" />
+              ) : (
+                <Heading title="Add Category" />
+              )}
 
-              <AddNewCategory />
+              <AddNewCategory state={state} />
             </Col>
           </Row>
         </ConfigProvider>
