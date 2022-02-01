@@ -15,6 +15,7 @@ const ApplicationSettings = ({ direction }) => {
             </Col>
             <Col md={21}>
               <Heading title="Application Settings" />
+
               <ApplicationSetting />
             </Col>
           </Row>

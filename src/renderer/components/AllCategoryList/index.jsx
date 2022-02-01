@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Navigate, Route } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
@@ -61,14 +61,12 @@ const AllCategoryList = () => {
     });
   }
 
-  const handleEditCategory = (record) => {
-    console.log('Edit', record);
-    // <Redirect from="/category_list" to="/add_category" />;
-
-    return <Route path="/" element={<Navigate replace to="/add_category" />} />;
+  let navigate = useNavigate();
+  const handleEditCategory = (categoryItem) => {
+    navigate('/add_category', { state: categoryItem });
   };
 
-  const showConfirm = (record) => {
+  const showConfirm = (categoryItem) => {
     confirm({
       title: 'Are you sure to delete this items?',
       icon: <ExclamationCircleOutlined />,
@@ -76,7 +74,9 @@ const AllCategoryList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         setCategories(
-          categories.filter((item) => item.category_id !== record.category_id)
+          categories.filter(
+            (item) => item.category_id !== categoryItem.category_id
+          )
         );
         message.success({
           content: 'Foods category added successfully ',

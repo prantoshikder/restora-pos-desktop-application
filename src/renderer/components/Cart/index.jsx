@@ -408,7 +408,7 @@ const Cart = () => {
                   columns={columns}
                   pagination={false}
                   dataSource={cartItems}
-                  rowKey={(record) => record.key}
+                  rowKey={(record) => record.id}
                   className="custom_table"
                 />
               </div>
@@ -434,13 +434,17 @@ const Cart = () => {
             </div>
 
             <div>
-              <span>
-                $
-                {cartItems.reduce(
-                  (prevPrice, currentPrice) => prevPrice + currentPrice.price,
-                  0
-                )}
-              </span>
+              {cartItems?.length !== 0 ? (
+                <span>
+                  $
+                  {cartItems.reduce(
+                    (prevPrice, currentPrice) => prevPrice + currentPrice.price,
+                    0
+                  )}
+                </span>
+              ) : (
+                <span>$0.00</span>
+              )}
             </div>
           </div>
 
