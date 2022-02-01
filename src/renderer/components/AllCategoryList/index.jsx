@@ -32,6 +32,11 @@ const AllCategoryList = () => {
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [visible, setVisible] = useState({});
+
+  window.delete_category.once('delete_category_response', (event, args) => {
+    console.log('%%%%%%%%%%%%%%%%%%', { args });
+  });
 
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category)
