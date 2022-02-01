@@ -23,7 +23,6 @@ const { Option } = Select;
 const AddNewCategory = () => {
   const [form] = Form.useForm();
   const { state } = useLocation();
-  console.log('state', state);
 
   const [categories, setCategories] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
@@ -31,7 +30,6 @@ const AddNewCategory = () => {
   const [offerStartDate, setOfferStartDate] = useState('');
 
   useEffect(() => {
-    // insertData('sendSettingDataFromMain', window.api).then((data) => {
     setCategories([
       {
         name: ['category_name'],
@@ -63,10 +61,9 @@ const AddNewCategory = () => {
       // },
       {
         name: ['category_is_active'],
-        value: state?.category_is_active,
+        value: state?.category_is_active || 'Active',
       },
     ]);
-    // });
   }, []);
 
   const normFile = (e) => {
@@ -122,6 +119,8 @@ const AddNewCategory = () => {
     }
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
+
+    console.log('newCategory', newCategory);
 
     window.add_category.send('insertCategoryData', newCategory);
 

@@ -34,8 +34,28 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
   const [visible, setVisible] = useState({});
 
-  window.delete_category.once('delete_category_response', (event, args) => {
-    console.log('%%%%%%%%%%%%%%%%%%', { args });
+  window.delete_category.once('delete_category_response', ({ status }) => {
+    if (status) {
+      message.success({
+        content: 'Foods category added successfully ',
+        className: 'custom-class',
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+    } else {
+      message.error({
+        content: 'Something is wrong ',
+        className: 'custom-class',
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+    }
   });
 
   useEffect(() => {
@@ -71,13 +91,17 @@ const AllCategoryList = () => {
     navigate('/add_category', { state: categoryItem });
   };
 
-  const showConfirm = (categoryItem) => {
+  const handleDeleteCategory = (categoryItem) => {
     confirm({
-      title: 'Are you sure to delete this items?',
+      title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
+        window.delete_category.send('delete_category', {
+          id: categoryItem.category_id,
+        });
+
         setCategories(
           categories.filter(
             (item) => item.category_id !== categoryItem.category_id
@@ -141,7 +165,7 @@ const AllCategoryList = () => {
             Edit
           </Button>
 
-          <Button type="danger" onClick={() => showConfirm(record)}>
+          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
             <DeleteOutlined />
             Delete
           </Button>
