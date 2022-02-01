@@ -27,6 +27,11 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
 
+  // -----------------
+  window.add_category.once('after_insert_get_response', (args) => {
+    console.log('args', args);
+  });
+
   useEffect(() => {
     setCategories([
       {
@@ -117,7 +122,9 @@ const AddNewCategory = ({ state }) => {
     }
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
+    newCategory.category_id = state?.category_id;
 
+    // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
 
     message.success({

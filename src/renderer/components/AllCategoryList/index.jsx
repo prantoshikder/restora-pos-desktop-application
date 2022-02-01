@@ -88,6 +88,7 @@ const AllCategoryList = () => {
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
+    console.log(categoryItem.category_id);
     navigate('/add_category', { state: categoryItem });
   };
 
@@ -117,7 +118,7 @@ const AllCategoryList = () => {
           },
         });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
