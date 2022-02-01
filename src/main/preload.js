@@ -53,7 +53,7 @@ contextBridge.exposeInMainWorld(
   once: (channel, func) => {
     let validChannels = ["delete_category_response"];
     if (validChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
   }
 
@@ -69,11 +69,11 @@ contextBridge.exposeInMainWorld(
       ipcRenderer.send(channel, data);
     }
   },
-  once: (channel, func) => {
-    let validChannels = ["edit_category_response"];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
-    }
-  }
+  // once: (channel, func) => {
+  //   let validChannels = ["edit_category_response"];
+  //   if (validChannels.includes(channel)) {
+  //     ipcRenderer.on(channel, (event, ...args) => func(...args));
+  //   }
+  // }
 
 });

@@ -229,6 +229,9 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
+  console.log("argsargsargsargsargs",args);
+
+  
   let {
     category_name,
     parent_id,
@@ -241,7 +244,8 @@ ipcMain.on('insertCategoryData', (event, args) => {
   } = args;
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-
+  // INSERT OR REPLACE INTO add_item_category (category_name)
+  // VALUES (27, '200');
   db.serialize(() => {
     db.run(
       `CREATE TABLE IF NOT EXISTS add_item_category (
@@ -264,7 +268,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
         'date_locked' DATETIME
       )`
     ).run(
-      `INSERT INTO add_item_category (
+      `INSERT OR REPLACE INTO add_item_category (
         category_name,
         parent_id,
         category_image,
@@ -318,10 +322,11 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
 
 // Delete category data
 ipcMain.on('delete_category', (event, args) => {
+
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM item_category WHERE category_id = ?`, id, (err) => {
+    db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       if (err) {
         mainWindow.webContents.send("delete_category_response", { 'status': err });
       }
@@ -334,6 +339,37 @@ ipcMain.on('delete_category', (event, args) => {
 
 })
 
+// Edit category data
+ipcMain.on("edit_category", (event, args) => {
+
+  // let sql = `UPDATE add_item_category
+  // SET category_name = ?, parent_id = ?, category_image = ?, category_icon = ?, category_is_active = ?, offer_start_date = ?, offer_end_date = ?, category_color = ?
+  // WHERE category_id = ?`
+  // let data = ['Ansi C', 'C'];
+  // db.run(sql, data, function(err) {
+  //   if (err) {
+  //     return console.error(err.message);
+  //   }
+  //   console.log(`Row(s) updated: ${this.changes}`);
+  // })
+
+
+
+
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  let settingSqlQ = `SELECT * FROM add_item_category WHERE category_id = ?`;
+
+  db.serialize(() => {
+    db.get(settingSqlQ, [id], (err, rows) => {
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@", rows);
+      // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
+    })
+  })
+
+  db.close()
+
+})
 
 
 

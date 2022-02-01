@@ -88,7 +88,9 @@ const AllCategoryList = () => {
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
+    console.log(categoryItem.category_id);
     navigate('/add_category', { state: categoryItem });
+    // window.edit_category.send('edit_category', { id: categoryItem.category_id });
   };
 
   const handleDeleteCategory = (categoryItem) => {
@@ -117,7 +119,7 @@ const AllCategoryList = () => {
           },
         });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
