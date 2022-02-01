@@ -229,77 +229,60 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
-  console.log("argsargsargsargsargs",args);
 
-  
-  let {
-    category_name,
-    parent_id,
-    category_image,
-    category_icon,
-    category_is_active,
-    offer_start_date,
-    offer_end_date,
-    category_color,
-  } = args;
-
+  let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  // INSERT OR REPLACE INTO add_item_category (category_name)
-  // VALUES (27, '200');
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS add_item_category (
-        'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
-        'category_name' varchar(255),
-        'category_image' varchar(255),
-        'position' INT,
-        'category_is_active' INT,
-        'offer_start_date' DATE ,
-        'offer_end_date' DATE,
-        'isoffer' INT,
-        'category_color' varchar(50),
-        'category_icon' varchar(255),
-        'parent_id' INT,
-        'user_id_inserted' INT,
-        'user_id_updated' INT,
-        'user_id_locked' INT,
-        'date_inserted' DATETIME,
-        'date_updated' DATETIME,
-        'date_locked' DATETIME
-      )`
-    ).run(
-      `INSERT OR REPLACE INTO add_item_category (
-        category_name,
-        parent_id,
-        category_image,
-        category_icon,
-        category_is_active,
-        offer_start_date,
-        offer_end_date,
-        category_color
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
-      [
-        category_name,
-        parent_id,
-        category_image,
-        category_icon,
-        category_is_active,
-        offer_start_date,
-        offer_end_date,
-        category_color,
-      ],
-      function (err) {
-        if (err) {
-          console.log('Error message add category table ', err.message);
-          return;
+
+  if (args.category_id !== undefined) {
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO add_item_category ( category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [args.category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        (err) => {
+          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'updated' })
+          // err ? console.log('Error message add category table ', err.message) : console.log(`row updated ${this.category_name}`)
         }
-        console.log(`row inserted ${this.category_name}`);
-      }
-    );
-  });
+      )
+    })
+
+  }
+  else {
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS add_item_category (
+          'category_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'category_name' varchar(255),
+          'category_image' varchar(255),
+          'position' INT,
+          'category_is_active' INT,
+          'offer_start_date' DATE ,
+          'offer_end_date' DATE,
+          'isoffer' INT,
+          'category_color' varchar(50),
+          'category_icon' varchar(255),
+          'parent_id' INT,
+          'user_id_inserted' INT,
+          'user_id_updated' INT,
+          'user_id_locked' INT,
+          'date_inserted' DATETIME,
+          'date_updated' DATETIME,
+          'date_locked' DATETIME
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO add_item_category ( category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
+        [category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        (err) => {
+          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'inserted' })
+          // err ? console.log('Error message add category table ', err.message) : console.log(`row inserted ${this.category_name}`)
+        }
+      );
+    });
+  }
 
   db.close();
+
 });
 
 // Send category item data
@@ -338,39 +321,6 @@ ipcMain.on('delete_category', (event, args) => {
   db.close()
 
 })
-
-// Edit category data
-ipcMain.on("edit_category", (event, args) => {
-
-  // let sql = `UPDATE add_item_category
-  // SET category_name = ?, parent_id = ?, category_image = ?, category_icon = ?, category_is_active = ?, offer_start_date = ?, offer_end_date = ?, category_color = ?
-  // WHERE category_id = ?`
-  // let data = ['Ansi C', 'C'];
-  // db.run(sql, data, function(err) {
-  //   if (err) {
-  //     return console.error(err.message);
-  //   }
-  //   console.log(`Row(s) updated: ${this.changes}`);
-  // })
-
-
-
-
-  let { id } = args;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  let settingSqlQ = `SELECT * FROM add_item_category WHERE category_id = ?`;
-
-  db.serialize(() => {
-    db.get(settingSqlQ, [id], (err, rows) => {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@", rows);
-      // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
-    })
-  })
-
-  db.close()
-
-})
-
 
 
 app.on('window-all-closed', () => {
