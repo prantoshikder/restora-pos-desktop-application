@@ -12,7 +12,6 @@ import {
   Space,
   Upload,
 } from 'antd';
-import { ipcRenderer } from 'electron/renderer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
@@ -30,8 +29,8 @@ const AddNewCategory = ({ state }) => {
 
   // -----------------
   window.add_category.once('after_insert_get_response', (args) => {
-    console.log("args", args);
-  })
+    console.log('args', args);
+  });
 
   useEffect(() => {
     setCategories([
@@ -117,22 +116,21 @@ const AddNewCategory = ({ state }) => {
 
   const handleSubmit = () => {
     const newCategory = {};
-    let successMessage = '';
 
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
     }
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
-
     newCategory.category_id = state?.category_id;
 
-    successMessage = 'Category has been updated successfully';
-
+    // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
 
     message.success({
-      content: successMessage,
+      content: state?.category_id
+        ? 'Category has been updated successfully'
+        : 'Food category added successfully',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -140,6 +138,8 @@ const AddNewCategory = ({ state }) => {
         float: 'right',
       },
     });
+
+    form.resetFields();
   };
 
   return (
