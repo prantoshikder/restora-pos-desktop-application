@@ -186,7 +186,7 @@ const AllCategoryList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={categories}
         pagination={false}
-        rowKey={(record) => record.category_id}
+        rowKey={(record) => record?.category_id}
       />
     </div>
   );

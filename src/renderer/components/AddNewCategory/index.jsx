@@ -111,7 +111,6 @@ const AddNewCategory = ({ state }) => {
 
   const handleSubmit = () => {
     const newCategory = {};
-    let successMessage = '';
 
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
@@ -119,15 +118,12 @@ const AddNewCategory = ({ state }) => {
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
 
-    if (state?.category_id) {
-      successMessage = 'Category has been updated successfully';
-    } else {
-      window.add_category.send('insertCategoryData', newCategory);
-      successMessage = 'Food category added successfully';
-    }
+    window.add_category.send('insertCategoryData', newCategory);
 
     message.success({
-      content: successMessage,
+      content: state?.category_id
+        ? 'Category has been updated successfully'
+        : 'Food category added successfully',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -135,6 +131,8 @@ const AddNewCategory = ({ state }) => {
         float: 'right',
       },
     });
+
+    form.resetFields();
   };
 
   return (
