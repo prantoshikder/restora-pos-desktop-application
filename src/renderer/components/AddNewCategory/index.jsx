@@ -14,15 +14,13 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const AddNewCategory = () => {
+const AddNewCategory = ({ state }) => {
   const [form] = Form.useForm();
-  const { state } = useLocation();
 
   const [categories, setCategories] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
@@ -113,6 +111,7 @@ const AddNewCategory = () => {
 
   const handleSubmit = () => {
     const newCategory = {};
+    let successMessage = '';
 
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
@@ -120,12 +119,15 @@ const AddNewCategory = () => {
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
 
-    console.log('newCategory', newCategory);
-
-    window.add_category.send('insertCategoryData', newCategory);
+    if (state?.category_id) {
+      successMessage = 'Category has been updated successfully';
+    } else {
+      window.add_category.send('insertCategoryData', newCategory);
+      successMessage = 'Food category added successfully';
+    }
 
     message.success({
-      content: 'Foods category added successfully',
+      content: successMessage,
       className: 'custom-class',
       duration: 1,
       style: {
@@ -297,6 +299,7 @@ const AddNewCategory = () => {
               >
                 Reset
               </Button>
+
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>

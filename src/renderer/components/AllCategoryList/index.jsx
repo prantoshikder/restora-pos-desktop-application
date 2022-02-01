@@ -32,12 +32,12 @@ const AllCategoryList = () => {
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
-  const [visible, setVisible] = useState({});
 
   window.delete_category.once('delete_category_response', ({ status }) => {
+    console.log('status1', status);
     if (status) {
       message.success({
-        content: 'Foods category added successfully ',
+        content: 'Food category deleted successfully',
         className: 'custom-class',
         duration: 1,
         style: {
@@ -47,7 +47,7 @@ const AllCategoryList = () => {
       });
     } else {
       message.error({
-        content: 'Something is wrong ',
+        content: status,
         className: 'custom-class',
         duration: 1,
         style: {
