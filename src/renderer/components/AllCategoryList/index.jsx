@@ -34,7 +34,7 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
 
   window.delete_category.once('delete_category_response', ({ status }) => {
-    console.log('status1', status);
+    console.log('status', status);
     if (status) {
       message.success({
         content: 'Food category deleted successfully',
@@ -45,17 +45,19 @@ const AllCategoryList = () => {
           float: 'right',
         },
       });
-    } else {
-      message.error({
-        content: status,
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
     }
+
+    // else {
+    //   message.error({
+    //     content: status,
+    //     className: 'custom-class',
+    //     duration: 1,
+    //     style: {
+    //       marginTop: '5vh',
+    //       float: 'right',
+    //     },
+    //   });
+    // }
   });
 
   useEffect(() => {
@@ -88,7 +90,6 @@ const AllCategoryList = () => {
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
-    console.log(categoryItem.category_id);
     navigate('/add_category', { state: categoryItem });
   };
 
@@ -108,15 +109,15 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
-        message.success({
-          content: 'Foods category added successfully ',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
+        // message.success({
+        //   content: 'Foods category added successfully ',
+        //   className: 'custom-class',
+        //   duration: 1,
+        //   style: {
+        //     marginTop: '5vh',
+        //     float: 'right',
+        //   },
+        // });
       },
       onCancel() {},
     });

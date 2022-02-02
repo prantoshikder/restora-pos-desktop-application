@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -21,18 +22,41 @@ const { Option } = Select;
 
 const AddNewCategory = ({ state }) => {
   const [form] = Form.useForm();
+  let navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
 
-  // -----------------
-
   useEffect(() => {
-    window.add_category.once('after_insert_get_response', (args) => {
-      console.log('args', args);
+    window.add_category.once('after_insert_get_response', ({ status }) => {
+      console.log('status', status);
+      if (status === 'updated') {
+        message.success({
+          content: 'Category has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        navigate('/category_list');
+      } else {
+        message.success({
+          content: 'Food category added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        form.resetFields();
+      }
     });
+
     setCategories([
       {
         name: ['category_name'],
@@ -120,26 +144,13 @@ const AddNewCategory = ({ state }) => {
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
     }
+
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
-
-    message.success({
-      content: state?.category_id
-        ? 'Category has been updated successfully'
-        : 'Food category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-
-    form.resetFields();
   };
 
   return (
