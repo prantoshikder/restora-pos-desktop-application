@@ -34,7 +34,7 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
 
   window.delete_category.once('delete_category_response', ({ status }) => {
-    console.log('status1', status);
+    console.log('status', status);
     if (status) {
       message.success({
         content: 'Food category deleted successfully',
@@ -45,23 +45,55 @@ const AllCategoryList = () => {
           float: 'right',
         },
       });
-    } else {
-      message.error({
-        content: status,
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
     }
+
+    // else {
+    //   message.error({
+    //     content: status,
+    //     className: 'custom-class',
+    //     duration: 1,
+    //     style: {
+    //       marginTop: '5vh',
+    //       float: 'right',
+    //     },
+    //   });
+    // }
   });
 
+  const [parentCategory, setParentCategory] = useState([]);
+
   useEffect(() => {
+    // window.parent_category.send('parent_category', { status: true });
+
+    // window.parent_category.once('parent_category', (args) => {
+    //   console.log('******************************', args);
+    //   setParentCategory(args);
+    // });
+
+    getDataFromDatabase('parent_category', window.parent_category).then(
+      (data) => {
+        console.log('data', data);
+      }
+    );
+
     getDataFromDatabase('sendCategoryData', window.get_category)
       .then((data) => {
+        // console.log('data', data);
+        // console.log('parentCategory', parentCategory);
+
         const categoryLists = data.map((element) => {
+          const filterData = parentCategory.filter((item) =>
+            console.log('item', item)
+          );
+
+          console.log('element', element);
+          console.log('filterData', filterData);
+
+          // if (filterData) {
+          //   console.log('filterData', element.parent_id);
+          //   element.parent_id = 'data';
+          // }
+
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
           } else {
@@ -73,6 +105,8 @@ const AllCategoryList = () => {
       })
       .catch((err) => console.log('error', err));
   }, []);
+
+  // console.log('parentCategory', parentCategory);
 
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
@@ -88,7 +122,6 @@ const AllCategoryList = () => {
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
-    console.log(categoryItem.category_id);
     navigate('/add_category', { state: categoryItem });
   };
 
@@ -108,15 +141,15 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
-        message.success({
-          content: 'Foods category added successfully ',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
+        // message.success({
+        //   content: 'Foods category added successfully ',
+        //   className: 'custom-class',
+        //   duration: 1,
+        //   style: {
+        //     marginTop: '5vh',
+        //     float: 'right',
+        //   },
+        // });
       },
       onCancel() {},
     });
