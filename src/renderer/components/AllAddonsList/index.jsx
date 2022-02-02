@@ -19,7 +19,18 @@ const rowSelection = {
 };
 
 const AllAddonsList = () => {
+  
   const [checkStrictly, setCheckStrictly] = useState(false);
+
+  window.addons_list.send('addons_list', { 'status': true })
+
+  window.addons_list.once('addons_list_response', (args) => {
+    console.log(args);
+  })
+
+  window.delete_addons.once('delete_addons_response', (args) => {
+    console.log(args);
+  })
 
   const columns = [
     {
@@ -97,7 +108,10 @@ const AllAddonsList = () => {
     console.log('Edit', record);
   }
   function handleDeleteCategory(record) {
-    console.log('Delete', record);
+    console.log('Delete', record.key);
+
+    window.delete_addons.send('delete_addons', { 'id': 3 })
+
     message.success({
       content: 'Foods category added successfully ',
       className: 'custom-class',
