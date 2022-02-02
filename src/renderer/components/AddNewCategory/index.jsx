@@ -29,6 +29,13 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
 
+  // -----------------
+  window.parent_category.send('parent_category', { status: true });
+
+  window.parent_category.once('parent_category', (args) => {
+    console.log('******************************', args);
+  });
+
   useEffect(() => {
     window.add_category.once('after_insert_get_response', ({ status }) => {
       console.log('status', status);
