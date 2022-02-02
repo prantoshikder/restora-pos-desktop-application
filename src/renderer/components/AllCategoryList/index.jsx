@@ -68,24 +68,60 @@ const AllCategoryList = () => {
     //   console.log('******************************', args);
     //   setParentCategory(args);
     // });
-    getDataFromDatabase('parent_category', window.parent_category)
-      .then((data) => {
-        console.log('data', data);
-        getDataFromDatabase('sendCategoryData', window.get_category)
-          .then((data) => {
-            const categoryLists = data.map((element) => {
-              if (element.category_is_active === 1) {
-                return { ...element, category_is_active: 'Active' };
-              } else {
-                return { ...element, category_is_active: 'Inactive' };
-              }
-            });
 
-            setCategories(categoryLists);
-          })
-          .catch((err) => console.log('error', err));
+    Promise.all([
+      getDataFromDatabase('parent_category', window.parent_category),
+      getDataFromDatabase('sendCategoryData', window.get_category),
+    ])
+      .then(([parent_category, categories]) => {
+        console.log('parent_category', parent_category);
+        const categoryLists = categories.map((element, i) => {
+          // const paren = parent_category.filter(
+          //   (parent_cat) => parent_cat.parent_id !== element.category_id
+          // );
+
+          // console.log('paren', paren);
+          // console.log(
+          //   'parentcat ',
+          //   parent_category.filter(
+          //     (parent_cat) => parent_cat.parent_id === element.category_id
+          //   )
+          // );
+
+          if (element.category_is_active === 1) {
+            return { ...element, category_is_active: 'Active' };
+          } else {
+            return { ...element, category_is_active: 'Inactive' };
+          }
+        });
+
+        console.log('categoryLists', categoryLists);
+
+        setCategories(categoryLists);
       })
-      .catch((err) => console.log('cat error', err));
+      .catch((err) => console.log('error', err));
+
+    // console.log('am I promise?', allData);
+
+    // getDataFromDatabase('parent_category', window.parent_category)
+    //   .then((data) => {
+    //     console.log('parnet cat', data);
+    //   })
+    //   .catch((err) => console.log('cat error', err));
+
+    // getDataFromDatabase('sendCategoryData', window.get_category)
+    //   .then((data) => {
+    //     const categoryLists = data.map((element) => {
+    //       if (element.category_is_active === 1) {
+    //         return { ...element, category_is_active: 'Active' };
+    //       } else {
+    //         return { ...element, category_is_active: 'Inactive' };
+    //       }
+    //     });
+
+    //     setCategories(categoryLists);
+    //   })
+    //   .catch((err) => console.log('error', err));
   }, []);
 
   function getApplicationSettingsData() {
