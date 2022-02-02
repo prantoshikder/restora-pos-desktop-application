@@ -28,10 +28,13 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
+  // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
+  window.parent_category.send('parent_category', { status: true });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [parentCategory, setParentCategory] = useState(null);
 
   window.delete_category.once('delete_category_response', ({ status }) => {
     console.log('status', status);
@@ -60,53 +63,30 @@ const AllCategoryList = () => {
     // }
   });
 
-  const [parentCategory, setParentCategory] = useState([]);
-
   useEffect(() => {
-    // window.parent_category.send('parent_category', { status: true });
-
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);
     //   setParentCategory(args);
     // });
-
-    getDataFromDatabase('parent_category', window.parent_category).then(
-      (data) => {
-        console.log('data', data);
-      }
-    );
-
-    getDataFromDatabase('sendCategoryData', window.get_category)
+    getDataFromDatabase('parent_category', window.parent_category)
       .then((data) => {
-        // console.log('data', data);
-        // console.log('parentCategory', parentCategory);
+        console.log('data', data);
+        getDataFromDatabase('sendCategoryData', window.get_category)
+          .then((data) => {
+            const categoryLists = data.map((element) => {
+              if (element.category_is_active === 1) {
+                return { ...element, category_is_active: 'Active' };
+              } else {
+                return { ...element, category_is_active: 'Inactive' };
+              }
+            });
 
-        const categoryLists = data.map((element) => {
-          const filterData = parentCategory.filter((item) =>
-            console.log('item', item)
-          );
-
-          console.log('element', element);
-          console.log('filterData', filterData);
-
-          // if (filterData) {
-          //   console.log('filterData', element.parent_id);
-          //   element.parent_id = 'data';
-          // }
-
-          if (element.category_is_active === 1) {
-            return { ...element, category_is_active: 'Active' };
-          } else {
-            return { ...element, category_is_active: 'Inactive' };
-          }
-        });
-
-        setCategories(categoryLists);
+            setCategories(categoryLists);
+          })
+          .catch((err) => console.log('error', err));
       })
-      .catch((err) => console.log('error', err));
+      .catch((err) => console.log('cat error', err));
   }, []);
-
-  // console.log('parentCategory', parentCategory);
 
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
