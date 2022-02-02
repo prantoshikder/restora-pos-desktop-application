@@ -12,6 +12,7 @@ import {
   Space,
   Upload,
 } from 'antd';
+import { ipcRenderer } from 'electron/renderer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import './AddNewCategory.style.scss';
@@ -28,6 +29,11 @@ const AddNewCategory = ({ state }) => {
   const [offerStartDate, setOfferStartDate] = useState('');
 
   // -----------------
+  window.parent_category.send('parent_category', { status: true });
+
+  window.parent_category.once("parent_category", (args) => {
+    console.log("******************************",args);
+  })
 
   useEffect(() => {
     window.add_category.once('after_insert_get_response', (args) => {

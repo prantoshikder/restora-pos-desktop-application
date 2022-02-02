@@ -102,6 +102,26 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
+// Get parent category data
+ipcMain.on('parent_category', (event, args) => {
+
+  if (args.status) {
+
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      let sql = `SELECT category_id, category_name, parent_id FROM add_item_category`
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send("parent_category", rows)
+      })
+    })
+
+    db.close();
+
+  }
+
+})
+
+
 // This is for settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
   let { status } = args;
@@ -217,18 +237,17 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
             console.log(`row inserted ${this.applicationTitle}`);
           }
         );
-      // .all(settingSqlQ, [], (err, rows)=>{
-      //   console.log("@@@@@@@@@@@@@@@@@@@@@@@",rows);
-      //   // mainWindow.webContents.send("sendSettingDbDataFromMain", rows);
-      // })
     });
+
     // DB connection close
     db.close();
+
   }
 });
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
+  console.log("$$$$$$$$$$$$$$", args);
 
   let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -342,3 +361,8 @@ app
     });
   })
   .catch(console.log);
+
+
+// [
+//   {id: 1, category: "Burger", children: [{id: 10, category: "American Burger", children: []}]}
+// ]
