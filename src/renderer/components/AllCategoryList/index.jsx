@@ -28,10 +28,13 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
+  // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
+  window.parent_category.send('parent_category', { status: true });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [parentCategory, setParentCategory] = useState(null);
 
   window.delete_category.once('delete_category_response', ({ status }) => {
     if (status) {
@@ -47,39 +50,30 @@ const AllCategoryList = () => {
     }
   });
 
-  const [parentCategory, setParentCategory] = useState([]);
-
   useEffect(() => {
-    // window.parent_category.send('parent_category', { status: true });
-
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);
     //   setParentCategory(args);
     // });
 
-    getDataFromDatabase('parent_category', window.parent_category).then(
-      (data) => {
-        console.log('data', data);
-      }
-    );
+    Promise.all([
+      getDataFromDatabase('parent_category', window.parent_category),
+      getDataFromDatabase('sendCategoryData', window.get_category),
+    ])
+      .then(([parent_category, categories]) => {
+        console.log('parent_category', parent_category);
+        const categoryLists = categories.map((element, i) => {
+          // const paren = parent_category.filter(
+          //   (parent_cat) => parent_cat.parent_id !== element.category_id
+          // );
 
-    getDataFromDatabase('sendCategoryData', window.get_category)
-      .then((data) => {
-        // console.log('data', data);
-        // console.log('parentCategory', parentCategory);
-
-        const categoryLists = data.map((element) => {
-          const filterData = parentCategory.filter((item) =>
-            console.log('item', item)
-          );
-
-          console.log('element', element);
-          console.log('filterData', filterData);
-
-          // if (filterData) {
-          //   console.log('filterData', element.parent_id);
-          //   element.parent_id = 'data';
-          // }
+          // console.log('paren', paren);
+          // console.log(
+          //   'parentcat ',
+          //   parent_category.filter(
+          //     (parent_cat) => parent_cat.parent_id === element.category_id
+          //   )
+          // );
 
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
@@ -88,12 +82,34 @@ const AllCategoryList = () => {
           }
         });
 
+        console.log('categoryLists', categoryLists);
+
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
-  }, []);
 
-  // console.log('parentCategory', parentCategory);
+    // console.log('am I promise?', allData);
+
+    // getDataFromDatabase('parent_category', window.parent_category)
+    //   .then((data) => {
+    //     console.log('parnet cat', data);
+    //   })
+    //   .catch((err) => console.log('cat error', err));
+
+    // getDataFromDatabase('sendCategoryData', window.get_category)
+    //   .then((data) => {
+    //     const categoryLists = data.map((element) => {
+    //       if (element.category_is_active === 1) {
+    //         return { ...element, category_is_active: 'Active' };
+    //       } else {
+    //         return { ...element, category_is_active: 'Inactive' };
+    //       }
+    //     });
+
+    //     setCategories(categoryLists);
+    //   })
+    //   .catch((err) => console.log('error', err));
+  }, []);
 
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
