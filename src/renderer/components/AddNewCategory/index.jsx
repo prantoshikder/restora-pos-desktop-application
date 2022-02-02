@@ -32,7 +32,7 @@ const AddNewCategory = ({ state }) => {
   window.parent_category.send('parent_category', { status: true });
 
   window.parent_category.once("parent_category", (args) => {
-    console.log("******************************",args);
+    console.log("******************************", args);
   })
 
   useEffect(() => {

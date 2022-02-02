@@ -203,31 +203,8 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [
-            title,
-            storename,
-            address,
-            email,
-            phone,
-            logo,
-            favcon,
-            opentime,
-            closetime,
-            vat,
-            vattinno,
-            discount_type,
-            discountrate,
-            servicecharge,
-            service_chargeType,
-            currency,
-            min_prepare_time,
-            language,
-            timezone,
-            dateformat,
-            site_align,
-            powerbytxt,
-            footer_text,
-          ],
+          [title, storename, address, email, phone, logo, favcon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge,
+            service_chargeType, currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text],
           function (err) {
             if (err) {
               console.log('Error message settings table ', err.message);
@@ -235,8 +212,7 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
             }
 
             console.log(`row inserted ${this.applicationTitle}`);
-          }
-        );
+          });
     });
 
     // DB connection close
@@ -247,7 +223,6 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
-  console.log("$$$$$$$$$$$$$$", args);
 
   let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -260,7 +235,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [args.category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
         (err) => {
           err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'updated' })
-          // err ? console.log('Error message add category table ', err.message) : console.log(`row updated ${this.category_name}`)
         }
       )
     })
@@ -294,7 +268,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
         (err) => {
           err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'inserted' })
-          // err ? console.log('Error message add category table ', err.message) : console.log(`row inserted ${this.category_name}`)
         }
       );
     });
@@ -329,14 +302,89 @@ ipcMain.on('delete_category', (event, args) => {
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
-      if (err) {
-        mainWindow.webContents.send("delete_category_response", { 'status': err });
-      }
-      else {
-        mainWindow.webContents.send("delete_category_response", { 'status': true });
-      }
+      err ?
+        mainWindow.webContents.send("delete_category_response", { 'status': err })
+        :
+        mainWindow.webContents.send("delete_category_response", { 'status': true })
     })
   })
+
+  db.close()
+
+})
+
+// Insert addons data to db
+ipcMain.on('add_addons', (event, args) => {
+  let { addonsName, price, addonsStatus } = args
+
+  if (args.addonsId !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(`INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active ) VALUES ( ?, ?, ?, ?)`,
+        [args.addonId, addonsName, price, addonsStatus],
+        (err) => {
+          err ? mainWindow.webContents.send('add_addons_response', err.message) : mainWindow.webContents.send('add_addons_response', { 'status': 'inserted' })
+        })
+    })
+    db.close()
+  }
+  else {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(`CREATE TABLE IF NOT EXISTS addons (
+        "add_on_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+        "add_on_name" varchar(255),
+        "price" REAL,
+        "is_active" INT,
+        "tax0" TEXT,
+        "tax1" TEXT
+            )`)
+        .run(`INSERT OR REPLACE INTO addons ( add_on_name, price, is_active ) VALUES ( ?, ?, ?)`,
+          [addonsName, price, addonsStatus],
+          (err) => {
+            err ? mainWindow.webContents.send('add_addons_response', err.message) : mainWindow.webContents.send('add_addons_response', { 'status': 'inserted' })
+          })
+    })
+    db.close()
+  }
+
+})
+
+// Get all addons from DB
+ipcMain.on('addons_list', (event, args) => {
+
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  let { status } = args
+  let sql = `SELECT * FROM addons`
+
+  if (status) {
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('addons_list_response', rows);
+      })
+    })
+  }
+
+  db.close()
+
+})
+
+
+// Delete addons from DB
+ipcMain.on('delete_addons', (event, args) => {
+
+  let { id } = args
+  console.log(id);
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM addons WHERE add_on_id = ?`, id, (err) => {
+      err ?
+        mainWindow.webContents.send("delete_addons_response", { 'status': err })
+        :
+        mainWindow.webContents.send("delete_addons_response", { 'status': true })
+    })
+  })
+
   db.close()
 
 })
@@ -360,9 +408,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
-
-
-// [
-//   {id: 1, category: "Burger", children: [{id: 10, category: "American Burger", children: []}]}
-// ]
+  .catch(console.log)
