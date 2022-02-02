@@ -23,6 +23,11 @@ const AddNewAddons = () => {
     addonsStatus: '',
   });
 
+  // Get addons insert response
+  window.add_addons.once('add_addons_response', (args) =>{
+    console.log(args);
+  })
+
   const handleChangeStatus = (value) => {
     setNewAddons({ ...newAddons, addonsStatus: value });
   };
@@ -47,6 +52,8 @@ const AddNewAddons = () => {
 
   const handleSubmit = () => {
     console.log('newAddons', newAddons);
+
+    window.add_addons.send('add_addons', newAddons)
 
     message.success({
       content: 'Foods category added successfully',
