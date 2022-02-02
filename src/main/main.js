@@ -104,23 +104,18 @@ const createWindow = async () => {
 
 // Get parent category data
 ipcMain.on('parent_category', (event, args) => {
-
   if (args.status) {
-
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      let sql = `SELECT category_id, category_name, parent_id FROM add_item_category`
+      let sql = `SELECT category_id, category_name, parent_id FROM add_item_category`;
       db.all(sql, [], (err, rows) => {
-        mainWindow.webContents.send("parent_category", rows)
-      })
-    })
+        mainWindow.webContents.send('parent_category', rows);
+      });
+    });
 
     db.close();
-
   }
-
-})
-
+});
 
 // This is for settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
@@ -203,8 +198,31 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [title, storename, address, email, phone, logo, favcon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge,
-            service_chargeType, currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text],
+          [
+            title,
+            storename,
+            address,
+            email,
+            phone,
+            logo,
+            favcon,
+            opentime,
+            closetime,
+            vat,
+            vattinno,
+            discount_type,
+            discountrate,
+            servicecharge,
+            service_chargeType,
+            currency,
+            min_prepare_time,
+            language,
+            timezone,
+            dateformat,
+            site_align,
+            powerbytxt,
+            footer_text,
+          ],
           function (err) {
             if (err) {
               console.log('Error message settings table ', err.message);
@@ -212,19 +230,27 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
             }
 
             console.log(`row inserted ${this.applicationTitle}`);
-          });
+          }
+        );
     });
 
     // DB connection close
     db.close();
-
   }
 });
 
 // Insert Category item data
 ipcMain.on('insertCategoryData', (event, args) => {
-
-  let { category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color } = args;
+  let {
+    category_name,
+    parent_id,
+    category_image,
+    category_icon,
+    category_is_active,
+    offer_start_date,
+    offer_end_date,
+    category_color,
+  } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
   if (args.category_id !== undefined) {
@@ -232,15 +258,30 @@ ipcMain.on('insertCategoryData', (event, args) => {
       db.run(
         `INSERT OR REPLACE INTO add_item_category ( category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [args.category_id, category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        [
+          args.category_id,
+          category_name,
+          parent_id,
+          category_image,
+          category_icon,
+          category_is_active,
+          offer_start_date,
+          offer_end_date,
+          category_color,
+        ],
         (err) => {
-          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'updated' })
+          err
+            ? mainWindow.webContents.send(
+                'after_insert_get_response',
+                err.message
+              )
+            : mainWindow.webContents.send('after_insert_get_response', {
+                status: 'updated',
+              });
         }
-      )
-    })
-
-  }
-  else {
+      );
+    });
+  } else {
     db.serialize(() => {
       db.run(
         `CREATE TABLE IF NOT EXISTS add_item_category (
@@ -265,16 +306,31 @@ ipcMain.on('insertCategoryData', (event, args) => {
       ).run(
         `INSERT OR REPLACE INTO add_item_category ( category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color )
          VALUES (?, ?, ?, ?, ?, ?, ?, ? )`,
-        [category_name, parent_id, category_image, category_icon, category_is_active, offer_start_date, offer_end_date, category_color],
+        [
+          category_name,
+          parent_id,
+          category_image,
+          category_icon,
+          category_is_active,
+          offer_start_date,
+          offer_end_date,
+          category_color,
+        ],
         (err) => {
-          err ? mainWindow.webContents.send('after_insert_get_response', err.message) : mainWindow.webContents.send('after_insert_get_response', { 'status': 'inserted' })
+          err
+            ? mainWindow.webContents.send(
+                'after_insert_get_response',
+                err.message
+              )
+            : mainWindow.webContents.send('after_insert_get_response', {
+                status: 'inserted',
+              });
         }
       );
     });
   }
 
   db.close();
-
 });
 
 // Send category item data
@@ -297,98 +353,105 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
 
 // Delete category data
 ipcMain.on('delete_category', (event, args) => {
-
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
-      err ?
-        mainWindow.webContents.send("delete_category_response", { 'status': err })
-        :
-        mainWindow.webContents.send("delete_category_response", { 'status': true })
-    })
-  })
+      err
+        ? mainWindow.webContents.send('delete_category_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_category_response', {
+            status: true,
+          });
+    });
+  });
 
-  db.close()
-
-})
+  db.close();
+});
 
 // Insert addons data to db
 ipcMain.on('add_addons', (event, args) => {
-  let { addonsName, price, addonsStatus } = args
+  let { add_on_name, price, is_active } = args;
 
-  if (args.addonsId !== undefined) {
+  if (args.add_on_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      db.run(`INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active ) VALUES ( ?, ?, ?, ?)`,
-        [args.addonId, addonsName, price, addonsStatus],
+      db.run(
+        `INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active ) VALUES ( ?, ?, ?, ?)`,
+        [args.add_on_id, add_on_name, price, is_active],
         (err) => {
-          err ? mainWindow.webContents.send('add_addons_response', err.message) : mainWindow.webContents.send('add_addons_response', { 'status': 'inserted' })
-        })
-    })
-    db.close()
-  }
-  else {
+          err
+            ? mainWindow.webContents.send('add_addons_response', err.message)
+            : mainWindow.webContents.send('add_addons_response', {
+                status: 'updated',
+              });
+        }
+      );
+    });
+    db.close();
+  } else {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      db.run(`CREATE TABLE IF NOT EXISTS addons (
+      db.run(
+        `CREATE TABLE IF NOT EXISTS addons (
         "add_on_id" INTEGER PRIMARY KEY AUTOINCREMENT,
         "add_on_name" varchar(255),
         "price" REAL,
         "is_active" INT,
         "tax0" TEXT,
         "tax1" TEXT
-            )`)
-        .run(`INSERT OR REPLACE INTO addons ( add_on_name, price, is_active ) VALUES ( ?, ?, ?)`,
-          [addonsName, price, addonsStatus],
-          (err) => {
-            err ? mainWindow.webContents.send('add_addons_response', err.message) : mainWindow.webContents.send('add_addons_response', { 'status': 'inserted' })
-          })
-    })
-    db.close()
+            )`
+      ).run(
+        `INSERT OR REPLACE INTO addons ( add_on_name, price, is_active ) VALUES ( ?, ?, ?)`,
+        [add_on_name, price, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send('add_addons_response', err.message)
+            : mainWindow.webContents.send('add_addons_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
   }
-
-})
+});
 
 // Get all addons from DB
 ipcMain.on('addons_list', (event, args) => {
-
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  let { status } = args
-  let sql = `SELECT * FROM addons`
+  let { status } = args;
+  let sql = `SELECT * FROM addons`;
 
   if (status) {
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('addons_list_response', rows);
-      })
-    })
+      });
+    });
   }
 
-  db.close()
-
-})
-
+  db.close();
+});
 
 // Delete addons from DB
 ipcMain.on('delete_addons', (event, args) => {
-
-  let { id } = args
+  let { id } = args;
   console.log(id);
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM addons WHERE add_on_id = ?`, id, (err) => {
-      err ?
-        mainWindow.webContents.send("delete_addons_response", { 'status': err })
-        :
-        mainWindow.webContents.send("delete_addons_response", { 'status': true })
-    })
-  })
+      err
+        ? mainWindow.webContents.send('delete_addons_response', { status: err })
+        : mainWindow.webContents.send('delete_addons_response', {
+            status: true,
+          });
+    });
+  });
 
-  db.close()
-
-})
-
+  db.close();
+});
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
@@ -408,4 +471,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log)
+  .catch(console.log);
