@@ -28,13 +28,9 @@ const AddNewCategory = ({ state }) => {
   const [packageOffer, setPackageOffer] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
+  const [parentCategory, setParentCategory] = useState([]);
 
   // -----------------
-  window.parent_category.send('parent_category', { status: true });
-
-  window.parent_category.once('parent_category', (args) => {
-    console.log('******************************', args);
-  });
 
   useEffect(() => {
     window.add_category.once('after_insert_get_response', ({ status }) => {
@@ -98,7 +94,16 @@ const AddNewCategory = ({ state }) => {
         value: state?.category_is_active || 'Active',
       },
     ]);
+
+    window.parent_category.send('parent_category', { status: true });
+
+    window.parent_category.once('parent_category', (args) => {
+      console.log('******************************', args);
+      setParentCategory(args);
+    });
   }, []);
+
+  console.log('parentCategory', parentCategory);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -190,11 +195,14 @@ const AddNewCategory = ({ state }) => {
 
             <Form.Item name="parent_id" label="Parent Category">
               <Select placeholder="Select an Option" size="large" allowClear>
-                <Option value="1">Lunch Package</Option>
-                <Option value="2">Japanese</Option>
-                <Option value="3">Salad</Option>
-                <Option value="4">Indian Food</Option>
-                <Option value="5">Dinner Package</Option>
+                {parentCategory?.map((catItem) => (
+                  <Option
+                    key={catItem?.category_id}
+                    value={catItem?.category_id}
+                  >
+                    {catItem?.category_name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
 
