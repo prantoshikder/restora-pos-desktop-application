@@ -12,9 +12,9 @@ import {
   Space,
   Upload,
 } from 'antd';
-import { ipcRenderer } from 'electron/renderer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddNewCategory.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -22,23 +22,44 @@ const { Option } = Select;
 
 const AddNewCategory = ({ state }) => {
   const [form] = Form.useForm();
+  let navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
+  const [parentCategory, setParentCategory] = useState([]);
 
   // -----------------
-  window.parent_category.send('parent_category', { status: true });
-
-  window.parent_category.once("parent_category", (args) => {
-    console.log("******************************",args);
-  })
 
   useEffect(() => {
-    window.add_category.once('after_insert_get_response', (args) => {
-      console.log('args', args);
+    window.add_category.once('after_insert_get_response', ({ status }) => {
+      console.log('status', status);
+      if (status === 'updated') {
+        message.success({
+          content: 'Category has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        navigate('/category_list');
+      } else {
+        message.success({
+          content: 'Food category added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        form.resetFields();
+      }
     });
+
     setCategories([
       {
         name: ['category_name'],
@@ -73,6 +94,12 @@ const AddNewCategory = ({ state }) => {
         value: state?.category_is_active || 'Active',
       },
     ]);
+
+    window.parent_category.send('parent_category', { status: true });
+
+    window.parent_category.once('parent_category', (args) => {
+      setParentCategory(args);
+    });
   }, []);
 
   const normFile = (e) => {
@@ -126,26 +153,16 @@ const AddNewCategory = ({ state }) => {
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
     }
+
+    newCategory.category_is_active === 'Active' &&
+      (newCategory.category_is_active = 1);
+
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
-
-    message.success({
-      content: state?.category_id
-        ? 'Category has been updated successfully'
-        : 'Food category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-
-    form.resetFields();
   };
 
   return (
@@ -178,11 +195,14 @@ const AddNewCategory = ({ state }) => {
 
             <Form.Item name="parent_id" label="Parent Category">
               <Select placeholder="Select an Option" size="large" allowClear>
-                <Option value="1">Lunch Package</Option>
-                <Option value="2">Japanese</Option>
-                <Option value="3">Salad</Option>
-                <Option value="4">Indian Food</Option>
-                <Option value="5">Dinner Package</Option>
+                {parentCategory?.map((catItem) => (
+                  <Option
+                    key={catItem?.category_id}
+                    value={catItem?.category_id}
+                  >
+                    {catItem?.category_name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
 
