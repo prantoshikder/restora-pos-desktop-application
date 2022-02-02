@@ -372,19 +372,19 @@ ipcMain.on('delete_category', (event, args) => {
 
 // Insert addons data to db
 ipcMain.on('add_addons', (event, args) => {
-  let { addonsName, price, addonsStatus } = args;
+  let { add_on_name, price, is_active } = args;
 
-  if (args.addonsId !== undefined) {
+  if (args.add_on_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
         `INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active ) VALUES ( ?, ?, ?, ?)`,
-        [args.addonId, addonsName, price, addonsStatus],
+        [args.add_on_id, add_on_name, price, is_active],
         (err) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'inserted',
+                status: 'updated',
               });
         }
       );
@@ -404,7 +404,7 @@ ipcMain.on('add_addons', (event, args) => {
             )`
       ).run(
         `INSERT OR REPLACE INTO addons ( add_on_name, price, is_active ) VALUES ( ?, ?, ?)`,
-        [addonsName, price, addonsStatus],
+        [add_on_name, price, is_active],
         (err) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)

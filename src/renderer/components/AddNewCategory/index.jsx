@@ -39,7 +39,6 @@ const AddNewCategory = ({ state }) => {
 
   useEffect(() => {
     window.add_category.once('after_insert_get_response', ({ status }) => {
-      console.log('status', status);
       if (status === 'updated') {
         message.success({
           content: 'Category has been updated successfully',
