@@ -22,34 +22,6 @@ const AddNewAddons = ({ state }) => {
   const [newAddons, setNewAddons] = useState([]);
 
   useEffect(() => {
-    // Get addons insert response
-    window.add_addons.once('add_addons_response', ({ status }) => {
-      console.log('status', status);
-      if (status === 'updated') {
-        message.success({
-          content: 'Add-ons has been updated successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        navigate('/addons_list');
-      } else {
-        message.success({
-          content: 'Add-ons added successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        form.resetFields();
-      }
-    });
-
     setNewAddons([
       {
         name: ['add_on_name'],
@@ -95,7 +67,36 @@ const AddNewAddons = ({ state }) => {
 
     newAddOns.add_on_id = state?.add_on_id;
 
+    // Insert & update through the same event & channel
     window.add_addons.send('add_addons', newAddOns);
+
+    // Get addons insert & update response
+    window.add_addons.once('add_addons_response', ({ status }) => {
+      console.log('status', status);
+      if (status === 'updated') {
+        message.success({
+          content: 'Add-ons has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        navigate('/addons_list');
+      } else {
+        message.success({
+          content: 'Add-ons added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+        form.resetFields();
+      }
+    });
   };
 
   return (
