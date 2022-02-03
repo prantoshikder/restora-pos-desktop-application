@@ -33,13 +33,12 @@ const AddNewCategory = ({ state }) => {
   // -----------------
   window.parent_category.send('parent_category', { status: true });
 
-  window.parent_category.once("parent_category", (args) => {
-    console.log("******************************", args);
-  })
+  window.parent_category.once('parent_category', (args) => {
+    console.log('******************************', args);
+  });
 
   useEffect(() => {
     window.add_category.once('after_insert_get_response', ({ status }) => {
-      console.log('status', status);
       if (status === 'updated') {
         message.success({
           content: 'Category has been updated successfully',

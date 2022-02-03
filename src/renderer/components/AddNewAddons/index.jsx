@@ -9,6 +9,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddNewAddons.style.scss';
 
 const { Option } = Select;
@@ -16,6 +17,7 @@ const { Title } = Typography;
 
 const AddNewAddons = ({ state }) => {
   const [form] = Form.useForm();
+  let navigate = useNavigate();
 
   const [newAddons, setNewAddons] = useState([]);
 
@@ -23,9 +25,9 @@ const AddNewAddons = ({ state }) => {
     // Get addons insert response
     window.add_addons.once('add_addons_response', ({ status }) => {
       console.log('status', status);
-      if (status) {
+      if (status === 'updated') {
         message.success({
-          content: 'Foods category added successfully',
+          content: 'Add-ons has been updated successfully',
           className: 'custom-class',
           duration: 1,
           style: {
@@ -33,7 +35,17 @@ const AddNewAddons = ({ state }) => {
             float: 'right',
           },
         });
-
+        navigate('/addons_list');
+      } else {
+        message.success({
+          content: 'Add-ons added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
         form.resetFields();
       }
     });
@@ -80,6 +92,8 @@ const AddNewAddons = ({ state }) => {
     }
 
     newAddOns.is_active === 'Active' && (newAddOns.is_active = 1);
+
+    newAddOns.add_on_id = state?.add_on_id;
 
     window.add_addons.send('add_addons', newAddOns);
   };
