@@ -36,20 +36,6 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
   const [parentCategory, setParentCategory] = useState(null);
 
-  window.delete_category.once('delete_category_response', ({ status }) => {
-    if (status) {
-      message.success({
-        content: 'Food category deleted successfully',
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-    }
-  });
-
   useEffect(() => {
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);

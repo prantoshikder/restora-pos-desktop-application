@@ -172,7 +172,6 @@ const AddNewCategory = ({ state }) => {
           },
         });
 
-        // navigate('/category_list');
         form.resetFields();
       }
     });
