@@ -30,6 +30,13 @@ const AddNewCategory = ({ state }) => {
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
 
+  // Get only 3 columns from the add_item_category table from database
+  // category_id, category_name, parent_id
+  window.parent_category.send('parent_category', { status: true });
+  window.parent_category.once('parent_category', (args) => {
+    console.log('********** parent cat', args);
+  });
+
   useEffect(() => {
     setCategories([
       {
@@ -69,6 +76,7 @@ const AddNewCategory = ({ state }) => {
     window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args) => {
+      console.log('parentCategory', args);
       setParentCategory(args);
     });
   }, []);
