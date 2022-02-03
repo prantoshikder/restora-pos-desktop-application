@@ -49,21 +49,6 @@ const AllAddonsList = () => {
         setAddonsLists(addonsList);
       })
       .catch((err) => console.log('error', err));
-
-    // Delete Add-ons item
-    window.delete_addons.once('delete_addons_response', ({ status }) => {
-      if (status) {
-        message.success({
-          content: 'Add-ons deleted successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-      }
-    });
   }, []);
 
   const columns = [
@@ -124,6 +109,21 @@ const AllAddonsList = () => {
         setAddonsLists(
           addonsLists.filter((item) => item.add_on_id !== addonsItem.add_on_id)
         );
+
+        // Delete Add-ons item
+        window.delete_addons.once('delete_addons_response', ({ status }) => {
+          if (status) {
+            message.success({
+              content: 'Add-ons deleted successfully',
+              className: 'custom-class',
+              duration: 1,
+              style: {
+                marginTop: '5vh',
+                float: 'right',
+              },
+            });
+          }
+        });
       },
       onCancel() {},
     });

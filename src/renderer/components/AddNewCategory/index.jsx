@@ -30,40 +30,7 @@ const AddNewCategory = ({ state }) => {
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
 
-  // -----------------
-  window.parent_category.send('parent_category', { status: true });
-
-  window.parent_category.once('parent_category', (args) => {
-    console.log('******************************', args);
-  });
-
   useEffect(() => {
-    window.add_category.once('after_insert_get_response', ({ status }) => {
-      if (status === 'updated') {
-        message.success({
-          content: 'Category has been updated successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        navigate('/category_list');
-      } else {
-        message.success({
-          content: 'Food category added successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        form.resetFields();
-      }
-    });
-
     setCategories([
       {
         name: ['category_name'],
@@ -165,8 +132,42 @@ const AddNewCategory = ({ state }) => {
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
 
+    console.log('newCategory', newCategory);
+
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
+
+    // Get add category insert & update response
+    window.add_category.once('after_insert_get_response', ({ status }) => {
+      console.log('status', status);
+
+      if (status === 'updated') {
+        message.success({
+          content: 'Category has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        navigate('/category_list');
+      } else {
+        message.success({
+          content: 'Food category added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        // navigate('/category_list');
+        form.resetFields();
+      }
+    });
   };
 
   return (

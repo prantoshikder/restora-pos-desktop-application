@@ -33,53 +33,37 @@ const AllCategoryList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
 
-  window.delete_category.once('delete_category_response', ({ status }) => {
-    if (status) {
-      message.success({
-        content: 'Food category deleted successfully',
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-    }
-  });
-
   const [parentCategory, setParentCategory] = useState([]);
 
   useEffect(() => {
-    // window.parent_category.send('parent_category', { status: true });
+    window.parent_category.send('parent_category', { status: true });
 
-    // window.parent_category.once('parent_category', (args) => {
-    //   console.log('******************************', args);
-    //   setParentCategory(args);
-    // });
+    window.parent_category.once('parent_category', (args) => {
+      console.log('******************************', args);
+      setParentCategory(args);
+    });
 
     getDataFromDatabase('parent_category', window.parent_category).then(
       (data) => {
-        console.log('data', data);
+        // console.log('data', data);
       }
     );
 
     getDataFromDatabase('sendCategoryData', window.get_category)
       .then((data) => {
-        // console.log('data', data);
-        // console.log('parentCategory', parentCategory);
+        console.log('data', data);
 
         const categoryLists = data.map((element) => {
+          console.log('element', element.parent_id);
+
           const filterData = parentCategory.filter((item) =>
-            console.log('item', item)
+            item.parent_id === element?.parent_id
+              ? (element.parent_id = element?.category_name)
+              : ''
           );
 
-          console.log('element', element);
+          // console.log('element', element);
           console.log('filterData', filterData);
-
-          // if (filterData) {
-          //   console.log('filterData', element.parent_id);
-          //   element.parent_id = 'data';
-          // }
 
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
@@ -127,6 +111,23 @@ const AllCategoryList = () => {
           categories.filter(
             (item) => item.category_id !== categoryItem.category_id
           )
+        );
+
+        window.delete_category.once(
+          'delete_category_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Food category deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
         );
       },
       onCancel() {},
