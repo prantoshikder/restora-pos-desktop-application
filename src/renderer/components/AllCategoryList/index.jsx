@@ -34,7 +34,6 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
 
   window.delete_category.once('delete_category_response', ({ status }) => {
-    console.log('status', status);
     if (status) {
       message.success({
         content: 'Food category deleted successfully',
@@ -46,18 +45,6 @@ const AllCategoryList = () => {
         },
       });
     }
-
-    // else {
-    //   message.error({
-    //     content: status,
-    //     className: 'custom-class',
-    //     duration: 1,
-    //     style: {
-    //       marginTop: '5vh',
-    //       float: 'right',
-    //     },
-    //   });
-    // }
   });
 
   const [parentCategory, setParentCategory] = useState([]);
@@ -141,15 +128,6 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
-        // message.success({
-        //   content: 'Foods category added successfully ',
-        //   className: 'custom-class',
-        //   duration: 1,
-        //   style: {
-        //     marginTop: '5vh',
-        //     float: 'right',
-        //   },
-        // });
       },
       onCancel() {},
     });

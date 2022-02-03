@@ -8,29 +8,51 @@ import {
   Select,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddNewAddons.style.scss';
 
 const { Option } = Select;
 const { Title } = Typography;
 
-const AddNewAddons = () => {
+const AddNewAddons = ({ state }) => {
   const [form] = Form.useForm();
 
-  const [newAddons, setNewAddons] = useState({
-    addonsName: '',
-    price: '',
-    addonsStatus: '',
-  });
+  const [newAddons, setNewAddons] = useState([]);
 
-  // Get addons insert response
-  window.add_addons.once('add_addons_response', (args) =>{
-    console.log(args);
-  })
+  useEffect(() => {
+    // Get addons insert response
+    window.add_addons.once('add_addons_response', ({ status }) => {
+      console.log('status', status);
+      if (status) {
+        message.success({
+          content: 'Foods category added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
 
-  const handleChangeStatus = (value) => {
-    setNewAddons({ ...newAddons, addonsStatus: value });
-  };
+        form.resetFields();
+      }
+    });
+
+    setNewAddons([
+      {
+        name: ['add_on_name'],
+        value: state?.add_on_name,
+      },
+      {
+        name: ['price'],
+        value: state?.price,
+      },
+      {
+        name: ['is_active'],
+        value: state?.is_active,
+      },
+    ]);
+  }, []);
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -51,19 +73,15 @@ const AddNewAddons = () => {
   };
 
   const handleSubmit = () => {
-    console.log('newAddons', newAddons);
+    const newAddOns = {};
 
-    window.add_addons.send('add_addons', newAddons)
+    for (const data of newAddons) {
+      newAddOns[data.name[0]] = data.value;
+    }
 
-    message.success({
-      content: 'Foods category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
+    newAddOns.is_active === 'Active' && (newAddOns.is_active = 1);
+
+    window.add_addons.send('add_addons', newAddOns);
   };
 
   return (
@@ -71,7 +89,11 @@ const AddNewAddons = () => {
       <Form
         form={form}
         layout="vertical"
+        fields={newAddons}
         onFinish={handleSubmit}
+        onFieldsChange={(_, allFields) => {
+          setNewAddons(allFields);
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
@@ -79,7 +101,7 @@ const AddNewAddons = () => {
           <Col lg={14}>
             <Form.Item
               label="Add-ons Name"
-              name="addonsName"
+              name="add_on_name"
               rules={[
                 {
                   required: true,
@@ -87,14 +109,7 @@ const AddNewAddons = () => {
                 },
               ]}
             >
-              <Input
-                placeholder="Add-ons Name"
-                size="large"
-                value={newAddons.addonsName}
-                onChange={(e) =>
-                  setNewAddons({ ...newAddons, addonsName: e.target.value })
-                }
-              />
+              <Input placeholder="Add-ons Name" size="large" />
             </Form.Item>
 
             <Form.Item
@@ -107,28 +122,15 @@ const AddNewAddons = () => {
                 },
               ]}
             >
-              <Input
-                placeholder="Price"
-                size="large"
-                value={newAddons.price}
-                onChange={(e) =>
-                  setNewAddons({ ...newAddons, price: e.target.value })
-                }
-              />
+              <Input placeholder="Price" size="large" />
             </Form.Item>
           </Col>
 
           <Col lg={10}>
-            <Form.Item name="status" label="Status">
-              <Select
-                placeholder="Select an Option"
-                value={newAddons.addonsStatus}
-                onChange={handleChangeStatus}
-                size="large"
-                allowClear
-              >
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
+            <Form.Item name="is_active" label="Status">
+              <Select placeholder="Select an Option" size="large" allowClear>
+                <Option value="1">Active</Option>
+                <Option value="0">Inactive</Option>
               </Select>
             </Form.Item>
 
