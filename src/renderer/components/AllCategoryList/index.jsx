@@ -144,6 +144,23 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
+
+        window.delete_category.once(
+          'delete_category_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Food category deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
       onCancel() {},
     });
