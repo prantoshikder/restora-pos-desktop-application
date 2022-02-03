@@ -98,12 +98,9 @@ const AddNewCategory = ({ state }) => {
     window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args) => {
-      console.log('******************************', args);
       setParentCategory(args);
     });
   }, []);
-
-  console.log('parentCategory', parentCategory);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -156,6 +153,9 @@ const AddNewCategory = ({ state }) => {
     for (const data of categories) {
       newCategory[data.name[0]] = data.value;
     }
+
+    newCategory.category_is_active === 'Active' &&
+      (newCategory.category_is_active = 1);
 
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
