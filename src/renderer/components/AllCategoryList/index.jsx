@@ -3,7 +3,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, message, Modal, Space, Table } from 'antd';
+import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDataFromDatabase } from '../../../helpers';
@@ -36,20 +36,6 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
   const [parentCategory, setParentCategory] = useState(null);
 
-  window.delete_category.once('delete_category_response', ({ status }) => {
-    if (status) {
-      message.success({
-        content: 'Food category deleted successfully',
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-    }
-  });
-
   useEffect(() => {
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);
@@ -63,8 +49,13 @@ const AllCategoryList = () => {
       .then(([child_categories, categories]) => {
         function getParentCat(cat) {}
 
-        const allCats = categories.filter((cat) => {
-          if (cat.parent_id !== null) {
+        const allCats = categories.map((cat, i) => {
+          console.log('cehck', cat.category_id, child_categories[i].parent_id);
+
+          if (cat.category_id === child_categories[i].parent_id) {
+            console.log('matched');
+            return { ...cat };
+          } else {
             return { ...cat };
           }
         });
@@ -75,7 +66,7 @@ const AllCategoryList = () => {
           }
         });
 
-        console.log('childCats', childCats);
+        // console.log('childCats', childCats);
         console.log('allCats', allCats);
 
         const categoryLists = categories.map((element, i) => {
@@ -156,23 +147,6 @@ const AllCategoryList = () => {
           categories.filter(
             (item) => item.category_id !== categoryItem.category_id
           )
-        );
-
-        window.delete_category.once(
-          'delete_category_response',
-          ({ status }) => {
-            if (status) {
-              message.success({
-                content: 'Food category deleted successfully',
-                className: 'custom-class',
-                duration: 1,
-                style: {
-                  marginTop: '5vh',
-                  float: 'right',
-                },
-              });
-            }
-          }
         );
       },
       onCancel() {},
