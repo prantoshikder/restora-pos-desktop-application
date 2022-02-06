@@ -18,7 +18,11 @@ const AddAddons = ({ direction }) => {
             </Col>
 
             <Col lg={21}>
-              <Heading title="Add Add-ons" />
+              {state?.add_on_id ? (
+                <Heading title="Update Add-ons" />
+              ) : (
+                <Heading title="Add Add-ons" />
+              )}
 
               <AddNewAddons state={state} />
             </Col>
