@@ -50,7 +50,7 @@ const AllCategoryList = () => {
         function getParentCat(cat) {}
 
         const allCats = categories.map((cat, i) => {
-          console.log('cehck', cat.category_id, child_categories[i].parent_id);
+          console.log('cehck', cat.parent_id);
 
           if (cat.category_id === child_categories[i].parent_id) {
             console.log('matched');
@@ -61,13 +61,11 @@ const AllCategoryList = () => {
         });
 
         const childCats = child_categories.filter((cat) => {
-          if (cat.parent_id !== null) {
-            return { ...cat };
-          }
+          return cat.parent_id;
         });
 
         // console.log('childCats', childCats);
-        console.log('allCats', allCats);
+        console.log('childCats', childCats);
 
         const categoryLists = categories.map((element, i) => {
           const child_categories_arr = child_categories.map((child_cat) => {
