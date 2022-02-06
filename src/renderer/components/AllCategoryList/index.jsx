@@ -6,6 +6,7 @@ import {
 import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import defaultImage from '../../../../assets/default.jpg';
 import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
@@ -158,10 +159,11 @@ const AllCategoryList = () => {
       key: 'categoryImage',
       render: (text, record) => (
         <Image
-          src={record.categoryImage}
+          // src={record.categoryImage}
+          src={defaultImage}
           width="50px"
           height="50px"
-          className="category-image"
+          className="category_image"
         />
       ),
     },

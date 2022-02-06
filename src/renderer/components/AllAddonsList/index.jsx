@@ -91,7 +91,6 @@ const AllAddonsList = () => {
   ];
 
   const handleEditCategory = (addonsItem) => {
-    console.log('addonsItem', addonsItem);
     navigate('/add_addons', { state: addonsItem });
   };
 
