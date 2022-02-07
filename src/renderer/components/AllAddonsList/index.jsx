@@ -1,6 +1,14 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, message, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, message, Modal, Space, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getDataFromDatabase } from './../../../helpers';
+
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -19,25 +27,36 @@ const rowSelection = {
 };
 
 const AllAddonsList = () => {
-  
+  window.addons_list.send('addons_list', { status: true });
+
+  let navigate = useNavigate();
+
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [addonsLists, setAddonsLists] = useState([]);
 
-  window.addons_list.send('addons_list', { 'status': true })
+  useEffect(() => {
+    // Add-ons Lists
+    getDataFromDatabase('addons_list_response', window.addons_list)
+      .then((data) => {
+        const addonsList = data.map((element) => {
+          if (element.is_active === 1) {
+            return { ...element, is_active: 'Active' };
+          } else {
+            return { ...element, is_active: 'Inactive' };
+          }
+        });
 
-  window.addons_list.once('addons_list_response', (args) => {
-    console.log(args);
-  })
-
-  window.delete_addons.once('delete_addons_response', (args) => {
-    console.log(args);
-  })
+        setAddonsLists(addonsList);
+      })
+      .catch((err) => console.log('error', err));
+  }, []);
 
   const columns = [
     {
       title: 'Add-ons Name',
-      dataIndex: 'addonsName',
-      key: 'addonsName',
-      width: '40%',
+      dataIndex: 'add_on_name',
+      key: 'add_on_name',
+      width: '30%',
     },
     {
       title: 'Price',
@@ -47,9 +66,9 @@ const AllAddonsList = () => {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'is_active',
+      key: 'is_active',
       width: '20%',
-      key: 'status',
     },
     {
       title: 'Action',
@@ -71,57 +90,43 @@ const AllAddonsList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      addonsName: 'Coffee',
-      price: '$ 70.00',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      addonsName: 'chocolate milk shake',
-      price: '$ 100.00',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      addonsName: 'Drinks',
-      price: '$ 200.00',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      addonsName: 'Souse',
-      price: '$ 150.00',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      addonsName: 'Butter',
-      price: '$ 90.00',
-      status: 'Active',
-    },
-  ];
+  const handleEditCategory = (addonsItem) => {
+    navigate('/add_addons', { state: addonsItem });
+  };
 
-  function handleEditCategory(record) {
-    console.log('Edit', record);
-  }
-  function handleDeleteCategory(record) {
-    console.log('Delete', record.key);
+  const handleDeleteCategory = (addonsItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.delete_addons.send('delete_addons', {
+          id: addonsItem.add_on_id,
+        });
 
-    window.delete_addons.send('delete_addons', { 'id': 3 })
+        setAddonsLists(
+          addonsLists.filter((item) => item.add_on_id !== addonsItem.add_on_id)
+        );
 
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+        // Delete Add-ons item
+        window.delete_addons.once('delete_addons_response', ({ status }) => {
+          if (status) {
+            message.success({
+              content: 'Add-ons deleted successfully',
+              className: 'custom-class',
+              duration: 1,
+              style: {
+                marginTop: '5vh',
+                float: 'right',
+              },
+            });
+          }
+        });
       },
+      onCancel() {},
     });
-  }
+  };
 
   return (
     <div
@@ -133,9 +138,9 @@ const AllAddonsList = () => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        dataSource={addonsLists}
         pagination={false}
-        rowKey={(record) => record.key}
+        rowKey={(record) => record?.add_on_id}
       />
     </div>
   );

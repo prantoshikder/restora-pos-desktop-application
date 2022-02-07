@@ -1,35 +1,35 @@
-.application_setting{
+.application_setting {
   padding: 1.5rem 3rem;
   margin: 0rem 1.5rem;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
-.ant-form-item{
+.ant-form-item {
   font-weight: 500;
 }
-.offer_date_select{
-  display: flex;
-  justify-content: space-between;
-}
-.button_group{
+// .offer_date_select {
+//   display: flex;
+//   justify-content: space-between;
+// }
+.button_group {
   display: flex;
   justify-content: flex-end;
 }
-.resetBtn{
+.resetBtn {
   margin-right: 1rem;
   padding: 0.3rem 2rem;
-  background-color: #3a95e4;
-  border-color: #3b7cb4;
+  // background-color: #3a95e4;
+  // border-color: #3b7cb4;
   color: #fff;
   transition: all 0.3s linear;
 }
-.save_btn{
+.save_btn {
   padding: 0.3rem 2rem;
-  background-color: #37a000;
-  border-color: #318d01;
+  // background-color: #37a000;
+  // border-color: #318d01;
   color: #fff;
   transition: all 0.3s linear;
 }
-.save_btn:hover{
-  background-color: #37a000;
-  border-color: #318d01;
-}
+// .save_btn:hover{
+//   background-color: #37a000;
+//   border-color: #318d01;
+// }

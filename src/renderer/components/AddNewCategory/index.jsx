@@ -9,7 +9,6 @@ import {
   message,
   Row,
   Select,
-  Space,
   Upload,
 } from 'antd';
 import moment from 'moment';
@@ -29,42 +28,16 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
+  const [reUpdate, setReUpdate] = useState(false);
 
-  // -----------------
+  // Get only 3 columns from the add_item_category table from database
+  // category_id, category_name, parent_id
   window.parent_category.send('parent_category', { status: true });
-
-  window.parent_category.once("parent_category", (args) => {
-    console.log("******************************", args);
-  })
+  window.parent_category.once('parent_category', (args) => {
+    console.log('********** parent cat', args);
+  });
 
   useEffect(() => {
-    window.add_category.once('after_insert_get_response', ({ status }) => {
-      console.log('status', status);
-      if (status === 'updated') {
-        message.success({
-          content: 'Category has been updated successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        navigate('/category_list');
-      } else {
-        message.success({
-          content: 'Food category added successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-        form.resetFields();
-      }
-    });
-
     setCategories([
       {
         name: ['category_name'],
@@ -102,10 +75,17 @@ const AddNewCategory = ({ state }) => {
 
     window.parent_category.send('parent_category', { status: true });
 
-    window.parent_category.once('parent_category', (args) => {
-      setParentCategory(args);
+    window.parent_category.once('parent_category', (args = []) => {
+      const categoryFilter =
+        Array.isArray(args) &&
+        args?.filter(
+          (category) =>
+            category.category_is_active !== 0 &&
+            category.category_is_active !== null
+        );
+      setParentCategory(categoryFilter);
     });
-  }, []);
+  }, [reUpdate]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -159,8 +139,9 @@ const AddNewCategory = ({ state }) => {
       newCategory[data.name[0]] = data.value;
     }
 
-    newCategory.category_is_active === 'Active' &&
-      (newCategory.category_is_active = 1);
+    newCategory.category_is_active === 'Active'
+      ? (newCategory.category_is_active = 1)
+      : (newCategory.category_is_active = 0);
 
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
@@ -168,6 +149,37 @@ const AddNewCategory = ({ state }) => {
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
+
+    // Get add category insert & update response
+    window.add_category.once('after_insert_get_response', ({ status }) => {
+      if (status === 'updated') {
+        message.success({
+          content: 'Category has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        navigate('/category_list');
+      } else {
+        setReUpdate((prevState) => !prevState);
+
+        message.success({
+          content: 'Food category added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        form.resetFields();
+      }
+    });
   };
 
   return (
@@ -294,27 +306,31 @@ const AddNewCategory = ({ state }) => {
             </Form.Item>
 
             {packageOffer && (
-              <Space direction="vertical" size={12}>
-                <div className="offer_date_select">
-                  <Form.Item name="offer_start_date" label="Offer Start Date">
-                    <DatePicker
-                      format="DD-MM-YYYY"
-                      placeholder="Offer Start Date"
-                      disabledDate={disabledDate}
-                      onChange={handleChangeStartDate}
-                    />
-                  </Form.Item>
+              <div className="offer_date_select">
+                <Row gutter={20}>
+                  <Col lg={12}>
+                    <Form.Item name="offer_start_date" label="Offer Start Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer Start Date"
+                        disabledDate={disabledDate}
+                        onChange={handleChangeStartDate}
+                      />
+                    </Form.Item>
+                  </Col>
 
-                  <Form.Item name="offer_end_date" label="Offer End Date">
-                    <DatePicker
-                      format="DD-MM-YYYY"
-                      placeholder="Offer End Date"
-                      onChange={handleChangeEndDate}
-                      disabledDate={disabledDate}
-                    />
-                  </Form.Item>
-                </div>
-              </Space>
+                  <Col lg={12}>
+                    <Form.Item name="offer_end_date" label="Offer End Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer End Date"
+                        onChange={handleChangeEndDate}
+                        disabledDate={disabledDate}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </div>
             )}
 
             <Form.Item name="category_is_active" label="Status">

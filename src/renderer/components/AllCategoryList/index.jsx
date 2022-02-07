@@ -3,9 +3,10 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, message, Modal, Space, Table } from 'antd';
+import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import defaultImage from '../../../../assets/default.jpg';
 import { getDataFromDatabase } from '../../../helpers';
 import './AllCategoryList.style.scss';
 
@@ -28,71 +29,80 @@ const rowSelection = {
 };
 
 const AllCategoryList = () => {
+  // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
+  window.parent_category.send('parent_category', { status: true });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [parentCategory, setParentCategory] = useState(null);
 
-  window.delete_category.once('delete_category_response', ({ status }) => {
-    console.log('status', status);
-    if (status) {
-      message.success({
-        content: 'Food category deleted successfully',
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-    }
-
-    // else {
-    //   message.error({
-    //     content: status,
-    //     className: 'custom-class',
-    //     duration: 1,
-    //     style: {
-    //       marginTop: '5vh',
-    //       float: 'right',
-    //     },
-    //   });
-    // }
-  });
-
-  const [parentCategory, setParentCategory] = useState([]);
+  console.log('categories', categories);
 
   useEffect(() => {
-    // window.parent_category.send('parent_category', { status: true });
-
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);
     //   setParentCategory(args);
     // });
 
-    getDataFromDatabase('parent_category', window.parent_category).then(
-      (data) => {
-        console.log('data', data);
-      }
-    );
+    Promise.all([
+      getDataFromDatabase('parent_category', window.parent_category),
+      getDataFromDatabase('sendCategoryData', window.get_category),
+    ])
+      .then(([child_categories, categories]) => {
+        function getParentCat(cat) {}
 
-    getDataFromDatabase('sendCategoryData', window.get_category)
-      .then((data) => {
-        // console.log('data', data);
-        // console.log('parentCategory', parentCategory);
+        const allCats = categories.map((cat, i) => {
+          console.log('cehck', cat.category_id, child_categories[i].parent_id);
 
-        const categoryLists = data.map((element) => {
-          const filterData = parentCategory.filter((item) =>
-            console.log('item', item)
+          if (cat.category_id === child_categories[i].parent_id) {
+            console.log('matched');
+            return { ...cat };
+          } else {
+            return { ...cat };
+          }
+        });
+
+        const childCats = child_categories.filter((cat) => {
+          if (cat.parent_id !== null) {
+            return { ...cat };
+          }
+        });
+
+        // console.log('childCats', childCats);
+        console.log('allCats', allCats);
+
+        const categoryLists = categories.map((element, i) => {
+          const child_categories_arr = child_categories.map((child_cat) => {
+            if (child_cat.parent_id === null) {
+              return { ...child_cat, parent_id: '' };
+            } else {
+              return { ...child_cat };
+            }
+          });
+
+          const parent = categories.find(
+            (childEle) => childEle.parent_id !== child_categories[i].parent_id
           );
 
-          console.log('element', element);
-          console.log('filterData', filterData);
+          // console.log('child_categories_arr', child_categories_arr);
 
-          // if (filterData) {
-          //   console.log('filterData', element.parent_id);
-          //   element.parent_id = 'data';
-          // }
+          // console.log('paren', paren);
+          // console.log(
+          //   'parentcat ',
+          //   child_categories.filter(
+          //     (parent_cat) => parent_cat.parent_id === element.category_id
+          //   )
+          // );
+
+          // console.log(element.parent_id === child_categories[i].parent_id);
+
+          if (element.parent_id === child_categories[i].parent_id) {
+            return {
+              ...element,
+              parent_category_name: parent.category_name,
+            };
+          }
 
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
@@ -101,12 +111,12 @@ const AllCategoryList = () => {
           }
         });
 
+        console.log('categoryLists', categoryLists);
+
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
   }, []);
-
-  // console.log('parentCategory', parentCategory);
 
   function getApplicationSettingsData() {
     return new Promise((resolve, reject) => {
@@ -141,15 +151,6 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
-        // message.success({
-        //   content: 'Foods category added successfully ',
-        //   className: 'custom-class',
-        //   duration: 1,
-        //   style: {
-        //     marginTop: '5vh',
-        //     float: 'right',
-        //   },
-        // });
       },
       onCancel() {},
     });
@@ -162,10 +163,11 @@ const AllCategoryList = () => {
       key: 'categoryImage',
       render: (text, record) => (
         <Image
-          src={record.categoryImage}
+          // src={record.categoryImage}
+          src={defaultImage}
           width="50px"
           height="50px"
-          className="category-image"
+          className="category_image"
         />
       ),
     },
@@ -177,8 +179,8 @@ const AllCategoryList = () => {
     },
     {
       title: 'Parent Menu',
-      dataIndex: 'parent_id',
-      key: 'parent_id',
+      dataIndex: 'parent_category_name',
+      key: 'parent_category_name',
       width: '20%',
     },
     {
