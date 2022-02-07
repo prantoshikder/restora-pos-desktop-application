@@ -64,64 +64,44 @@ const Cart = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const changeQuantityValue = (value, cartItem) => {
-    console.log(cartItem);
-    cartItem.quantity = 1;
-
-    const itemFind = cartItems.find((item) => item.id === cartItem.id);
-
-    const index = cartItems.indexOf(itemFind);
-
-    const newData = [
-      ...cartItems.slice(0, index),
-      cartItem,
-      ...cartItems.slice(index + 1),
-    ];
-
-    console.log('newData', newData);
-
-    if (value < 1) {
-      message.error({
-        content: 'At list added one item',
-        className: 'custom-class',
-        duration: 1,
-        style: { marginTop: '5vh', float: 'right' },
-      });
-    } else {
-      setQuantityValue(value);
-    }
-  };
-
   const increaseQuantity = (cartData) => {
+    console.log('cartData', cartData);
+
     const index = cartItems.indexOf(cartData);
+    console.log('index', index);
 
     const newQuantity = (cartData.quantity += 1);
 
-    const newData = [
-      ...cartItems.slice(0, index),
-      { ...cartData, quantity: newQuantity },
-      ...cartItems.slice(index + 1),
-    ];
-
-    dispatch(newData);
-
-    console.log('newData', newData);
+    console.log('cartData.price * newQuantity', cartData.price * newQuantity);
     setQuantityValue(newQuantity);
+
+    // const newData = [
+    //   ...cartItems.slice(0, index),
+    //   { ...cartData, quantity: newQuantity },
+    //   ...cartItems.slice(index + 1),
+    // ];
+
+    // dispatch(newData);
   };
+
+  console.log('cartItems', cartItems);
 
   const decreaseQuantity = (cartData) => {
     const index = cartItems.indexOf(cartData);
 
+    if (cartData.quantity === 1) return;
+
     const newQuantity = (cartData.quantity -= 1);
-
-    const newData = [
-      ...cartItems.slice(0, index),
-      { ...cartData, quantity: newQuantity },
-      ...cartItems.slice(index + 1),
-    ];
-
-    console.log('newData', newData);
     setQuantityValue(newQuantity);
+
+    // const newData = [
+    //   ...cartItems.slice(0, index),
+    //   { ...cartData, quantity: newQuantity },
+    //   ...cartItems.slice(index + 1),
+    // ];
+
+    // console.log('newData', newData);
+    // setQuantityValue(newQuantity);
   };
 
   const columns = [
@@ -224,7 +204,7 @@ const Cart = () => {
 
   const handleResetAll = () => {
     form.resetFields();
-    // setCartItems('');
+    setCartItems('');
 
     message.success({
       content: 'Reset successfully',
@@ -437,7 +417,7 @@ const Cart = () => {
               {cartItems?.length !== 0 ? (
                 <span>
                   $
-                  {cartItems.reduce(
+                  {cartItems?.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
                   )}

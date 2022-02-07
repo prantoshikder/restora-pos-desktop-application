@@ -44,7 +44,9 @@ const SystemMenu = ({ direction }) => {
             </Menu.Item>
           </SubMenu>
           <SubMenu key="submenu_settings" title="Settings" popupOffset={[0, 0]}>
-            <Menu.Item key="submenu_settings:1">Application Settings</Menu.Item>
+            <Menu.Item key="submenu_settings:1">
+              <Link to="/application_setting">Application Settings</Link>
+            </Menu.Item>
             <Menu.Item key="submenu_settings:2">Synchronization</Menu.Item>
           </SubMenu>
           <SubMenu key="submenu_help" title="Help" popupOffset={[0, 0]}>
