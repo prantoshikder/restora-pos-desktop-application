@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+import { Col, message } from 'antd';
 import React, { useContext } from 'react';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import { ContextData } from './../../contextApi';
@@ -13,10 +13,30 @@ const FoodItem = ({ item }) => {
       e.currentTarget.style.border = '2px solid #297600';
       setCartItems([...cartItems, item]);
     } else {
-      item.isSelected = false;
-      e.currentTarget.style.border = '';
-      setCartItems(cartItems.filter((cartId) => cartId.id !== item.id));
-      return;
+      console.log('item', item);
+
+      // const [filterItem] = cartItems.filter((cartId) => cartId.id === item.id);
+
+      if (item.id) {
+        message.info({
+          content: 'Item already added',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        // console.log('item.quantity', item.quantity + 1);
+
+        // let itemQuantity = item.quantity + 1;
+
+        // console.log({ ...item, quantity: itemQuantity++ });
+      }
+      // item.isSelected = false;
+      // e.currentTarget.style.border = '';
+      // setCartItems(cartItems.filter((cartId) => cartId.id !== item.id));
+      // return;
     }
   };
 
