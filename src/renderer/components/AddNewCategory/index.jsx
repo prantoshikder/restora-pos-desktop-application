@@ -9,7 +9,6 @@ import {
   message,
   Row,
   Select,
-  Space,
   Upload,
 } from 'antd';
 import moment from 'moment';
@@ -76,12 +75,14 @@ const AddNewCategory = ({ state }) => {
 
     window.parent_category.send('parent_category', { status: true });
 
-    window.parent_category.once('parent_category', (args) => {
-      const categoryFilter = args.filter(
-        (category) =>
-          category.category_is_active !== 0 &&
-          category.category_is_active !== null
-      );
+    window.parent_category.once('parent_category', (args = []) => {
+      const categoryFilter =
+        Array.isArray(args) &&
+        args?.filter(
+          (category) =>
+            category.category_is_active !== 0 &&
+            category.category_is_active !== null
+        );
       setParentCategory(categoryFilter);
     });
   }, [reUpdate]);
@@ -151,8 +152,6 @@ const AddNewCategory = ({ state }) => {
 
     // Get add category insert & update response
     window.add_category.once('after_insert_get_response', ({ status }) => {
-      console.log('status', status);
-
       if (status === 'updated') {
         message.success({
           content: 'Category has been updated successfully',
@@ -307,27 +306,31 @@ const AddNewCategory = ({ state }) => {
             </Form.Item>
 
             {packageOffer && (
-              <Space direction="vertical" size={12}>
-                <div className="offer_date_select">
-                  <Form.Item name="offer_start_date" label="Offer Start Date">
-                    <DatePicker
-                      format="DD-MM-YYYY"
-                      placeholder="Offer Start Date"
-                      disabledDate={disabledDate}
-                      onChange={handleChangeStartDate}
-                    />
-                  </Form.Item>
+              <div className="offer_date_select">
+                <Row gutter={20}>
+                  <Col lg={12}>
+                    <Form.Item name="offer_start_date" label="Offer Start Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer Start Date"
+                        disabledDate={disabledDate}
+                        onChange={handleChangeStartDate}
+                      />
+                    </Form.Item>
+                  </Col>
 
-                  <Form.Item name="offer_end_date" label="Offer End Date">
-                    <DatePicker
-                      format="DD-MM-YYYY"
-                      placeholder="Offer End Date"
-                      onChange={handleChangeEndDate}
-                      disabledDate={disabledDate}
-                    />
-                  </Form.Item>
-                </div>
-              </Space>
+                  <Col lg={12}>
+                    <Form.Item name="offer_end_date" label="Offer End Date">
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        placeholder="Offer End Date"
+                        onChange={handleChangeEndDate}
+                        disabledDate={disabledDate}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </div>
             )}
 
             <Form.Item name="category_is_active" label="Status">

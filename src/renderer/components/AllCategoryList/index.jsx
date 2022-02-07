@@ -37,6 +37,8 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
   const [parentCategory, setParentCategory] = useState(null);
 
+  console.log('categories', categories);
+
   useEffect(() => {
     // window.parent_category.once('parent_category', (args) => {
     //   console.log('******************************', args);
