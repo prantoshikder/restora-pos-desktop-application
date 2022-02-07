@@ -546,7 +546,22 @@ ipcMain.on('add_new_foods', (event, args) => {
 });
 
 
+// Get all food list from DB
+ipcMain.on('get_food_list', (event, args) => {
+  let { status } = args
+  let sql = `SELECT item_foods.ProductsID, add_item_category.category_name, item_foods.ProductName, item_foods.component, item_foods.productvat, item_foods.ProductsIsActive
+  FROM item_foods
+  INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`
 
+  if (status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('get_food_list_response', rows);
+      });
+    });
+  }
+})
 
 
 
