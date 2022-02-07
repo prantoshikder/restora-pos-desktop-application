@@ -1,4 +1,3 @@
-import 'core-js/stable';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -8,14 +7,19 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 
+
 var dbPath = app.getPath('userData');
 
+
+
 export default class AppUpdater {
+
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
+
 }
 
 let mainWindow;
