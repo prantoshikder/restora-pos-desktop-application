@@ -63,7 +63,9 @@ const AddNewAddons = ({ state }) => {
       newAddOns[data.name[0]] = data.value;
     }
 
-    newAddOns.is_active === 'Active' && (newAddOns.is_active = 1);
+    newAddOns.is_active === 'Active'
+      ? (newAddOns.is_active = 1)
+      : (newAddOns.is_active = 0);
 
     newAddOns.add_on_id = state?.add_on_id;
 
@@ -72,7 +74,6 @@ const AddNewAddons = ({ state }) => {
 
     // Get addons insert & update response
     window.add_addons.once('add_addons_response', ({ status }) => {
-      console.log('status', status);
       if (status === 'updated') {
         message.success({
           content: 'Add-ons has been updated successfully',

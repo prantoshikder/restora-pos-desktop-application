@@ -9,12 +9,11 @@ import {
   message,
   Row,
   Select,
-  Space,
   TimePicker,
   Upload,
 } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddNewFood.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -26,11 +25,75 @@ const AddNewFood = () => {
   const [form] = Form.useForm();
   const format = 'HH:mm';
   const [value, setValue] = useState('active');
-  const [menuType, setMenuType] = useState('');
+  const [menuType, setMenuType] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
+  const [addNewFood, setAddNewFood] = useState([]);
+  const [offerStartDate, setOfferStartDate] = useState('');
+  const [offerEndDate, setOfferEndDate] = useState('');
 
-  const handleSelectCategory = () => {};
-  const handleKitchenSelect = () => {};
+  useEffect(() => {
+    setAddNewFood([
+      {
+        name: ['category_name'],
+        // value: state?.category_name,
+      },
+      {
+        name: ['kitchen_select'],
+        // value: state?.kitchen_select,
+      },
+      {
+        name: ['food_name'],
+        // value: state?.food_name,
+      },
+      {
+        name: ['component'],
+        // value: state?.component,
+      },
+      {
+        name: ['notes'],
+        // value: state?.notes,
+      },
+      {
+        name: ['description'],
+        // value: state?.description,
+      },
+      {
+        name: ['vat'],
+        // value: state?.vat,
+      },
+      {
+        name: ['price'],
+        // value: state?.price,
+      },
+      {
+        name: ['offer_rate'],
+        // value: state?.offer_rate,
+      },
+      {
+        name: ['offer_start_date'],
+        // value: state?.offer_start_date,
+      },
+      {
+        name: ['offer_end_date'],
+        // value: state?.offer_end_date,
+      },
+      {
+        name: ['cooking_time'],
+        // value: state?.cooking_time,
+      },
+      {
+        name: ['menu_type'],
+        // value: state?.menu_type,
+      },
+      {
+        name: ['food_status'],
+        // value: state?.food_status,
+      },
+    ]);
+  }, []);
+
+  // const handleSelectCategory = () => {};
+  // const handleKitchenSelect = () => {};
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -48,11 +111,6 @@ const AddNewFood = () => {
     return current && current < moment().endOf('day');
   };
 
-  const handleChangeStatus = (value) => {
-    console.log('status', value);
-    setValue(value);
-  };
-
   function onChange(checkedValues) {
     console.log('checked = ', checkedValues);
   }
@@ -65,16 +123,12 @@ const AddNewFood = () => {
     setPackageOffer(!packageOffer);
   };
 
-  const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
-    // setCategories({ ...categories, categoryOfferStart: value });
+  const handleOfferStart = (value, stringDate) => {
+    setOfferStartDate(stringDate);
   };
 
-  const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
-    // setCategories({ ...categories, categoryOfferEnd: value });
+  const handleOfferEnd = (value, stringDate) => {
+    setOfferEndDate(stringDate);
   };
 
   const customQuantity = (e) => {
@@ -100,6 +154,21 @@ const AddNewFood = () => {
   };
 
   const handleSubmit = () => {
+    const newFoods = {};
+
+    for (const data of addNewFood) {
+      newFoods[data.name[0]] = data.value;
+    }
+
+    newFoods.food_status === 'Active'
+      ? (newFoods.food_status = 1)
+      : (newFoods.food_status = 0);
+
+    newFoods.offer_start_date = offerStartDate;
+    newFoods.offer_end_date = offerEndDate;
+
+    newFoods.menu_type = menuType;
+
     message.success({
       content: 'Foods category added successfully ',
       className: 'custom-class',
@@ -109,7 +178,11 @@ const AddNewFood = () => {
         float: 'right',
       },
     });
+
+    console.log('newFoods', newFoods);
   };
+
+  // console.log('addNewFood', addNewFood);
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -119,17 +192,20 @@ const AddNewFood = () => {
     <div className="add_new_food">
       <Form
         form={form}
+        fields={addNewFood}
         onFinish={handleSubmit}
+        onFieldsChange={(_, allFields) => {
+          setAddNewFood(allFields);
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
-        layout="vertical"
       >
         <Row gutter={40}>
           <Col lg={14}>
-            <Form.Item name="category" label="Category">
+            <Form.Item name="category_name" label="Category">
               <Select
                 placeholder="Select a category"
-                onChange={handleSelectCategory}
+                // onChange={handleSelectCategory}
                 size="large"
                 allowClear
               >
@@ -141,10 +217,10 @@ const AddNewFood = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item name="select kitchen" label="Select Kitchen">
+            <Form.Item name="kitchen_select" label="Select Kitchen">
               <Select
                 placeholder="Select a kitchen"
-                onChange={handleKitchenSelect}
+                // onChange={handleKitchenSelect}
                 size="large"
                 allowClear
               >
@@ -158,7 +234,7 @@ const AddNewFood = () => {
 
             <Form.Item
               label="Food Name"
-              name="foodName"
+              name="food_name"
               rules={[
                 {
                   required: true,
@@ -178,7 +254,7 @@ const AddNewFood = () => {
               <Input placeholder="Add Notes" size="large" />
             </Form.Item>
 
-            <Form.Item label="Description">
+            <Form.Item label="Description" name="description">
               <Input.TextArea placeholder="Description" size="large" />
             </Form.Item>
 
@@ -208,6 +284,7 @@ const AddNewFood = () => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
+
                 <Col lg={8}>
                   <h4>Preview Image</h4>
                 </Col>
@@ -218,6 +295,7 @@ const AddNewFood = () => {
           <Col lg={10}>
             <Form.Item
               label="Vat"
+              name="vat"
               tooltip={{
                 title: 'Vat are always calculate percent like:5 means:5%',
                 icon: <InfoCircleOutlined />,
@@ -227,7 +305,7 @@ const AddNewFood = () => {
             </Form.Item>
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Form.Item name="offer" valuePropName="checked">
+              <Form.Item valuePropName="checked">
                 <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
               </Form.Item>
 
@@ -244,6 +322,7 @@ const AddNewFood = () => {
               <>
                 <Form.Item
                   label="Offer Rate"
+                  name="offer_rate"
                   tooltip={{
                     title:
                       'Offer Rate Must ba a number. It a Percentage Like: if 5% then put 5',
@@ -253,54 +332,50 @@ const AddNewFood = () => {
                   <Input placeholder="Vat" size="large" />
                 </Form.Item>
 
-                <Space direction="vertical" size={12}>
-                  <div className="offer_date_select">
-                    <Form.Item label="Offer Start Date">
+                <Row gutter={20}>
+                  <Col lg={12}>
+                    <Form.Item label="Offer Start Date" name="offer_start_date">
                       <DatePicker
                         format="DD-MM-YYYY"
                         placeholder="Offer Start Date"
                         disabledDate={disabledDate}
-                        // value={categories.categoryOfferStart}
                         onChange={handleOfferStart}
                       />
                     </Form.Item>
-
-                    <Form.Item label="Offer End Date">
+                  </Col>
+                  <Col lg={12}>
+                    <Form.Item label="Offer End Date" name="offer_end_date">
                       <DatePicker
                         format="DD-MM-YYYY"
                         placeholder="Offer End Date"
                         disabledDate={disabledDate}
-                        // value={categories.categoryOfferEnd}
                         onChange={handleOfferEnd}
                       />
                     </Form.Item>
-                  </div>
-                </Space>
+                  </Col>
+                </Row>
               </>
             )}
 
-            <Form.Item label="Cooking Time" name="cookingTime">
+            <Form.Item label="Cooking Time" name="cooking_time">
               <TimePicker format={format} />
-              {/* <Input placeholder="0:00" size="large" /> */}
             </Form.Item>
 
-            <Form.Item label="Menu Type" valuePropName="checked">
+            <Form.Item
+              label="Menu Type"
+              name="menu_type"
+              valuePropName="checked"
+            >
               <Checkbox.Group
                 options={plainOptions}
                 onChange={changesMenuType}
               />
             </Form.Item>
 
-            <Form.Item name="status" label="Status">
-              <Select
-                placeholder="Select an Option"
-                onChange={handleChangeStatus}
-                value={value}
-                size="large"
-                allowClear
-              >
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
+            <Form.Item name="food_status" label="Status">
+              <Select placeholder="Select an Option" size="large" allowClear>
+                <Option value="1">Active</Option>
+                <Option value="0">Inactive</Option>
               </Select>
             </Form.Item>
 
