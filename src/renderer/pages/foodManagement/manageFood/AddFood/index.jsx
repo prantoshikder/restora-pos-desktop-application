@@ -1,6 +1,7 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, ConfigProvider, Modal, Row, Typography } from 'antd';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Heading from 'renderer/components/Heading';
 import AddNewFood from './../../../../components/AddNewFood';
 import Sidebar from './../../../../components/partials/Sidebar';
@@ -14,6 +15,7 @@ const AddFood = ({ direction }) => {
   const [visible, setVisible] = useState(false);
 
   const handleShow = () => setVisible(true);
+  const { state } = useLocation();
 
   return (
     <>
@@ -39,7 +41,7 @@ const AddFood = ({ direction }) => {
                   </Button>
                 </div>
 
-                <AddNewFood />
+                <AddNewFood state={state} />
               </Col>
             </Row>
           </div>
