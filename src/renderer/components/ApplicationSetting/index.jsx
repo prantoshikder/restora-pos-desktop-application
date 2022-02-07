@@ -1,8 +1,4 @@
-import {
-  LoadingOutlined,
-  PictureOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { PictureOutlined } from '@ant-design/icons';
 import { faDollarSign, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -30,9 +26,6 @@ const ApplicationSetting = () => {
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [defaultData, setDefaultData] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     getDataFromDatabase('sendSettingDataFromMain', window.api).then((data) => {
@@ -173,31 +166,6 @@ const ApplicationSetting = () => {
     });
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const handleUploadFevicon = (info) => {
-    console.log('file status', info.file);
-    console.log('file status', window.URL());
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (imageUrl) => {
-        console.log('imageUrl', imageUrl);
-        setLoading(false);
-        setImageUrl(imageUrl);
-      });
-    }
-  };
-
   return (
     <div className="application_setting">
       <Form
@@ -251,34 +219,14 @@ const ApplicationSetting = () => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload
-                      name="avatar"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      showUploadList={false}
-                      // beforeUpload={beforeUpload}
-                      onChange={handleUploadFevicon}
-                    >
-                      {imageUrl ? (
-                        <img
-                          src={imageUrl}
-                          alt="avatar"
-                          style={{ width: '100%' }}
-                        />
-                      ) : (
-                        uploadButton
-                      )}
-                    </Upload>
-
-                    {/* <Upload name="fevicon" onChange={handleUploadFevicon}> */}
-
-                    {/* <p className="ant-upload-drag-icon">
+                    <Upload.Dragger name="files" action="/upload.do">
+                      <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
                       <p className="ant-upload-hint">
                         Click or drag a favicon to this area to upload
-                      </p> */}
-                    {/* </Upload> */}
+                      </p>
+                    </Upload.Dragger>
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
