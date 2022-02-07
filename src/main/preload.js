@@ -81,7 +81,7 @@ contextBridge.exposeInMainWorld('parent_category', {
 });
 
 
-// Add addons channel
+// Add new addons - channel
 contextBridge.exposeInMainWorld('add_addons', {
   send: (channel, data) => {
     let validChannels = ['add_addons'];
@@ -98,7 +98,7 @@ contextBridge.exposeInMainWorld('add_addons', {
 });
 
 
-// Addons list channel
+// Addons list - channel
 contextBridge.exposeInMainWorld('addons_list', {
   send: (channel, data) => {
     let validChannels = ['addons_list'];
@@ -115,7 +115,7 @@ contextBridge.exposeInMainWorld('addons_list', {
 });
 
 
-// Delete addons channel
+// Delete addons - channel
 contextBridge.exposeInMainWorld('delete_addons', {
   send: (channel, data) => {
     let validChannels = ['delete_addons'];
@@ -132,3 +132,18 @@ contextBridge.exposeInMainWorld('delete_addons', {
 });
 
 
+// Add new foods - channel
+contextBridge.exposeInMainWorld('add_new_foods', {
+  send: (channel, data) => {
+    let validChannels = ['add_new_foods'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['add_new_foods_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});

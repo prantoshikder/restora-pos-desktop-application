@@ -283,12 +283,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -330,12 +330,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -370,18 +370,18 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-            status: err,
-          })
+          status: err,
+        })
         : mainWindow.webContents.send('delete_category_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
 
   db.close();
 });
 
-// Insert addons data to db
+// Insert and update addons data to db
 ipcMain.on('add_addons', (event, args) => {
   let { add_on_name, price, is_active } = args;
 
@@ -395,8 +395,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -420,8 +420,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -456,13 +456,109 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
 
   db.close();
 });
+
+
+// Insert and update foods to DB
+ipcMain.on('add_new_foods', (event, args) => {
+  console.log(args);
+  let { category_name, kitchen_select, food_name, component, notes, description, dragger, vat, special, customQuantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date, offer_end_date } = args;
+
+  if (args.add_on_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO item_foods ( CategoryID, ProductName, ProductImage, bigthumb, medium_thumb, small_thumb, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
+          offerstartdate, offerendate, Position, kitchenid, isgroup, is_customqty, cookedtime, ProductsIsActive, UserIDInserted, UserIDUpdated, UserIDLocked, DateInserted, DateUpdated, DateLocked, tax0, tax1 )
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [category_name, kitchen_select, food_name, component, notes, description, dragger, vat, special, customQuantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date],
+        (err) => {
+          err
+            ? mainWindow.webContents.send('add_addons_response', err.message)
+            : mainWindow.webContents.send('add_addons_response', {
+              status: 'inserted',
+            });
+        }
+      );
+    });
+    db.close();
+  }
+  else {
+    console.log("else");
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS item_foods (
+          'ProductsID' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'CategoryID' INT NOT NULL,
+          'ProductName' varchar(255),
+          'ProductImage' varchar(200),
+          'bigthumb' varchar(255),
+          'medium_thumb' varchar(255),
+          'small_thumb' varchar(255),
+          'component' TEXT,
+          'descrip' TEXT,
+          'itemnotes' varchar(255),
+          'menutype' varchar(25),
+          'productvat' REAL,
+          'special' INT,
+          'OffersRate' INT,
+          'offerIsavailable' INT,
+          'offerstartdate' DATETIME ,
+          'offerendate' DATETIME,
+          'Position' INT,
+          'kitchenid' INT,
+          'isgroup' INT,
+          'is_customqty' INT,
+          'cookedtime' varchar(10),
+          'ProductsIsActive' INT,
+          'UserIDInserted' INT,
+          'UserIDUpdated' INT,
+          'UserIDLocked' INT,
+          'DateInserted' DATETIME,
+          'DateUpdated' DATETIME,
+          'DateLocked' DATETIME,
+          'tax0' TEXT,
+          'tax1' TEXT
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO item_foods ( CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, ProductsIsActive, cookedtime, offerstartdate, offerendate,
+           kitchenid, OffersRate, is_customqty)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [ 1, food_name, dragger, component, description, notes, menu_type, vat, special, food_status, cooking_time, offer_start_date, offer_end_date, kitchen_select, offer_rate, customQuantity],
+        (err) => {
+          console.log("Add food error: ", err);
+          // err
+          //   ? mainWindow.webContents.send('add_addons_response', err.message)
+          //   : mainWindow.webContents.send('add_addons_response', {
+          //     status: 'updated',
+          //   });
+        }
+      );
+    });
+    db.close();
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
@@ -471,7 +567,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
 
 app
   .whenReady()

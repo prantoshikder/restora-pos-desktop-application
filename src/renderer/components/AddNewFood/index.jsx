@@ -170,7 +170,7 @@ const AddNewFood = () => {
     newFoods.menu_type = menuType;
 
     message.success({
-      content: 'Foods category added successfully ',
+      content: 'Foods category added successfully',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -178,8 +178,8 @@ const AddNewFood = () => {
         float: 'right',
       },
     });
-
     console.log('newFoods', newFoods);
+    window.add_new_foods.send('add_new_foods', newFoods)
   };
 
   // console.log('addNewFood', addNewFood);
