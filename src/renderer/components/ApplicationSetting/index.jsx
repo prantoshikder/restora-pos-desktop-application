@@ -1,4 +1,6 @@
 import { PictureOutlined } from '@ant-design/icons';
+import { faDollarSign, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Col,
@@ -179,7 +181,16 @@ const ApplicationSetting = () => {
       >
         <Row gutter={20}>
           <Col lg={13}>
-            <Form.Item label="Application Title" name="title">
+            <Form.Item
+              label="Application Title"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Application Title is required',
+                },
+              ]}
+            >
               <Input placeholder="Application Title" size="large" />
             </Form.Item>
 
@@ -256,59 +267,113 @@ const ApplicationSetting = () => {
               </Row>
             </Form.Item>
 
-            <Form.Item label="Available On" name="opentime">
-              <Input placeholder="Available On" size="large" />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item label="Available On" name="opentime">
+                  <Input placeholder="Available On" size="large" />
+                </Form.Item>
+              </Col>
 
-            <Form.Item label="Closing Time" name="closetime">
-              <Input placeholder="Closing Time" size="large" />
-            </Form.Item>
-
-            <Form.Item name="discount_type" label="Discount Type">
-              <Select placeholder="Select an Option" size="large" allowClear>
-                <Option value="1">Amount</Option>
-                <Option value="2">Percent</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item label="Discount Rate" name="discountrate">
-              <Input placeholder="Discount Rate" size="large" />
-            </Form.Item>
-
-            <Form.Item label="Service Charge" name="servicecharge">
-              <Input placeholder="Service Charge" size="large" />
-            </Form.Item>
+              <Col lg={12}>
+                <Form.Item label="Closing Time" name="closetime">
+                  <Input placeholder="Closing Time" size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
           </Col>
 
           <Col lg={11}>
-            <Form.Item
-              label="Select Service Charge Type"
-              name="service_chargeType"
-            >
-              <Select placeholder="Select an Option" size="large" allowClear>
-                <Option value="amount">Amount</Option>
-                <Option value="percent">Percent</Option>
-              </Select>
-            </Form.Item>
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item name="discount_type" label="Discount Type">
+                  <Select
+                    placeholder="Select an Option"
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="1">Amount</Option>
+                    <Option value="2">Percent</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-            <Form.Item label="Vat Setting" name="vat">
-              <Input placeholder="Vat Setting" size="large" />
-            </Form.Item>
+              <Col lg={12}>
+                <Form.Item label="Discount Rate" name="discountrate">
+                  <Input placeholder="Discount Rate" size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
 
-            <Form.Item label="Tin Number" name="vattinno">
-              <Input placeholder="Tin Number" size="large" />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item
+                  label="Select Service Charge Type"
+                  name="service_chargeType"
+                >
+                  <Select
+                    placeholder="Select an Option"
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="amount">Amount</Option>
+                    <Option value="percent">Percent</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-            <Form.Item label="Currency" name="currency">
-              <Select placeholder="Select Currency" size="large" allowClear>
-                <Option value="amount">Amount</Option>
-                <Option value="percent">Percent</Option>
-              </Select>
-            </Form.Item>
+              <Col lg={12}>
+                <Form.Item label="Service Charge" name="servicecharge">
+                  <Input placeholder="Service Charge" size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
 
-            <Form.Item label="Delivery Time" name="min_prepare_time">
-              <Input placeholder="Delivery Time" size="large" />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item label="Vat Setting" name="vat">
+                  <Input placeholder="Vat Setting" size="large" />
+                </Form.Item>
+              </Col>
+
+              <Col lg={12}>
+                <Form.Item label="Tin Number" name="vattinno">
+                  <Input placeholder="Tin Number" size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item label="Currency" name="currency">
+                  <Select placeholder="Select Currency" size="large" allowClear>
+                    <Option value="bdt">
+                      BDT{' '}
+                      <span style={{ float: 'right' }}>
+                        <FontAwesomeIcon icon={faDollarSign} />
+                      </span>
+                    </Option>
+                    <Option value="usd">
+                      USD{' '}
+                      <span style={{ float: 'right' }}>
+                        <FontAwesomeIcon icon={faDollarSign} />
+                      </span>
+                    </Option>
+                    <Option value="inr">
+                      INR{' '}
+                      <span style={{ float: 'right' }}>
+                        <FontAwesomeIcon icon={faRupeeSign} />
+                      </span>
+                    </Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col lg={12}>
+                <Form.Item label="Delivery Time" name="min_prepare_time">
+                  <Input placeholder="Delivery Time" size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
 
             <Form.Item label="Language" name="language">
               <Select placeholder="Select Language" size="large" allowClear>
@@ -319,37 +384,41 @@ const ApplicationSetting = () => {
               </Select>
             </Form.Item>
 
-            <div className="d-flex">
-              <Form.Item label="Date Format" name="dateformat">
-                <Select placeholder="Select Your " size="large" allowClear>
-                  <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
-                  <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
-                  <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
-                  <Option value="yyyy-mm-dd">yyyy-mm-dd</Option>
-                  <Option value="mm/dd/yyyy">mm/dd/yyyy</Option>
-                  <Option value="dd M,yyyy">dd M,yyyy</Option>
-                  <Option value="dd MM,yyyy">dd MM,yyyy</Option>
-                </Select>
-              </Form.Item>
+            <Row gutter={20}>
+              <Col lg={12}>
+                <Form.Item label="Date Format" name="dateformat">
+                  <Select placeholder="Select Your " size="large" allowClear>
+                    <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
+                    <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
+                    <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
+                    <Option value="yyyy-mm-dd">yyyy-mm-dd</Option>
+                    <Option value="mm/dd/yyyy">mm/dd/yyyy</Option>
+                    <Option value="dd M,yyyy">dd M,yyyy</Option>
+                    <Option value="dd MM,yyyy">dd MM,yyyy</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-              <Form.Item
-                label="Time Zone"
-                name="timezone"
-                style={{ marginLeft: 'auto' }}
-              >
-                <Select
-                  placeholder="Select Your Time zone"
-                  size="large"
-                  allowClear
+              <Col lg={12}>
+                <Form.Item
+                  label="Time Zone"
+                  name="timezone"
+                  style={{ marginLeft: 'auto' }}
                 >
-                  <Option value="asiaDhaka">Asia/Dhaka</Option>
-                  <Option value="asiaThimbu">Asia/Thimbu</Option>
-                  <Option value="asiaJakarta">Asia/Jakarta</Option>
-                  <Option value="asiaOmsk">Asia/Omsk</Option>
-                  <Option value="asiaHovd">Asia/Hovd</Option>
-                </Select>
-              </Form.Item>
-            </div>
+                  <Select
+                    placeholder="Select Your Time zone"
+                    size="large"
+                    allowClear
+                  >
+                    <Option value="asiaDhaka">Asia/Dhaka</Option>
+                    <Option value="asiaThimbu">Asia/Thimbu</Option>
+                    <Option value="asiaJakarta">Asia/Jakarta</Option>
+                    <Option value="asiaOmsk">Asia/Omsk</Option>
+                    <Option value="asiaHovd">Asia/Hovd</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
 
             <Form.Item label="Application Alignment" name="site_align">
               <Select
@@ -376,7 +445,7 @@ const ApplicationSetting = () => {
 
             <div className="button_group">
               <Button
-                type="primary"
+                type="danger"
                 className="resetBtn"
                 style={{
                   marginRight: '0.6rem',
