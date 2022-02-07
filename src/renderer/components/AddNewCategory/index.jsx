@@ -29,6 +29,7 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
+  const [reUpdate, setReUpdate] = useState(false);
 
   // Get only 3 columns from the add_item_category table from database
   // category_id, category_name, parent_id
@@ -76,10 +77,14 @@ const AddNewCategory = ({ state }) => {
     window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args) => {
-      console.log('parentCategory', args);
-      setParentCategory(args);
+      const categoryFilter = args.filter(
+        (category) =>
+          category.category_is_active !== 0 &&
+          category.category_is_active !== null
+      );
+      setParentCategory(categoryFilter);
     });
-  }, []);
+  }, [reUpdate]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -133,14 +138,13 @@ const AddNewCategory = ({ state }) => {
       newCategory[data.name[0]] = data.value;
     }
 
-    newCategory.category_is_active === 'Active' &&
-      (newCategory.category_is_active = 1);
+    newCategory.category_is_active === 'Active'
+      ? (newCategory.category_is_active = 1)
+      : (newCategory.category_is_active = 0);
 
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
-
-    console.log('newCategory', newCategory);
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
@@ -162,6 +166,8 @@ const AddNewCategory = ({ state }) => {
 
         navigate('/category_list');
       } else {
+        setReUpdate((prevState) => !prevState);
+
         message.success({
           content: 'Food category added successfully',
           className: 'custom-class',

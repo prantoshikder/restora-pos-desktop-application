@@ -107,7 +107,7 @@ ipcMain.on('parent_category', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      let sql = `SELECT category_id, category_name, parent_id FROM add_item_category`;
+      let sql = `SELECT category_id, category_name, parent_id, category_is_active FROM add_item_category`;
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('parent_category', rows);
       });
