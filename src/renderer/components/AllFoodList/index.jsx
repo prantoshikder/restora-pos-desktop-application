@@ -30,6 +30,12 @@ const AllFoodList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  window.get_food_list.send('get_food_list', { 'status': true })
+
+  window.get_food_list.once('get_food_list_response', (args)=>{
+    console.log(args);
+  })
+
   const columns = [
     {
       title: 'Image',
