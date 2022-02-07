@@ -13,13 +13,7 @@ import './AllCategoryList.style.scss';
 const { confirm } = Modal;
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      'selectedRows: ',
-      selectedRows
-    );
-  },
+  onChange: (selectedRowKeys, selectedRows) => {},
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
   },
@@ -37,42 +31,13 @@ const AllCategoryList = () => {
   const [categories, setCategories] = useState(null);
   const [parentCategory, setParentCategory] = useState(null);
 
-  console.log('categories', categories);
-
   useEffect(() => {
-    // window.parent_category.once('parent_category', (args) => {
-    //   console.log('******************************', args);
-    //   setParentCategory(args);
-    // });
-
     Promise.all([
       getDataFromDatabase('parent_category', window.parent_category),
       getDataFromDatabase('sendCategoryData', window.get_category),
     ])
-      .then(([child_categories, categories]) => {
-        function getParentCat(cat) {}
-
-        const allCats = categories.map((cat, i) => {
-          console.log('cehck', cat.category_id, child_categories[i].parent_id);
-
-          if (cat.category_id === child_categories[i].parent_id) {
-            console.log('matched');
-            return { ...cat };
-          } else {
-            return { ...cat };
-          }
-        });
-
-        const childCats = child_categories.filter((cat) => {
-          if (cat.parent_id !== null) {
-            return { ...cat };
-          }
-        });
-
-        // console.log('childCats', childCats);
-        console.log('allCats', allCats);
-
-        const categoryLists = categories.map((element, i) => {
+      .then(([child_categories, allCategories]) => {
+        const categoryLists = allCategories.map((element, i) => {
           const child_categories_arr = child_categories.map((child_cat) => {
             if (child_cat.parent_id === null) {
               return { ...child_cat, parent_id: '' };
@@ -80,22 +45,6 @@ const AllCategoryList = () => {
               return { ...child_cat };
             }
           });
-
-          const parent = categories.find(
-            (childEle) => childEle.parent_id !== child_categories[i].parent_id
-          );
-
-          // console.log('child_categories_arr', child_categories_arr);
-
-          // console.log('paren', paren);
-          // console.log(
-          //   'parentcat ',
-          //   child_categories.filter(
-          //     (parent_cat) => parent_cat.parent_id === element.category_id
-          //   )
-          // );
-
-          // console.log(element.parent_id === child_categories[i].parent_id);
 
           if (element.parent_id === child_categories[i].parent_id) {
             return {
@@ -109,11 +58,11 @@ const AllCategoryList = () => {
           } else {
             return { ...element, category_is_active: 'Inactive' };
           }
+
+          console.log(element);
         });
 
-        console.log('categoryLists', categoryLists);
-
-        setCategories(categoryLists);
+        setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
   }, []);
