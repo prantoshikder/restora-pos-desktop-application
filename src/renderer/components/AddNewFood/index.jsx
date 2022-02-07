@@ -33,6 +33,12 @@ const AddNewFood = () => {
   const [parentCategory, setParentCategory] = useState([]);
   const [reUpdate, setReUpdate] = useState(false);
 
+  window.add_new_foods.once('add_new_foods_response', (args)=>{
+    console.log(args);
+  })
+
+
+
   useEffect(() => {
     setAddNewFood([
       {

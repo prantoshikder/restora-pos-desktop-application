@@ -468,21 +468,21 @@ ipcMain.on('delete_addons', (event, args) => {
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
   console.log(args);
-  let { category_name, kitchen_select, food_name, component, notes, description, dragger, vat, special, customQuantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date, offer_end_date } = args;
+  let { category_name, kitchen_select, food_name, component, notes, description, food_image, vat, is_offer, special, custom_quantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date, offer_end_date } = args;
 
   if (args.add_on_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO item_foods ( CategoryID, ProductName, ProductImage, bigthumb, medium_thumb, small_thumb, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
-          offerstartdate, offerendate, Position, kitchenid, isgroup, is_customqty, cookedtime, ProductsIsActive, UserIDInserted, UserIDUpdated, UserIDLocked, DateInserted, DateUpdated, DateLocked, tax0, tax1 )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [category_name, kitchen_select, food_name, component, notes, description, dragger, vat, special, customQuantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date],
+        `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
+          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [category_name, food_name, food_image, component, description, notes, menu_type, vat, special, offer_rate, is_offer, offer_start_date, offer_end_date, kitchen_select, custom_quantity, cooking_time, food_status],
         (err) => {
           err
-            ? mainWindow.webContents.send('add_addons_response', err.message)
-            : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
+            ? mainWindow.webContents.send('add_new_foods_response', err.message)
+            : mainWindow.webContents.send('add_new_foods_response', {
+              status: 'updated',
             });
         }
       );
@@ -528,17 +528,16 @@ ipcMain.on('add_new_foods', (event, args) => {
           'tax1' TEXT
         )`
       ).run(
-        `INSERT OR REPLACE INTO item_foods ( CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, ProductsIsActive, cookedtime, offerstartdate, offerendate,
-           kitchenid, OffersRate, is_customqty)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [ 1, food_name, dragger, component, description, notes, menu_type, vat, special, food_status, cooking_time, offer_start_date, offer_end_date, kitchen_select, offer_rate, customQuantity],
+        `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
+          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [category_name, food_name, food_image, component, description, notes, menu_type, vat, special, offer_rate, is_offer, offer_start_date, offer_end_date, kitchen_select, custom_quantity, cooking_time, food_status],
         (err) => {
-          console.log("Add food error: ", err);
-          // err
-          //   ? mainWindow.webContents.send('add_addons_response', err.message)
-          //   : mainWindow.webContents.send('add_addons_response', {
-          //     status: 'updated',
-          //   });
+          err
+            ? mainWindow.webContents.send('add_new_foods_response', err.message)
+            : mainWindow.webContents.send('add_new_foods_response', {
+              status: 'inserted',
+            });
         }
       );
     });
