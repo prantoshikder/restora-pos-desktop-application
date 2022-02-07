@@ -33,6 +33,12 @@ const AddNewFood = () => {
   const [parentCategory, setParentCategory] = useState([]);
   const [reUpdate, setReUpdate] = useState(false);
 
+  window.add_new_foods.once('add_new_foods_response', (args)=>{
+    console.log(args);
+  })
+
+
+
   useEffect(() => {
     setAddNewFood([
       {
@@ -210,7 +216,7 @@ const AddNewFood = () => {
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
     message.success({
-      content: 'Foods category added successfully ',
+      content: 'Foods category added successfully',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -222,6 +228,7 @@ const AddNewFood = () => {
     // setReUpdate((prevState) => !prevState);
 
     console.log('newFoods', newFoods);
+    window.add_new_foods.send('add_new_foods', newFoods)
   };
 
   const onFinishFailed = (errorInfo) => {
