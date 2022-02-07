@@ -127,9 +127,16 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
     // Create DB connection
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      db.all(settingSqlQ, [], (err, rows) => {
-        console.log(rows);
-        mainWindow.webContents.send('sendSettingDataFromMain', rows[0]);
+      db.all(settingSqlQ, [], (err, rows = []) => {
+        try {
+          if (rows[0] !== undefined && Object.keys(rows[0])) {
+            mainWindow.webContents.send('sendSettingDataFromMain', rows[0]);
+          } else {
+            rows[0] = {};
+          }
+        } catch (error) {
+          console.log('Settings error', error);
+        }
       });
     });
     // DB connection close

@@ -3,7 +3,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, message, Modal, Space, Table } from 'antd';
+import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../../../assets/default.jpg';
@@ -47,20 +47,60 @@ const AllCategoryList = () => {
       getDataFromDatabase('parent_category', window.parent_category),
       getDataFromDatabase('sendCategoryData', window.get_category),
     ])
-      .then(([parent_category, categories]) => {
-        console.log('parent_category', parent_category);
+      .then(([child_categories, categories]) => {
+        function getParentCat(cat) {}
+
+        const allCats = categories.map((cat, i) => {
+          console.log('cehck', cat.category_id, child_categories[i].parent_id);
+
+          if (cat.category_id === child_categories[i].parent_id) {
+            console.log('matched');
+            return { ...cat };
+          } else {
+            return { ...cat };
+          }
+        });
+
+        const childCats = child_categories.filter((cat) => {
+          if (cat.parent_id !== null) {
+            return { ...cat };
+          }
+        });
+
+        // console.log('childCats', childCats);
+        console.log('allCats', allCats);
+
         const categoryLists = categories.map((element, i) => {
-          // const paren = parent_category.filter(
-          //   (parent_cat) => parent_cat.parent_id !== element.category_id
-          // );
+          const child_categories_arr = child_categories.map((child_cat) => {
+            if (child_cat.parent_id === null) {
+              return { ...child_cat, parent_id: '' };
+            } else {
+              return { ...child_cat };
+            }
+          });
+
+          const parent = categories.find(
+            (childEle) => childEle.parent_id !== child_categories[i].parent_id
+          );
+
+          // console.log('child_categories_arr', child_categories_arr);
 
           // console.log('paren', paren);
           // console.log(
           //   'parentcat ',
-          //   parent_category.filter(
+          //   child_categories.filter(
           //     (parent_cat) => parent_cat.parent_id === element.category_id
           //   )
           // );
+
+          // console.log(element.parent_id === child_categories[i].parent_id);
+
+          if (element.parent_id === child_categories[i].parent_id) {
+            return {
+              ...element,
+              parent_category_name: parent.category_name,
+            };
+          }
 
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
@@ -74,28 +114,6 @@ const AllCategoryList = () => {
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
-
-    // console.log('am I promise?', allData);
-
-    // getDataFromDatabase('parent_category', window.parent_category)
-    //   .then((data) => {
-    //     console.log('parnet cat', data);
-    //   })
-    //   .catch((err) => console.log('cat error', err));
-
-    // getDataFromDatabase('sendCategoryData', window.get_category)
-    //   .then((data) => {
-    //     const categoryLists = data.map((element) => {
-    //       if (element.category_is_active === 1) {
-    //         return { ...element, category_is_active: 'Active' };
-    //       } else {
-    //         return { ...element, category_is_active: 'Inactive' };
-    //       }
-    //     });
-
-    //     setCategories(categoryLists);
-    //   })
-    //   .catch((err) => console.log('error', err));
   }, []);
 
   function getApplicationSettingsData() {
@@ -131,23 +149,6 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
-
-        window.delete_category.once(
-          'delete_category_response',
-          ({ status }) => {
-            if (status) {
-              message.success({
-                content: 'Food category deleted successfully',
-                className: 'custom-class',
-                duration: 1,
-                style: {
-                  marginTop: '5vh',
-                  float: 'right',
-                },
-              });
-            }
-          }
-        );
       },
       onCancel() {},
     });
@@ -176,8 +177,8 @@ const AllCategoryList = () => {
     },
     {
       title: 'Parent Menu',
-      dataIndex: 'parent_id',
-      key: 'parent_id',
+      dataIndex: 'parent_category_name',
+      key: 'parent_category_name',
       width: '20%',
     },
     {
