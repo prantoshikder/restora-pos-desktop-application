@@ -449,7 +449,6 @@ ipcMain.on('addons_list', (event, args) => {
 // Delete addons from DB
 ipcMain.on('delete_addons', (event, args) => {
   let { id } = args;
-  console.log(id);
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM addons WHERE add_on_id = ?`, id, (err) => {
@@ -460,7 +459,6 @@ ipcMain.on('delete_addons', (event, args) => {
         });
     });
   });
-
   db.close();
 });
 
@@ -560,18 +558,26 @@ ipcMain.on('get_food_list', (event, args) => {
         mainWindow.webContents.send('get_food_list_response', rows);
       });
     });
+    db.close()
   }
 })
 
 
-
-
-
-
-
-
-
-
+// Delete food from DB
+ipcMain.on('delete_foods', (event, args) => {
+  let { id } = args
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM item_foods WHERE ProductsID = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send('delete_foods_response', { "status": err })
+        : mainWindow.webContents.send('delete_foods_response', {
+          "status": true,
+        });
+    });
+  });
+  db.close();
+})
 
 
 app.on('window-all-closed', () => {

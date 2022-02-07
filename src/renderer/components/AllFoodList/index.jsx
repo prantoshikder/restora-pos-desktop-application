@@ -32,7 +32,11 @@ const AllFoodList = () => {
 
   window.get_food_list.send('get_food_list', { 'status': true })
 
-  window.get_food_list.once('get_food_list_response', (args)=>{
+  window.get_food_list.once('get_food_list_response', (args) => {
+    console.log(args);
+  })
+
+  window.delete_foods.once('delete_foods_response', (args)=>{
     console.log(args);
   })
 
@@ -166,9 +170,10 @@ const AllFoodList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('foodItem', foodItem);
+        console.log('foodItem', foodItem.key);
+        window.delete_foods.send('delete_foods', { 'id': foodItem.key })
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 

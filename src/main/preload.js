@@ -164,3 +164,22 @@ contextBridge.exposeInMainWorld('get_food_list', {
     }
   },
 });
+
+
+// Delete foods - channel
+contextBridge.exposeInMainWorld('delete_foods', {
+  send: (channel, data) => {
+    let validChannels = ['delete_foods'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_foods_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
