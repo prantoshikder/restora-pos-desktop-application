@@ -1,7 +1,14 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Image, message, Space, Table } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AllFoodList.style.scss';
+
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -74,11 +81,11 @@ const AllFoodList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditFoodItem(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteFoodItem(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -140,22 +147,24 @@ const AllFoodList = () => {
     },
   ];
 
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-  }
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+  let navigate = useNavigate();
+  const handleEditFoodItem = (foodItem) => {
+    console.log('foodItem', foodItem);
+    navigate('/add_food', { state: foodItem });
+  };
+
+  const handleDeleteFoodItem = (foodItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        console.log('foodItem', foodItem);
       },
+      onCancel() {},
     });
-  }
+  };
 
   return (
     <div

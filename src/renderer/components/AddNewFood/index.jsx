@@ -21,7 +21,7 @@ const { Option } = Select;
 
 const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
 
-const AddNewFood = () => {
+const AddNewFood = ({ state }) => {
   const [form] = Form.useForm();
   const format = 'HH:mm';
   const [menuType, setMenuType] = useState([]);
@@ -37,75 +37,75 @@ const AddNewFood = () => {
     setAddNewFood([
       {
         name: ['category_name'],
-        // value: state?.category_name,
+        value: state?.category_name,
       },
       {
         name: ['kitchen_select'],
-        // value: state?.kitchen_select,
+        value: state?.kitchen_select,
       },
       {
         name: ['food_name'],
-        // value: state?.food_name,
+        value: state?.food_name,
       },
       {
         name: ['component'],
-        // value: state?.component,
+        value: state?.component,
       },
       {
         name: ['notes'],
-        // value: state?.notes,
+        value: state?.notes,
       },
       {
         name: ['description'],
-        // value: state?.description,
+        value: state?.description,
       },
       {
         name: ['food_image'],
-        // value: state?.food_image,
+        value: state?.food_image,
       },
       {
         name: ['vat'],
-        // value: state?.vat,
+        value: state?.vat,
       },
       {
         name: ['is_offer'],
-        // value: state?.offer,
+        value: state?.offer,
       },
       {
         name: ['special'],
-        // value: state?.special,
+        value: state?.special,
       },
       {
         name: ['custom_quantity'],
-        // value: state?.custom_quantity,
+        value: state?.custom_quantity,
       },
       {
         name: ['price'],
-        // value: state?.price,
+        value: state?.price,
       },
       {
         name: ['offer_rate'],
-        // value: state?.offer_rate,
+        value: state?.offer_rate,
       },
       {
         name: ['offer_start_date'],
-        // value: state?.offer_start_date,
+        value: state?.offer_start_date,
       },
       {
         name: ['offer_end_date'],
-        // value: state?.offer_end_date,
+        value: state?.offer_end_date,
       },
       {
         name: ['cooking_time'],
-        // value: state?.cooking_time,
+        value: state?.cooking_time,
       },
       {
         name: ['menu_type'],
-        // value: state?.menu_type,
+        value: state?.menu_type,
       },
       {
         name: ['food_status'],
-        // value: state?.food_status,
+        value: state?.food_status,
       },
     ]);
 
