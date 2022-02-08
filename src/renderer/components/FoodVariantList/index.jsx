@@ -1,6 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -16,10 +17,11 @@ import {
   Table,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -42,6 +44,26 @@ const FoodVariantList = () => {
   const [foodName, setFoodName] = useState('');
   const [visible, setVisible] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+
+  const [foodVariant, setFoodVariant] = useState([]);
+  const [updateFoodVariant, setUpdateFoodVariant] = useState({});
+
+  useEffect(() => {
+    setFoodVariant([
+      {
+        name: ['food_name'],
+        value: updateFoodVariant.foodName,
+      },
+      {
+        name: ['food_variant'],
+        value: updateFoodVariant.variantName,
+      },
+      {
+        name: ['food_price'],
+        value: updateFoodVariant.food_price,
+      },
+    ]);
+  }, []);
 
   const columns = [
     {
@@ -104,35 +126,73 @@ const FoodVariantList = () => {
     },
   ];
 
-  function handleEditCategory(record) {
+  const handleEditCategory = (variantItem) => {
     setVisible(true);
-    console.log('Edit', record);
-  }
+    setUpdateFoodVariant(variantItem);
+    console.log('Edit', variantItem);
+  };
 
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+  const handleDeleteCategory = (variantItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        console.log('Delete', variantItem.key);
+        window.delete_foods_variant.send('delete_foods_variant', {
+          id: variantItem.key,
+        });
+
+        window.delete_foods_variant.once(
+          'delete_foods_variant_response',
+          ({ status }) => {
+            if (status) {
+              console.log(status);
+
+              message.success({
+                content: 'Food variant deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
+      onCancel() {},
     });
-  }
-
-  const handleChangeFoodVariant = (foodName) => {
-    console.log('status', foodName);
-    setFoodName(foodName);
   };
 
   const handleReset = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const newFoodVariant = {};
+
+    for (const data of foodVariant) {
+      newFoodVariant[data.name[0]] =
+        typeof data.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
+
+    console.log('newFoodVariant', newFoodVariant);
+
+    newFoodVariant.food_variant_id = state.food_variant_id;
+
+    window.add_new_foods_variant.once(
+      'add_new_foods_variant_response',
+      (args) => {
+        console.log('add food variant', args);
+        setVisible(false);
+        form.resetFields();
+      }
+    );
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -179,36 +239,34 @@ const FoodVariantList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={foodVariant}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setFoodVariant(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                name="foodName"
+                name="food_name"
                 label="Food Name"
                 rules={[
                   { required: true, message: 'Please input your food name!' },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  onChange={handleChangeFoodVariant}
-                  value={foodName}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  <Option value="1">Pizza</Option>
+                  <Option value="2">Dhosa</Option>
+                  <Option value="3">French Fries</Option>
+                  <Option value="4">Chicken Kebab</Option>
+                  <Option value="5">Burger</Option>
                 </Select>
               </Form.Item>
 
               <Form.Item
                 label="Variant Name"
-                name="variantName"
+                name="food_variant"
                 rules={[
                   {
                     required: true,
@@ -221,7 +279,7 @@ const FoodVariantList = () => {
 
               <Form.Item
                 label="Price"
-                name="price"
+                name="food_price"
                 rules={[
                   { required: true, message: 'Please input your price!' },
                 ]}

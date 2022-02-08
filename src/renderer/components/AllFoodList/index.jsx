@@ -3,8 +3,8 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, Modal, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import { Button, Image, message, Modal, Space, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AllFoodList.style.scss';
 
@@ -29,6 +29,31 @@ const rowSelection = {
 const AllFoodList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [foodData, setFoodData] = useState(null);
+
+  window.get_food_list.send('get_food_list', { status: true });
+
+  useEffect(() => {
+    window.get_food_list.once('get_food_list_response', (data) => {
+      const foodLists = data.map((element) => {
+        if (element.ProductsIsActive === 1) {
+          return { ...element, ProductsIsActive: 'Active' };
+        } else {
+          return { ...element, ProductsIsActive: 'Inactive' };
+        }
+
+        // if (element.productvat === '') {
+        //   return { ...element, productvat: '0.00%' };
+        // } else {
+        //   return { ...element, productvat: `${element.productvat} "%"` };
+        // }
+      });
+
+      setFoodData(foodLists);
+    });
+  }, []);
+
+  console.log('foodData', foodData);
 
   const columns = [
     {
@@ -46,33 +71,33 @@ const AllFoodList = () => {
     },
     {
       title: 'Category Name',
-      dataIndex: 'categoryName',
-      key: 'categoryName',
+      dataIndex: 'category_name',
+      key: 'category_name',
       width: '25%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'ProductName',
+      key: 'ProductName',
       width: '20%',
     },
     {
       title: 'Components',
-      dataIndex: 'components',
-      key: 'components',
+      dataIndex: 'component',
+      key: 'component',
       width: '15%',
     },
     {
       title: 'Vat',
-      dataIndex: 'vat',
-      key: 'vat',
+      dataIndex: 'productvat',
+      key: 'productvat',
       width: '10%',
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'ProductsIsActive',
+      key: 'ProductsIsActive',
       width: '15%',
-      key: 'status',
     },
     {
       title: 'Action',
@@ -94,59 +119,6 @@ const AllFoodList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Soup N Salads',
-      foodName: 'Soup (Thai)',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Salad (Thai)',
-      foodName: 'Chicken item',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Prawn & Fish Dishes',
-      foodName: 'indian',
-      components: 'chili, nuts',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Oven Roasted Eggplant',
-      foodName: 'thai',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Maxican spicy',
-      foodName: 'Chicken item',
-      components: 'chili, nuts',
-      vat: '0.00%',
-      status: 'Active',
-    },
-  ];
-
   let navigate = useNavigate();
   const handleEditFoodItem = (foodItem) => {
     console.log('foodItem', foodItem);
@@ -160,7 +132,26 @@ const AllFoodList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('foodItem', foodItem);
+        window.delete_foods.send('delete_foods', { id: foodItem.ProductsID });
+
+        setFoodData(
+          foodData.filter((item) => item.ProductsID !== foodItem.ProductsID)
+        );
+
+        // Delete Food item
+        window.delete_foods.once('delete_foods_response', ({ status }) => {
+          if (status) {
+            message.success({
+              content: 'Food Name deleted successfully',
+              className: 'custom-class',
+              duration: 1,
+              style: {
+                marginTop: '5vh',
+                float: 'right',
+              },
+            });
+          }
+        });
       },
       onCancel() {},
     });
@@ -176,9 +167,9 @@ const AllFoodList = () => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        dataSource={foodData}
         pagination={false}
-        rowKey={(record) => record.key}
+        rowKey={(record) => record.ProductsID}
       />
     </div>
   );

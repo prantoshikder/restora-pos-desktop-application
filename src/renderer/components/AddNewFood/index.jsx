@@ -14,30 +14,33 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddNewFood.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
-
 const AddNewFood = ({ state }) => {
   const [form] = Form.useForm();
   const format = 'HH:mm';
-  const [menuType, setMenuType] = useState([]);
-  const [packageOffer, setPackageOffer] = useState('');
-  const [addNewFood, setAddNewFood] = useState([]);
+  let navigate = useNavigate();
+
+  const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
+  const selectedValue = state?.menutype.split(',');
+
+  console.log('state', state);
+
+  const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
+  const [packageOffer, setPackageOffer] = useState('');
+  const [addNewFood, setAddNewFood] = useState([]);
   const [timePicker, setTimePicker] = useState('');
-  const [parentCategory, setParentCategory] = useState([]);
+  const [menuType, setMenuType] = useState([]);
   const [reUpdate, setReUpdate] = useState(false);
 
-  window.add_new_foods.once('add_new_foods_response', (args)=>{
-    console.log(args);
-  })
-
-
+  const [checkedList, setCheckedList] = useState(selectedValue);
+  const [indeterminate, setIndeterminate] = useState(true);
 
   useEffect(() => {
     setAddNewFood([
@@ -47,11 +50,11 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['kitchen_select'],
-        value: state?.kitchen_select,
+        value: state?.kitchenid,
       },
       {
         name: ['food_name'],
-        value: state?.food_name,
+        value: state?.ProductName,
       },
       {
         name: ['component'],
@@ -59,23 +62,23 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['notes'],
-        value: state?.notes,
+        value: state?.itemnotes,
       },
       {
         name: ['description'],
-        value: state?.description,
+        value: state?.descrip,
       },
       {
         name: ['food_image'],
-        value: state?.food_image,
+        value: state?.ProductImage,
       },
       {
         name: ['vat'],
-        value: state?.vat,
+        value: state?.productvat || '0.00%',
       },
       {
         name: ['is_offer'],
-        value: state?.offer,
+        value: state?.offerIsavailable,
       },
       {
         name: ['special'],
@@ -83,35 +86,31 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['custom_quantity'],
-        value: state?.custom_quantity,
-      },
-      {
-        name: ['price'],
-        value: state?.price,
+        value: state?.is_customqty,
       },
       {
         name: ['offer_rate'],
-        value: state?.offer_rate,
+        value: state?.OffersRate,
       },
-      {
-        name: ['offer_start_date'],
-        value: state?.offer_start_date,
-      },
-      {
-        name: ['offer_end_date'],
-        value: state?.offer_end_date,
-      },
+      // {
+      //   name: ['offer_start_date'],
+      //   value: state?.offerstartdate,
+      // },
+      // {
+      //   name: ['offer_end_date'],
+      //   value: state?.offerendate,
+      // },
       {
         name: ['cooking_time'],
-        value: state?.cooking_time,
+        value: state?.cookedtime,
       },
       {
         name: ['menu_type'],
-        value: state?.menu_type,
+        value: state?.menutype,
       },
       {
         name: ['food_status'],
-        value: state?.food_status,
+        value: state?.ProductsIsActive || 'Active',
       },
     ]);
 
@@ -127,7 +126,7 @@ const AddNewFood = ({ state }) => {
         );
       setParentCategory(categoryFilter);
     });
-  }, []);
+  }, [reUpdate]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -147,6 +146,11 @@ const AddNewFood = ({ state }) => {
 
   const changesMenuType = (checkedValues) => {
     console.log('menuType', checkedValues);
+    setCheckedList(checkedValues);
+    setIndeterminate(
+      !!checkedValues.length && checkedValues.length < plainOptions.length
+    );
+
     setMenuType(checkedValues);
   };
 
@@ -176,6 +180,7 @@ const AddNewFood = ({ state }) => {
 
   const handleReset = () => {
     form.resetFields();
+    setCheckedList('');
 
     message.success({
       content: 'Reset done',
@@ -192,10 +197,15 @@ const AddNewFood = ({ state }) => {
     const newFoods = {};
 
     for (const data of addNewFood) {
-      newFoods[data.name[0]] = data.value;
+      newFoods[data.name[0]] =
+        typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
+    parseInt(newFoods.food_status);
+
     newFoods.food_status === 'Active'
+      ? (newFoods.food_status = 1)
+      : parseInt(newFoods.food_status) === 1
       ? (newFoods.food_status = 1)
       : (newFoods.food_status = 0);
 
@@ -204,6 +214,7 @@ const AddNewFood = ({ state }) => {
     newFoods.cooking_time = timePicker;
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
+    newFoods.ProductsID = state?.ProductsID;
 
     newFoods.custom_quantity === true
       ? (newFoods.custom_quantity = 1)
@@ -215,20 +226,47 @@ const AddNewFood = ({ state }) => {
 
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
-    message.success({
-      content: 'Foods category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-
-    // setReUpdate((prevState) => !prevState);
+    // Insert & update through the same event & channel
+    window.add_new_foods.send('add_new_foods', newFoods);
 
     console.log('newFoods', newFoods);
-    window.add_new_foods.send('add_new_foods', newFoods)
+
+    // Get add food name insert & update response
+    window.add_new_foods.once('add_new_foods_response', ({ status }) => {
+      if (status === 'updated') {
+        console.log('status', status);
+
+        message.success({
+          content: 'Food name has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        navigate('/food_list');
+      } else {
+        setReUpdate((prevState) => !prevState);
+
+        setCheckedList('');
+
+        console.log('status', status);
+
+        message.success({
+          content: 'Foods name added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        form.resetFields();
+      }
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -250,7 +288,16 @@ const AddNewFood = ({ state }) => {
       >
         <Row gutter={40}>
           <Col lg={14}>
-            <Form.Item name="category_name" label="Category">
+            <Form.Item
+              name="category_name"
+              label="Category"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
               <Select placeholder="Select a category" size="large" allowClear>
                 {parentCategory?.map((catItem) => (
                   <Option
@@ -263,7 +310,16 @@ const AddNewFood = ({ state }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item name="kitchen_select" label="Select Kitchen">
+            <Form.Item
+              name="kitchen_select"
+              label="Select Kitchen"
+              rules={[
+                {
+                  required: true,
+                  message: 'Kitchen select is required',
+                },
+              ]}
+            >
               <Select placeholder="Select a kitchen" size="large" allowClear>
                 <Option value="1">Common</Option>
                 <Option value="2">MAIN</Option>
@@ -409,6 +465,7 @@ const AddNewFood = ({ state }) => {
             >
               <Checkbox.Group
                 options={plainOptions}
+                value={checkedList}
                 onChange={changesMenuType}
               />
             </Form.Item>

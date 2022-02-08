@@ -23,7 +23,8 @@ export const getDataFromDatabase = (event, channel) => {
       if (data) {
         resolve(data);
       } else {
-        reject(Error('No settings found'));
+        // reject(Error('No settings found'));
+        console.log('Getting database from error');
       }
     });
   });
@@ -47,7 +48,8 @@ export const insertData = (event, channel) => {
       if (insertCat) {
         resolve(insertCat);
       } else {
-        reject(Error('No settings found'));
+        // reject(Error('No settings found'));
+        console.log('Inserting data error');
       }
     });
   });
@@ -71,7 +73,8 @@ export const deleteData = (event, channel) => {
       if (insertCat) {
         resolve(insertCat);
       } else {
-        reject(Error('No settings found'));
+        // reject(Error('No settings found'));
+        console.log('Deleting data error');
       }
     });
   });

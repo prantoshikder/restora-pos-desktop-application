@@ -98,7 +98,7 @@ contextBridge.exposeInMainWorld('add_addons', {
 });
 
 
-// Addons list - channel
+// get addons list - channel
 contextBridge.exposeInMainWorld('addons_list', {
   send: (channel, data) => {
     let validChannels = ['addons_list'];
@@ -142,6 +142,74 @@ contextBridge.exposeInMainWorld('add_new_foods', {
   },
   once: (channel, func) => {
     let validChannels = ['add_new_foods_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Get food list - channel
+contextBridge.exposeInMainWorld('get_food_list', {
+  send: (channel, data) => {
+    let validChannels = ['get_food_list'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_food_list_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Delete foods - channel
+contextBridge.exposeInMainWorld('delete_foods', {
+  send: (channel, data) => {
+    let validChannels = ['delete_foods'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_foods_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Add foods variant - channel
+contextBridge.exposeInMainWorld('add_new_foods_variant', {
+  send: (channel, data) => {
+    let validChannels = ['add_new_foods_variant'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['add_new_foods_variant_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Delete foods variant - channel
+contextBridge.exposeInMainWorld('delete_foods_variant', {
+  send: (channel, data) => {
+    let validChannels = ['delete_foods_variant'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_foods_variant_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }

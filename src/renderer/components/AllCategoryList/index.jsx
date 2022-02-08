@@ -7,13 +7,13 @@ import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../../../assets/default.jpg';
-import { getDataFromDatabase } from '../../../helpers';
+import { getDataFromDatabase } from './../../../helpers';
 import './AllCategoryList.style.scss';
 
 const { confirm } = Modal;
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {},
+  onChange: (selectedRowKeys, selectedRows) => { },
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
   },
@@ -22,10 +22,17 @@ const rowSelection = {
   },
 };
 
+
+
+
+
 const AllCategoryList = () => {
   // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
   window.parent_category.send('parent_category', { status: true });
+  window.delete_category.once('delete_category_response', (args) => {
+    console.log("Deleted",args);
+  })
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -45,39 +52,23 @@ const AllCategoryList = () => {
               return { ...child_cat };
             }
           });
-
           if (element.parent_id === child_categories[i].parent_id) {
             return {
               ...element,
               parent_category_name: parent.category_name,
             };
           }
-
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
           } else {
             return { ...element, category_is_active: 'Inactive' };
           }
-
           console.log(element);
         });
-
         setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
   }, []);
-
-  function getApplicationSettingsData() {
-    return new Promise((resolve, reject) => {
-      window.get_category.once('sendCategoryData', (categoryLists) => {
-        if (categoryLists) {
-          resolve(categoryLists);
-        } else {
-          reject(Error('No settings found'));
-        }
-      });
-    });
-  }
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
@@ -100,8 +91,18 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
+
+        message.success({
+          content: 'Category deleted successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
