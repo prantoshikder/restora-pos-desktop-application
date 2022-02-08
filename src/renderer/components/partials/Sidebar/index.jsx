@@ -11,10 +11,10 @@ import { Link } from 'react-router-dom';
 import './Sidebar.style.scss';
 
 const { SubMenu } = Menu;
-const rootSubmenuKeys = ['food_management', 'setting', 'report'];
+const rootSubmenuKeys = ['food_management'];
 
-const Sidebar = ({ home }) => {
-  const [openKeys, setOpenKeys] = useState(['home']);
+export const Sidebar = () => {
+  const [openKeys, setOpenKeys] = useState(['food_management']);
 
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -24,6 +24,8 @@ const Sidebar = ({ home }) => {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
   };
+
+  console.log('openKeys', openKeys);
 
   const onClick = (e) => {};
 
@@ -98,7 +100,7 @@ const Sidebar = ({ home }) => {
         </SubMenu>
 
         <SubMenu
-          key="setting"
+          key="application_setting"
           title="Setting"
           icon={<FontAwesomeIcon icon={faCog} />}
         >
