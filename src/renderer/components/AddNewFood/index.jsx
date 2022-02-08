@@ -24,12 +24,14 @@ const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
 const AddNewFood = () => {
   const [form] = Form.useForm();
   const format = 'HH:mm';
-  const [value, setValue] = useState('active');
   const [menuType, setMenuType] = useState([]);
   const [packageOffer, setPackageOffer] = useState('');
   const [addNewFood, setAddNewFood] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
+  const [timePicker, setTimePicker] = useState('');
+  const [parentCategory, setParentCategory] = useState([]);
+  const [reUpdate, setReUpdate] = useState(false);
 
   useEffect(() => {
     setAddNewFood([
@@ -58,8 +60,24 @@ const AddNewFood = () => {
         // value: state?.description,
       },
       {
+        name: ['food_image'],
+        // value: state?.food_image,
+      },
+      {
         name: ['vat'],
         // value: state?.vat,
+      },
+      {
+        name: ['is_offer'],
+        // value: state?.offer,
+      },
+      {
+        name: ['special'],
+        // value: state?.special,
+      },
+      {
+        name: ['custom_quantity'],
+        // value: state?.custom_quantity,
       },
       {
         name: ['price'],
@@ -90,10 +108,20 @@ const AddNewFood = () => {
         // value: state?.food_status,
       },
     ]);
-  }, []);
 
-  // const handleSelectCategory = () => {};
-  // const handleKitchenSelect = () => {};
+    window.parent_category.send('parent_category', { status: true });
+
+    window.parent_category.once('parent_category', (args = []) => {
+      const categoryFilter =
+        Array.isArray(args) &&
+        args?.filter(
+          (category) =>
+            category.category_is_active !== 0 &&
+            category.category_is_active !== null
+        );
+      setParentCategory(categoryFilter);
+    });
+  }, []);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -111,9 +139,6 @@ const AddNewFood = () => {
     return current && current < moment().endOf('day');
   };
 
-  function onChange(checkedValues) {
-    console.log('checked = ', checkedValues);
-  }
   const changesMenuType = (checkedValues) => {
     console.log('menuType', checkedValues);
     setMenuType(checkedValues);
@@ -129,6 +154,10 @@ const AddNewFood = () => {
 
   const handleOfferEnd = (value, stringDate) => {
     setOfferEndDate(stringDate);
+  };
+
+  const handleChangeTime = (time, timeString) => {
+    setTimePicker(timeString);
   };
 
   const customQuantity = (e) => {
@@ -166,8 +195,19 @@ const AddNewFood = () => {
 
     newFoods.offer_start_date = offerStartDate;
     newFoods.offer_end_date = offerEndDate;
+    newFoods.cooking_time = timePicker;
 
     newFoods.menu_type = menuType;
+    newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
+
+    newFoods.custom_quantity === true
+      ? (newFoods.custom_quantity = 1)
+      : (newFoods.custom_quantity = 0);
+
+    newFoods.is_offer === true
+      ? (newFoods.is_offer = 1)
+      : (newFoods.is_offer = 0);
+    newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
     message.success({
       content: 'Foods category added successfully ',
@@ -179,10 +219,10 @@ const AddNewFood = () => {
       },
     });
 
+    // setReUpdate((prevState) => !prevState);
+
     console.log('newFoods', newFoods);
   };
-
-  // console.log('addNewFood', addNewFood);
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -199,36 +239,30 @@ const AddNewFood = () => {
         }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Row gutter={40}>
           <Col lg={14}>
             <Form.Item name="category_name" label="Category">
-              <Select
-                placeholder="Select a category"
-                // onChange={handleSelectCategory}
-                size="large"
-                allowClear
-              >
-                <Option value="lunch_package">Lunch Package</Option>
-                <Option value="japanese">Japanese</Option>
-                <Option value="salad">Salad</Option>
-                <Option value="indian_food">Indian Food</Option>
-                <Option value="dinner_package">Dinner Package</Option>
+              <Select placeholder="Select a category" size="large" allowClear>
+                {parentCategory?.map((catItem) => (
+                  <Option
+                    key={catItem?.category_id}
+                    value={catItem?.category_id}
+                  >
+                    {catItem?.category_name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
 
             <Form.Item name="kitchen_select" label="Select Kitchen">
-              <Select
-                placeholder="Select a kitchen"
-                // onChange={handleKitchenSelect}
-                size="large"
-                allowClear
-              >
-                <Option value="kitchen:1">Common</Option>
-                <Option value="kitchen:2">MAIN</Option>
-                <Option value="kitchen:3">Mexican</Option>
-                <Option value="kitchen:4">Italian</Option>
-                <Option value="kitchen:5">Chinese</Option>
+              <Select placeholder="Select a kitchen" size="large" allowClear>
+                <Option value="1">Common</Option>
+                <Option value="2">MAIN</Option>
+                <Option value="3">Mexican</Option>
+                <Option value="4">Italian</Option>
+                <Option value="5">Chinese</Option>
               </Select>
             </Form.Item>
 
@@ -269,7 +303,7 @@ const AddNewFood = () => {
               <Row gutter={10}>
                 <Col lg={16}>
                   <Form.Item
-                    name="dragger"
+                    name="food_image"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                     noStyle
@@ -305,7 +339,7 @@ const AddNewFood = () => {
             </Form.Item>
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Form.Item valuePropName="checked">
+              <Form.Item valuePropName="checked" name="is_offer">
                 <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
               </Form.Item>
 
@@ -314,7 +348,7 @@ const AddNewFood = () => {
               </Form.Item>
             </div>
 
-            <Form.Item name="customQuantity" valuePropName="checked">
+            <Form.Item name="custom_quantity" valuePropName="checked">
               <Checkbox onChange={customQuantity}>Custom Quantity</Checkbox>
             </Form.Item>
 
@@ -358,7 +392,7 @@ const AddNewFood = () => {
             )}
 
             <Form.Item label="Cooking Time" name="cooking_time">
-              <TimePicker format={format} />
+              <TimePicker onChange={handleChangeTime} format={format} />
             </Form.Item>
 
             <Form.Item
