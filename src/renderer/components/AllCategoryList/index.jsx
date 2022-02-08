@@ -22,6 +22,10 @@ const rowSelection = {
   },
 };
 
+
+
+
+
 const AllCategoryList = () => {
   // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
