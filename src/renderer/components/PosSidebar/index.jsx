@@ -12,8 +12,6 @@ const PosSidebar = ({ direction }) => {
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
-        console.log('data', data);
-
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(

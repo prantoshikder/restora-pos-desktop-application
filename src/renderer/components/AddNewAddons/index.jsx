@@ -60,7 +60,8 @@ const AddNewAddons = ({ state }) => {
     const newAddOns = {};
 
     for (const data of newAddons) {
-      newAddOns[data.name[0]] = data.value;
+      newAddOns[data.name[0]] =
+        typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
     parseInt(newAddOns.is_active);

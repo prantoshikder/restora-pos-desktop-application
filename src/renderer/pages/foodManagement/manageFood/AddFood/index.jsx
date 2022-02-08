@@ -29,7 +29,11 @@ const AddFood = ({ direction }) => {
 
               <Col lg={21}>
                 <div className="flex content_between item_center">
-                  <Heading title="Add Food" />
+                  {state?.ProductsID ? (
+                    <Heading title=" Update Food Name" />
+                  ) : (
+                    <Heading title=" Add Food" />
+                  )}
 
                   <Button
                     type="primary"

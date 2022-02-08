@@ -35,20 +35,23 @@ const AllFoodList = () => {
 
   useEffect(() => {
     window.get_food_list.once('get_food_list_response', (data) => {
-      console.log(data);
       const foodLists = data.map((element) => {
         if (element.ProductsIsActive === 1) {
           return { ...element, ProductsIsActive: 'Active' };
         } else {
           return { ...element, ProductsIsActive: 'Inactive' };
         }
+
+        // if (element.productvat === '') {
+        //   return { ...element, productvat: '0.00%' };
+        // } else {
+        //   return { ...element, productvat: `${element.productvat} "%"` };
+        // }
       });
 
       setFoodData(foodLists);
     });
   }, []);
-
-  console.log('foodData', foodData);
 
   const columns = [
     {
@@ -114,59 +117,6 @@ const AllFoodList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Soup N Salads',
-      foodName: 'Soup (Thai)',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 2,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Salad (Thai)',
-      foodName: 'Chicken item',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 3,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Prawn & Fish Dishes',
-      foodName: 'indian',
-      components: 'chili, nuts',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 4,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Oven Roasted Eggplant',
-      foodName: 'thai',
-      components: '',
-      vat: '0.00%',
-      status: 'Active',
-    },
-    {
-      key: 5,
-      categoryImage:
-        'https://spokeherd.com/wp-content/uploads/2021/06/ingredients-healthy-foods-selection-set-up_35641-3104.jpg',
-      categoryName: 'Maxican spicy',
-      foodName: 'Chicken item',
-      components: 'chili, nuts',
-      vat: '0.00%',
-      status: 'Active',
-    },
-  ];
-
   let navigate = useNavigate();
   const handleEditFoodItem = (foodItem) => {
     console.log('foodItem', foodItem);
@@ -198,7 +148,7 @@ const AllFoodList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={foodData}
         pagination={false}
-        rowKey={(record) => record.key}
+        rowKey={(record) => record.ProductsID}
       />
     </div>
   );

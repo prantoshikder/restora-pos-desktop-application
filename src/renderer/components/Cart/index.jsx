@@ -84,8 +84,6 @@ const Cart = () => {
     // dispatch(newData);
   };
 
-  console.log('cartItems', cartItems);
-
   const decreaseQuantity = (cartData) => {
     const index = cartItems.indexOf(cartData);
 

@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddNewFood.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -24,18 +25,16 @@ const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
 const AddNewFood = ({ state }) => {
   const [form] = Form.useForm();
   const format = 'HH:mm';
-  const [menuType, setMenuType] = useState([]);
-  const [packageOffer, setPackageOffer] = useState('');
-  const [addNewFood, setAddNewFood] = useState([]);
+  let navigate = useNavigate();
+
+  const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
+  const [packageOffer, setPackageOffer] = useState('');
+  const [addNewFood, setAddNewFood] = useState([]);
   const [timePicker, setTimePicker] = useState('');
-  const [parentCategory, setParentCategory] = useState([]);
+  const [menuType, setMenuType] = useState([]);
   const [reUpdate, setReUpdate] = useState(false);
-
-  window.add_new_foods.once('add_new_foods_response', (args) => {
-    console.log('response', args);
-  });
 
   useEffect(() => {
     setAddNewFood([
@@ -49,7 +48,7 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['food_name'],
-        value: state?.food_name,
+        value: state?.ProductName,
       },
       {
         name: ['component'],
@@ -69,7 +68,7 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['vat'],
-        value: state?.vat,
+        value: state?.productvat,
       },
       {
         name: ['is_offer'],
@@ -109,7 +108,7 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['food_status'],
-        value: state?.food_status,
+        value: state?.ProductsIsActive || 'Active',
       },
     ]);
 
@@ -125,7 +124,7 @@ const AddNewFood = ({ state }) => {
         );
       setParentCategory(categoryFilter);
     });
-  }, []);
+  }, [reUpdate]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -190,7 +189,8 @@ const AddNewFood = ({ state }) => {
     const newFoods = {};
 
     for (const data of addNewFood) {
-      newFoods[data.name[0]] = data.value;
+      newFoods[data.name[0]] =
+        typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
     parseInt(newFoods.food_status);
@@ -206,6 +206,7 @@ const AddNewFood = ({ state }) => {
     newFoods.cooking_time = timePicker;
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
+    newFoods.ProductsID = state?.ProductsID;
 
     newFoods.custom_quantity === true
       ? (newFoods.custom_quantity = 1)
@@ -217,20 +218,41 @@ const AddNewFood = ({ state }) => {
 
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
-    message.success({
-      content: 'Foods category added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-
-    // setReUpdate((prevState) => !prevState);
-
-    console.log('newFoods', newFoods);
+    // Insert & update through the same event & channel
     window.add_new_foods.send('add_new_foods', newFoods);
+
+    // Get add food name insert & update response
+    window.add_new_foods.once('add_new_foods_response', ({ status }) => {
+      if (status === 'updated') {
+        console.log('status', status);
+        message.success({
+          content: 'Food name has been updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        navigate('/food_list');
+      } else {
+        setReUpdate((prevState) => !prevState);
+        console.log('status', status);
+
+        message.success({
+          content: 'Foods name added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        form.resetFields();
+      }
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
