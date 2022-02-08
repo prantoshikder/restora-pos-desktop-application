@@ -62,8 +62,6 @@ const AddNewCategory = ({ state }) => {
       },
     ]);
 
-    window.parent_category.send('parent_category', { status: true });
-
     window.parent_category.once('parent_category', (args = []) => {
       const categoryFilter =
         Array.isArray(args) &&
@@ -129,7 +127,11 @@ const AddNewCategory = ({ state }) => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
+    parseInt(newCategory.category_is_active);
+
     newCategory.category_is_active === 'Active'
+      ? (newCategory.category_is_active = 1)
+      : parseInt(newCategory.category_is_active) === 1
       ? (newCategory.category_is_active = 1)
       : (newCategory.category_is_active = 0);
 

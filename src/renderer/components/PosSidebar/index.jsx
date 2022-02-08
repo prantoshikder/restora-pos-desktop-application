@@ -6,13 +6,12 @@ import './PosSidebar.style.scss';
 
 const PosSidebar = ({ direction }) => {
   const [categories, setCategories] = useState([]);
+
   window.get_category.send('sendResponseForCategory', { status: true });
 
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
-        console.log('data', data);
-
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(
@@ -57,7 +56,7 @@ const PosSidebar = ({ direction }) => {
                 <img src="" alt="" />
               ) : (
                 <img
-                  src="https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/2021-12-09/s.jpg"
+                  src="https://i.postimg.cc/bvzKkjn3/image.png"
                   width="20px"
                   height="20px"
                   alt=""
