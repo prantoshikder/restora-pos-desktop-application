@@ -43,6 +43,14 @@ const FoodVariantList = () => {
   const [visible, setVisible] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
+  window.add_new_foods_variant.once('add_new_foods_variant_response', (args)=>{
+    console.log(args);
+  })
+
+  window.delete_foods_variant.once('delete_foods_variant_response', (args)=>{
+    console.log(args);
+  })
+
   const columns = [
     {
       title: 'Variant Name',
@@ -110,7 +118,8 @@ const FoodVariantList = () => {
   }
 
   function handleDeleteCategory(record) {
-    console.log('Delete', record);
+    console.log('Delete', record.key);
+    window.delete_foods_variant.send('delete_foods_variant', {'id': record.key})
     message.success({
       content: 'Foods category added successfully ',
       className: 'custom-class',
@@ -132,6 +141,7 @@ const FoodVariantList = () => {
   };
 
   const handleSubmit = (values) => {
+    window.add_new_foods_variant.send('add_new_foods_variant', values)
     console.log('Success:', values);
   };
 

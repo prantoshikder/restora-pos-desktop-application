@@ -3,7 +3,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, Modal, Space, Table } from 'antd';
+import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AllFoodList.style.scss';
@@ -52,6 +52,8 @@ const AllFoodList = () => {
       setFoodData(foodLists);
     });
   }, []);
+
+  console.log('foodData', foodData);
 
   const columns = [
     {
@@ -130,7 +132,26 @@ const AllFoodList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('foodItem', foodItem);
+        window.delete_foods.send('delete_foods', { id: foodItem.ProductsID });
+
+        setFoodData(
+          foodData.filter((item) => item.ProductsID !== foodItem.ProductsID)
+        );
+
+        // Delete Food item
+        window.delete_foods.once('delete_foods_response', ({ status }) => {
+          if (status) {
+            message.success({
+              content: 'Food Name deleted successfully',
+              className: 'custom-class',
+              duration: 1,
+              style: {
+                marginTop: '5vh',
+                float: 'right',
+              },
+            });
+          }
+        });
       },
       onCancel() {},
     });
