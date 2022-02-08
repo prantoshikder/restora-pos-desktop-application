@@ -196,7 +196,6 @@ const AddNewFood = () => {
     newFoods.offer_start_date = offerStartDate;
     newFoods.offer_end_date = offerEndDate;
     newFoods.cooking_time = timePicker;
-
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
 
@@ -207,6 +206,7 @@ const AddNewFood = () => {
     newFoods.is_offer === true
       ? (newFoods.is_offer = 1)
       : (newFoods.is_offer = 0);
+
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
     message.success({
