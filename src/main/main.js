@@ -488,7 +488,6 @@ ipcMain.on('add_new_foods', (event, args) => {
     db.close();
   }
   else {
-    console.log("else");
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
@@ -504,7 +503,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           'descrip' TEXT,
           'itemnotes' varchar(255),
           'menutype' varchar(25),
-          'productvat' REAL,
+          'productvat' REAL DEFAULT 0.00,
           'special' INT,
           'OffersRate' INT,
           'offerIsavailable' INT,
@@ -547,7 +546,9 @@ ipcMain.on('add_new_foods', (event, args) => {
 // Get all food list from DB
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args
-  let sql = `SELECT item_foods.ProductsID, add_item_category.category_name, item_foods.ProductName, item_foods.component, item_foods.productvat, item_foods.ProductsIsActive
+  let sql = `SELECT item_foods.ProductsID, add_item_category.category_name, item_foods.ProductName, item_foods.ProductImage, item_foods.component, item_foods.descrip, item_foods.itemnotes, item_foods.menutype,
+  item_foods.productvat, item_foods.special, item_foods.OffersRate, item_foods.offerIsavailable, item_foods.offerstartdate, item_foods.offerendate,item_foods.kitchenid, item_foods.productvat, item_foods.ProductsIsActive,
+  item_foods.is_customqty, item_foods.cookedtime, item_foods.ProductsIsActive
   FROM item_foods
   INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`
 
@@ -578,6 +579,71 @@ ipcMain.on('delete_foods', (event, args) => {
   });
   db.close();
 })
+
+
+// Insert and update foods variant
+ipcMain.on('add_new_foods_variant', (event, args) => {
+
+  let { foodName, variantName, price } = args;
+
+  // if (args.add_on_id !== undefined) {
+  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  //   db.serialize(() => {
+  //     db.run(
+  //       `INSERT OR REPLACE INTO variant (menuid, variantName, price)
+  //       VALUES (?, ?, ?)`,
+  //   [foodName, variantName, price],
+  //   (err) => {
+  //     err
+  //       ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+  //       : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
+  //   }
+  //     );
+  //   });
+  //   db.close();
+  // }
+  // else {
+  //   console.log("else");
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS variant (
+          'variantid' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'menuid' INT NOT NULL,
+          'variantName' varchar(120) NOT NULL,
+          'price' REAL NOT NULL
+        )`
+    ).run(
+      `INSERT OR REPLACE INTO variant (menuid, variantName, price)
+          VALUES (?, ?, ?)`,
+      [foodName, variantName, price],
+      (err) => {
+        err
+          ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+          : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
+      }
+    );
+  });
+  db.close();
+  // }
+});
+
+
+// Delete variant from DB
+ipcMain.on('delete_foods_variant', (event, args) => {
+  console.log(args);
+  let { id } = args
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send('delete_foods_variant_response', { "status": err })
+        : mainWindow.webContents.send('delete_foods_variant_response', { "status": true });
+    });
+  });
+  db.close();
+})
+
 
 
 app.on('window-all-closed', () => {

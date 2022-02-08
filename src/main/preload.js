@@ -183,3 +183,35 @@ contextBridge.exposeInMainWorld('delete_foods', {
 });
 
 
+// Add foods variant - channel
+contextBridge.exposeInMainWorld('add_new_foods_variant', {
+  send: (channel, data) => {
+    let validChannels = ['add_new_foods_variant'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['add_new_foods_variant_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Delete foods variant - channel
+contextBridge.exposeInMainWorld('delete_foods_variant', {
+  send: (channel, data) => {
+    let validChannels = ['delete_foods_variant'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_foods_variant_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
