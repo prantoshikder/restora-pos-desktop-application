@@ -13,7 +13,7 @@ import './AllCategoryList.style.scss';
 const { confirm } = Modal;
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {},
+  onChange: (selectedRowKeys, selectedRows) => { },
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
   },
@@ -26,6 +26,9 @@ const AllCategoryList = () => {
   // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
   window.parent_category.send('parent_category', { status: true });
+  window.delete_category.once('delete_category_response', (args) => {
+    console.log("Deleted",args);
+  })
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -101,7 +104,7 @@ const AllCategoryList = () => {
           )
         );
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 

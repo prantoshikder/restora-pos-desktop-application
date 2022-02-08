@@ -373,7 +373,7 @@ ipcMain.on('delete_category', (event, args) => {
           status: err,
         })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
+          status: true
         });
     });
   });
