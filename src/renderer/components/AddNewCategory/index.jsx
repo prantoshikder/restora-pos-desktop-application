@@ -33,9 +33,9 @@ const AddNewCategory = ({ state }) => {
   // Get only 3 columns from the add_item_category table from database
   // category_id, category_name, parent_id
   window.parent_category.send('parent_category', { status: true });
-  window.parent_category.once('parent_category', (args) => {
-    console.log('********** parent cat', args);
-  });
+  // window.parent_category.once('parent_category', (args) => {
+  //   console.log('********** parent cat', args);
+  // });
 
   useEffect(() => {
     setCategories([
@@ -72,8 +72,6 @@ const AddNewCategory = ({ state }) => {
         value: state?.category_is_active || 'Active',
       },
     ]);
-
-    window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args = []) => {
       const categoryFilter =
@@ -139,7 +137,11 @@ const AddNewCategory = ({ state }) => {
       newCategory[data.name[0]] = data.value;
     }
 
+    parseInt(newCategory.category_is_active);
+
     newCategory.category_is_active === 'Active'
+      ? (newCategory.category_is_active = 1)
+      : parseInt(newCategory.category_is_active) === 1
       ? (newCategory.category_is_active = 1)
       : (newCategory.category_is_active = 0);
 

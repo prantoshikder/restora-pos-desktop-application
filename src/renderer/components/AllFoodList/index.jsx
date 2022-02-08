@@ -4,7 +4,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Image, Modal, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AllFoodList.style.scss';
 
@@ -29,12 +29,26 @@ const rowSelection = {
 const AllFoodList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [foodData, setFoodData] = useState(null);
 
-  window.get_food_list.send('get_food_list', { 'status': true })
+  window.get_food_list.send('get_food_list', { status: true });
 
-  window.get_food_list.once('get_food_list_response', (args)=>{
-    console.log(args);
-  })
+  useEffect(() => {
+    window.get_food_list.once('get_food_list_response', (data) => {
+      console.log(data);
+      const foodLists = data.map((element) => {
+        if (element.ProductsIsActive === 1) {
+          return { ...element, ProductsIsActive: 'Active' };
+        } else {
+          return { ...element, ProductsIsActive: 'Inactive' };
+        }
+      });
+
+      setFoodData(foodLists);
+    });
+  }, []);
+
+  console.log('foodData', foodData);
 
   const columns = [
     {
@@ -52,33 +66,33 @@ const AllFoodList = () => {
     },
     {
       title: 'Category Name',
-      dataIndex: 'categoryName',
-      key: 'categoryName',
+      dataIndex: 'category_name',
+      key: 'category_name',
       width: '25%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'ProductName',
+      key: 'ProductName',
       width: '20%',
     },
     {
       title: 'Components',
-      dataIndex: 'components',
-      key: 'components',
+      dataIndex: 'component',
+      key: 'component',
       width: '15%',
     },
     {
       title: 'Vat',
-      dataIndex: 'vat',
-      key: 'vat',
+      dataIndex: 'productvat',
+      key: 'productvat',
       width: '10%',
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'ProductsIsActive',
+      key: 'ProductsIsActive',
       width: '15%',
-      key: 'status',
     },
     {
       title: 'Action',
@@ -182,7 +196,7 @@ const AllFoodList = () => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        dataSource={foodData}
         pagination={false}
         rowKey={(record) => record.key}
       />

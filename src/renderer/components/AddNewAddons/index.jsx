@@ -63,7 +63,11 @@ const AddNewAddons = ({ state }) => {
       newAddOns[data.name[0]] = data.value;
     }
 
+    parseInt(newAddOns.is_active);
+
     newAddOns.is_active === 'Active'
+      ? (newAddOns.is_active = 1)
+      : parseInt(newAddOns.is_active) === 1
       ? (newAddOns.is_active = 1)
       : (newAddOns.is_active = 0);
 

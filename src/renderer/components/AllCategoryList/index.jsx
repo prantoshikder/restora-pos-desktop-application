@@ -7,7 +7,7 @@ import { Button, Image, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../../../assets/default.jpg';
-import { getDataFromDatabase } from '../../../helpers';
+import { getDataFromDatabase } from './../../../helpers';
 import './AllCategoryList.style.scss';
 
 const { confirm } = Modal;
@@ -45,39 +45,23 @@ const AllCategoryList = () => {
               return { ...child_cat };
             }
           });
-
           if (element.parent_id === child_categories[i].parent_id) {
             return {
               ...element,
               parent_category_name: parent.category_name,
             };
           }
-
           if (element.category_is_active === 1) {
             return { ...element, category_is_active: 'Active' };
           } else {
             return { ...element, category_is_active: 'Inactive' };
           }
-
           console.log(element);
         });
-
         setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
   }, []);
-
-  function getApplicationSettingsData() {
-    return new Promise((resolve, reject) => {
-      window.get_category.once('sendCategoryData', (categoryLists) => {
-        if (categoryLists) {
-          resolve(categoryLists);
-        } else {
-          reject(Error('No settings found'));
-        }
-      });
-    });
-  }
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {

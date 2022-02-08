@@ -33,11 +33,9 @@ const AddNewFood = ({ state }) => {
   const [parentCategory, setParentCategory] = useState([]);
   const [reUpdate, setReUpdate] = useState(false);
 
-  window.add_new_foods.once('add_new_foods_response', (args)=>{
-    console.log(args);
-  })
-
-
+  window.add_new_foods.once('add_new_foods_response', (args) => {
+    console.log('response', args);
+  });
 
   useEffect(() => {
     setAddNewFood([
@@ -195,7 +193,11 @@ const AddNewFood = ({ state }) => {
       newFoods[data.name[0]] = data.value;
     }
 
+    parseInt(newFoods.food_status);
+
     newFoods.food_status === 'Active'
+      ? (newFoods.food_status = 1)
+      : parseInt(newFoods.food_status) === 1
       ? (newFoods.food_status = 1)
       : (newFoods.food_status = 0);
 
@@ -228,7 +230,7 @@ const AddNewFood = ({ state }) => {
     // setReUpdate((prevState) => !prevState);
 
     console.log('newFoods', newFoods);
-    window.add_new_foods.send('add_new_foods', newFoods)
+    window.add_new_foods.send('add_new_foods', newFoods);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -250,7 +252,16 @@ const AddNewFood = ({ state }) => {
       >
         <Row gutter={40}>
           <Col lg={14}>
-            <Form.Item name="category_name" label="Category">
+            <Form.Item
+              name="category_name"
+              label="Category"
+              rules={[
+                {
+                  required: true,
+                  message: 'Category name is required',
+                },
+              ]}
+            >
               <Select placeholder="Select a category" size="large" allowClear>
                 {parentCategory?.map((catItem) => (
                   <Option
@@ -263,7 +274,16 @@ const AddNewFood = ({ state }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item name="kitchen_select" label="Select Kitchen">
+            <Form.Item
+              name="kitchen_select"
+              label="Select Kitchen"
+              rules={[
+                {
+                  required: true,
+                  message: 'Kitchen select is required',
+                },
+              ]}
+            >
               <Select placeholder="Select a kitchen" size="large" allowClear>
                 <Option value="1">Common</Option>
                 <Option value="2">MAIN</Option>
