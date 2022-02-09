@@ -40,13 +40,15 @@ const AllCategoryList = () => {
       getDataFromDatabase('sendCategoryData', window.get_category),
     ])
       .then(([child_categories, allCategories]) => {
-        console.log(child_categories);
-
-        const categoryLists = allCategories.map((element, i) => {
+        function getParentCategoryName(element) {
           const parentCatName = child_categories.find(
-            (item) => item.parent_id === element.category_id
+            (item) => element.category_id === item.parent_id
           );
           console.log(parentCatName);
+        }
+
+        const categoryLists = allCategories.map((element, i) => {
+          getParentCategoryName(element);
 
           // 1 represents Active & 0 represents Inactive
           // We only show the active items but it is category lists that's why we show all
