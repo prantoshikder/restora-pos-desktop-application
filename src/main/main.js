@@ -278,12 +278,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -325,12 +325,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -365,11 +365,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -390,8 +390,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -415,8 +415,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -450,8 +450,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -510,7 +510,9 @@ ipcMain.on('add_new_foods', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
-            : mainWindow.webContents.send('add_new_foods_response', { status: 'updated' });
+            : mainWindow.webContents.send('add_new_foods_response', {
+                status: 'updated',
+              });
         }
       );
     });
@@ -579,8 +581,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -617,8 +619,8 @@ ipcMain.on('delete_foods', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -662,12 +664,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
       (err) => {
         err
           ? mainWindow.webContents.send(
-            'add_new_foods_variant_response',
-            err.message
-          )
+              'add_new_foods_variant_response',
+              err.message
+            )
           : mainWindow.webContents.send('add_new_foods_variant_response', {
-            status: 'inserted',
-          });
+              status: 'inserted',
+            });
       }
     );
   });
@@ -684,11 +686,11 @@ ipcMain.on('delete_foods_variant', (event, args) => {
     db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_variant_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_foods_variant_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();

@@ -37,30 +37,27 @@ const AllCategoryList = () => {
       getDataFromDatabase('sendCategoryData', window.get_category),
     ])
       .then(([child_categories, allCategories]) => {
+        function getParentCategoryName(element) {
+          const parentCatName = child_categories.find(
+            (item) => element.category_id === item.parent_id
+          );
+          console.log(parentCatName);
+        }
+
         const categoryLists = allCategories.map((element, i) => {
-          const child_categories_arr = child_categories.map((child_cat) => {
-            if (child_cat.parent_id === null) {
-              return { ...child_cat, parent_id: '' };
-            } else {
-              return { ...child_cat };
-            }
-          });
+          getParentCategoryName(element);
 
-          if (element.parent_id === child_categories[i].parent_id) {
-            return {
-              ...element,
-              parent_category_name: parent.category_name,
-            };
-          }
-
+          // 1 represents Active & 0 represents Inactive
+          // We only show the active items but it is category lists that's why we show all
           if (element.category_is_active === 1) {
-            return { ...element, category_is_active: 'Active' };
+            element.category_is_active = 'Active';
           } else {
-            return { ...element, category_is_active: 'Inactive' };
+            element.category_is_active = 'Inactive';
           }
         });
 
-        setCategories(categoryLists);
+        console.log(allCategories);
+        setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
   }, []);
