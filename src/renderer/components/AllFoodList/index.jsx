@@ -35,6 +35,7 @@ const AllFoodList = () => {
 
   useEffect(() => {
     window.get_food_list.once('get_food_list_response', (data) => {
+      console.log('data', data);
       const foodLists = data.map((element) => {
         if (element.ProductsIsActive === 1) {
           return { ...element, ProductsIsActive: 'Active' };
@@ -52,8 +53,6 @@ const AllFoodList = () => {
       setFoodData(foodLists);
     });
   }, []);
-
-  console.log('foodData', foodData);
 
   const columns = [
     {

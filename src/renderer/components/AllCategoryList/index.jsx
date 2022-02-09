@@ -3,7 +3,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Image, Modal, Space, Table } from 'antd';
+import { Button, Image, message, Modal, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../../../assets/default.jpg';
@@ -26,9 +26,6 @@ const AllCategoryList = () => {
   // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
   window.parent_category.send('parent_category', { status: true });
-  window.delete_category.once('delete_category_response', (args) => {
-    console.log('Deleted', args);
-  });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -87,15 +84,22 @@ const AllCategoryList = () => {
           )
         );
 
-        message.success({
-          content: 'Category deleted successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
+        window.delete_category.once(
+          'delete_category_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Category deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
       onCancel() {},
     });
