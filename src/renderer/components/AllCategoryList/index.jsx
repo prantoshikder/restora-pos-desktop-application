@@ -60,8 +60,6 @@ const AllCategoryList = () => {
           }
         });
 
-        console.log('categoryLists', categoryLists);
-
         setCategories(categoryLists);
       })
       .catch((err) => console.log('error', err));
