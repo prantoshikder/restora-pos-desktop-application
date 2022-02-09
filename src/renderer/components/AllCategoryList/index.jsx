@@ -84,6 +84,16 @@ const AllCategoryList = () => {
             (item) => item.category_id !== categoryItem.category_id
           )
         );
+
+        message.success({
+          content: 'Category deleted successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
       },
       onCancel() {},
     });

@@ -7,19 +7,14 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 
-
 var dbPath = app.getPath('userData');
 
-
-
 export default class AppUpdater {
-
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
-
 }
 
 let mainWindow;
@@ -283,12 +278,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -330,12 +325,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -370,11 +365,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -395,8 +390,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -420,8 +415,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -455,18 +450,35 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
 });
 
-
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
   console.log(args);
-  let { category_name, kitchen_select, food_name, component, notes, description, food_image, vat, is_offer, special, custom_quantity, cooking_time, menu_type, food_status, offer_rate, offer_start_date, offer_end_date } = args;
+  let {
+    category_name,
+    kitchen_select,
+    food_name,
+    component,
+    notes,
+    description,
+    food_image,
+    vat,
+    is_offer,
+    special,
+    custom_quantity,
+    cooking_time,
+    menu_type,
+    food_status,
+    offer_rate,
+    offer_start_date,
+    offer_end_date,
+  } = args;
 
   if (args.add_on_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -475,19 +487,36 @@ ipcMain.on('add_new_foods', (event, args) => {
         `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
           offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [category_name, food_name, food_image, component, description, notes, menu_type, vat, special, offer_rate, is_offer, offer_start_date, offer_end_date, kitchen_select, custom_quantity, cooking_time, food_status],
+        [
+          category_name,
+          food_name,
+          food_image,
+          component,
+          description,
+          notes,
+          menu_type,
+          vat,
+          special,
+          offer_rate,
+          is_offer,
+          offer_start_date,
+          offer_end_date,
+          kitchen_select,
+          custom_quantity,
+          cooking_time,
+          food_status,
+        ],
         (err) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
     db.close();
-  }
-  else {
+  } else {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
@@ -528,13 +557,31 @@ ipcMain.on('add_new_foods', (event, args) => {
         `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
           offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [category_name, food_name, food_image, component, description, notes, menu_type, vat, special, offer_rate, is_offer, offer_start_date, offer_end_date, kitchen_select, custom_quantity, cooking_time, food_status],
+        [
+          category_name,
+          food_name,
+          food_image,
+          component,
+          description,
+          notes,
+          menu_type,
+          vat,
+          special,
+          offer_rate,
+          is_offer,
+          offer_start_date,
+          offer_end_date,
+          kitchen_select,
+          custom_quantity,
+          cooking_time,
+          food_status,
+        ],
         (err) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -542,15 +589,14 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 });
 
-
 // Get all food list from DB
 ipcMain.on('get_food_list', (event, args) => {
-  let { status } = args
+  let { status } = args;
   let sql = `SELECT item_foods.ProductsID, add_item_category.category_name, item_foods.ProductName, item_foods.ProductImage, item_foods.component, item_foods.descrip, item_foods.itemnotes, item_foods.menutype,
   item_foods.productvat, item_foods.special, item_foods.OffersRate, item_foods.offerIsavailable, item_foods.offerstartdate, item_foods.offerendate,item_foods.kitchenid, item_foods.productvat, item_foods.ProductsIsActive,
   item_foods.is_customqty, item_foods.cookedtime, item_foods.ProductsIsActive
   FROM item_foods
-  INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`
+  INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -559,31 +605,28 @@ ipcMain.on('get_food_list', (event, args) => {
         mainWindow.webContents.send('get_food_list_response', rows);
       });
     });
-    db.close()
+    db.close();
   }
-})
-
+});
 
 // Delete food from DB
 ipcMain.on('delete_foods', (event, args) => {
-  let { id } = args
+  let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM item_foods WHERE ProductsID = ?`, id, (err) => {
       err
-        ? mainWindow.webContents.send('delete_foods_response', { "status": err })
+        ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
-          "status": true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
-})
-
+});
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-
   let { foodName, variantName, price } = args;
 
   // if (args.add_on_id !== undefined) {
@@ -619,8 +662,13 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
       [foodName, variantName, price],
       (err) => {
         err
-          ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-          : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
+          ? mainWindow.webContents.send(
+              'add_new_foods_variant_response',
+              err.message
+            )
+          : mainWindow.webContents.send('add_new_foods_variant_response', {
+              status: 'inserted',
+            });
       }
     );
   });
@@ -628,23 +676,24 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   // }
 });
 
-
 // Delete variant from DB
 ipcMain.on('delete_foods_variant', (event, args) => {
   console.log(args);
-  let { id } = args
+  let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
       err
-        ? mainWindow.webContents.send('delete_foods_variant_response', { "status": err })
-        : mainWindow.webContents.send('delete_foods_variant_response', { "status": true });
+        ? mainWindow.webContents.send('delete_foods_variant_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_foods_variant_response', {
+            status: true,
+          });
     });
   });
   db.close();
-})
-
-
+});
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
