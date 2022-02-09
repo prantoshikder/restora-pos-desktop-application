@@ -207,7 +207,7 @@ const FoodVariantList = () => {
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >
-        <div className="d-flex justify-content_end mb-3">
+        <div className="flex content_end content_center mb-3">
           <Button
             type="primary"
             className="bulk_upload_btn"

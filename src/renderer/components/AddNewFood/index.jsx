@@ -28,8 +28,6 @@ const AddNewFood = ({ state }) => {
   const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
   const selectedValue = state?.menutype.split(',');
 
-  console.log('state', state);
-
   const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
@@ -216,6 +214,10 @@ const AddNewFood = ({ state }) => {
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
     newFoods.ProductsID = state?.ProductsID;
 
+    if (state?.CategoryID) {
+      newFoods.category_name = state?.CategoryID;
+    }
+
     newFoods.custom_quantity === true
       ? (newFoods.custom_quantity = 1)
       : (newFoods.custom_quantity = 0);
@@ -228,8 +230,6 @@ const AddNewFood = ({ state }) => {
 
     // Insert & update through the same event & channel
     window.add_new_foods.send('add_new_foods', newFoods);
-
-    console.log('newFoods', newFoods);
 
     // Get add food name insert & update response
     window.add_new_foods.once('add_new_foods_response', ({ status }) => {
