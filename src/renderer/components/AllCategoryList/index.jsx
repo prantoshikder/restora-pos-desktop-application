@@ -32,31 +32,26 @@ const AllCategoryList = () => {
   const [parentCategory, setParentCategory] = useState(null);
 
   useEffect(() => {
-    Promise.all([
-      getDataFromDatabase('parent_category', window.parent_category),
-      getDataFromDatabase('sendCategoryData', window.get_category),
-    ])
-      .then(([child_categories, allCategories]) => {
-        function getParentCategoryName(element) {
-          const parentCatName = child_categories.find(
-            (item) => element.category_id === item.parent_id
+    getDataFromDatabase('sendCategoryData', window.get_category)
+      .then((allCategories) => {
+        const categoryLists = allCategories.map((categoryObj, i) => {
+          // Find the parent cateogry Object
+          const getParentCategory = allCategories.find(
+            (item) => item.category_id === categoryObj.parent_id
           );
-          console.log(parentCatName);
-        }
 
-        const categoryLists = allCategories.map((element, i) => {
-          getParentCategoryName(element);
+          // Assign the parent category name into a new property
+          categoryObj.parent_category_name = getParentCategory?.category_name;
 
           // 1 represents Active & 0 represents Inactive
           // We only show the active items but it is category lists that's why we show all
-          if (element.category_is_active === 1) {
-            element.category_is_active = 'Active';
+          if (categoryObj.category_is_active === 1) {
+            categoryObj.category_is_active = 'Active';
           } else {
-            element.category_is_active = 'Inactive';
+            categoryObj.category_is_active = 'Inactive';
           }
         });
 
-        console.log(allCategories);
         setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
