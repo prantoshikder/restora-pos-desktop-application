@@ -13,7 +13,7 @@ import './AllCategoryList.style.scss';
 const { confirm } = Modal;
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => { },
+  onChange: (selectedRowKeys, selectedRows) => {},
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
   },
@@ -22,17 +22,13 @@ const rowSelection = {
   },
 };
 
-
-
-
-
 const AllCategoryList = () => {
   // Send request to the main
   window.get_category.send('sendResponseForCategory', { status: true });
   window.parent_category.send('parent_category', { status: true });
   window.delete_category.once('delete_category_response', (args) => {
-    console.log("Deleted",args);
-  })
+    console.log('Deleted', args);
+  });
 
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [categories, setCategories] = useState(null);
@@ -44,27 +40,24 @@ const AllCategoryList = () => {
       getDataFromDatabase('sendCategoryData', window.get_category),
     ])
       .then(([child_categories, allCategories]) => {
+        console.log(child_categories);
+
         const categoryLists = allCategories.map((element, i) => {
-          const child_categories_arr = child_categories.map((child_cat) => {
-            if (child_cat.parent_id === null) {
-              return { ...child_cat, parent_id: '' };
-            } else {
-              return { ...child_cat };
-            }
-          });
-          if (element.parent_id === child_categories[i].parent_id) {
-            return {
-              ...element,
-              parent_category_name: parent.category_name,
-            };
-          }
+          const parentCatName = child_categories.find(
+            (item) => item.parent_id === element.category_id
+          );
+          console.log(parentCatName);
+
+          // 1 represents Active & 0 represents Inactive
+          // We only show the active items but it is category lists that's why we show all
           if (element.category_is_active === 1) {
-            return { ...element, category_is_active: 'Active' };
+            element.category_is_active = 'Active';
           } else {
-            return { ...element, category_is_active: 'Inactive' };
+            element.category_is_active = 'Inactive';
           }
-          console.log(element);
         });
+
+        console.log(allCategories);
         setCategories(allCategories);
       })
       .catch((err) => console.log('error', err));
@@ -102,7 +95,7 @@ const AllCategoryList = () => {
           },
         });
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
