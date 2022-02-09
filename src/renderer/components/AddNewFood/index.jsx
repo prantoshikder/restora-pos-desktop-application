@@ -227,9 +227,10 @@ const AddNewFood = ({ state }) => {
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
     // Insert & update through the same event & channel
-    window.add_new_foods.send('add_new_foods', newFoods);
-
     console.log('newFoods', newFoods);
+    return;
+
+    window.add_new_foods.send('add_new_foods', newFoods);
 
     // Get add food name insert & update response
     window.add_new_foods.once('add_new_foods_response', ({ status }) => {
