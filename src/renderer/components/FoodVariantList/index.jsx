@@ -53,7 +53,7 @@ const FoodVariantList = () => {
   const [foodVariant, setFoodVariant] = useState([]);
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
   const [foodVariantList, setFoodVariantList] = useState(null);
-  const [reUpdate, setReUpdate] = useState(false);
+  const [ReRender, setReRender] = useState(false);
 
   useEffect(() => {
     // Get active food name
@@ -71,7 +71,6 @@ const FoodVariantList = () => {
     // Get food variant data
     window.variant_lists_channel.once('variant_lists_response', (args) => {
       setFoodVariantList(args);
-      console.log('variant_lists_response', args);
     });
 
     setFoodVariant([
@@ -88,7 +87,7 @@ const FoodVariantList = () => {
         value: updateFoodVariant?.price,
       },
     ]);
-  }, [reUpdate]);
+  }, [ReRender]);
 
   const columns = [
     {
@@ -127,10 +126,8 @@ const FoodVariantList = () => {
   const handleEditCategory = (variantItem) => {
     setVisible(true);
     setUpdateFoodVariant(variantItem);
-    console.log('Edit', variantItem);
+    setReRender((prevState) => !prevState);
   };
-
-  console.log('updateFoodVariant', updateFoodVariant);
 
   const handleDeleteCategory = (variantItem) => {
     confirm({
@@ -183,7 +180,6 @@ const FoodVariantList = () => {
     }
 
     newFoodVariant.variant_id = updateFoodVariant.variant_id;
-    console.log('newFoodVariant', newFoodVariant);
 
     // Insert & update
     window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
@@ -193,7 +189,6 @@ const FoodVariantList = () => {
       'add_new_foods_variant_response',
       (args) => {
         if (args === 'update') {
-          console.log(args);
           message.success({
             content: 'Food variant deleted successfully',
             className: 'custom-class',
@@ -206,7 +201,7 @@ const FoodVariantList = () => {
 
           setVisible(false);
         } else {
-          setReUpdate((prevState) => !prevState);
+          setReRender((prevState) => !prevState);
 
           message.success({
             content: 'Food variant deleted successfully',

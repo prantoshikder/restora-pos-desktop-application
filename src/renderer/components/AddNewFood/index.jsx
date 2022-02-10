@@ -35,7 +35,7 @@ const AddNewFood = ({ state }) => {
   const [addNewFood, setAddNewFood] = useState([]);
   const [timePicker, setTimePicker] = useState('');
   const [menuType, setMenuType] = useState([]);
-  const [reUpdate, setReUpdate] = useState(false);
+  const [ReRender, setReRender] = useState(false);
 
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
@@ -124,7 +124,7 @@ const AddNewFood = ({ state }) => {
         );
       setParentCategory(categoryFilter);
     });
-  }, [reUpdate]);
+  }, [ReRender]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -248,7 +248,7 @@ const AddNewFood = ({ state }) => {
 
         navigate('/food_list');
       } else {
-        setReUpdate((prevState) => !prevState);
+        setReRender((prevState) => !prevState);
 
         setCheckedList('');
 
