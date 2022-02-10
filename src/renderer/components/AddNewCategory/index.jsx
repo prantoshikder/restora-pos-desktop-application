@@ -77,7 +77,6 @@ const AddNewCategory = ({ state }) => {
         }
       });
 
-      console.log(categories);
       setParentCategory(categories);
     });
   }, [reUpdate]);

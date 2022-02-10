@@ -40,10 +40,11 @@ const rowSelection = {
 };
 
 const FoodVariantList = () => {
+  // Food variant
   window.food_lists_channel.send('food_lists_channel', { status: true });
 
   const [form] = Form.useForm();
-  const [foodName, setFoodName] = useState('');
+  const [foodName, setFoodName] = useState(null);
   const [visible, setVisible] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
@@ -51,13 +52,21 @@ const FoodVariantList = () => {
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
 
   useEffect(() => {
+    // Get active & inactive food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
-      console.log('food lists', args);
+      const foodNameList =
+        Array.isArray(args) &&
+        args?.filter(
+          (foodItem) =>
+            foodItem.ProductsIsActive !== 0 &&
+            foodItem.ProductsIsActive !== null
+        );
+      setFoodName(foodNameList);
     });
 
     setFoodVariant([
       {
-        name: ['food_name'],
+        name: ['food_id'],
         value: updateFoodVariant.foodName,
       },
       {
@@ -255,18 +264,21 @@ const FoodVariantList = () => {
               layout="vertical"
             >
               <Form.Item
-                name="food_name"
+                name="food_id"
                 label="Food Name"
                 rules={[
                   { required: true, message: 'Please input your food name!' },
                 ]}
               >
                 <Select placeholder="Select Option" size="large" allowClear>
-                  <Option value="1">Pizza</Option>
-                  <Option value="2">Dhosa</Option>
-                  <Option value="3">French Fries</Option>
-                  <Option value="4">Chicken Kebab</Option>
-                  <Option value="5">Burger</Option>
+                  {foodName?.map((foodName) => (
+                    <Option
+                      key={foodName?.ProductsID}
+                      value={foodName?.ProductsID}
+                    >
+                      {foodName?.ProductName}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
