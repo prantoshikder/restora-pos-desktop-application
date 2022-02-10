@@ -641,53 +641,52 @@ ipcMain.on('food_lists_channel', (event, args) => {
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-  console.log(args);
   let { food_id, food_variant, food_price } = args;
-  // if (args.add_on_id !== undefined) {
-  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  //   db.serialize(() => {
-  //     db.run(
-  //       `INSERT OR REPLACE INTO variant (menuid, variantName, price)
-  //       VALUES (?, ?, ?)`,
-  //   [foodName, variantName, price],
-  //   (err) => {
-  //     err
-  //       ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-  //       : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
-  //   }
-  //     );
-  //   });
-  //   db.close();
-  // }
-  // else {
-  //   console.log("else");
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS variants (
+
+  if (args.variant_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO variants (variant_id, food_id, variant_name, price)
+        VALUES (?, ?, ?, ?)`,
+        [args.variant_id, food_id, food_variant, Number(food_price)]
+        (err) => {
+          err
+            ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+            : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'updated' });
+        }
+      );
+    });
+    db.close();
+  } else {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS variants (
           'variant_id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'food_id' INT,
           'variant_name' varchar(255),
           'price' REAL
         )`
-    ).run(
-      `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
+      ).run(
+        `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
           VALUES (?, ?, ?)`,
-      [food_id, food_variant, parseInt(food_price)],
-      (err) => {
-        err
-          ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
-          : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'inserted',
-            });
-      }
-    );
-  });
-  db.close();
-  // }
+        [food_id, food_variant, Number(food_price)],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'add_new_foods_variant_response',
+                err.message
+              )
+            : mainWindow.webContents.send('add_new_foods_variant_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
+  }
 });
 
 // get all variant list from DB
