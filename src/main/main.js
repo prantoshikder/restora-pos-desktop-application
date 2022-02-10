@@ -101,6 +101,7 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
+
 // Get parent category data
 ipcMain.on('parent_category', (event, args) => {
   if (args.status) {
@@ -245,7 +246,9 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
   }
 });
 
-// Insert Category item data
+
+
+// Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
   let {
     category_name,
@@ -339,7 +342,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
   db.close();
 });
 
-// Send category item data
+// Get all category list
 ipcMain.on('sendResponseForCategory', (event, args) => {
   let { status } = args;
 
@@ -376,7 +379,9 @@ ipcMain.on('delete_category', (event, args) => {
   db.close();
 });
 
-// Insert and update addons data to db
+
+
+// Insert and update addons data
 ipcMain.on('add_addons', (event, args) => {
   let { add_on_name, price, is_active } = args;
 
@@ -424,7 +429,7 @@ ipcMain.on('add_addons', (event, args) => {
   }
 });
 
-// Get all addons from DB
+// Get all addons list
 ipcMain.on('addons_list', (event, args) => {
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   let { status } = args;
@@ -441,7 +446,7 @@ ipcMain.on('addons_list', (event, args) => {
   db.close();
 });
 
-// Delete addons from DB
+// Delete addons data
 ipcMain.on('delete_addons', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -457,7 +462,9 @@ ipcMain.on('delete_addons', (event, args) => {
   db.close();
 });
 
-// Insert and update foods to DB
+
+
+// Insert and update foods
 ipcMain.on('add_new_foods', (event, args) => {
   console.log(args);
   let {
@@ -588,7 +595,7 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 });
 
-// Get all food list from DB
+// Get all foods list
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args;
   let sql = `SELECT item_foods.ProductsID, item_foods.CategoryID, add_item_category.category_name, item_foods.ProductName, item_foods.ProductImage, item_foods.component, item_foods.descrip, item_foods.itemnotes, item_foods.menutype,
@@ -608,7 +615,7 @@ ipcMain.on('get_food_list', (event, args) => {
   }
 });
 
-// Delete food from DB
+// Delete food
 ipcMain.on('delete_foods', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -624,9 +631,12 @@ ipcMain.on('delete_foods', (event, args) => {
   db.close();
 });
 
+
+
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
   let { foodName, variantName, price } = args;
+  console.log(foodName);
 
   // if (args.add_on_id !== undefined) {
   //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -646,32 +656,35 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   // }
   // else {
   //   console.log("else");
+
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
       `CREATE TABLE IF NOT EXISTS variant (
           'variantid' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'menuid' INT NOT NULL,
-          'variantName' varchar(120) NOT NULL,
-          'price' REAL NOT NULL
+          'menuid' INT,
+          'variantName' varchar(120),
+          'price' REAL
         )`
     ).run(
       `INSERT OR REPLACE INTO variant (menuid, variantName, price)
           VALUES (?, ?, ?)`,
       [foodName, variantName, price],
       (err) => {
-        err
-          ? mainWindow.webContents.send(
-            'add_new_foods_variant_response',
-            err.message
-          )
-          : mainWindow.webContents.send('add_new_foods_variant_response', {
-            status: 'inserted',
-          });
+        console.log("Varient err: ", err);
+        // err
+        //   ? mainWindow.webContents.send(
+        //     'add_new_foods_variant_response',
+        //     err.message
+        //   )
+        //   : mainWindow.webContents.send('add_new_foods_variant_response', {
+        //     status: 'inserted',
+        //   });
       }
     );
   });
   db.close();
+
   // }
 });
 
@@ -683,12 +696,8 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   db.serialize(() => {
     db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
       err
-        ? mainWindow.webContents.send('delete_foods_variant_response', {
-          status: err,
-        })
-        : mainWindow.webContents.send('delete_foods_variant_response', {
-          status: true,
-        });
+        ? mainWindow.webContents.send('delete_foods_variant_response', { status: err })
+        : mainWindow.webContents.send('delete_foods_variant_response', { status: true });
     });
   });
   db.close();
