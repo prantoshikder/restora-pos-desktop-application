@@ -13,10 +13,6 @@ const FoodItem = ({ item }) => {
       e.currentTarget.style.border = '2px solid #297600';
       setCartItems([...cartItems, item]);
     } else {
-      console.log('item', item);
-
-      // const [filterItem] = cartItems.filter((cartId) => cartId.id === item.id);
-
       if (item.id) {
         message.info({
           content: 'Item already added',
@@ -26,12 +22,6 @@ const FoodItem = ({ item }) => {
             float: 'right',
           },
         });
-
-        // console.log('item.quantity', item.quantity + 1);
-
-        // let itemQuantity = item.quantity + 1;
-
-        // console.log({ ...item, quantity: itemQuantity++ });
       }
       // item.isSelected = false;
       // e.currentTarget.style.border = '';

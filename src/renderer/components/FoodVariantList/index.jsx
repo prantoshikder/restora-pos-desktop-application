@@ -183,7 +183,7 @@ const FoodVariantList = () => {
 
     console.log('newFoodVariant', newFoodVariant);
 
-    newFoodVariant.food_variant_id = state.food_variant_id;
+    newFoodVariant.food_variant_id = updateFoodVariant.food_variant_id;
 
     window.add_new_foods_variant.once(
       'add_new_foods_variant_response',
@@ -207,7 +207,7 @@ const FoodVariantList = () => {
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >
-        <div className="flex content_end content_center mb-3">
+        <div className="flex content_end mb-3">
           <Button
             type="primary"
             className="bulk_upload_btn"
