@@ -40,8 +40,9 @@ const rowSelection = {
 };
 
 const FoodVariantList = () => {
-  // Food list
+  // Food name list
   window.food_lists_channel.send('food_lists_channel', { status: true });
+
   // Variant list
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
 
@@ -185,7 +186,6 @@ const FoodVariantList = () => {
 
     if (updateFoodVariant.food_id) {
       newFoodVariant.food_id = updateFoodVariant.food_id;
-      console.log('updateFoodVariant.food_id', updateFoodVariant.food_id);
     }
 
     console.log('newFoodVariant', newFoodVariant);
@@ -242,7 +242,7 @@ const FoodVariantList = () => {
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >
-        <div className="flex content_end mb-3">
+        <div className="flex  mb-3">
           <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Variant
