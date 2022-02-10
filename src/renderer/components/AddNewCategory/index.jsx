@@ -28,7 +28,7 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
-  const [reUpdate, setReUpdate] = useState(false);
+  const [ReRender, setReRender] = useState(false);
 
   // Get only 3 columns from the add_item_category table from database
   // category_id, category_name, parent_id
@@ -79,7 +79,7 @@ const AddNewCategory = ({ state }) => {
 
       setParentCategory(categories);
     });
-  }, [reUpdate]);
+  }, [ReRender]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -164,7 +164,7 @@ const AddNewCategory = ({ state }) => {
 
         navigate('/category_list');
       } else {
-        setReUpdate((prevState) => !prevState);
+        setReRender((prevState) => !prevState);
 
         message.success({
           content: 'Food category added successfully',
