@@ -483,8 +483,7 @@ ipcMain.on('add_new_foods', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO item_foods (ProductsID, CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
-          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+        `INSERT OR REPLACE INTO item_foods (ProductsID, CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable, offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           args.ProductsID,
@@ -728,6 +727,70 @@ ipcMain.on('delete_foods_variant', (event, args) => {
     });
   });
   db.close();
+});
+
+// Insert Food availability data
+// Insert and update foods variant
+ipcMain.on('add_food_available_day_time', (event, args) => {
+  console.log('args food available', args);
+  let { food_id, avail_day, avail_time, is_active } = args;
+
+  // available_id
+
+  // if (args.variant_id !== undefined) {
+  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  //   db.serialize(() => {
+  //     db.run(
+  //       `INSERT OR REPLACE INTO foodvariable (variant_id, food_id, variant_name, price)
+  //       VALUES (?, ?, ?, ?)`,
+  //       [args.variant_id, food_id, food_variant, Number(food_price)],
+  //       (err) => {
+  //         err
+  //           ? mainWindow.webContents.send(
+  //               'add_food_available_day_time_response',
+  //               err.message
+  //             )
+  //           : mainWindow.webContents.send('add_food_available_day_time_response', {
+  //               status: 'updated',
+  //             });
+  //       }
+  //     );
+  //   });
+  //   db.close();
+  // }
+  // else {
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS foodvariable (
+          'available_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'food_id' INT,
+          'avail_day' varchar(30),
+          'avail_time' varchar(50),
+          'is_active' INT,
+        )`
+    ).run(
+      `INSERT OR REPLACE INTO foodvariable (food_id, avail_day, avail_time, is_active)
+          VALUES (?, ?, ?, ?)`,
+      [food_id, avail_day, avail_time, is_active],
+      (err) => {
+        err
+          ? mainWindow.webContents.send(
+              'add_food_available_day_time_response',
+              err.message
+            )
+          : mainWindow.webContents.send(
+              'add_food_available_day_time_response',
+              {
+                status: 'inserted',
+              }
+            );
+      }
+    );
+  });
+  db.close();
+  // }
 });
 
 app.on('window-all-closed', () => {

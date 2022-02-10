@@ -39,6 +39,8 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
+  // window.get_category.send('sendResponseForCategory', { status: true });
+
   const [form] = Form.useForm();
   const [status, setStatus] = useState('');
   const [foodName, setFoodName] = useState('');
@@ -139,6 +141,12 @@ const FoodAvailabilityList = () => {
 
   const handleSubmit = (values) => {
     console.log('Success:', values);
+
+    // add_food_available_day_time
+    window.add_food_available_day_time.send(
+      'add_food_available_day_time',
+      values
+    );
   };
 
   const onFinishFailed = (errorInfo) => {
