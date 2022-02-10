@@ -2,7 +2,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  PlusCircleOutlined,
+  PlusCircleOutlined
 } from '@ant-design/icons';
 import {
   Button,
@@ -15,7 +15,7 @@ import {
   Select,
   Space,
   Table,
-  Typography,
+  Typography
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 
