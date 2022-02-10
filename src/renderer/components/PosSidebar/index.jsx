@@ -49,9 +49,10 @@ const PosSidebar = ({ direction }) => {
                 ? category.category_color
                 : '#6900ff',
               display: 'flex',
+              alignItems: 'center',
             }}
           >
-            <div style={{ width: '30px' }}>
+            <div style={{ width: '30px', marginRight: '5px' }}>
               {category?.category_icon ? (
                 <img src="" alt="" />
               ) : (

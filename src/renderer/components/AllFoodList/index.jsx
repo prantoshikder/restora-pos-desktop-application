@@ -34,26 +34,21 @@ const AllFoodList = () => {
   window.get_food_list.send('get_food_list', { status: true });
 
   useEffect(() => {
-    window.get_food_list.once('get_food_list_response', (data) => {
-      const foodLists = data.map((element) => {
-        if (element.ProductsIsActive === 1) {
-          return { ...element, ProductsIsActive: 'Active' };
-        } else {
-          return { ...element, ProductsIsActive: 'Inactive' };
-        }
-
-        // if (element.productvat === '') {
-        //   return { ...element, productvat: '0.00%' };
-        // } else {
-        //   return { ...element, productvat: `${element.productvat} "%"` };
-        // }
-      });
+    window.get_food_list.once('get_food_list_response', (data = []) => {
+      console.log('data', data);
+      const foodLists =
+        Array.isArray(data) &&
+        data?.map((element) => {
+          if (element.ProductsIsActive === 1) {
+            return { ...element, ProductsIsActive: 'Active' };
+          } else {
+            return { ...element, ProductsIsActive: 'Inactive' };
+          }
+        });
 
       setFoodData(foodLists);
     });
   }, []);
-
-  console.log('foodData', foodData);
 
   const columns = [
     {

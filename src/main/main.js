@@ -281,12 +281,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -328,12 +328,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -368,11 +368,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -395,8 +395,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -420,8 +420,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -455,8 +455,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -466,7 +466,6 @@ ipcMain.on('delete_addons', (event, args) => {
 
 // Insert and update foods
 ipcMain.on('add_new_foods', (event, args) => {
-  console.log(args);
   let {
     category_name,
     kitchen_select,
@@ -517,7 +516,9 @@ ipcMain.on('add_new_foods', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
-            : mainWindow.webContents.send('add_new_foods_response', { status: 'updated' });
+            : mainWindow.webContents.send('add_new_foods_response', {
+                status: 'updated',
+              });
         }
       );
     });
@@ -586,8 +587,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -624,68 +625,92 @@ ipcMain.on('delete_foods', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
 });
 
-
+// Get only food lists
+ipcMain.on('food_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('food_lists_response', rows);
+      });
+    });
+    db.close();
+  }
+});
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-  let { foodName, variantName, price } = args;
-  console.log(foodName);
+  let { food_id, food_variant, food_price } = args;
 
-  // if (args.add_on_id !== undefined) {
-  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  //   db.serialize(() => {
-  //     db.run(
-  //       `INSERT OR REPLACE INTO variant (menuid, variantName, price)
-  //       VALUES (?, ?, ?)`,
-  //   [foodName, variantName, price],
-  //   (err) => {
-  //     err
-  //       ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-  //       : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
-  //   }
-  //     );
-  //   });
-  //   db.close();
-  // }
-  // else {
-  //   console.log("else");
+  if (args.variant_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS variant (
-          'variantid' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'menuid' INT,
-          'variantName' varchar(120),
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO variants (variant_id, food_id, variant_name, price)
+        VALUES (?, ?, ?, ?)`,
+        [args.variant_id, food_id, food_variant, Number(food_price)],
+        (err) => {
+          err
+            ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+            : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'updated' });
+        }
+      );
+    });
+    db.close();
+  } else {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS variants (
+          'variant_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'food_id' INT,
+          'variant_name' varchar(255),
           'price' REAL
         )`
-    ).run(
-      `INSERT OR REPLACE INTO variant (menuid, variantName, price)
+      ).run(
+        `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
           VALUES (?, ?, ?)`,
-      [foodName, variantName, price],
-      (err) => {
-        console.log("Varient err: ", err);
-        // err
-        //   ? mainWindow.webContents.send(
-        //     'add_new_foods_variant_response',
-        //     err.message
-        //   )
-        //   : mainWindow.webContents.send('add_new_foods_variant_response', {
-        //     status: 'inserted',
-        //   });
-      }
-    );
-  });
-  db.close();
+        [food_id, food_variant, Number(food_price)],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'add_new_foods_variant_response',
+                err.message
+              )
+            : mainWindow.webContents.send('add_new_foods_variant_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
+  }
+});
 
-  // }
+// get all variant list from DB
+ipcMain.on('variant_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.ProductName
+    FROM variants
+    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send('variant_lists_response', rows);
+      });
+    });
+    db.close();
+  }
 });
 
 // Delete variant from DB
@@ -694,23 +719,18 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
+    db.run(`DELETE FROM variants WHERE variant_id = ?`, id, (err) => {
       err
-        ? mainWindow.webContents.send('delete_foods_variant_response', { status: err })
-        : mainWindow.webContents.send('delete_foods_variant_response', { status: true });
+        ? mainWindow.webContents.send('delete_foods_variant_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_foods_variant_response', {
+            status: true,
+          });
     });
   });
   db.close();
 });
-
-
-
-
-
-
-
-
-
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

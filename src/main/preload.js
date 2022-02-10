@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('add_category', {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
+  },
 });
 
 contextBridge.exposeInMainWorld('get_category', {
@@ -62,9 +62,7 @@ contextBridge.exposeInMainWorld('delete_category', {
   },
 });
 
-
 contextBridge.exposeInMainWorld('parent_category', {
-
   send: (channel, data) => {
     let validChannels = ['parent_category'];
     if (validChannels.includes(channel)) {
@@ -76,10 +74,8 @@ contextBridge.exposeInMainWorld('parent_category', {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
-
+  },
 });
-
 
 // Add new addons - channel
 contextBridge.exposeInMainWorld('add_addons', {
@@ -94,9 +90,8 @@ contextBridge.exposeInMainWorld('add_addons', {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
+  },
 });
-
 
 // get addons list - channel
 contextBridge.exposeInMainWorld('addons_list', {
@@ -111,9 +106,8 @@ contextBridge.exposeInMainWorld('addons_list', {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
-  }
+  },
 });
-
 
 // Delete addons - channel
 contextBridge.exposeInMainWorld('delete_addons', {
@@ -131,7 +125,6 @@ contextBridge.exposeInMainWorld('delete_addons', {
   },
 });
 
-
 // Add new foods - channel
 contextBridge.exposeInMainWorld('add_new_foods', {
   send: (channel, data) => {
@@ -147,7 +140,6 @@ contextBridge.exposeInMainWorld('add_new_foods', {
     }
   },
 });
-
 
 // Get food list - channel
 contextBridge.exposeInMainWorld('get_food_list', {
@@ -165,7 +157,6 @@ contextBridge.exposeInMainWorld('get_food_list', {
   },
 });
 
-
 // Delete foods - channel
 contextBridge.exposeInMainWorld('delete_foods', {
   send: (channel, data) => {
@@ -181,7 +172,6 @@ contextBridge.exposeInMainWorld('delete_foods', {
     }
   },
 });
-
 
 // Add foods variant - channel
 contextBridge.exposeInMainWorld('add_new_foods_variant', {
@@ -199,6 +189,21 @@ contextBridge.exposeInMainWorld('add_new_foods_variant', {
   },
 });
 
+// Get food lists channel
+contextBridge.exposeInMainWorld('food_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['food_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['food_lists_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
 
 // Delete foods variant - channel
 contextBridge.exposeInMainWorld('delete_foods_variant', {
@@ -210,6 +215,23 @@ contextBridge.exposeInMainWorld('delete_foods_variant', {
   },
   once: (channel, func) => {
     let validChannels = ['delete_foods_variant_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+
+// Get variant lists channel
+contextBridge.exposeInMainWorld('variant_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['variant_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['variant_lists_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
