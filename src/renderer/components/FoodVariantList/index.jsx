@@ -42,12 +42,8 @@ const rowSelection = {
 const FoodVariantList = () => {
   // Food list
   window.food_lists_channel.send('food_lists_channel', { status: true });
-  // Varint list
+  // Variant list
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
-
-  window.variant_lists_channel.once('variant_lists_response', (args)=>{
-    console.log("variant_lists_response",args);
-  })
 
   const [form] = Form.useForm();
   const [foodName, setFoodName] = useState(null);
@@ -56,9 +52,11 @@ const FoodVariantList = () => {
 
   const [foodVariant, setFoodVariant] = useState([]);
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
+  const [foodVariantList, setFoodVariantList] = useState(null);
+  const [reUpdate, setReUpdate] = useState(false);
 
   useEffect(() => {
-    // Get active & inactive food name
+    // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
         Array.isArray(args) &&
@@ -70,34 +68,40 @@ const FoodVariantList = () => {
       setFoodName(foodNameList);
     });
 
+    // Get food variant data
+    window.variant_lists_channel.once('variant_lists_response', (args) => {
+      setFoodVariantList(args);
+      console.log('variant_lists_response', args);
+    });
+
     setFoodVariant([
       {
         name: ['food_id'],
-        value: updateFoodVariant.foodName,
+        value: updateFoodVariant?.ProductName,
       },
       {
         name: ['food_variant'],
-        value: updateFoodVariant.variantName,
+        value: updateFoodVariant?.variant_name,
       },
       {
         name: ['food_price'],
-        value: updateFoodVariant.food_price,
+        value: updateFoodVariant?.price,
       },
     ]);
-  }, []);
+  }, [reUpdate]);
 
   const columns = [
     {
       title: 'Variant Name',
-      dataIndex: 'variantName',
-      key: 'variantName',
+      dataIndex: 'variant_name',
+      key: 'variant_name',
       width: '30%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
+      dataIndex: 'ProductName',
+      key: 'ProductName',
       width: '45%',
-      key: 'foodName',
     },
     {
       title: 'Action',
@@ -120,39 +124,13 @@ const FoodVariantList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      variantName: 'Regular',
-      foodName: 'Oven Roasted Eggplant',
-    },
-    {
-      key: 2,
-      variantName: 'Italian',
-      foodName: 'Veggie Omelette',
-    },
-    {
-      key: 3,
-      variantName: 'Burger',
-      foodName: 'BOMA BURGER',
-    },
-    {
-      key: 4,
-      variantName: 'Italian',
-      foodName: 'Arancini',
-    },
-    {
-      key: 5,
-      variantName: 'Regular',
-      foodName: 'Fool Plate',
-    },
-  ];
-
   const handleEditCategory = (variantItem) => {
     setVisible(true);
     setUpdateFoodVariant(variantItem);
     console.log('Edit', variantItem);
   };
+
+  console.log('updateFoodVariant', updateFoodVariant);
 
   const handleDeleteCategory = (variantItem) => {
     confirm({
@@ -161,17 +139,20 @@ const FoodVariantList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('Delete', variantItem.key);
         window.delete_foods_variant.send('delete_foods_variant', {
-          id: variantItem.key,
+          id: variantItem.variant_id,
         });
+
+        setFoodVariantList(
+          foodVariantList.filter(
+            (variantName) => variantName.variant_id !== variantItem.variant_id
+          )
+        );
 
         window.delete_foods_variant.once(
           'delete_foods_variant_response',
           ({ status }) => {
             if (status) {
-              console.log(status);
-
               message.success({
                 content: 'Food variant deleted successfully',
                 className: 'custom-class',
@@ -201,19 +182,45 @@ const FoodVariantList = () => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    newFoodVariant.food_variant_id = updateFoodVariant.food_variant_id;
+    newFoodVariant.variant_id = updateFoodVariant.variant_id;
     console.log('newFoodVariant', newFoodVariant);
 
     // Insert & update
     window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
 
-    // Delete response
+    // Insert or update response
     window.add_new_foods_variant.once(
       'add_new_foods_variant_response',
       (args) => {
-        console.log('add food variant', args);
-        setVisible(false);
-        form.resetFields();
+        if (args === 'update') {
+          console.log(args);
+          message.success({
+            content: 'Food variant deleted successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setVisible(false);
+        } else {
+          setReUpdate((prevState) => !prevState);
+
+          message.success({
+            content: 'Food variant deleted successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setVisible(false);
+          form.resetFields();
+        }
       }
     );
   };
@@ -240,9 +247,9 @@ const FoodVariantList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={foodVariantList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record?.variant_id}
         />
       </div>
 
