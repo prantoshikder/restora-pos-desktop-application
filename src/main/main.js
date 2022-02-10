@@ -644,7 +644,6 @@ ipcMain.on('food_lists_channel', (event, args) => {
 ipcMain.on('add_new_foods_variant', (event, args) => {
   console.log(args);
   let { food_id, variant_name, price } = args;
-
   // if (args.add_on_id !== undefined) {
   //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   //   db.serialize(() => {
@@ -666,16 +665,16 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
-      `CREATE TABLE IF NOT EXISTS variant (
+      `CREATE TABLE IF NOT EXISTS variants (
           'variant_id' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'menu_id' INT NOT NULL,
-          'variant_name' varchar(120) NOT NULL,
-          'price' REAL NOT NULL
+          'food_id' INT,
+          'variant_name' varchar(255),
+          'price' REAL
         )`
     ).run(
-      `INSERT OR REPLACE INTO variant (menu_id, variant_name, price)
+      `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
           VALUES (?, ?, ?)`,
-      [food_id, variant_name, price],
+      [food_id, variant_name, parseInt(price)],
       (err) => {
         err
           ? mainWindow.webContents.send(
@@ -692,13 +691,13 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   // }
 });
 
-// Delete variant from DB
+Delete variant from DB
 ipcMain.on('delete_foods_variant', (event, args) => {
   console.log(args);
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM variant WHERE variantid = ?`, id, (err) => {
+    db.run(`DELETE FROM variants WHERE variantid = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_variant_response', {
             status: err,
