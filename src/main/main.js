@@ -642,7 +642,7 @@ ipcMain.on('food_lists_channel', (event, args) => {
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
   console.log(args);
-  let { food_id, variant_name, price } = args;
+  let { food_id, food_variant, food_price } = args;
   // if (args.add_on_id !== undefined) {
   //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   //   db.serialize(() => {
@@ -673,7 +673,7 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
     ).run(
       `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
           VALUES (?, ?, ?)`,
-      [food_id, variant_name, parseInt(price)],
+      [food_id, food_variant, parseInt(food_price)],
       (err) => {
         err
           ? mainWindow.webContents.send(
@@ -696,7 +696,7 @@ ipcMain.on('variant_lists_channel', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.ProductName
     FROM variants
-    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`
+    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
@@ -713,7 +713,7 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM variants WHERE variantid = ?`, id, (err) => {
+    db.run(`DELETE FROM variants WHERE variant_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_variant_response', {
             status: err,

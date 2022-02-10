@@ -2,7 +2,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  PlusCircleOutlined
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
   Button,
@@ -15,7 +15,7 @@ import {
   Select,
   Space,
   Table,
-  Typography
+  Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 
@@ -110,6 +110,7 @@ const FoodVariantList = () => {
             <EditOutlined />
             Edit
           </Button>
+
           <Button type="danger" onClick={() => handleDeleteCategory(record)}>
             <DeleteOutlined />
             Delete
@@ -200,12 +201,13 @@ const FoodVariantList = () => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
-
+    newFoodVariant.food_variant_id = updateFoodVariant.food_variant_id;
     console.log('newFoodVariant', newFoodVariant);
 
-    newFoodVariant.food_variant_id = updateFoodVariant.food_variant_id;
+    // Insert & update
+    window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
 
+    // Delete response
     window.add_new_foods_variant.once(
       'add_new_foods_variant_response',
       (args) => {
@@ -229,11 +231,7 @@ const FoodVariantList = () => {
         }}
       >
         <div className="flex content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
-          >
+          <Button type="primary" onClick={() => setVisible(true)}>
             <PlusCircleOutlined />
             Add Variant
           </Button>
