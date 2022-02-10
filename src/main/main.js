@@ -459,7 +459,6 @@ ipcMain.on('delete_addons', (event, args) => {
 
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
-  console.log(args);
   let {
     category_name,
     kitchen_select,
@@ -631,7 +630,7 @@ ipcMain.on('food_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      let sql = `SELECT ProductName, ProductsID from item_foods`;
+      let sql = `SELECT ProductName, ProductsID from item_foods where`;
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('food_lists_response', rows);
       });
@@ -643,7 +642,8 @@ ipcMain.on('food_lists_channel', (event, args) => {
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-  let { foodName, variantName, price } = args;
+  console.log(args);
+  let { food_id, variant_name, price } = args;
 
   // if (args.add_on_id !== undefined) {
   //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -667,15 +667,15 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   db.serialize(() => {
     db.run(
       `CREATE TABLE IF NOT EXISTS variant (
-          'variantid' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'menuid' INT NOT NULL,
-          'variantName' varchar(120) NOT NULL,
+          'variant_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'menu_id' INT NOT NULL,
+          'variant_name' varchar(120) NOT NULL,
           'price' REAL NOT NULL
         )`
     ).run(
-      `INSERT OR REPLACE INTO variant (menuid, variantName, price)
+      `INSERT OR REPLACE INTO variant (menu_id, variant_name, price)
           VALUES (?, ?, ?)`,
-      [foodName, variantName, price],
+      [food_id, variant_name, price],
       (err) => {
         err
           ? mainWindow.webContents.send(
