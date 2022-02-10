@@ -631,7 +631,7 @@ ipcMain.on('food_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      let sql = `SELECT ProductName, ProductsID from item_foods`;
+      let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('food_lists_response', rows);
       });
