@@ -629,13 +629,12 @@ ipcMain.on('delete_foods', (event, args) => {
 ipcMain.on('food_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
     db.serialize(() => {
-      let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('food_lists_response', rows);
       });
     });
-
     db.close();
   }
 });
@@ -689,6 +688,23 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   });
   db.close();
   // }
+});
+
+// get all variant list from DB
+ipcMain.on('variant_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.ProductName
+    FROM variants
+    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send('variant_lists_response', rows);
+      });
+    });
+    db.close();
+  }
 });
 
 // Delete variant from DB
