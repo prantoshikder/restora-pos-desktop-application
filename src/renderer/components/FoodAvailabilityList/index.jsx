@@ -52,6 +52,13 @@ const FoodAvailabilityList = () => {
   const [foodAvailability, setFoodAvailability] = useState([]);
 
   useEffect(() => {
+    window.context_bridge_food_available_time.once(
+      'context_bridge_food_available_time_response',
+      (args) => {
+        console.log('print data', args);
+      }
+    );
+
     // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
@@ -163,7 +170,7 @@ const FoodAvailabilityList = () => {
   const handleSubmit = () => {
     const newFoodAvailable = {};
 
-    const availableTime = `${availableStartTime}, ${availableEndTime}`;
+    const avail_time = `${availableStartTime}, ${availableEndTime}`;
 
     for (const data of foodAvailability) {
       newFoodAvailable[data.name[0]] =
@@ -176,9 +183,14 @@ const FoodAvailabilityList = () => {
       ? (newFoodAvailable.is_active = 1)
       : (newFoodAvailable.is_active = 0);
 
-    newFoodAvailable.availableTime = availableTime;
-
+    newFoodAvailable.avail_time = avail_time;
     console.log('newFoodAvailable', newFoodAvailable);
+
+    // add_food_available_day_time
+    window.context_bridge_food_available_time.send(
+      'context_bridge_food_available_time',
+      newFoodAvailable
+    );
   };
 
   const onFinishFailed = (errorInfo) => {
