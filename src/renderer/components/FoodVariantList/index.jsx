@@ -179,8 +179,16 @@ const FoodVariantList = () => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    newFoodVariant.variant_id = updateFoodVariant.variant_id;
+    if (updateFoodVariant.variant_id) {
+      newFoodVariant.variant_id = updateFoodVariant.variant_id;
+    }
 
+    if (updateFoodVariant.food_id) {
+      newFoodVariant.food_id = updateFoodVariant.food_id;
+      console.log('updateFoodVariant.food_id', updateFoodVariant.food_id);
+    }
+
+    console.log('newFoodVariant', newFoodVariant);
     // Insert & update
     window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
 
