@@ -220,3 +220,20 @@ contextBridge.exposeInMainWorld('delete_foods_variant', {
     }
   },
 });
+
+
+// Get variant lists channel
+contextBridge.exposeInMainWorld('variant_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['variant_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['variant_lists_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});

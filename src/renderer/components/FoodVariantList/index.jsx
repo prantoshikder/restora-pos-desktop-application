@@ -40,8 +40,14 @@ const rowSelection = {
 };
 
 const FoodVariantList = () => {
-  // Food variant
+  // Food list
   window.food_lists_channel.send('food_lists_channel', { status: true });
+  // Varint list
+  window.variant_lists_channel.send('variant_lists_channel', { status: true });
+
+  window.variant_lists_channel.once('variant_lists_response', (args)=>{
+    console.log("variant_lists_response",args);
+  })
 
   const [form] = Form.useForm();
   const [foodName, setFoodName] = useState(null);
