@@ -35,7 +35,7 @@ const AllCategoryList = () => {
     getDataFromDatabase('sendCategoryData', window.get_category)
       .then((allCategories) => {
         const categoryLists = allCategories.map((categoryObj, i) => {
-          // Find the parent cateogry Object
+          // Find the parent category Object
           const getParentCategory = allCategories.find(
             (item) => item.category_id === categoryObj.parent_id
           );
