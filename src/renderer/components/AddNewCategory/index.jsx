@@ -70,7 +70,15 @@ const AddNewCategory = ({ state }) => {
             category.category_is_active !== 0 &&
             category.category_is_active !== null
         );
-      setParentCategory(categoryFilter);
+
+      const categories = categoryFilter.sort((a, b) => {
+        if (a.parent_id < b.parent_id) {
+          return a.parent_id - b.parent_id;
+        }
+      });
+
+      console.log(categories);
+      setParentCategory(categories);
     });
   }, [reUpdate]);
 

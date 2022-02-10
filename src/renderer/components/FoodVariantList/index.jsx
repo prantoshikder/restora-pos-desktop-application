@@ -40,6 +40,8 @@ const rowSelection = {
 };
 
 const FoodVariantList = () => {
+  window.food_lists_channel.send('food_lists_channel', { status: true });
+
   const [form] = Form.useForm();
   const [foodName, setFoodName] = useState('');
   const [visible, setVisible] = useState(false);
@@ -49,6 +51,10 @@ const FoodVariantList = () => {
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
 
   useEffect(() => {
+    window.food_lists_channel.once('food_lists_response', (args = []) => {
+      console.log('food lists', args);
+    });
+
     setFoodVariant([
       {
         name: ['food_name'],
