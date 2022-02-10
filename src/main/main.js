@@ -731,8 +731,7 @@ ipcMain.on('delete_foods_variant', (event, args) => {
 
 // Insert Food availability data
 // Insert and update foods variant
-ipcMain.on('add_food_available_day_time', (event, args) => {
-  console.log('args food available', args);
+ipcMain.on('context_bridge_food_available_time', (event, args) => {
   let { food_id, avail_day, avail_time, is_active } = args;
 
   // available_id
@@ -748,10 +747,10 @@ ipcMain.on('add_food_available_day_time', (event, args) => {
   //       (err) => {
   //         err
   //           ? mainWindow.webContents.send(
-  //               'add_food_available_day_time_response',
+  //               'context_bridge_food_available_time_response',
   //               err.message
   //             )
-  //           : mainWindow.webContents.send('add_food_available_day_time_response', {
+  //           : mainWindow.webContents.send('context_bridge_food_available_time_response', {
   //               status: 'updated',
   //             });
   //       }
@@ -768,7 +767,7 @@ ipcMain.on('add_food_available_day_time', (event, args) => {
           'food_id' INT,
           'avail_day' varchar(30),
           'avail_time' varchar(50),
-          'is_active' INT,
+          'is_active' INT
         )`
     ).run(
       `INSERT OR REPLACE INTO foodvariable (food_id, avail_day, avail_time, is_active)
@@ -777,11 +776,11 @@ ipcMain.on('add_food_available_day_time', (event, args) => {
       (err) => {
         err
           ? mainWindow.webContents.send(
-              'add_food_available_day_time_response',
+              'context_bridge_food_available_time_response',
               err.message
             )
           : mainWindow.webContents.send(
-              'add_food_available_day_time_response',
+              'context_bridge_food_available_time_response',
               {
                 status: 'inserted',
               }

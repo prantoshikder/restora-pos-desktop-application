@@ -39,7 +39,8 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
-  // window.get_category.send('sendResponseForCategory', { status: true });
+  // Food name list
+  window.food_lists_channel.send('food_lists_channel', { status: true });
 
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -51,6 +52,13 @@ const FoodAvailabilityList = () => {
   const [foodAvailability, setFoodAvailability] = useState([]);
 
   useEffect(() => {
+    window.context_bridge_food_available_time.once(
+      'context_bridge_food_available_time_response',
+      (args) => {
+        console.log('print data', args);
+      }
+    );
+
     // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
@@ -162,7 +170,7 @@ const FoodAvailabilityList = () => {
   const handleSubmit = () => {
     const newFoodAvailable = {};
 
-    const availableTime = `${availableStartTime}, ${availableEndTime}`;
+    const avail_time = `${availableStartTime}, ${availableEndTime}`;
 
     for (const data of foodAvailability) {
       newFoodAvailable[data.name[0]] =
@@ -175,15 +183,14 @@ const FoodAvailabilityList = () => {
       ? (newFoodAvailable.is_active = 1)
       : (newFoodAvailable.is_active = 0);
 
-    newFoodAvailable.availableTime = availableTime;
+    newFoodAvailable.avail_time = avail_time;
+    console.log('newFoodAvailable', newFoodAvailable);
 
     // add_food_available_day_time
-    window.add_food_available_day_time.send(
-      'add_food_available_day_time',
+    window.context_bridge_food_available_time.send(
+      'context_bridge_food_available_time',
       newFoodAvailable
     );
-
-    console.log('newFoodAvailable', newFoodAvailable);
   };
 
   const onFinishFailed = (errorInfo) => {
