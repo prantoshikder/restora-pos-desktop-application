@@ -641,24 +641,25 @@ ipcMain.on('food_lists_channel', (event, args) => {
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-  console.log(args);
+  console.log('variant food', args);
   let { food_id, food_variant, food_price } = args;
-  // if (args.add_on_id !== undefined) {
-  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  //   db.serialize(() => {
-  //     db.run(
-  //       `INSERT OR REPLACE INTO variant (menuid, variantName, price)
-  //       VALUES (?, ?, ?)`,
-  //   [foodName, variantName, price],
-  //   (err) => {
-  //     err
-  //       ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-  //       : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
-  //   }
-  //     );
-  //   });
-  //   db.close();
-  // }
+  if (args.variant_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO variant (food_id, variant_name, price)
+        VALUES (?, ?, ?)`,
+        [food_id, variant_name, price]
+        // (err) => {
+        //   err
+        //     ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+        //     : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
+        // }
+      );
+    });
+    db.close();
+  }
   // else {
   //   console.log("else");
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
