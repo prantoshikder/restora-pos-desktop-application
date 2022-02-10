@@ -626,6 +626,21 @@ ipcMain.on('delete_foods', (event, args) => {
   db.close();
 });
 
+// Get only food lists
+ipcMain.on('food_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      let sql = `SELECT ProductName, ProductsID from item_foods`;
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('food_lists_response', rows);
+      });
+    });
+
+    db.close();
+  }
+});
+
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
   let { foodName, variantName, price } = args;
@@ -695,15 +710,6 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   });
   db.close();
 });
-
-
-
-
-
-
-
-
-
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
