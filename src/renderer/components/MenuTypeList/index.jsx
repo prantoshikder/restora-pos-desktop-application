@@ -62,7 +62,7 @@ const props = {
 const MenuTypeList = () => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
@@ -112,7 +112,7 @@ const MenuTypeList = () => {
   ];
 
   function handleEditCategory(record) {
-    setVisible(true);
+    setOpenModal(true);
     console.log('Edit', record);
     // message.success({
     //   content: 'Foods category added successfully ',
@@ -167,7 +167,7 @@ const MenuTypeList = () => {
           <Button
             type="primary"
             className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
+            onClick={() => setOpenModal(true)}
           >
             <PlusCircleOutlined />
             Add Menu Type
@@ -185,9 +185,9 @@ const MenuTypeList = () => {
 
       <Modal
         title="Add Menu Type"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >

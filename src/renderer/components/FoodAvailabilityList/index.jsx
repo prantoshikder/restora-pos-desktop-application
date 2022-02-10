@@ -43,7 +43,7 @@ const FoodAvailabilityList = () => {
   const [status, setStatus] = useState('');
   const [foodName, setFoodName] = useState('');
   const [availableDay, setAvailableDay] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
@@ -101,7 +101,7 @@ const FoodAvailabilityList = () => {
   ];
 
   function handleEditCategory(record) {
-    setVisible(true);
+    setOpenModal(true);
     console.log('Edit', record);
   }
 
@@ -157,7 +157,7 @@ const FoodAvailabilityList = () => {
           <Button
             type="primary"
             className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
+            onClick={() => setOpenModal(true)}
           >
             <PlusCircleOutlined />
             Add Available Day & Time
@@ -175,9 +175,9 @@ const FoodAvailabilityList = () => {
 
       <Modal
         title="Add Available Day & Time"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >

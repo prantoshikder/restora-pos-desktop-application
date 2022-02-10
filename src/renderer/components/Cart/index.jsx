@@ -35,7 +35,7 @@ const Cart = () => {
   const [addCustomer] = Form.useForm();
 
   const [show, setShow] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
@@ -245,7 +245,7 @@ const Cart = () => {
   };
 
   const handleAddCustomer = () => {
-    setVisible(true);
+    setOpenModal(true);
   };
 
   const submitCustomer = () => {};
@@ -464,9 +464,9 @@ const Cart = () => {
 
       <Modal
         title="Add Variant"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >
@@ -528,7 +528,7 @@ const Cart = () => {
                   style={{
                     marginRight: '1rem',
                   }}
-                  onClick={() => setVisible(false)}
+                  onClick={() => setOpenModal(false)}
                 >
                   Close
                 </Button>

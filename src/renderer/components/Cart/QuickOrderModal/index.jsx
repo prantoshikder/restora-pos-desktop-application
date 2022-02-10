@@ -11,7 +11,7 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
   return (
     <Modal
       title="Select Your Payment Method"
-      visible={quickOrder}
+      openModal={quickOrder}
       onOk={() => setQuickOrder(false)}
       onCancel={() => setQuickOrder(false)}
       footer={null}
