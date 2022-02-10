@@ -641,7 +641,6 @@ ipcMain.on('food_lists_channel', (event, args) => {
 
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
-  console.log('variant food 222', args);
   let { food_id, food_variant, food_price } = args;
 
   if (args.variant_id !== undefined) {
@@ -649,19 +648,18 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO variants (food_id, variant_name, price)
-        VALUES (?, ?, ?)`,
-        [food_id, food_variant, Number(food_price)]
-        // (err) => {
-        //   err
-        //     ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-        //     : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'inserted' });
-        // }
+        `INSERT OR REPLACE INTO variants (variant_id, food_id, variant_name, price)
+        VALUES (?, ?, ?, ?)`,
+        [args.variant_id, food_id, food_variant, Number(food_price)]
+        (err) => {
+          err
+            ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
+            : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'updated' });
+        }
       );
     });
     db.close();
   } else {
-    console.log('else');
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
