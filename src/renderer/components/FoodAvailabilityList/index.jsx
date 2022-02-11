@@ -17,7 +17,7 @@ import {
   TimePicker,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -39,12 +39,50 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
+  // Food name list
+  window.food_lists_channel.send('food_lists_channel', { status: true });
+
   const [form] = Form.useForm();
-  const [status, setStatus] = useState('');
-  const [foodName, setFoodName] = useState('');
-  const [availableDay, setAvailableDay] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [foodName, setFoodName] = useState(null);
+  const [availableStartTime, setAvailableStartTime] = useState('');
+  const [availableEndTime, setAvailableEndTime] = useState('');
+
+  const [foodAvailability, setFoodAvailability] = useState([]);
+
+  useEffect(() => {
+    // Get active food name
+    window.food_lists_channel.once('food_lists_response', (args = []) => {
+      const foodNameList =
+        Array.isArray(args) &&
+        args?.filter(
+          (foodItem) =>
+            foodItem.ProductsIsActive !== 0 &&
+            foodItem.ProductsIsActive !== null
+        );
+      setFoodName(foodNameList);
+    });
+
+    setFoodAvailability([
+      {
+        name: ['food_id'],
+        // value: ,
+      },
+      {
+        name: ['avail_day'],
+        // value: ,
+      },
+      {
+        name: ['avail_time'],
+        // value: ,
+      },
+      {
+        name: ['is_active'],
+        value: 'Active',
+      },
+    ]);
+  }, []);
 
   const columns = [
     {
@@ -100,12 +138,12 @@ const FoodAvailabilityList = () => {
     },
   ];
 
-  function handleEditCategory(record) {
+  const handleEditCategory = (record) => {
     setOpenModal(true);
     console.log('Edit', record);
-  }
+  };
 
-  function handleDeleteCategory(record) {
+  const handleDeleteCategory = (record) => {
     console.log('Delete', record);
     message.success({
       content: 'Foods category added successfully ',
@@ -116,29 +154,31 @@ const FoodAvailabilityList = () => {
         float: 'right',
       },
     });
-  }
-
-  const changeFoodName = (foodName) => {
-    console.log('status', foodName);
-    setFoodName(foodName);
-  };
-
-  const changeAvailableDay = (availableDay) => {
-    console.log('status', availableDay);
-    setFoodName(availableDay);
-  };
-
-  const handleChangeStatus = (value) => {
-    console.log('status', value);
-    setStatus(value);
   };
 
   const handleReset = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const newFoodAvailable = {};
+
+    const availableTime = `${availableStartTime}, ${availableEndTime}`;
+
+    for (const data of foodAvailability) {
+      newFoodAvailable[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    newFoodAvailable.is_active === 'Active'
+      ? (newFoodAvailable.is_active = 1)
+      : parseInt(newFoodAvailable.is_active) === 1
+      ? (newFoodAvailable.is_active = 1)
+      : (newFoodAvailable.is_active = 0);
+
+    newFoodAvailable.availableTime = availableTime;
+
+    console.log('newFoodAvailable', newFoodAvailable);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -185,35 +225,36 @@ const FoodAvailabilityList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={foodAvailability}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setFoodAvailability(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                name="foodName"
+                name="food_id"
                 label="Food Name"
                 rules={[
                   { required: true, message: 'Please input your food name!' },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeFoodName}
-                  value={foodName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  {foodName?.map((foodName) => (
+                    <Option
+                      key={foodName?.ProductsID}
+                      value={foodName?.ProductsID}
+                    >
+                      {foodName?.ProductName}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
               <Form.Item
-                name="availableDay"
+                name="avail_day"
                 label="Available Day"
                 rules={[
                   {
@@ -226,13 +267,7 @@ const FoodAvailabilityList = () => {
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeAvailableDay}
-                  value={availableDay}
-                  allowClear
-                >
+                <Select placeholder="Select Option" size="large" allowClear>
                   <Option value="saturday">Saturday</Option>
                   <Option value="sunday">Sunday</Option>
                   <Option value="monday">Monday</Option>
@@ -243,39 +278,52 @@ const FoodAvailabilityList = () => {
                 </Select>
               </Form.Item>
 
-              <div className="d-flex">
-                <Form.Item
-                  label="From Time"
-                  name="fromTime"
-                  rules={[
-                    { required: true, message: 'Please input your from time!' },
-                  ]}
-                >
-                  <TimePicker placeholder="From Time" size="large" />
-                </Form.Item>
+              <Row gutter={20}>
+                <Col lg={12}>
+                  <Form.Item
+                    label="From Time"
+                    name="avail_time"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your from time!',
+                      },
+                    ]}
+                  >
+                    <TimePicker
+                      placeholder="From Time"
+                      size="large"
+                      onChange={(value, timeString) =>
+                        setAvailableStartTime(timeString)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
 
-                <Form.Item
-                  label="To Time"
-                  name="toTime"
-                  style={{ marginLeft: 'auto' }}
-                  rules={[
-                    { required: true, message: 'Please input your to time!' },
-                  ]}
-                >
-                  <TimePicker placeholder="To Time" size="large" />
-                </Form.Item>
-              </div>
+                <Col lg={12}>
+                  <Form.Item
+                    label="To Time"
+                    name="avail_time"
+                    style={{ marginLeft: 'auto' }}
+                    rules={[
+                      { required: true, message: 'Please input your to time!' },
+                    ]}
+                  >
+                    <TimePicker
+                      placeholder="To Time"
+                      size="large"
+                      onChange={(value, timeString) =>
+                        setAvailableEndTime(timeString)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
 
-              <Form.Item name="status" label="Status">
-                <Select
-                  placeholder="Select an Option"
-                  value={status}
-                  onChange={handleChangeStatus}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="active">Active</Option>
-                  <Option value="inactive">Inactive</Option>
+              <Form.Item name="is_active" label="Status">
+                <Select placeholder="Select an Option" size="large" allowClear>
+                  <Option value="1">Active</Option>
+                  <Option value="0">Inactive</Option>
                 </Select>
               </Form.Item>
 
