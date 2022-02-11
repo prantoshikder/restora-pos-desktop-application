@@ -43,13 +43,14 @@ const FoodAvailabilityList = () => {
   window.food_lists_channel.send('food_lists_channel', { status: true });
 
   const [form] = Form.useForm();
-  const [openModal, setOpenModal] = useState(false);
-  const [checkStrictly, setCheckStrictly] = useState(false);
-  const [foodName, setFoodName] = useState(null);
   const [availableStartTime, setAvailableStartTime] = useState('');
   const [availableEndTime, setAvailableEndTime] = useState('');
-
   const [foodAvailability, setFoodAvailability] = useState([]);
+
+  const [checkStrictly, setCheckStrictly] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [reRender, setReRender] = useState(false);
+  const [foodName, setFoodName] = useState(null);
 
   useEffect(() => {
     // Get active food name
@@ -146,7 +147,7 @@ const FoodAvailabilityList = () => {
   const handleDeleteCategory = (record) => {
     console.log('Delete', record);
     message.success({
-      content: 'Foods category added successfully ',
+      content: 'Available food deleted successfully ',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -163,7 +164,7 @@ const FoodAvailabilityList = () => {
   const handleSubmit = () => {
     const newFoodAvailable = {};
 
-    const availableTime = `${availableStartTime}, ${availableEndTime}`;
+    const avail_time = `${availableStartTime}, ${availableEndTime}`;
 
     for (const data of foodAvailability) {
       newFoodAvailable[data.name[0]] =
@@ -176,9 +177,24 @@ const FoodAvailabilityList = () => {
       ? (newFoodAvailable.is_active = 1)
       : (newFoodAvailable.is_active = 0);
 
-    newFoodAvailable.availableTime = availableTime;
+    newFoodAvailable.avail_time = avail_time;
+
+    // if(foodAvailability.availableFood_id) {
+    //   newFoodAvailable.availableFood_id = foodAvailability.availableFood_id;
+    // }
 
     console.log('newFoodAvailable', newFoodAvailable);
+
+    // setReRender((prevState) => !prevState);
+    message.success({
+      content: 'Available food added successfully',
+      className: 'custom-class',
+      duration: 1,
+      style: {
+        marginTop: '5vh',
+        float: 'right',
+      },
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -282,7 +298,7 @@ const FoodAvailabilityList = () => {
                 <Col lg={12}>
                   <Form.Item
                     label="From Time"
-                    name="avail_time"
+                    name="from_time"
                     rules={[
                       {
                         required: true,
@@ -303,7 +319,7 @@ const FoodAvailabilityList = () => {
                 <Col lg={12}>
                   <Form.Item
                     label="To Time"
-                    name="avail_time"
+                    name="to_time"
                     style={{ marginLeft: 'auto' }}
                     rules={[
                       { required: true, message: 'Please input your to time!' },

@@ -54,7 +54,7 @@ const FoodVariantList = () => {
   const [foodVariant, setFoodVariant] = useState([]);
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
   const [foodVariantList, setFoodVariantList] = useState(null);
-  const [ReRender, setReRender] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
     // Get active food name
@@ -88,7 +88,7 @@ const FoodVariantList = () => {
         value: updateFoodVariant?.price,
       },
     ]);
-  }, [ReRender]);
+  }, [reRender]);
 
   const columns = [
     {
