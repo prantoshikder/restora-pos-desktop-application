@@ -19,7 +19,7 @@ const { Option } = Select;
 
 const Currency = ({ direction }) => {
   const [form] = Form.useForm();
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const changePosition = (value) => {
     console.log('position', value);
@@ -52,7 +52,7 @@ const Currency = ({ direction }) => {
                   <Button
                     type="primary"
                     className="bulk_upload_btn"
-                    onClick={() => setVisible(true)}
+                    onClick={() => setOpenModal(true)}
                   >
                     <PlusCircleOutlined />
                     Add Currency
@@ -66,9 +66,9 @@ const Currency = ({ direction }) => {
 
         <Modal
           title="Add Currency"
-          visible={visible}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
+          visible={openModal}
+          onOk={() => setOpenModal(false)}
+          onCancel={() => setOpenModal(false)}
           footer={null}
           width={650}
         >

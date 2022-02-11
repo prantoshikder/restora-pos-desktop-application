@@ -47,7 +47,7 @@ const FoodVariantList = () => {
 
   const [form] = Form.useForm();
   const [foodName, setFoodName] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
   const [foodVariant, setFoodVariant] = useState([]);
@@ -124,7 +124,7 @@ const FoodVariantList = () => {
   ];
 
   const handleEditCategory = (variantItem) => {
-    setVisible(true);
+    setOpenModal(true);
     setUpdateFoodVariant(variantItem);
     setReRender((prevState) => !prevState);
   };
@@ -196,7 +196,7 @@ const FoodVariantList = () => {
     window.add_new_foods_variant.once(
       'add_new_foods_variant_response',
       (args) => {
-        if (args === 'update') {
+        if (args === 'updated') {
           console.log('args update', args);
           message.success({
             content: 'Food variant deleted successfully',
@@ -208,7 +208,7 @@ const FoodVariantList = () => {
             },
           });
 
-          setVisible(false);
+          setOpenModal(false);
         } else {
           setReRender((prevState) => !prevState);
           console.log('args else', args);
@@ -223,7 +223,7 @@ const FoodVariantList = () => {
             },
           });
 
-          setVisible(false);
+          setOpenModal(false);
           form.resetFields();
         }
       }
@@ -243,7 +243,7 @@ const FoodVariantList = () => {
         }}
       >
         <div className="flex content_end mb-3">
-          <Button type="primary" onClick={() => setVisible(true)}>
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Variant
           </Button>
@@ -260,9 +260,9 @@ const FoodVariantList = () => {
 
       <Modal
         title="Add Variant"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >

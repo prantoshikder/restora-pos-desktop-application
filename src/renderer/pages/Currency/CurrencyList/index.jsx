@@ -20,7 +20,7 @@ const rowSelection = {
 
 const CurrencyList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const columns = [
     {
@@ -99,7 +99,7 @@ const CurrencyList = () => {
   ];
 
   function handleEditCurrency(record) {
-    setVisible(true);
+    setOpenModal(true);
     console.log('Edit', record);
     // message.success({
     //   content: 'Foods category added successfully ',

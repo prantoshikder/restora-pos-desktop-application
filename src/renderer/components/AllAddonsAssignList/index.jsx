@@ -40,7 +40,7 @@ const AllAddonsAssignList = () => {
   const [form] = Form.useForm();
   const [addonsName, setAddonsName] = useState('');
   const [foodName, setFoodName] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
@@ -100,7 +100,7 @@ const AllAddonsAssignList = () => {
   ];
 
   function handleEditCategory(record) {
-    setVisible(true);
+    setOpenModal(true);
     console.log('Edit', record);
   }
 
@@ -151,7 +151,7 @@ const AllAddonsAssignList = () => {
           <Button
             type="primary"
             className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
+            onClick={() => setOpenModal(true)}
           >
             <PlusCircleOutlined />
             Add-ons Assign
@@ -169,9 +169,9 @@ const AllAddonsAssignList = () => {
 
       <Modal
         title="Add-ons Assign"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >

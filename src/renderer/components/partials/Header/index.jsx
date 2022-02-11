@@ -18,7 +18,7 @@ const { SubMenu } = Menu;
 
 const Header = ({ direction }) => {
   const [form] = Form.useForm();
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState('');
 
   const handleChangeStatus = (value) => {
@@ -78,7 +78,7 @@ const Header = ({ direction }) => {
 
             <div className="right_panel_wrapper">
               <div
-                onClick={() => setVisible(true)}
+                onClick={() => setOpenModal(true)}
                 title="Cash Register"
                 className="image_icon"
               >
@@ -91,9 +91,9 @@ const Header = ({ direction }) => {
         <Modal
           title="Cash Register"
           centered
-          visible={visible}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
+          visible={openModal}
+          onOk={() => setOpenModal(false)}
+          onCancel={() => setOpenModal(false)}
           footer={null}
           width={650}
         >
@@ -132,7 +132,7 @@ const Header = ({ direction }) => {
                   <Button
                     type="primary"
                     style={{ marginRight: '1rem' }}
-                    onClick={() => setVisible(false)}
+                    onClick={() => setOpenModal(false)}
                   >
                     <Link className="dashboard" to="/">
                       Dashboard

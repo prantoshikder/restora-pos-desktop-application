@@ -28,7 +28,7 @@ const rowSelection = {
 
 const AllFoodList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [foodData, setFoodData] = useState(null);
 
   window.get_food_list.send('get_food_list', { status: true });

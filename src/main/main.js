@@ -650,11 +650,16 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
       db.run(
         `INSERT OR REPLACE INTO variants (variant_id, food_id, variant_name, price)
         VALUES (?, ?, ?, ?)`,
-        [args.variant_id, food_id, food_variant, Number(food_price)]
+        [args.variant_id, food_id, food_variant, Number(food_price)],
         (err) => {
           err
-            ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-            : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'updated' });
+            ? mainWindow.webContents.send(
+                'add_new_foods_variant_response',
+                err.message
+              )
+            : mainWindow.webContents.send('add_new_foods_variant_response', {
+                status: 'updated',
+              });
         }
       );
     });
