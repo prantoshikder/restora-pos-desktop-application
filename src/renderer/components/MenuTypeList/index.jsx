@@ -60,6 +60,10 @@ const props = {
 };
 
 const MenuTypeList = () => {
+  window.context_bridge_menu_type.send('context_bridge_menu_type', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const [status, setStatus] = useState('');
   const [openModal, setOpenModal] = useState(false);
