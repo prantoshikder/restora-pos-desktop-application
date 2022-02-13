@@ -258,6 +258,7 @@ const FoodAvailabilityList = () => {
             },
           });
 
+          setReRender((prevState) => !prevState);
           setOpenModal(false);
           form.resetFields();
         } else {
