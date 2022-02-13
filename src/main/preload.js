@@ -288,6 +288,7 @@ contextBridge.exposeInMainWorld('channel_delete_food_available_day_time', {
 /*=================================================================
   MENU TYPE
 =================================================================*/
+// Insert menu type data
 contextBridge.exposeInMainWorld('context_bridge_menu_type', {
   send: (channel, data) => {
     let validChannels = ['context_bridge_menu_type'];
@@ -297,6 +298,22 @@ contextBridge.exposeInMainWorld('context_bridge_menu_type', {
   },
   once: (channel, func) => {
     let validChannels = ['context_bridge_menu_type_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get menu type data from the DB
+contextBridge.exposeInMainWorld('get_menu_type_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_type_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_type_lists_channel_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }

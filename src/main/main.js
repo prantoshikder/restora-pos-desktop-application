@@ -902,6 +902,24 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
   // }
 });
 
+// Get menu type lists as an Array
+ipcMain.on('get_menu_type_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT * FROM menu_type`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_menu_type_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
