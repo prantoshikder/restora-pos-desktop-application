@@ -42,6 +42,10 @@ const rowSelection = {
 };
 
 const MenuTypeList = () => {
+  // window.context_bridge_menu_type.send('context_bridge_menu_type', {
+  //   status: true,
+  // });
+
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -184,9 +188,14 @@ const MenuTypeList = () => {
 
     console.log('newMenuType', newMenuType);
 
-    // setReRender((prevState) => !prevState);
-    setOpenModal(false);
+    // Insert Data
+    window.context_bridge_menu_type.send(
+      'context_bridge_menu_type',
+      newMenuType
+    );
+
     form.resetFields();
+    setOpenModal(false);
   };
 
   const onFinishFailed = (errorInfo) => {
