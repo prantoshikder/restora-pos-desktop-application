@@ -999,13 +999,31 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
 });
 
 // Get addons lists as an Array
+// ipcMain.on('get_menu_add_on_lists_channel', (event, args) => {
+//   if (args.status) {
+//     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+//     let sql = `SELECT row_id, menu_id, add_on_id FROM menu_add_on`;
+//     db.serialize(() => {
+//       db.all(sql, [], (err, rows) => {
+//         console.log(rows);
+//         mainWindow.webContents.send(
+//           'get_menu_add_on_lists_channel_response',
+//           rows
+//         );
+//       });
+//     });
+//     db.close();
+//   }
+// });
+
+// Get addons lists as an Array
 ipcMain.on('get_menu_add_on_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT row_id, menu_id, add_on_id FROM menu_add_on`;
+
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
-        console.log(rows);
         mainWindow.webContents.send(
           'get_menu_add_on_lists_channel_response',
           rows
