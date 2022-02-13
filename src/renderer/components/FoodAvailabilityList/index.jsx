@@ -39,8 +39,14 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
-  // Food name list
+  // Get food name list channel
   window.food_lists_channel.send('food_lists_channel', { status: true });
+
+  // Get food availability day & time lists
+  window.get_food_availability_lists_channel.send(
+    'get_food_availability_lists_channel',
+    { status: true }
+  );
 
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -56,6 +62,14 @@ const FoodAvailabilityList = () => {
       'context_bridge_food_available_time_response',
       (args) => {
         console.log('print data', args);
+      }
+    );
+
+    // Get food availability day & time lists
+    window.get_food_availability_lists_channel.once(
+      'get_food_availability_lists_channel_response',
+      (args = []) => {
+        console.log('Food available lists', args);
       }
     );
 

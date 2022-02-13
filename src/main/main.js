@@ -796,7 +796,7 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
 ipcMain.on('get_food_availability_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT food_id, avail_day, avail_time FROM foodvariable WHERE is_active = 1`;
+    let sql = `SELECT available_id, food_id, avail_day, avail_time FROM foodvariable WHERE is_active = 1`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
