@@ -2,8 +2,6 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  InfoCircleOutlined,
-  PictureOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -58,25 +56,36 @@ const MenuTypeList = () => {
     window.get_menu_type_lists_channel.once(
       'get_menu_type_lists_channel_response',
       (args = []) => {
+        const foodAvailableList =
+          Array.isArray(args) &&
+          args?.map((element) => {
+            if (element.status === 1) {
+              element.status = 'Active';
+            } else {
+              element.status = 'Inactive';
+            }
+          });
+
         setMenuTypesList(args);
+        console.log('*******************args', args);
       }
     );
 
     setMenuTypes([
       {
         name: 'menu_type',
-        // value: ,
+        value: updateMenuType?.menu_type,
       },
       {
         name: 'menu_icon',
-        // value: ,
+        // value: updateMenuType?.menu_type,
       },
       {
         name: 'status',
-        value: 'Active',
+        value: updateMenuType?.status || 'Active',
       },
     ]);
-  }, []);
+  }, [reRender]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -89,15 +98,15 @@ const MenuTypeList = () => {
   const columns = [
     {
       title: 'Menu Type',
-      dataIndex: 'menuType',
-      key: 'menuType',
+      dataIndex: 'menu_type',
+      key: 'menu_type',
       width: '30%',
     },
     {
       title: 'Icon',
-      dataIndex: 'icon',
+      dataIndex: 'menu_icon',
+      key: 'menu_icon',
       width: '55%',
-      key: 'icon',
     },
     {
       title: 'Action',
@@ -119,22 +128,9 @@ const MenuTypeList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      menuType: 'Party',
-      icon: './application/modules/itemmanage/assets/images/2020-11-21/p.png',
-    },
-    {
-      key: 2,
-      menuType: 'Coffee',
-      icon: './application/modules/itemmanage/assets/images/2020-11-21/p.png',
-    },
-  ];
-
   const handleEditCategory = (menuItem) => {
     setOpenModal(true);
-    // setReRender((prevState) => !prevState);
+    setReRender((prevState) => !prevState);
     setUpdateMenuType(menuItem);
     form.resetFields();
     console.log('Edit', menuItem);
@@ -149,11 +145,11 @@ const MenuTypeList = () => {
       onOk() {
         console.log('Delete', menuItem);
 
-        // setMenuTypesList(
-        //   menuTypesList.filter(
-        //     (item) => item.menuType_id !== menuItem.menuType_id
-        //   )
-        // );
+        setMenuTypesList(
+          menuTypesList.filter(
+            (item) => item.menu_type_id !== menuItem.menu_type_id
+          )
+        );
 
         // get delete response
 
@@ -189,8 +185,8 @@ const MenuTypeList = () => {
       ? (newMenuType.status = 1)
       : (newMenuType.status = 0);
 
-    if (updateMenuType.menuType_id) {
-      newMenuType.menuType_id = updateMenuType.menuType_id;
+    if (updateMenuType.menu_type_id) {
+      newMenuType.menu_type_id = updateMenuType.menu_type_id;
     }
 
     console.log('newMenuType', newMenuType);
@@ -201,8 +197,9 @@ const MenuTypeList = () => {
       newMenuType
     );
 
-    form.resetFields();
+    setReRender((prevState) => !prevState);
     setOpenModal(false);
+    form.resetFields();
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -233,7 +230,7 @@ const MenuTypeList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={menuTypesList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record.menu_type_id}
         />
       </div>
 
@@ -271,7 +268,7 @@ const MenuTypeList = () => {
                 <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
-              <Form.Item
+              {/* <Form.Item
                 label="Icon"
                 name="menu_icon"
                 getValueFromEvent={normFile}
@@ -288,7 +285,7 @@ const MenuTypeList = () => {
                     Click or drag file to this area to upload
                   </p>
                 </Upload.Dragger>
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item name="status" label="Status">
                 <Select placeholder="Select an Option" size="large" allowClear>
