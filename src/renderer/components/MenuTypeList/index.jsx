@@ -41,26 +41,6 @@ const rowSelection = {
   },
 };
 
-const props = {
-  name: 'file',
-  multiple: true,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
-
 const MenuTypeList = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -86,6 +66,14 @@ const MenuTypeList = () => {
       },
     ]);
   }, []);
+
+  const normFile = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e;
+  };
 
   const columns = [
     {
@@ -270,19 +258,20 @@ const MenuTypeList = () => {
               <Form.Item
                 label="Icon"
                 name="menu_icon"
+                getValueFromEvent={normFile}
                 tooltip={{
                   title: 'Use only .jpg,.jpeg,.gif and .png Images & Image',
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Dragger {...props}>
+                <Upload.Dragger name="files" action="/upload.do">
                   <p className="ant-upload-drag-icon">
                     <PictureOutlined />
                   </p>
                   <p className="ant-upload-hint">
                     Click or drag file to this area to upload
                   </p>
-                </Dragger>
+                </Upload.Dragger>
               </Form.Item>
 
               <Form.Item name="status" label="Status">
