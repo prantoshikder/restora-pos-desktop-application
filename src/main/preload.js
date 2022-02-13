@@ -386,3 +386,19 @@ contextBridge.exposeInMainWorld('delete_menu_addons_item', {
     }
   },
 });
+
+// Get food lists as an Array from the DB only [ProductsID, ProductName]
+contextBridge.exposeInMainWorld('get_food_name_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_food_name_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_food_name_lists_channel_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
