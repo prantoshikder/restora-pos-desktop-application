@@ -268,3 +268,19 @@ contextBridge.exposeInMainWorld('get_food_availability_lists_channel', {
     }
   },
 });
+
+// Delete food available day & time list channel
+contextBridge.exposeInMainWorld('channel_delete_food_available_day_time', {
+  send: (channel, data) => {
+    let validChannels = ['channel_delete_food_available_day_time'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_food_available_day_time_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
