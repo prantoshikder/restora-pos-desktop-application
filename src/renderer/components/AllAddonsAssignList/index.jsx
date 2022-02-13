@@ -236,7 +236,7 @@ const AllAddonsAssignList = () => {
               layout="vertical"
             >
               <Form.Item
-                name="addonsName"
+                name="add_on_id"
                 label="Add-ons Name"
                 rules={[
                   { required: true, message: 'Please input your addons name!' },
@@ -252,7 +252,7 @@ const AllAddonsAssignList = () => {
               </Form.Item>
 
               <Form.Item
-                name="foodName"
+                name="menu_id"
                 label="Food Name"
                 rules={[
                   {
