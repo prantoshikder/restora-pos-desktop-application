@@ -63,14 +63,22 @@ const FoodAvailabilityList = () => {
     window.get_food_availability_lists_channel.once(
       'get_food_availability_lists_channel_response',
       (args = []) => {
-        const foodAvailableList =
-          Array.isArray(args) &&
-          args?.filter(
-            (foodItem) =>
-              foodItem.ProductsIsActive !== 0 &&
-              foodItem.ProductsIsActive !== null
-          );
-        setFoodAvailabilityList(foodAvailableList);
+        // const foodAvailableList =
+        //   Array.isArray(args) &&
+        //   args?.map((element) => {
+
+        //     const availableFoodName = args.find(
+        //       (item) => item?.ProductsID === element?.food_id
+        //     );
+
+        //     if (availableFoodName) {
+        //       console.log('availableFoodName', availableFoodName);
+
+        //       element.food_id = availableFoodName?.ProductName;
+        //     }
+        //   });
+
+        setFoodAvailabilityList(args);
         console.log('Food available lists', args);
       }
     );
@@ -110,21 +118,21 @@ const FoodAvailabilityList = () => {
   const columns = [
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'food_id',
+      key: 'food_id',
       width: '30%',
     },
     {
       title: 'Available Day',
-      dataIndex: 'availableDay',
+      dataIndex: 'avail_day',
+      key: 'avail_day',
       width: '35%',
-      key: 'availableDay',
     },
     {
       title: 'Available Time',
-      dataIndex: 'availableTime',
+      dataIndex: 'avail_time',
+      key: 'avail_time',
       width: '25%',
-      key: 'availableTime',
     },
     {
       title: 'Action',
@@ -240,7 +248,7 @@ const FoodAvailabilityList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={foodAvailabilityList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record?.available_id}
         />
       </div>
 
