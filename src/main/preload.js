@@ -237,7 +237,7 @@ contextBridge.exposeInMainWorld('variant_lists_channel', {
   },
 });
 
-// Food available day & time channel
+// Insert food available day & time channel
 contextBridge.exposeInMainWorld('context_bridge_food_available_time', {
   send: (channel, data) => {
     let validChannels = ['context_bridge_food_available_time'];
@@ -279,6 +279,24 @@ contextBridge.exposeInMainWorld('channel_delete_food_available_day_time', {
   },
   once: (channel, func) => {
     let validChannels = ['delete_food_available_day_time_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+/*=================================================================
+  MENU TYPE
+=================================================================*/
+contextBridge.exposeInMainWorld('context_bridge_menu_type', {
+  send: (channel, data) => {
+    let validChannels = ['context_bridge_menu_type'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['context_bridge_menu_type_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
