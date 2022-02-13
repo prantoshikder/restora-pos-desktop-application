@@ -53,6 +53,13 @@ const FoodAvailabilityList = () => {
   const [foodName, setFoodName] = useState(null);
 
   useEffect(() => {
+    window.context_bridge_food_available_time.once(
+      'context_bridge_food_available_time_response',
+      (args) => {
+        console.log('print data', args);
+      }
+    );
+
     // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
@@ -185,6 +192,12 @@ const FoodAvailabilityList = () => {
 
     console.log('newFoodAvailable', newFoodAvailable);
 
+    // add_food_available_day_time
+    window.context_bridge_food_available_time.send(
+      'context_bridge_food_available_time',
+      newFoodAvailable
+    );
+
     // setReRender((prevState) => !prevState);
     message.success({
       content: 'Available food added successfully',
@@ -210,11 +223,7 @@ const FoodAvailabilityList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setOpenModal(true)}
-          >
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Available Day & Time
           </Button>
