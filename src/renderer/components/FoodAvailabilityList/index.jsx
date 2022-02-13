@@ -39,8 +39,14 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
-  // Food name list
+  // Get food name list channel
   window.food_lists_channel.send('food_lists_channel', { status: true });
+
+  // Get food availability day & time lists
+  window.get_food_availability_lists_channel.send(
+    'get_food_availability_lists_channel',
+    { status: true }
+  );
 
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -50,8 +56,25 @@ const FoodAvailabilityList = () => {
   const [availableEndTime, setAvailableEndTime] = useState('');
   const [reRender, setReRender] = useState(false);
   const [foodAvailability, setFoodAvailability] = useState([]);
+  const [foodAvailabilityList, setFoodAvailabilityList] = useState(null);
 
   useEffect(() => {
+    // Get food availability day & time lists
+    window.get_food_availability_lists_channel.once(
+      'get_food_availability_lists_channel_response',
+      (args = []) => {
+        const foodAvailableList =
+          Array.isArray(args) &&
+          args?.filter(
+            (foodItem) =>
+              foodItem.ProductsIsActive !== 0 &&
+              foodItem.ProductsIsActive !== null
+          );
+        setFoodAvailabilityList(foodAvailableList);
+        console.log('Food available lists', args);
+      }
+    );
+
     // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
@@ -120,21 +143,6 @@ const FoodAvailabilityList = () => {
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      foodName: 'Chicken Fry',
-      availableDay: 'Saturday',
-      availableTime: '00:00:00 - 00:00:00',
-    },
-    {
-      key: 2,
-      foodName: 'Burger',
-      availableDay: 'Monday',
-      availableTime: '00:00:00 - 00:00:00',
     },
   ];
 
@@ -230,7 +238,7 @@ const FoodAvailabilityList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={foodAvailabilityList}
           pagination={false}
           rowKey={(record) => record.key}
         />
