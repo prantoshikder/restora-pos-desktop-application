@@ -938,6 +938,7 @@ ipcMain.on('delete_menu_type_item', (event, args) => {
 // Insert menu addons
 ipcMain.on('context_bridge_menu_addons', (event, args) => {
   let { row_id, menu_id, add_on_id, is_active } = args;
+  console.log('menu_addons', args);
   // row_id, menu_id, add_on_id, is_active
   // Execute if the event has row ID / data ID. It is used to update a specific item
   if (args.menu_type_id !== undefined) {

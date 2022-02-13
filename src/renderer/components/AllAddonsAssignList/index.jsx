@@ -1,13 +1,13 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
   Button,
   Col,
   Form,
-  message,
   Modal,
   Row,
   Select,
@@ -15,10 +15,11 @@ import {
   Table,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -37,24 +38,50 @@ const rowSelection = {
 };
 
 const AllAddonsAssignList = () => {
+  window.get_menu_add_on_lists_channel.send('get_menu_add_on_lists_channel', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
-  const [addonsName, setAddonsName] = useState('');
-  const [foodName, setFoodName] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [updateMenuAddons, setUpdateMenuAddons] = useState(null);
+  const [reRender, setReRender] = useState(false);
+
+  const [addonsAssign, setAddonsAssign] = useState([]);
+  const [addonsAssignList, setAddonsAssignList] = useState(null);
+
+  useEffect(() => {
+    window.get_menu_add_on_lists_channel.once(
+      'get_menu_add_on_lists_channel_response',
+      (args = []) => {
+        setAddonsAssignList(args);
+        console.log('*********args', args);
+      }
+    );
+
+    setAddonsAssign([
+      {
+        name: ['add_on_id'],
+        // value: ,
+      },
+      {
+        name: ['menu_id'],
+        // value: ,
+      },
+    ]);
+  }, []);
 
   const columns = [
     {
       title: 'Add-ons Name',
-      dataIndex: 'addonsName',
-      key: 'addonsName',
+      dataIndex: 'add_on_id',
+      key: 'add_on_id',
       width: '30%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'menu_id',
+      key: 'menu_id',
       width: '40%',
     },
     {
@@ -77,55 +104,49 @@ const AllAddonsAssignList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      addonsName: 'Coffee',
-      foodName: 'takos',
-    },
-    {
-      key: 2,
-      addonsName: 'Burger',
-      foodName: 'Chicken fry',
-    },
-    {
-      key: 3,
-      addonsName: 'Drinks',
-      foodName: 'Chicken Kebab',
-    },
-    {
-      key: 4,
-      addonsName: 'Butter',
-      foodName: 'Chicken Kebab',
-    },
-  ];
-
-  function handleEditCategory(record) {
+  const handleEditCategory = (addonsItem) => {
     setOpenModal(true);
-    console.log('Edit', record);
-  }
-
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-  }
-
-  const changeAddonsName = (addonsName) => {
-    console.log('addonsName', addonsName);
-    setAddonsName(addonsName);
+    console.log('Edit', addonsItem);
   };
 
-  const changeFoodName = (foodName) => {
-    console.log('status', foodName);
-    setFoodName(foodName);
+  const handleDeleteCategory = (addonsItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        console.log('Delete', addonsItem);
+        // window.delete_menu_type_item.send('delete_menu_type_item', {
+        //   id: menuTypeItem.menu_type_id,
+        // });
+
+        // setAddonsAssignList(
+        //   menuTypesList.filter(
+        //     (item) => item.menu_type_id !== menuTypeItem.menu_type_id
+        //   )
+        // );
+
+        // // get delete response
+        // window.delete_menu_type_item.once(
+        //   'delete_menu_type_item_response',
+        //   ({ status }) => {
+        //     if (status) {
+        //       message.success({
+        //         content: 'Menu type deleted successfully',
+        //         className: 'custom-class',
+        //         duration: 1,
+        //         style: {
+        //           marginTop: '5vh',
+        //           float: 'right',
+        //         },
+        //       });
+        //     }
+        //   }
+        // );
+      },
+      onCancel() {},
+    });
   };
 
   const handleReset = () => {
@@ -133,34 +154,33 @@ const AllAddonsAssignList = () => {
   };
 
   const handleSubmit = () => {
-    const menuAddons = {};
+    const newAddonsAssignList = {};
 
-    // for (const data of menuAddons) {
-    //   menuAddons[data.name[0]] =
-    //     typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    for (const data of addonsAssign) {
+      newAddonsAssignList[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    // if (addonsAssign.row_id) {
+    //   newAddonsAssignList.row_id = addonsAssign.row_id;
     // }
 
-    // menuAddons.status === 'Active'
-    //   ? (menuAddons.status = 1)
-    //   : parseInt(menuAddons.status) === 1
-    //   ? (menuAddons.status = 1)
-    //   : (menuAddons.status = 0);
-
-    // if (updateMenuAddons.row_id) {
-    //   menuAddons.row_id = updateMenuAddons.row_id;
-    // }
-
-    // console.log('menuAddons', menuAddons);
+    console.log('menuAddons', newAddonsAssignList);
 
     // // Insert Data
-    // window.context_bridge_menu_addons.send(
-    //   'context_bridge_menu_addons',
-    //   menuAddons
-    // );
+    window.context_bridge_menu_addons.send(
+      'context_bridge_menu_addons',
+      newAddonsAssignList
+    );
 
-    form.resetFields();
     setOpenModal(false);
+    form.resetFields();
   };
+
+  function closeModal() {
+    setOpenModal(false);
+    form.resetFields();
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -188,7 +208,7 @@ const AllAddonsAssignList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={addonsAssignList}
           pagination={false}
           rowKey={(record) => record.key}
         />
@@ -197,8 +217,8 @@ const AllAddonsAssignList = () => {
       <Modal
         title="Add-ons Assign"
         visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
         footer={null}
         width={650}
       >
@@ -206,7 +226,11 @@ const AllAddonsAssignList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={addonsAssign}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setAddonsAssign(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
@@ -218,18 +242,12 @@ const AllAddonsAssignList = () => {
                   { required: true, message: 'Please input your addons name!' },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeAddonsName}
-                  value={addonsName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  <Option value="1">Pizza</Option>
+                  <Option value="2">Dhosa</Option>
+                  <Option value="3">French Fries</Option>
+                  <Option value="4">Chicken Kebab</Option>
+                  <Option value="5">Burger</Option>
                 </Select>
               </Form.Item>
 
@@ -243,18 +261,12 @@ const AllAddonsAssignList = () => {
                   },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeFoodName}
-                  value={foodName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  <Option value="1">Pizza</Option>
+                  <Option value="2">Dhosa</Option>
+                  <Option value="3">French Fries</Option>
+                  <Option value="4">Chicken Kebab</Option>
+                  <Option value="5">Burger</Option>
                 </Select>
               </Form.Item>
 
