@@ -932,6 +932,72 @@ ipcMain.on('delete_menu_type_item', (event, args) => {
   db.close();
 });
 
+/*==================================================================
+  MENU ADDONS
+==================================================================*/
+// Insert menu addons
+ipcMain.on('context_bridge_menu_addons', (event, args) => {
+  let { row_id, menu_id, add_on_id, is_active } = args;
+  // row_id, menu_id, add_on_id, is_active
+  // Execute if the event has row ID / data ID. It is used to update a specific item
+  if (args.menu_type_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id, is_active)
+        VALUES (?, ?, ?, ?)`,
+        [row_id, menu_id, add_on_id, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'updated',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  } else {
+    // Execute if it is new, then insert it
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS menu_add_on (
+          'row_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'menu_id' INT,
+          'add_on_id' INT,
+          'is_active' INT
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
+          VALUES (?, ?, ?)`,
+        [menu_id, add_on_id, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'inserted',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed

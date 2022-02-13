@@ -335,3 +335,22 @@ contextBridge.exposeInMainWorld('delete_menu_type_item', {
     }
   },
 });
+
+/*=================================================================
+  MENU ADDONS
+=================================================================*/
+// Insert menu addons data
+contextBridge.exposeInMainWorld('context_bridge_menu_addons', {
+  send: (channel, data) => {
+    let validChannels = ['context_bridge_menu_addons'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['context_bridge_menu_addons_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});

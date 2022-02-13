@@ -42,6 +42,7 @@ const AllAddonsAssignList = () => {
   const [foodName, setFoodName] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [updateMenuAddons, setUpdateMenuAddons] = useState(null);
 
   const columns = [
     {
@@ -131,8 +132,34 @@ const AllAddonsAssignList = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const menuAddons = {};
+
+    // for (const data of menuAddons) {
+    //   menuAddons[data.name[0]] =
+    //     typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    // }
+
+    // menuAddons.status === 'Active'
+    //   ? (menuAddons.status = 1)
+    //   : parseInt(menuAddons.status) === 1
+    //   ? (menuAddons.status = 1)
+    //   : (menuAddons.status = 0);
+
+    // if (updateMenuAddons.row_id) {
+    //   menuAddons.row_id = updateMenuAddons.row_id;
+    // }
+
+    // console.log('menuAddons', menuAddons);
+
+    // // Insert Data
+    // window.context_bridge_menu_addons.send(
+    //   'context_bridge_menu_addons',
+    //   menuAddons
+    // );
+
+    form.resetFields();
+    setOpenModal(false);
   };
 
   const onFinishFailed = (errorInfo) => {
