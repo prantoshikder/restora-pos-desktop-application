@@ -47,7 +47,7 @@ const MenuTypeList = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [updateMenuType, setUpdateMenuType] = useState({});
+  const [updateMenuType, setUpdateMenuType] = useState(null);
   const [menuTypes, setMenuTypes] = useState([]);
   const [menuTypesList, setMenuTypesList] = useState(null);
   const [reRender, setReRender] = useState(false);
@@ -67,7 +67,6 @@ const MenuTypeList = () => {
           });
 
         setMenuTypesList(args);
-        console.log('*******************args', args);
       }
     );
 
@@ -128,40 +127,47 @@ const MenuTypeList = () => {
     },
   ];
 
-  const handleEditCategory = (menuItem) => {
+  const handleEditCategory = (menuTypeItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
-    setUpdateMenuType(menuItem);
+    setUpdateMenuType(menuTypeItem);
     form.resetFields();
-    console.log('Edit', menuItem);
   };
 
-  const handleDeleteCategory = (menuItem) => {
+  const handleDeleteCategory = (menuTypeItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('Delete', menuItem);
+        window.delete_menu_type_item.send('delete_menu_type_item', {
+          id: menuTypeItem.menu_type_id,
+        });
 
         setMenuTypesList(
           menuTypesList.filter(
-            (item) => item.menu_type_id !== menuItem.menu_type_id
+            (item) => item.menu_type_id !== menuTypeItem.menu_type_id
           )
         );
 
         // get delete response
-
-        message.success({
-          content: 'Foods category added successfully ',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
+        window.delete_menu_type_item.once(
+          'delete_menu_type_item_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Menu type deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
       onCancel() {},
     });
@@ -189,18 +195,53 @@ const MenuTypeList = () => {
       newMenuType.menu_type_id = updateMenuType.menu_type_id;
     }
 
-    console.log('newMenuType', newMenuType);
-
     // Insert Data
     window.context_bridge_menu_type.send(
       'context_bridge_menu_type',
       newMenuType
     );
 
-    setReRender((prevState) => !prevState);
-    setOpenModal(false);
-    form.resetFields();
+    // Insert or update response
+    window.context_bridge_menu_type.once(
+      'context_bridge_menu_type_response',
+      ({ status }) => {
+        if (status === 'updated') {
+          message.success({
+            content: 'Food menu type update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setReRender((prevState) => !prevState);
+          closeModal();
+        } else {
+          setReRender((prevState) => !prevState);
+
+          message.success({
+            content: 'Food menu type added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          closeModal();
+        }
+      }
+    );
   };
+
+  function closeModal() {
+    setOpenModal(false);
+    setUpdateMenuType(null);
+    form.resetFields();
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -237,8 +278,8 @@ const MenuTypeList = () => {
       <Modal
         title="Add Menu Type"
         visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
         footer={null}
         width={650}
       >
@@ -305,7 +346,7 @@ const MenuTypeList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {updateMenuType?.menu_type_id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>
