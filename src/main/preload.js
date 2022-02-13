@@ -354,3 +354,35 @@ contextBridge.exposeInMainWorld('context_bridge_menu_addons', {
     }
   },
 });
+
+// Get menu addons as an Array from the DB
+contextBridge.exposeInMainWorld('get_menu_add_on_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_add_on_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_add_on_lists_channel_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Delete menu addons from the DB
+contextBridge.exposeInMainWorld('delete_menu_addons_item', {
+  send: (channel, data) => {
+    let validChannels = ['delete_menu_addons_item'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_menu_addons_item_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
