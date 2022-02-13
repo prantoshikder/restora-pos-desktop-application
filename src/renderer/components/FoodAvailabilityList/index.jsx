@@ -48,6 +48,14 @@ const FoodAvailabilityList = () => {
     { status: true }
   );
 
+  // get delete response
+  window.channel_delete_food_available_day_time.once(
+    'delete_food_available_day_time_response',
+    (arg) => {
+      console.log('delete response: ', arg);
+    }
+  );
+
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -162,6 +170,10 @@ const FoodAvailabilityList = () => {
 
   const handleDeleteCategory = (record) => {
     console.log('Delete', record);
+    window.channel_delete_food_available_day_time.send(
+      'channel_delete_food_available_day_time',
+      record
+    );
     message.success({
       content: 'Foods category added successfully ',
       className: 'custom-class',
