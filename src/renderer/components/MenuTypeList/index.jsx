@@ -62,9 +62,9 @@ const props = {
 };
 
 const MenuTypeList = () => {
-  // window.context_bridge_menu_type.send('context_bridge_menu_type', {
-  //   status: true,
-  // });
+  window.get_menu_type_lists_channel.send('get_menu_type_lists_channel', {
+    status: true,
+  });
 
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -75,6 +75,13 @@ const MenuTypeList = () => {
   const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
+    window.get_menu_type_lists_channel.once(
+      'get_menu_type_lists_channel_response',
+      (args = []) => {
+        setMenuTypesList(args);
+      }
+    );
+
     setMenuTypes([
       {
         name: 'menu_type',
@@ -236,7 +243,7 @@ const MenuTypeList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={menuTypesList}
           pagination={false}
           rowKey={(record) => record.key}
         />
