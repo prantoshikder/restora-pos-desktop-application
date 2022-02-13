@@ -319,3 +319,19 @@ contextBridge.exposeInMainWorld('get_menu_type_lists_channel', {
     }
   },
 });
+
+// Delete menu type from the DB
+contextBridge.exposeInMainWorld('delete_menu_type_item', {
+  send: (channel, data) => {
+    let validChannels = ['delete_menu_type_item'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_menu_type_item_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
