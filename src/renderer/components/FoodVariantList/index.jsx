@@ -197,7 +197,6 @@ const FoodVariantList = () => {
       'add_new_foods_variant_response',
       (args) => {
         if (args === 'updated') {
-          console.log('args update', args);
           message.success({
             content: 'Food variant deleted successfully',
             className: 'custom-class',
@@ -211,7 +210,6 @@ const FoodVariantList = () => {
           setOpenModal(false);
         } else {
           setReRender((prevState) => !prevState);
-          console.log('args else', args);
 
           message.success({
             content: 'Food variant deleted successfully',

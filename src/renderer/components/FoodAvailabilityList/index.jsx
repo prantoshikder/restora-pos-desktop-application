@@ -43,23 +43,15 @@ const FoodAvailabilityList = () => {
   window.food_lists_channel.send('food_lists_channel', { status: true });
 
   const [form] = Form.useForm();
+  const [openModal, setOpenModal] = useState(false);
+  const [checkStrictly, setCheckStrictly] = useState(false);
+  const [foodName, setFoodName] = useState(null);
   const [availableStartTime, setAvailableStartTime] = useState('');
   const [availableEndTime, setAvailableEndTime] = useState('');
+  const [reRender, setReRender] = useState(false);
   const [foodAvailability, setFoodAvailability] = useState([]);
 
-  const [checkStrictly, setCheckStrictly] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [reRender, setReRender] = useState(false);
-  const [foodName, setFoodName] = useState(null);
-
   useEffect(() => {
-    window.context_bridge_food_available_time.once(
-      'context_bridge_food_available_time_response',
-      (args) => {
-        console.log('print data', args);
-      }
-    );
-
     // Get active food name
     window.food_lists_channel.once('food_lists_response', (args = []) => {
       const foodNameList =
@@ -90,7 +82,7 @@ const FoodAvailabilityList = () => {
         value: 'Active',
       },
     ]);
-  }, []);
+  }, [reRender]);
 
   const columns = [
     {
@@ -148,13 +140,14 @@ const FoodAvailabilityList = () => {
 
   const handleEditCategory = (record) => {
     setOpenModal(true);
+    setReRender((prevState) => !prevState);
     console.log('Edit', record);
   };
 
   const handleDeleteCategory = (record) => {
     console.log('Delete', record);
     message.success({
-      content: 'Available food deleted successfully ',
+      content: 'Foods category added successfully ',
       className: 'custom-class',
       duration: 1,
       style: {
@@ -185,29 +178,34 @@ const FoodAvailabilityList = () => {
       : (newFoodAvailable.is_active = 0);
 
     newFoodAvailable.avail_time = avail_time;
-
-    // if(foodAvailability.availableFood_id) {
-    //   newFoodAvailable.availableFood_id = foodAvailability.availableFood_id;
-    // }
-
     console.log('newFoodAvailable', newFoodAvailable);
 
-    // add_food_available_day_time
+    // Insert or updated add_food_available_day_time
     window.context_bridge_food_available_time.send(
       'context_bridge_food_available_time',
       newFoodAvailable
     );
 
-    // setReRender((prevState) => !prevState);
-    message.success({
-      content: 'Available food added successfully',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
+    // Insert or update response
+    window.context_bridge_food_available_time.once(
+      'context_bridge_food_available_time_response',
+      ({ status }) => {
+        setReRender((prevState) => !prevState);
+
+        message.success({
+          content: 'Food availability added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+
+        setOpenModal(false);
+        form.resetFields();
+      }
+    );
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -307,7 +305,7 @@ const FoodAvailabilityList = () => {
                 <Col lg={12}>
                   <Form.Item
                     label="From Time"
-                    name="from_time"
+                    name="avail_time"
                     rules={[
                       {
                         required: true,
@@ -328,7 +326,7 @@ const FoodAvailabilityList = () => {
                 <Col lg={12}>
                   <Form.Item
                     label="To Time"
-                    name="to_time"
+                    name="avail_time"
                     style={{ marginLeft: 'auto' }}
                     rules={[
                       { required: true, message: 'Please input your to time!' },
