@@ -28,7 +28,7 @@ const AddNewCategory = ({ state }) => {
   const [offerEndDate, setOfferEndDate] = useState('');
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
-  const [ReRender, setReRender] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   // Get only 3 columns from the add_item_category table from database
   // category_id, category_name, parent_id
@@ -79,7 +79,7 @@ const AddNewCategory = ({ state }) => {
 
       setParentCategory(categories);
     });
-  }, [ReRender]);
+  }, [reRender]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);

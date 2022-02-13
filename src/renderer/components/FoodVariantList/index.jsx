@@ -54,7 +54,7 @@ const FoodVariantList = () => {
   const [foodVariant, setFoodVariant] = useState([]);
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
   const [foodVariantList, setFoodVariantList] = useState(null);
-  const [ReRender, setReRender] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
     // Get active food name
@@ -88,7 +88,7 @@ const FoodVariantList = () => {
         value: updateFoodVariant?.price,
       },
     ]);
-  }, [ReRender]);
+  }, [reRender]);
 
   const columns = [
     {
@@ -197,7 +197,6 @@ const FoodVariantList = () => {
       'add_new_foods_variant_response',
       (args) => {
         if (args === 'updated') {
-          console.log('args update', args);
           message.success({
             content: 'Food variant deleted successfully',
             className: 'custom-class',
@@ -211,7 +210,6 @@ const FoodVariantList = () => {
           setOpenModal(false);
         } else {
           setReRender((prevState) => !prevState);
-          console.log('args else', args);
 
           message.success({
             content: 'Food variant deleted successfully',
