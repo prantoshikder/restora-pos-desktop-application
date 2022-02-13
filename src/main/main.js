@@ -810,6 +810,31 @@ ipcMain.on('get_food_availability_lists_channel', (event, args) => {
   }
 });
 
+// Delete food available day & time list channel from
+ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
+  console.log("Delete foods:??????????????????????????",args);
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM foodvariable WHERE available_id = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send(
+            'delete_food_available_day_time_response',
+            {
+              status: err,
+            }
+          )
+        : mainWindow.webContents.send(
+            'delete_food_available_day_time_response',
+            {
+              status: true,
+            }
+          );
+    });
+  });
+  db.close();
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
