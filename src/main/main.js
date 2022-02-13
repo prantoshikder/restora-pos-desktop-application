@@ -736,67 +736,69 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
 
   // available_id
 
-  // if (args.variant_id !== undefined) {
-  //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  if (args.available_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-  //   db.serialize(() => {
-  //     db.run(
-  //       `INSERT OR REPLACE INTO foodvariable (variant_id, food_id, variant_name, price)
-  //       VALUES (?, ?, ?, ?)`,
-  //       [args.variant_id, food_id, food_variant, Number(food_price)],
-  //       (err) => {
-  //         err
-  //           ? mainWindow.webContents.send(
-  //               'context_bridge_food_available_time_response',
-  //               err.message
-  //             )
-  //           : mainWindow.webContents.send('context_bridge_food_available_time_response', {
-  //               status: 'updated',
-  //             });
-  //       }
-  //     );
-  //   });
-  //   db.close();
-  // }
-  // else {
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS foodvariable (
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO foodvariable (available_id, food_id, avail_day, avail_time, is_active)
+        VALUES (?, ?, ?, ?, ?)`,
+        [args.available_id, food_id, avail_day, avail_time, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'updated',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  } else {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS foodvariable (
           'available_id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'food_id' INT,
           'avail_day' varchar(30),
           'avail_time' varchar(50),
           'is_active' INT
         )`
-    ).run(
-      `INSERT OR REPLACE INTO foodvariable (food_id, avail_day, avail_time, is_active)
+      ).run(
+        `INSERT OR REPLACE INTO foodvariable (food_id, avail_day, avail_time, is_active)
           VALUES (?, ?, ?, ?)`,
-      [food_id, avail_day, avail_time, is_active],
-      (err) => {
-        err
-          ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
-          : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'inserted',
-              }
-            );
-      }
-    );
-  });
-  db.close();
-  // }
+        [food_id, avail_day, avail_time, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'inserted',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  }
 });
 
 //Get all lists of food availability from foodvariable
 ipcMain.on('get_food_availability_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT available_id, food_id, avail_day, avail_time FROM foodvariable WHERE is_active = 1`;
+    let sql = `SELECT available_id, food_id, avail_day, avail_time, is_active FROM foodvariable `;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
@@ -812,7 +814,7 @@ ipcMain.on('get_food_availability_lists_channel', (event, args) => {
 
 // Delete food available day & time list channel from
 ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
-  console.log("Delete foods:??????????????????????????",args);
+  console.log('Delete foods:??????????????????????????', args);
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {

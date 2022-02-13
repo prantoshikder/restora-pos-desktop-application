@@ -1,6 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   InfoCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
@@ -21,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -48,14 +50,6 @@ const FoodAvailabilityList = () => {
     { status: true }
   );
 
-  // get delete response
-  window.channel_delete_food_available_day_time.once(
-    'delete_food_available_day_time_response',
-    (arg) => {
-      console.log('delete response: ', arg);
-    }
-  );
-
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -64,6 +58,7 @@ const FoodAvailabilityList = () => {
   const [availableEndTime, setAvailableEndTime] = useState('');
   const [reRender, setReRender] = useState(false);
   const [foodAvailability, setFoodAvailability] = useState([]);
+  const [updateAvailableItem, setUpdateAvailableItem] = useState({});
   const [foodAvailabilityList, setFoodAvailabilityList] = useState(null);
 
   useEffect(() => {
@@ -71,20 +66,25 @@ const FoodAvailabilityList = () => {
     window.get_food_availability_lists_channel.once(
       'get_food_availability_lists_channel_response',
       (args = []) => {
-        // const foodAvailableList =
-        //   Array.isArray(args) &&
-        //   args?.map((element) => {
+        const foodAvailableList =
+          Array.isArray(args) &&
+          args?.map((element) => {
+            // const availableFoodName = args.find(
+            //   (item) => item?.ProductsID === element?.food_id
+            // );
 
-        //     const availableFoodName = args.find(
-        //       (item) => item?.ProductsID === element?.food_id
-        //     );
+            // if (availableFoodName) {
+            //   console.log('availableFoodName', availableFoodName);
 
-        //     if (availableFoodName) {
-        //       console.log('availableFoodName', availableFoodName);
+            //   element.food_id = availableFoodName?.ProductName;
+            // }
 
-        //       element.food_id = availableFoodName?.ProductName;
-        //     }
-        //   });
+            if (element.is_active === 1) {
+              element.is_active = 'Active';
+            } else {
+              element.is_active = 'Inactive';
+            }
+          });
 
         setFoodAvailabilityList(args);
         console.log('Food available lists', args);
@@ -106,11 +106,11 @@ const FoodAvailabilityList = () => {
     setFoodAvailability([
       {
         name: ['food_id'],
-        // value: ,
+        value: updateAvailableItem?.food_id,
       },
       {
         name: ['avail_day'],
-        // value: ,
+        value: updateAvailableItem?.avail_day,
       },
       {
         name: ['avail_time'],
@@ -118,7 +118,7 @@ const FoodAvailabilityList = () => {
       },
       {
         name: ['is_active'],
-        value: 'Active',
+        value: updateAvailableItem?.is_active || 'Active',
       },
     ]);
   }, [reRender]);
@@ -162,26 +162,50 @@ const FoodAvailabilityList = () => {
     },
   ];
 
-  const handleEditCategory = (record) => {
+  const handleEditCategory = (availableFoodItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
-    console.log('Edit', record);
+    setUpdateAvailableItem(availableFoodItem);
+    console.log('Edit', availableFoodItem);
   };
 
-  const handleDeleteCategory = (record) => {
-    console.log('Delete', record);
-    window.channel_delete_food_available_day_time.send(
-      'channel_delete_food_available_day_time',
-      record
-    );
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+  const handleDeleteCategory = (availableFoodItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.channel_delete_food_available_day_time.send(
+          'channel_delete_food_available_day_time',
+          { id: availableFoodItem.available_id }
+        );
+
+        setFoodAvailabilityList(
+          foodAvailabilityList.filter(
+            (item) => item.available_id !== availableFoodItem.available_id
+          )
+        );
+
+        // get delete response
+        window.channel_delete_food_available_day_time.once(
+          'delete_food_available_day_time_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Available food deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
+      onCancel() {},
     });
   };
 
@@ -206,6 +230,11 @@ const FoodAvailabilityList = () => {
       : (newFoodAvailable.is_active = 0);
 
     newFoodAvailable.avail_time = avail_time;
+
+    if (updateAvailableItem.available_id) {
+      newFoodAvailable.available_id = updateAvailableItem.available_id;
+    }
+
     console.log('newFoodAvailable', newFoodAvailable);
 
     // Insert or updated add_food_available_day_time
@@ -218,20 +247,35 @@ const FoodAvailabilityList = () => {
     window.context_bridge_food_available_time.once(
       'context_bridge_food_available_time_response',
       ({ status }) => {
-        setReRender((prevState) => !prevState);
+        if (status === 'updated') {
+          message.success({
+            content: 'Food availability update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
 
-        message.success({
-          content: 'Food availability added successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
+          setOpenModal(false);
+          form.resetFields();
+        } else {
+          setReRender((prevState) => !prevState);
 
-        setOpenModal(false);
-        form.resetFields();
+          message.success({
+            content: 'Food availability added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setOpenModal(false);
+          form.resetFields();
+        }
       }
     );
   };
