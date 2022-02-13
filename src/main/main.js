@@ -938,7 +938,6 @@ ipcMain.on('delete_menu_type_item', (event, args) => {
 // Insert menu addons
 ipcMain.on('context_bridge_menu_addons', (event, args) => {
   let { row_id, menu_id, add_on_id, is_active } = args;
-  console.log('menu_addons', args);
   // row_id, menu_id, add_on_id, is_active
   // Execute if the event has row ID / data ID. It is used to update a specific item
   if (args.menu_type_id !== undefined) {
@@ -946,9 +945,9 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id, is_active)
-        VALUES (?, ?, ?, ?)`,
-        [row_id, menu_id, add_on_id, is_active],
+        `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id)
+        VALUES (?, ?, ?)`,
+        [row_id, menu_id, add_on_id],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -977,9 +976,9 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
           'is_active' INT
         )`
       ).run(
-        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
-          VALUES (?, ?, ?)`,
-        [menu_id, add_on_id, is_active],
+        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id)
+          VALUES (?, ?)`,
+        [menu_id, add_on_id],
         (err) => {
           err
             ? mainWindow.webContents.send(
