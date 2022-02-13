@@ -792,6 +792,24 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
   // }
 });
 
+//Get all lists of food availability from foodvariable
+ipcMain.on('get_food_availability_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT available_id, food_id, avail_day, avail_time FROM foodvariable WHERE is_active = 1`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_food_availability_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
