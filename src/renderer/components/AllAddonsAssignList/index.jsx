@@ -8,6 +8,7 @@ import {
   Button,
   Col,
   Form,
+  message,
   Modal,
   Row,
   Select,
@@ -46,8 +47,8 @@ const AllAddonsAssignList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [reRender, setReRender] = useState(false);
-
-  const [addonsAssign, setAddonsAssign] = useState([]);
+  const [updateAssignAddons, setUpdateAssignAddons] = useState(null);
+  const [addonsAssign, setAddonsAssign] = useState();
   const [addonsAssignList, setAddonsAssignList] = useState(null);
 
   useEffect(() => {
@@ -55,21 +56,20 @@ const AllAddonsAssignList = () => {
       'get_menu_add_on_lists_channel_response',
       (args = []) => {
         setAddonsAssignList(args);
-        console.log('*********args', args);
       }
     );
 
     setAddonsAssign([
       {
         name: ['add_on_id'],
-        // value: ,
+        value: updateAssignAddons?.add_on_id,
       },
       {
         name: ['menu_id'],
-        // value: ,
+        value: updateAssignAddons?.menu_id,
       },
     ]);
-  }, []);
+  }, [reRender]);
 
   const columns = [
     {
@@ -106,7 +106,9 @@ const AllAddonsAssignList = () => {
 
   const handleEditCategory = (addonsItem) => {
     setOpenModal(true);
-    console.log('Edit', addonsItem);
+    setReRender((prevState) => !prevState);
+    setUpdateAssignAddons(addonsItem);
+    form.resetFields();
   };
 
   const handleDeleteCategory = (addonsItem) => {
@@ -116,34 +118,31 @@ const AllAddonsAssignList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        console.log('Delete', addonsItem);
-        // window.delete_menu_type_item.send('delete_menu_type_item', {
-        //   id: menuTypeItem.menu_type_id,
-        // });
+        window.delete_menu_addons_item.send('delete_menu_addons_item', {
+          id: addonsItem.row_id,
+        });
 
-        // setAddonsAssignList(
-        //   menuTypesList.filter(
-        //     (item) => item.menu_type_id !== menuTypeItem.menu_type_id
-        //   )
-        // );
+        setAddonsAssignList(
+          addonsAssignList.filter((item) => item.row_id !== addonsItem.row_id)
+        );
 
-        // // get delete response
-        // window.delete_menu_type_item.once(
-        //   'delete_menu_type_item_response',
-        //   ({ status }) => {
-        //     if (status) {
-        //       message.success({
-        //         content: 'Menu type deleted successfully',
-        //         className: 'custom-class',
-        //         duration: 1,
-        //         style: {
-        //           marginTop: '5vh',
-        //           float: 'right',
-        //         },
-        //       });
-        //     }
-        //   }
-        // );
+        // get delete response
+        window.delete_menu_addons_item.once(
+          'delete_menu_addons_item_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Menu type deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
       onCancel() {},
     });
@@ -161,11 +160,9 @@ const AllAddonsAssignList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    // if (addonsAssign.row_id) {
-    //   newAddonsAssignList.row_id = addonsAssign.row_id;
-    // }
-
-    console.log('menuAddons', newAddonsAssignList);
+    if (updateAssignAddons.row_id) {
+      newAddonsAssignList.row_id = updateAssignAddons.row_id;
+    }
 
     // // Insert Data
     window.context_bridge_menu_addons.send(
@@ -173,12 +170,45 @@ const AllAddonsAssignList = () => {
       newAddonsAssignList
     );
 
-    setOpenModal(false);
-    form.resetFields();
+    // Insert or update response
+    window.context_bridge_menu_addons.once(
+      'context_bridge_menu_addons_response',
+      ({ status }) => {
+        if (status === 'updated') {
+          message.success({
+            content: 'Assign addons update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setReRender((prevState) => !prevState);
+          closeModal();
+        } else {
+          setReRender((prevState) => !prevState);
+
+          message.success({
+            content: 'Assign new addons successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          closeModal();
+        }
+      }
+    );
   };
 
   function closeModal() {
     setOpenModal(false);
+    setUpdateAssignAddons(null);
     form.resetFields();
   }
 
@@ -210,7 +240,7 @@ const AllAddonsAssignList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={addonsAssignList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record?.row_id}
         />
       </div>
 

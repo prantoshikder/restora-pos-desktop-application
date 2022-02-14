@@ -49,7 +49,7 @@ const MenuTypeList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [updateMenuType, setUpdateMenuType] = useState(null);
-  const [menuTypes, setMenuTypes] = useState([]);
+  const [menuTypes, setMenuTypes] = useState();
   const [menuTypesList, setMenuTypesList] = useState(null);
   const [reRender, setReRender] = useState(false);
 

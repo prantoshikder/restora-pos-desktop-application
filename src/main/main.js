@@ -941,7 +941,8 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
   console.log('menu_addons', args);
   // row_id, menu_id, add_on_id, is_active
   // Execute if the event has row ID / data ID. It is used to update a specific item
-  if (args.menu_type_id !== undefined) {
+  if (args.row_id !== undefined) {
+    console.log('menu_addons if', args);
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
     db.serialize(() => {
@@ -966,6 +967,7 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
     });
     db.close();
   } else {
+    console.log('menu_addons else', args);
     // Execute if it is new, then insert it
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
