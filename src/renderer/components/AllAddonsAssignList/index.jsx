@@ -53,6 +53,7 @@ const AllAddonsAssignList = () => {
   const [updateAssignAddons, setUpdateAssignAddons] = useState(null);
   const [addonsAssign, setAddonsAssign] = useState(null);
   const [addonsAssignList, setAddonsAssignList] = useState(null);
+  const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
     window.get_menu_add_on_lists_channel.once(
@@ -66,7 +67,7 @@ const AllAddonsAssignList = () => {
     window.get_food_name_lists_channel.once(
       'get_food_name_lists_channel_response',
       (args = []) => {
-        console.log('food args', args);
+        setFoodNames(args);
       }
     );
 
@@ -175,7 +176,7 @@ const AllAddonsAssignList = () => {
       newAddonsAssignList.row_id = updateAssignAddons.row_id;
     }
 
-    // // Insert Data
+    // // Insert or update Data
     window.context_bridge_menu_addons.send(
       'context_bridge_menu_addons',
       newAddonsAssignList
@@ -186,6 +187,9 @@ const AllAddonsAssignList = () => {
       'context_bridge_menu_addons_response',
       ({ status }) => {
         if (status === 'updated') {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
           message.success({
             content: 'Assign addons update successfully',
             className: 'custom-class',
@@ -195,11 +199,9 @@ const AllAddonsAssignList = () => {
               float: 'right',
             },
           });
-
-          setReRender((prevState) => !prevState);
-          closeModal();
         } else {
           setReRender((prevState) => !prevState);
+          closeModal();
 
           message.success({
             content: 'Assign new addons successfully',
@@ -210,8 +212,6 @@ const AllAddonsAssignList = () => {
               float: 'right',
             },
           });
-
-          closeModal();
         }
       }
     );
@@ -302,11 +302,14 @@ const AllAddonsAssignList = () => {
                 ]}
               >
                 <Select placeholder="Select Option" size="large" allowClear>
-                  <Option value="1">Pizza</Option>
-                  <Option value="2">Dhosa</Option>
-                  <Option value="3">French Fries</Option>
-                  <Option value="4">Chicken Kebab</Option>
-                  <Option value="5">Burger</Option>
+                  {foodNames?.map((foodItem) => (
+                    <Option
+                      key={foodItem?.ProductsID}
+                      value={foodItem?.ProductsID}
+                    >
+                      {foodItem?.ProductName}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
