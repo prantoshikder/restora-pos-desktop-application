@@ -40,6 +40,7 @@ const rowSelection = {
 };
 
 const MenuTypeList = () => {
+  // Get Menu type list
   window.get_menu_type_lists_channel.send('get_menu_type_lists_channel', {
     status: true,
   });

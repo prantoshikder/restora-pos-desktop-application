@@ -38,6 +38,10 @@ const rowSelection = {
 };
 
 const AllAddonsAssignList = () => {
+  window.get_menu_add_on_lists_channel.send('get_menu_add_on_lists_channel', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -47,6 +51,14 @@ const AllAddonsAssignList = () => {
   const [addonsAssignList, setAddonsAssignList] = useState(null);
 
   useEffect(() => {
+    window.get_menu_add_on_lists_channel.once(
+      'get_menu_add_on_lists_channel_response',
+      (args = []) => {
+        setAddonsAssignList(args);
+        console.log('*********args', args);
+      }
+    );
+
     setAddonsAssign([
       {
         name: ['add_on_id'],
@@ -62,14 +74,14 @@ const AllAddonsAssignList = () => {
   const columns = [
     {
       title: 'Add-ons Name',
-      dataIndex: 'addonsName',
-      key: 'addonsName',
+      dataIndex: 'add_on_id',
+      key: 'add_on_id',
       width: '30%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'menu_id',
+      key: 'menu_id',
       width: '40%',
     },
     {
@@ -89,29 +101,6 @@ const AllAddonsAssignList = () => {
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      addonsName: 'Coffee',
-      foodName: 'takos',
-    },
-    {
-      key: 2,
-      addonsName: 'Burger',
-      foodName: 'Chicken fry',
-    },
-    {
-      key: 3,
-      addonsName: 'Drinks',
-      foodName: 'Chicken Kebab',
-    },
-    {
-      key: 4,
-      addonsName: 'Butter',
-      foodName: 'Chicken Kebab',
     },
   ];
 
@@ -179,10 +168,10 @@ const AllAddonsAssignList = () => {
     console.log('menuAddons', newAddonsAssignList);
 
     // // Insert Data
-    // window.context_bridge_menu_addons.send(
-    //   'context_bridge_menu_addons',
-    //   menuAddons
-    // );
+    window.context_bridge_menu_addons.send(
+      'context_bridge_menu_addons',
+      newAddonsAssignList
+    );
 
     setOpenModal(false);
     form.resetFields();
@@ -219,7 +208,7 @@ const AllAddonsAssignList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={addonsAssignList}
           pagination={false}
           rowKey={(record) => record.key}
         />
