@@ -417,3 +417,19 @@ contextBridge.exposeInMainWorld('get_addons_name_list', {
     }
   },
 });
+
+// Get Menu Types as Array
+contextBridge.exposeInMainWorld('get_menu_type_list', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_type_list'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_type_list_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});

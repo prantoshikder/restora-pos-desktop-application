@@ -57,13 +57,15 @@ const MenuTypeList = () => {
     window.get_menu_type_lists_channel.once(
       'get_menu_type_lists_channel_response',
       (args = []) => {
+        console.log('menu tyoe list', args);
+
         const foodAvailableList =
           Array.isArray(args) &&
           args?.map((element) => {
-            if (element.status === 1) {
-              element.status = 'Active';
+            if (element.is_active === 1) {
+              element.is_active = 'Active';
             } else {
-              element.status = 'Inactive';
+              element.is_active = 'Inactive';
             }
           });
 
@@ -81,8 +83,8 @@ const MenuTypeList = () => {
         // value: updateMenuType?.menu_type,
       },
       {
-        name: 'status',
-        value: updateMenuType?.status || 'Active',
+        name: 'is_active',
+        value: updateMenuType?.is_active || 'Active',
       },
     ]);
   }, [reRender]);
@@ -155,8 +157,8 @@ const MenuTypeList = () => {
         // get delete response
         window.delete_menu_type_item.once(
           'delete_menu_type_item_response',
-          ({ status }) => {
-            if (status) {
+          ({ is_active }) => {
+            if (is_active) {
               message.success({
                 content: 'Menu type deleted successfully',
                 className: 'custom-class',
@@ -186,15 +188,19 @@ const MenuTypeList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    newMenuType.status === 'Active'
-      ? (newMenuType.status = 1)
-      : parseInt(newMenuType.status) === 1
-      ? (newMenuType.status = 1)
-      : (newMenuType.status = 0);
+    console.log('newMenuType first', newMenuType);
+
+    newMenuType.is_active === 'Active'
+      ? (newMenuType.is_active = 1)
+      : parseInt(newMenuType.is_active) === 1
+      ? (newMenuType.is_active = 1)
+      : (newMenuType.is_active = 0);
 
     if (updateMenuType?.menu_type_id) {
       newMenuType.menu_type_id = updateMenuType?.menu_type_id;
     }
+
+    console.log('newMenuType', newMenuType);
 
     // Insert Data
     window.context_bridge_menu_type.send(
@@ -205,8 +211,8 @@ const MenuTypeList = () => {
     // Insert or update response
     window.context_bridge_menu_type.once(
       'context_bridge_menu_type_response',
-      ({ status }) => {
-        if (status === 'updated') {
+      ({ is_active }) => {
+        if (is_active === 'updated') {
           setReRender((prevState) => !prevState);
           closeModal();
 
@@ -328,7 +334,7 @@ const MenuTypeList = () => {
                 </Upload.Dragger>
               </Form.Item> */}
 
-              <Form.Item name="status" label="Status">
+              <Form.Item name="is_active" label="Status">
                 <Select placeholder="Select an Option" size="large" allowClear>
                   <Option value="1">Active</Option>
                   <Option value="0">Inactive</Option>
