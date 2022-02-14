@@ -965,6 +965,7 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
     });
     db.close();
   } else {
+    console.log('menu_addons else', args);
     // Execute if it is new, then insert it
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
