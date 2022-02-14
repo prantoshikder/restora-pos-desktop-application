@@ -58,13 +58,30 @@ const AllAddonsAssignList = () => {
   const [addonsAssignList, setAddonsAssignList] = useState(null);
   const [foodNames, setFoodNames] = useState(null);
   const [addonNames, setAddonNames] = useState(null);
+  const [addonsList, setAddonsList] = useState(null);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_add_on_lists_channel_response',
+      window.get_menu_add_on_lists_channel
+    ).then((res) => {
+      setAddonsList(res);
+    });
+
+    setAddonsAssign([
+      {
+        name: ['add_on_id'],
+        value: updateAssignAddons?.addonsName,
+      },
+      {
+        name: ['menu_id'],
+        value: updateAssignAddons?.foodName,
+      },
+    ]);
+  }, [reRender]);
 
   useEffect(() => {
     Promise.all([
-      getDataFromDatabase(
-        'get_menu_add_on_lists_channel_response',
-        window.get_menu_add_on_lists_channel
-      ),
       getDataFromDatabase(
         'get_addons_name_list_response',
         window.get_addons_name_list
@@ -74,12 +91,12 @@ const AllAddonsAssignList = () => {
         window.get_food_name_lists_channel
       ),
     ])
-      .then(([addonsList, addonNames, foodNames]) => {
+      .then(([addonNames, foodNames]) => {
         setAddonNames(addonNames);
         setFoodNames(foodNames);
         let newAddonNames = [];
 
-        addonsList.map((addon, index) => {
+        addonsList?.map((addon, index) => {
           const newAddons = addonNames.find(
             (addonName) => addonName.add_on_id === addon.add_on_id
           );
@@ -98,18 +115,7 @@ const AllAddonsAssignList = () => {
         setAddonsAssignList(newAddonNames);
       })
       .catch((err) => console.log(err));
-
-    setAddonsAssign([
-      {
-        name: ['add_on_id'],
-        value: updateAssignAddons?.addonsName,
-      },
-      {
-        name: ['menu_id'],
-        value: updateAssignAddons?.foodName,
-      },
-    ]);
-  }, [reRender]);
+  }, [addonsList]);
 
   const columns = [
     {
