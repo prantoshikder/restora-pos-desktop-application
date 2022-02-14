@@ -1039,7 +1039,7 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
 ipcMain.on('get_food_name_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT ProductsID, ProductName FROM item_foods`;
+    let sql = `SELECT ProductsID, ProductName FROM item_foods WHERE ProductsIsActive = 1`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
