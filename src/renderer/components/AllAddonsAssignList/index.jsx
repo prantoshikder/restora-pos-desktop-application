@@ -42,6 +42,9 @@ const AllAddonsAssignList = () => {
   window.get_menu_add_on_lists_channel.send('get_menu_add_on_lists_channel', {
     status: true,
   });
+  window.get_food_name_lists_channel.send('get_food_name_lists_channel', {
+    status: true,
+  });
 
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -56,6 +59,14 @@ const AllAddonsAssignList = () => {
       'get_menu_add_on_lists_channel_response',
       (args = []) => {
         setAddonsAssignList(args);
+      }
+    );
+
+    // Get only foods name
+    window.get_food_name_lists_channel.once(
+      'get_food_name_lists_channel_response',
+      (args = []) => {
+        console.log('food args', args);
       }
     );
 
