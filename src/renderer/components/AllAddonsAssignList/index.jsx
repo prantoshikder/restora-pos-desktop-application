@@ -48,7 +48,7 @@ const AllAddonsAssignList = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [reRender, setReRender] = useState(false);
   const [updateAssignAddons, setUpdateAssignAddons] = useState(null);
-  const [addonsAssign, setAddonsAssign] = useState();
+  const [addonsAssign, setAddonsAssign] = useState(null);
   const [addonsAssignList, setAddonsAssignList] = useState(null);
 
   useEffect(() => {
@@ -160,7 +160,7 @@ const AllAddonsAssignList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    if (updateAssignAddons.row_id) {
+    if (updateAssignAddons?.row_id) {
       newAddonsAssignList.row_id = updateAssignAddons.row_id;
     }
 
@@ -208,7 +208,10 @@ const AllAddonsAssignList = () => {
 
   function closeModal() {
     setOpenModal(false);
-    setUpdateAssignAddons(null);
+    setUpdateAssignAddons({
+      add_on_id: '',
+      menu_id: '',
+    });
     form.resetFields();
   }
 
@@ -225,11 +228,7 @@ const AllAddonsAssignList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setOpenModal(true)}
-          >
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add-ons Assign
           </Button>
