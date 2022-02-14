@@ -46,6 +46,8 @@ const AllAddonsAssignList = () => {
     status: true,
   });
 
+  window.get_addons_name_list.send('get_addons_name_list', { status: true });
+
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
@@ -54,12 +56,20 @@ const AllAddonsAssignList = () => {
   const [addonsAssign, setAddonsAssign] = useState(null);
   const [addonsAssignList, setAddonsAssignList] = useState(null);
   const [foodNames, setFoodNames] = useState(null);
+  const [addonNames, setAddonNames] = useState(null);
 
   useEffect(() => {
     window.get_menu_add_on_lists_channel.once(
       'get_menu_add_on_lists_channel_response',
       (args = []) => {
         setAddonsAssignList(args);
+      }
+    );
+
+    window.get_addons_name_list.once(
+      'get_addons_name_list_response',
+      (args = []) => {
+        setAddonNames(args);
       }
     );
 
@@ -283,11 +293,14 @@ const AllAddonsAssignList = () => {
                 ]}
               >
                 <Select placeholder="Select Option" size="large" allowClear>
-                  <Option value="1">Pizza</Option>
-                  <Option value="2">Dhosa</Option>
-                  <Option value="3">French Fries</Option>
-                  <Option value="4">Chicken Kebab</Option>
-                  <Option value="5">Burger</Option>
+                  {addonNames?.map((addonItem) => (
+                    <Option
+                      key={addonItem?.add_on_id}
+                      value={addonItem?.add_on_id}
+                    >
+                      {addonItem?.add_on_name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
