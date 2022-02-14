@@ -207,6 +207,9 @@ const MenuTypeList = () => {
       'context_bridge_menu_type_response',
       ({ status }) => {
         if (status === 'updated') {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
           message.success({
             content: 'Food menu type update successfully',
             className: 'custom-class',
@@ -216,11 +219,9 @@ const MenuTypeList = () => {
               float: 'right',
             },
           });
-
-          setReRender((prevState) => !prevState);
-          closeModal();
         } else {
           setReRender((prevState) => !prevState);
+          closeModal();
 
           message.success({
             content: 'Food menu type added successfully',
@@ -231,8 +232,6 @@ const MenuTypeList = () => {
               float: 'right',
             },
           });
-
-          closeModal();
         }
       }
     );
