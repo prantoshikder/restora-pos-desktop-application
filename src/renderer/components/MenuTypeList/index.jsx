@@ -192,8 +192,8 @@ const MenuTypeList = () => {
       ? (newMenuType.status = 1)
       : (newMenuType.status = 0);
 
-    if (updateMenuType.menu_type_id) {
-      newMenuType.menu_type_id = updateMenuType.menu_type_id;
+    if (updateMenuType?.menu_type_id) {
+      newMenuType.menu_type_id = updateMenuType?.menu_type_id;
     }
 
     // Insert Data
