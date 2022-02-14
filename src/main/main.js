@@ -998,6 +998,43 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
   }
 });
 
+// Get addons lists as an Array
+ipcMain.on('get_menu_add_on_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT row_id, menu_id, add_on_id FROM menu_add_on`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_menu_add_on_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
+//Delete menu addons from the DB
+ipcMain.on('delete_menu_addons_item', (event, args) => {
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  db.serialize(() => {
+    db.run(`DELETE FROM menu_add_on WHERE row_id = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send('delete_menu_addons_item_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_menu_addons_item_response', {
+            status: true,
+          });
+    });
+  });
+  db.close();
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
