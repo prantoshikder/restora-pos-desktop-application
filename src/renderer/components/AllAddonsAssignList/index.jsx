@@ -17,6 +17,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { getDataFromDatabase } from '../../../helpers';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -59,36 +60,53 @@ const AllAddonsAssignList = () => {
   const [addonNames, setAddonNames] = useState(null);
 
   useEffect(() => {
-    window.get_menu_add_on_lists_channel.once(
-      'get_menu_add_on_lists_channel_response',
-      (args = []) => {
-        setAddonsAssignList(args);
-      }
-    );
+    Promise.all([
+      getDataFromDatabase(
+        'get_menu_add_on_lists_channel_response',
+        window.get_menu_add_on_lists_channel
+      ),
+      getDataFromDatabase(
+        'get_addons_name_list_response',
+        window.get_addons_name_list
+      ),
+      getDataFromDatabase(
+        'get_food_name_lists_channel_response',
+        window.get_food_name_lists_channel
+      ),
+    ])
+      .then(([addonsList, addonNames, foodNames]) => {
+        setAddonNames(addonNames);
+        setFoodNames(foodNames);
+        let newAddonNames = [];
 
-    window.get_addons_name_list.once(
-      'get_addons_name_list_response',
-      (args = []) => {
-        setAddonNames(args);
-      }
-    );
+        addonsList.map((addon, index) => {
+          const newAddons = addonNames.find(
+            (addonName) => addonName.add_on_id === addon.add_on_id
+          );
 
-    // Get only foods name
-    window.get_food_name_lists_channel.once(
-      'get_food_name_lists_channel_response',
-      (args = []) => {
-        setFoodNames(args);
-      }
-    );
+          const newFoodItems = foodNames.find(
+            (foodItem) => foodItem.ProductsID === addon.menu_id
+          );
+
+          newAddonNames.push({
+            row_id: index,
+            addonsName: newAddons.add_on_name,
+            foodName: newFoodItems.ProductName,
+          });
+        });
+
+        setAddonsAssignList(newAddonNames);
+      })
+      .catch((err) => console.log(err));
 
     setAddonsAssign([
       {
         name: ['add_on_id'],
-        value: updateAssignAddons?.add_on_id,
+        value: updateAssignAddons?.addonsName,
       },
       {
         name: ['menu_id'],
-        value: updateAssignAddons?.menu_id,
+        value: updateAssignAddons?.foodName,
       },
     ]);
   }, [reRender]);
@@ -96,14 +114,14 @@ const AllAddonsAssignList = () => {
   const columns = [
     {
       title: 'Add-ons Name',
-      dataIndex: 'add_on_id',
-      key: 'add_on_id',
+      dataIndex: 'addonsName',
+      key: 'addonsName',
       width: '30%',
     },
     {
       title: 'Food Name',
-      dataIndex: 'menu_id',
-      key: 'menu_id',
+      dataIndex: 'foodName',
+      key: 'foodName',
       width: '40%',
     },
     {
@@ -113,11 +131,11 @@ const AllAddonsAssignList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditAddonsItem(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteAddonsItem(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -126,14 +144,14 @@ const AllAddonsAssignList = () => {
     },
   ];
 
-  const handleEditCategory = (addonsItem) => {
+  const handleEditAddonsItem = (addonsItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
     setUpdateAssignAddons(addonsItem);
     form.resetFields();
   };
 
-  const handleDeleteCategory = (addonsItem) => {
+  const handleDeleteAddonsItem = (addonsItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,
