@@ -17,6 +17,7 @@ const Currency = ({ direction }) => {
               </Col>
               <Col md={21}>
                 <Heading title="Currency" />
+
                 <CurrencyList />
               </Col>
             </Row>
