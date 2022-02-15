@@ -23,7 +23,7 @@ const { Option } = Select;
 
 const AddNewFood = ({ state }) => {
   // Get menu types e.g lunch, breakfast, dinner etc.
-  window.get_menu_type_list.send('get_menu_type_list', {
+  window.get_active_menu_type_lists.send('get_active_menu_type_lists', {
     status: true,
   });
 
@@ -31,9 +31,9 @@ const AddNewFood = ({ state }) => {
   const format = 'HH:mm';
   let navigate = useNavigate();
 
-  const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
   const selectedValue = state?.menu_type.split(',');
 
+  const [menuTypes, setMenuTypes] = useState([]);
   const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
@@ -134,11 +134,15 @@ const AddNewFood = ({ state }) => {
 
   useEffect(() => {
     getDataFromDatabase(
-      'get_menu_type_list_response',
-      window.get_menu_type_list
-    ).then((res) => {
-      console.log('menu type', res);
-    });
+      'get_active_menu_type_lists_response',
+      window.get_active_menu_type_lists
+    )
+      .then((res) => {
+        Array.isArray(res) &&
+          res?.length &&
+          setMenuTypes(res.map((item) => item.menu_type));
+      })
+      .catch((err) => console.log('Getting menu types erro', err));
   }, []);
 
   const normFile = (e) => {
@@ -158,10 +162,9 @@ const AddNewFood = ({ state }) => {
   };
 
   const changesMenuType = (checkedValues) => {
-    console.log('menuType', checkedValues);
     setCheckedList(checkedValues);
     setIndeterminate(
-      !!checkedValues.length && checkedValues.length < plainOptions.length
+      !!checkedValues.length && checkedValues.length < menuTypes.length
     );
 
     setMenuType(checkedValues);
@@ -475,7 +478,7 @@ const AddNewFood = ({ state }) => {
               valuePropName="checked"
             >
               <Checkbox.Group
-                options={plainOptions}
+                options={menuTypes}
                 value={checkedList}
                 onChange={changesMenuType}
               />

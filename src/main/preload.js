@@ -305,20 +305,17 @@ contextBridge.exposeInMainWorld('context_bridge_menu_type', {
 });
 
 // Get menu type data from the DB
-contextBridge.exposeInMainWorld('get_menu_type_lists', {
-  send: (channel, data) => {
-    let validChannels = ['get_menu_type_lists'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_menu_type_lists_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'get_menu_type_lists', //Event Name
+  'get_menu_type_lists', // Channel Name
+  'get_menu_type_lists_response' //Response
+);
+
+sendDataThroughMiddleware(
+  'get_active_menu_type_lists', //Event Name
+  'get_active_menu_type_lists', // Channel Name
+  'get_active_menu_type_lists_response' //Response
+);
 
 // Delete menu type from the DB
 contextBridge.exposeInMainWorld('delete_menu_type_item', {
@@ -418,18 +415,29 @@ contextBridge.exposeInMainWorld('get_addons_name_list', {
   },
 });
 
-// Get Menu Types as Array
-contextBridge.exposeInMainWorld('get_menu_type_list', {
-  send: (channel, data) => {
-    let validChannels = ['get_menu_type_list'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_menu_type_list_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+/*======================================================================
+  FUNCTION DECLARETIONS
+========================================================================*/
+/**
+ * Used as middleware to communicate between main.js & nodejs
+ *
+ * @params string event name
+ * @params string channel name
+ * @params string response
+ */
+function sendDataThroughMiddleware(event, channel, response) {
+  contextBridge.exposeInMainWorld(event, {
+    send: (channel, data) => {
+      let validChannels = [channel];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.send(channel, data);
+      }
+    },
+    once: (channel, func) => {
+      let validChannels = [response];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.once(channel, (event, ...args) => func(...args));
+      }
+    },
+  });
+}
