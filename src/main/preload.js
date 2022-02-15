@@ -402,3 +402,18 @@ contextBridge.exposeInMainWorld('get_food_name_lists_channel', {
     }
   },
 });
+
+contextBridge.exposeInMainWorld('get_addons_name_list', {
+  send: (channel, data) => {
+    let validChannels = ['get_addons_name_list'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_addons_name_list_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});

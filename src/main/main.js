@@ -425,21 +425,7 @@ ipcMain.on('add_addons', (event, args) => {
 });
 
 // Get all addons from DB
-ipcMain.on('addons_list', (event, args) => {
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  let { status } = args;
-  let sql = `SELECT * FROM addons`;
-
-  if (status) {
-    db.serialize(() => {
-      db.all(sql, [], (err, rows) => {
-        mainWindow.webContents.send('addons_list_response', rows);
-      });
-    });
-  }
-
-  db.close();
-});
+getListItems('addons_list', 'addons_list_response', 'addons');
 
 // Delete addons from DB
 ipcMain.on('delete_addons', (event, args) => {
@@ -457,6 +443,9 @@ ipcMain.on('delete_addons', (event, args) => {
   db.close();
 });
 
+/*==================================================================
+
+==================================================================*/
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
   let {
@@ -638,6 +627,9 @@ ipcMain.on('food_lists_channel', (event, args) => {
   }
 });
 
+/*==================================================================
+  FOOD VARIANT
+==================================================================*/
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
   let { food_id, food_variant, food_price } = args;
@@ -729,6 +721,9 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   db.close();
 });
 
+/*==================================================================
+  FOOD AVAILABILITY
+==================================================================*/
 // Insert Food availability data
 // Insert and update foods variant
 ipcMain.on('context_bridge_food_available_time', (event, args) => {
@@ -838,7 +833,7 @@ ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
 
 /*==================================================================
   MENU TYPE
-==================================================================*/
+====================================================================*/
 // Insert Menu type
 ipcMain.on('context_bridge_menu_type', (event, args) => {
   let { menu_type_id, menu_type, menu_icon, status } = args;
@@ -1036,6 +1031,15 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
   db.close();
 });
 
+// Get addons lists in names as an Array
+getListItems(
+  'get_addons_name_list',
+  'get_addons_name_list_response',
+  'addons',
+  'add_on_id, add_on_name',
+  true
+);
+
 // Get food lists as an Array from the DB only [ProductsID, ProductName]
 ipcMain.on('get_food_name_lists_channel', (event, args) => {
   if (args.status) {
@@ -1053,6 +1057,30 @@ ipcMain.on('get_food_name_lists_channel', (event, args) => {
     db.close();
   }
 });
+
+/*==================================================================
+  FUNCTIONS DEFINITIONS
+==================================================================*/
+// Get addons lists in names as an Array
+function getListItems(channelName, response, table, query = '*', condition) {
+  ipcMain.on(channelName, (event, args) => {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let { status } = args;
+    let sql = `SELECT ${query} FROM ${table} ${
+      condition && 'WHERE is_active = 1'
+    }`;
+
+    if (status) {
+      db.serialize(() => {
+        db.all(sql, [], (err, rows) => {
+          mainWindow.webContents.send(response, rows);
+        });
+      });
+    }
+
+    db.close();
+  });
+}
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
