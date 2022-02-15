@@ -17,6 +17,7 @@ import {
   Table,
   Upload,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import React, { useEffect, useState } from 'react';
 
 const { Option } = Select;
@@ -41,7 +42,7 @@ const rowSelection = {
 
 const MenuTypeList = () => {
   // Get Menu type list
-  window.get_menu_type_lists_channel.send('get_menu_type_lists_channel', {
+  window.get_menu_type_lists.send('get_menu_type_lists', {
     status: true,
   });
 
@@ -54,23 +55,6 @@ const MenuTypeList = () => {
   const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
-    window.get_menu_type_lists_channel.once(
-      'get_menu_type_lists_channel_response',
-      (args = []) => {
-        const foodAvailableList =
-          Array.isArray(args) &&
-          args?.map((element) => {
-            if (element.status === 1) {
-              element.status = 'Active';
-            } else {
-              element.status = 'Inactive';
-            }
-          });
-
-        setMenuTypesList(args);
-      }
-    );
-
     setMenuTypes([
       {
         name: 'menu_type',
@@ -81,11 +65,30 @@ const MenuTypeList = () => {
         // value: updateMenuType?.menu_type,
       },
       {
-        name: 'status',
-        value: updateMenuType?.status || 'Active',
+        name: 'is_active',
+        value: updateMenuType?.is_active || 'Active',
       },
     ]);
   }, [reRender]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_type_lists_response',
+      window.get_menu_type_lists
+    ).then((res) => {
+      const foodAvailableList =
+        Array.isArray(res) &&
+        res?.map((element) => {
+          if (element.is_active === 1) {
+            element.is_active = 'Active';
+          } else {
+            element.is_active = 'Inactive';
+          }
+        });
+
+      setMenuTypesList(res);
+    });
+  }, []);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -155,8 +158,8 @@ const MenuTypeList = () => {
         // get delete response
         window.delete_menu_type_item.once(
           'delete_menu_type_item_response',
-          ({ status }) => {
-            if (status) {
+          ({ is_active }) => {
+            if (is_active) {
               message.success({
                 content: 'Menu type deleted successfully',
                 className: 'custom-class',
@@ -186,11 +189,11 @@ const MenuTypeList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    newMenuType.status === 'Active'
-      ? (newMenuType.status = 1)
-      : parseInt(newMenuType.status) === 1
-      ? (newMenuType.status = 1)
-      : (newMenuType.status = 0);
+    newMenuType.is_active === 'Active'
+      ? (newMenuType.is_active = 1)
+      : parseInt(newMenuType.is_active) === 1
+      ? (newMenuType.is_active = 1)
+      : (newMenuType.is_active = 0);
 
     if (updateMenuType?.menu_type_id) {
       newMenuType.menu_type_id = updateMenuType?.menu_type_id;
@@ -205,8 +208,8 @@ const MenuTypeList = () => {
     // Insert or update response
     window.context_bridge_menu_type.once(
       'context_bridge_menu_type_response',
-      ({ status }) => {
-        if (status === 'updated') {
+      ({ is_active }) => {
+        if (is_active === 'updated') {
           setReRender((prevState) => !prevState);
           closeModal();
 
@@ -328,7 +331,7 @@ const MenuTypeList = () => {
                 </Upload.Dragger>
               </Form.Item> */}
 
-              <Form.Item name="status" label="Status">
+              <Form.Item name="is_active" label="Status">
                 <Select placeholder="Select an Option" size="large" allowClear>
                   <Option value="1">Active</Option>
                   <Option value="0">Inactive</Option>

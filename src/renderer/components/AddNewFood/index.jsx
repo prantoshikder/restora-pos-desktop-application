@@ -12,6 +12,7 @@ import {
   TimePicker,
   Upload,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +22,11 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AddNewFood = ({ state }) => {
+  // Get menu types e.g lunch, breakfast, dinner etc.
+  window.get_menu_type_list.send('get_menu_type_list', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const format = 'HH:mm';
   let navigate = useNavigate();
@@ -125,6 +131,15 @@ const AddNewFood = ({ state }) => {
       setParentCategory(categoryFilter);
     });
   }, [reRender]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_type_list_response',
+      window.get_menu_type_list
+    ).then((res) => {
+      console.log('menu type', res);
+    });
+  }, []);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -234,8 +249,6 @@ const AddNewFood = ({ state }) => {
     // Get add food name insert & update response
     window.add_new_foods.once('add_new_foods_response', ({ status }) => {
       if (status === 'updated') {
-        console.log('status', status);
-
         message.success({
           content: 'Food name has been updated successfully',
           className: 'custom-class',
@@ -251,8 +264,6 @@ const AddNewFood = ({ state }) => {
         setReRender((prevState) => !prevState);
 
         setCheckedList('');
-
-        console.log('status', status);
 
         message.success({
           content: 'Foods name added successfully',

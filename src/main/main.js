@@ -628,6 +628,17 @@ ipcMain.on('food_lists_channel', (event, args) => {
 });
 
 /*==================================================================
+  MENU TYPE - in the add food item
+==================================================================*/
+getListItems(
+  'get_menu_type_list',
+  'get_menu_type_list_response',
+  'menu_type',
+  'menu_type_id, menu_type',
+  true
+);
+
+/*==================================================================
   FOOD VARIANT
 ==================================================================*/
 // Insert and update foods variant
@@ -836,7 +847,7 @@ ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
 ====================================================================*/
 // Insert Menu type
 ipcMain.on('context_bridge_menu_type', (event, args) => {
-  let { menu_type_id, menu_type, menu_icon, status } = args;
+  let { menu_type_id, menu_type, menu_icon, is_active } = args;
 
   // Execute if the event has menu type ID. It is used to update a specific item
   if (args.menu_type_id !== undefined) {
@@ -844,9 +855,9 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO menu_type (menu_type_id, menu_type, menu_icon, status)
+        `INSERT OR REPLACE INTO menu_type (menu_type_id, menu_type, menu_icon, is_active)
         VALUES (?, ?, ?, ?)`,
-        [menu_type_id, menu_type, menu_icon, status],
+        [menu_type_id, menu_type, menu_icon, is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -869,12 +880,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
           'menu_type_id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'menu_type' varchar(120),
           'menu_icon' varchar(150),
-          'status' INT
+          'is_active' INT
         )`
       ).run(
-        `INSERT OR REPLACE INTO menu_type (menu_type, menu_icon, status)
+        `INSERT OR REPLACE INTO menu_type (menu_type, menu_icon, is_active)
           VALUES (?, ?, ?)`,
-        [menu_type, menu_icon, status],
+        [menu_type, menu_icon, is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -886,24 +897,6 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
               });
         }
       );
-    });
-    db.close();
-  }
-});
-
-// Get menu type lists as an Array
-ipcMain.on('get_menu_type_lists_channel', (event, args) => {
-  if (args.status) {
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT * FROM menu_type`;
-    db.serialize(() => {
-      db.all(sql, [], (err, rows) => {
-        console.log(rows);
-        mainWindow.webContents.send(
-          'get_menu_type_lists_channel_response',
-          rows
-        );
-      });
     });
     db.close();
   }
@@ -1030,6 +1023,13 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
   });
   db.close();
 });
+
+// Get MENU TYPE lists as an Array
+getListItems(
+  'get_menu_type_lists',
+  'get_menu_type_lists_response',
+  'menu_type'
+);
 
 // Get addons lists in names as an Array
 getListItems(
