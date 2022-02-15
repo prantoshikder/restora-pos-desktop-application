@@ -1,308 +1,138 @@
 const { channel } = require('diagnostics_channel');
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('api', {
-  send: (channel, data) => {
-    let validChannels = ['getSettingDataFromDB'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['sendSettingDataFromMain'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'api', //Event Name
+  'getSettingDataFromDB', // Channel Name
+  'sendSettingDataFromMain' //Response
+);
 
-contextBridge.exposeInMainWorld('add_category', {
-  send: (channel, data) => {
-    let validChannels = ['insertCategoryData'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['after_insert_get_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'add_category', //Event Name
+  'insertCategoryData', // Channel Name
+  'after_insert_get_response' //Response
+);
 
-contextBridge.exposeInMainWorld('get_category', {
-  send: (channel, data) => {
-    let validChannels = ['sendResponseForCategory'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
+sendDataThroughMiddleware(
+  'get_category', //Event Name
+  'sendResponseForCategory', // Channel Name
+  'sendCategoryData' //Response
+);
 
-  once: (channel, func) => {
-    let validChannels = ['sendCategoryData'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+// Delete Category
+sendDataThroughMiddleware(
+  'delete_category', //Event Name
+  'delete_category', // Channel Name
+  'delete_category_response' //Response
+);
 
-contextBridge.exposeInMainWorld('delete_category', {
-  send: (channel, data) => {
-    let validChannels = ['delete_category'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_category_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
-
-contextBridge.exposeInMainWorld('parent_category', {
-  send: (channel, data) => {
-    let validChannels = ['parent_category'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['parent_category'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+// Get parent category
+sendDataThroughMiddleware(
+  'parent_category', //Event Name
+  'parent_category', // Channel Name
+  'parent_category' //Response
+);
 
 // Add new addons - channel
-contextBridge.exposeInMainWorld('add_addons', {
-  send: (channel, data) => {
-    let validChannels = ['add_addons'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['add_addons_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'add_addons', //Event Name
+  'add_addons', // Channel Name
+  'add_addons_response' //Response
+);
 
 // get addons list - channel
-contextBridge.exposeInMainWorld('addons_list', {
-  send: (channel, data) => {
-    let validChannels = ['addons_list'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['addons_list_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'addons_list', //Event Name
+  'addons_list', // Channel Name
+  'addons_list_response' //Response
+);
 
 // Delete addons - channel
-contextBridge.exposeInMainWorld('delete_addons', {
-  send: (channel, data) => {
-    let validChannels = ['delete_addons'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_addons_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'delete_addons', //Event Name
+  'delete_addons', // Channel Name
+  'delete_addons_response' //Response
+);
 
 // Add new foods - channel
-contextBridge.exposeInMainWorld('add_new_foods', {
-  send: (channel, data) => {
-    let validChannels = ['add_new_foods'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['add_new_foods_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'add_new_foods', //Event Name
+  'add_new_foods', // Channel Name
+  'add_new_foods_response' //Response
+);
 
 // Get food list - channel
-contextBridge.exposeInMainWorld('get_food_list', {
-  send: (channel, data) => {
-    let validChannels = ['get_food_list'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_food_list_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'get_food_list', //Event Name
+  'get_food_list', // Channel Name
+  'get_food_list_response' //Response
+);
 
 // Delete foods - channel
-contextBridge.exposeInMainWorld('delete_foods', {
-  send: (channel, data) => {
-    let validChannels = ['delete_foods'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_foods_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'delete_foods', //Event Name
+  'delete_foods', // Channel Name
+  'delete_foods_response' //Response
+);
 
 // Add foods variant - channel
-contextBridge.exposeInMainWorld('add_new_foods_variant', {
-  send: (channel, data) => {
-    let validChannels = ['add_new_foods_variant'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['add_new_foods_variant_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'add_new_foods_variant', //Event Name
+  'add_new_foods_variant', // Channel Name
+  'add_new_foods_variant_response' //Response
+);
 
 // Get food lists channel
-contextBridge.exposeInMainWorld('food_lists_channel', {
-  send: (channel, data) => {
-    let validChannels = ['food_lists_channel'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['food_lists_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'food_lists_channel', //Event Name
+  'food_lists_channel', // Channel Name
+  'food_lists_response' //Response
+);
 
 // Delete foods variant - channel
-contextBridge.exposeInMainWorld('delete_foods_variant', {
-  send: (channel, data) => {
-    let validChannels = ['delete_foods_variant'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_foods_variant_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'delete_foods_variant', //Event Name
+  'delete_foods_variant', // Channel Name
+  'delete_foods_variant_response' //Response
+);
 
 // Get variant lists channel
-contextBridge.exposeInMainWorld('variant_lists_channel', {
-  send: (channel, data) => {
-    let validChannels = ['variant_lists_channel'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['variant_lists_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'variant_lists_channel', //Event Name
+  'variant_lists_channel', // Channel Name
+  'variant_lists_response' //Response
+);
 
 // Insert food available day & time channel
-contextBridge.exposeInMainWorld('context_bridge_food_available_time', {
-  send: (channel, data) => {
-    let validChannels = ['context_bridge_food_available_time'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['context_bridge_food_available_time_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'context_bridge_food_available_time', //Event Name
+  'context_bridge_food_available_time', // Channel Name
+  'context_bridge_food_available_time_response' //Response
+);
 
 // Get food available time lists
-contextBridge.exposeInMainWorld('get_food_availability_lists_channel', {
-  send: (channel, data) => {
-    let validChannels = ['get_food_availability_lists_channel'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_food_availability_lists_channel_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'get_food_availability_lists_channel', //Event Name
+  'get_food_availability_lists_channel', // Channel Name
+  'get_food_availability_lists_channel_response' //Response
+);
 
 // Delete food available day & time list channel
-contextBridge.exposeInMainWorld('channel_delete_food_available_day_time', {
-  send: (channel, data) => {
-    let validChannels = ['channel_delete_food_available_day_time'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_food_available_day_time_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'channel_delete_food_available_day_time', //Event Name
+  'channel_delete_food_available_day_time', // Channel Name
+  'delete_food_available_day_time_response' //Response
+);
 
 /*=================================================================
   MENU TYPE
 =================================================================*/
 // Insert menu type data
-contextBridge.exposeInMainWorld('context_bridge_menu_type', {
-  send: (channel, data) => {
-    let validChannels = ['context_bridge_menu_type'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['context_bridge_menu_type_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'context_bridge_menu_type', //Event Name
+  'context_bridge_menu_type', // Channel Name
+  'context_bridge_menu_type_response' //Response
+);
 
 // Get menu type data from the DB
 sendDataThroughMiddleware(
@@ -311,6 +141,7 @@ sendDataThroughMiddleware(
   'get_menu_type_lists_response' //Response
 );
 
+// Get only active menu types
 sendDataThroughMiddleware(
   'get_active_menu_type_lists', //Event Name
   'get_active_menu_type_lists', // Channel Name
@@ -318,102 +149,49 @@ sendDataThroughMiddleware(
 );
 
 // Delete menu type from the DB
-contextBridge.exposeInMainWorld('delete_menu_type_item', {
-  send: (channel, data) => {
-    let validChannels = ['delete_menu_type_item'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_menu_type_item_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'delete_menu_type_item', //Event Name
+  'delete_menu_type_item', // Channel Name
+  'delete_menu_type_item_response' //Response
+);
 
 /*=================================================================
   MENU ADDONS
 =================================================================*/
 // Insert menu addons data
-contextBridge.exposeInMainWorld('context_bridge_menu_addons', {
-  send: (channel, data) => {
-    let validChannels = ['context_bridge_menu_addons'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['context_bridge_menu_addons_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'context_bridge_menu_addons', //Event Name
+  'context_bridge_menu_addons', // Channel Name
+  'context_bridge_menu_addons_response' //Response
+);
 
 // Get menu addons as an Array from the DB
-contextBridge.exposeInMainWorld('get_menu_add_on_lists_channel', {
-  send: (channel, data) => {
-    let validChannels = ['get_menu_add_on_lists_channel'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_menu_add_on_lists_channel_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'get_menu_add_on_lists_channel', //Event Name
+  'get_menu_add_on_lists_channel', // Channel Name
+  'get_menu_add_on_lists_channel_response' //Response
+);
 
 // Delete menu addons from the DB
-contextBridge.exposeInMainWorld('delete_menu_addons_item', {
-  send: (channel, data) => {
-    let validChannels = ['delete_menu_addons_item'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['delete_menu_addons_item_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'delete_menu_addons_item', //Event Name
+  'delete_menu_addons_item', // Channel Name
+  'delete_menu_addons_item_response' //Response
+);
 
 // Get food lists as an Array from the DB only [product_id, product_name]
-contextBridge.exposeInMainWorld('get_food_name_lists_channel', {
-  send: (channel, data) => {
-    let validChannels = ['get_food_name_lists_channel'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_food_name_lists_channel_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+sendDataThroughMiddleware(
+  'get_food_name_lists_channel', //Event Name
+  'get_food_name_lists_channel', // Channel Name
+  'get_food_name_lists_channel_response' //Response
+);
 
-contextBridge.exposeInMainWorld('get_addons_name_list', {
-  send: (channel, data) => {
-    let validChannels = ['get_addons_name_list'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  once: (channel, func) => {
-    let validChannels = ['get_addons_name_list_response'];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.once(channel, (event, ...args) => func(...args));
-    }
-  },
-});
+// Get addons name list
+sendDataThroughMiddleware(
+  'get_addons_name_list', //Event Name
+  'get_addons_name_list', // Channel Name
+  'get_addons_name_list_response' //Response
+);
 
 /*======================================================================
   FUNCTION DECLARETIONS
