@@ -63,8 +63,8 @@ const FoodVariantList = () => {
         Array.isArray(args) &&
         args?.filter(
           (foodItem) =>
-            foodItem.ProductsIsActive !== 0 &&
-            foodItem.ProductsIsActive !== null
+            foodItem.products_is_active !== 0 &&
+            foodItem.products_is_active !== null
         );
       setFoodName(foodNameList);
     });
@@ -77,7 +77,7 @@ const FoodVariantList = () => {
     setFoodVariant([
       {
         name: ['food_id'],
-        value: updateFoodVariant?.ProductName,
+        value: updateFoodVariant?.product_name,
       },
       {
         name: ['food_variant'],
@@ -99,8 +99,8 @@ const FoodVariantList = () => {
     },
     {
       title: 'Food Name',
-      dataIndex: 'ProductName',
-      key: 'ProductName',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '45%',
     },
     {
@@ -287,10 +287,10 @@ const FoodVariantList = () => {
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodName?.map((foodName) => (
                     <Option
-                      key={foodName?.ProductsID}
-                      value={foodName?.ProductsID}
+                      key={foodName?.product_id}
+                      value={foodName?.product_id}
                     >
-                      {foodName?.ProductName}
+                      {foodName?.product_name}
                     </Option>
                   ))}
                 </Select>

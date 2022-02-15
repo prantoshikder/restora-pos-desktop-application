@@ -110,8 +110,8 @@ const Cart = () => {
     },
     {
       title: 'Variant Name',
-      dataIndex: 'variant',
-      key: 'variant',
+      dataIndex: 'foodVariant',
+      key: 'foodVariant',
       align: 'center',
     },
     {
