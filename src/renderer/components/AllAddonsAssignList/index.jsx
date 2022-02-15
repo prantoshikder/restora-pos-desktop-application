@@ -102,13 +102,13 @@ const AllAddonsAssignList = () => {
           );
 
           const newFoodItems = foodNames.find(
-            (foodItem) => foodItem.ProductsID === addon.menu_id
+            (foodItem) => foodItem.product_id === addon.menu_id
           );
 
           newAddonNames.push({
             row_id: index,
             addonsName: newAddons.add_on_name,
-            foodName: newFoodItems.ProductName,
+            foodName: newFoodItems.product_name,
           });
         });
 
@@ -341,10 +341,10 @@ const AllAddonsAssignList = () => {
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodNames?.map((foodItem) => (
                     <Option
-                      key={foodItem?.ProductsID}
-                      value={foodItem?.ProductsID}
+                      key={foodItem?.product_id}
+                      value={foodItem?.product_id}
                     >
-                      {foodItem?.ProductName}
+                      {foodItem?.product_name}
                     </Option>
                   ))}
                 </Select>

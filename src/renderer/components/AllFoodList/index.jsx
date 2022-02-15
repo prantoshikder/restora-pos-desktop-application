@@ -39,10 +39,10 @@ const AllFoodList = () => {
       const foodLists =
         Array.isArray(data) &&
         data?.map((element) => {
-          if (element.ProductsIsActive === 1) {
-            return { ...element, ProductsIsActive: 'Active' };
+          if (element.products_is_active === 1) {
+            return { ...element, products_is_active: 'Active' };
           } else {
-            return { ...element, ProductsIsActive: 'Inactive' };
+            return { ...element, products_is_active: 'Inactive' };
           }
         });
 
@@ -72,8 +72,8 @@ const AllFoodList = () => {
     },
     {
       title: 'Food Name',
-      dataIndex: 'ProductName',
-      key: 'ProductName',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '20%',
     },
     {
@@ -84,14 +84,14 @@ const AllFoodList = () => {
     },
     {
       title: 'Vat',
-      dataIndex: 'productvat',
-      key: 'productvat',
+      dataIndex: 'product_vat',
+      key: 'product_vat',
       width: '10%',
     },
     {
       title: 'Status',
-      dataIndex: 'ProductsIsActive',
-      key: 'ProductsIsActive',
+      dataIndex: 'products_is_active',
+      key: 'products_is_active',
       width: '15%',
     },
     {
@@ -127,10 +127,10 @@ const AllFoodList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        window.delete_foods.send('delete_foods', { id: foodItem.ProductsID });
+        window.delete_foods.send('delete_foods', { id: foodItem.product_id });
 
         setFoodData(
-          foodData.filter((item) => item.ProductsID !== foodItem.ProductsID)
+          foodData.filter((item) => item.product_id !== foodItem.product_id)
         );
 
         // Delete Food item
@@ -164,7 +164,7 @@ const AllFoodList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={foodData}
         pagination={false}
-        rowKey={(record) => record.ProductsID}
+        rowKey={(record) => record.product_id}
       />
     </div>
   );

@@ -5,7 +5,7 @@ var sqlite3 = require('sqlite3').verbose();
 // db.serialize(function() {
 //   db.run(
 // `    CREATE TABLE IF NOT EXISTS Category (
-//       CategoryId INTEGER PRIMARY KEY AUTOINCREMENT,
+//       category_id INTEGER PRIMARY KEY AUTOINCREMENT,
 //       CategoryName TEXT NOT NULL,
 //       ParentCategory TEXT,
 //       CategoryBgColor TEXT,
@@ -16,7 +16,7 @@ var sqlite3 = require('sqlite3').verbose();
 //       OfferEndDate TEXT)`
 //   );
 
-//   var stmt = db.prepare(`INSERT INTO Category (CategoryId, CategoryName, ParentCategory, CategoryBgColor, CategoryImage, CategoryIcon, Status, OfferStartDate, OfferEndDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+//   var stmt = db.prepare(`INSERT INTO Category (category_id, CategoryName, ParentCategory, CategoryBgColor, CategoryImage, CategoryIcon, Status, OfferStartDate, OfferEndDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 //   stmt.run(10, 'Burger', 'Snakes', 'Yellow', '', '', 1, '26/12/2021', '27/12/2021');
 //   stmt.finalize();
 
@@ -46,7 +46,7 @@ module.exports.insertCategory = function (tableName, data) {
         // Created table
         knex.schema
           .createTable(tableName, (table) => {
-            table.increments('CategoryId').primary();
+            table.increments('category_id').primary();
             table.string('CategoryName').notNullable();
             table.string('ParentCategory');
             table.string('CategoryBgColor');
@@ -125,7 +125,7 @@ module.exports.insertCategory = function (tableName, data) {
 // function getValues() {
 //   return knex(tableName)
 //     .select(
-//       'CategoryId',
+//       'category_id',
 //       'CategoryName',
 //       'ParentCategory',
 //       'CategoryBgColor',
