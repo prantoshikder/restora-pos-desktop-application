@@ -902,6 +902,22 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
   }
 });
 
+// Get menu type lists as an Array
+getListItems(
+  'get_menu_type_lists',
+  'get_menu_type_lists_response',
+  'menu_type'
+);
+
+// Get menu_type only is_active items & menu_type_id, menu_type etc.
+getListItems(
+  'get_active_menu_type_lists',
+  'get_active_menu_type_lists_response',
+  'menu_type',
+  'menu_type',
+  true
+);
+
 //Delete menu type from the DB
 ipcMain.on('delete_menu_type_item', (event, args) => {
   let { id } = args;
@@ -1023,13 +1039,6 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
   });
   db.close();
 });
-
-// Get MENU TYPE lists as an Array
-getListItems(
-  'get_menu_type_lists',
-  'get_menu_type_lists_response',
-  'menu_type'
-);
 
 // Get addons lists in names as an Array
 getListItems(
