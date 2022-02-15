@@ -43,7 +43,7 @@ const CurrencyList = () => {
   const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [addCurrency, setAddCurrency] = useState([]);
+  const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
   const [updateCurrencyAdd, setUpdateCurrencyAdd] = useState({});
   const [currencyLists, setCurrencyLists] = useState([]);
@@ -67,7 +67,7 @@ const CurrencyList = () => {
         value: updateCurrencyAdd?.position,
       },
     ]);
-  }, [reRender]);
+  }, []);
 
   const columns = [
     {
@@ -291,14 +291,18 @@ const CurrencyList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={addCurrency}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setAddCurrency(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                label="Currency Name"
                 name="currency_name"
+                label="Currency Name"
                 rules={[
                   {
                     required: true,
@@ -311,8 +315,8 @@ const CurrencyList = () => {
               </Form.Item>
 
               <Form.Item
-                label="Currency Icon"
                 name="currency_icon"
+                label="Currency Icon"
                 rules={[
                   {
                     required: true,
@@ -325,8 +329,8 @@ const CurrencyList = () => {
               </Form.Item>
 
               <Form.Item
-                label="Conversion Rate"
                 name="currency_rate"
+                label="Conversion Rate"
                 rules={[
                   {
                     required: true,
@@ -338,8 +342,8 @@ const CurrencyList = () => {
                 <Input placeholder="Conversion Rate" size="large" />
               </Form.Item>
               <Form.Item
-                label="Position"
                 name="position"
+                label="Position"
                 rules={[
                   { required: true, message: 'Please input your Position!' },
                 ]}
