@@ -1067,6 +1067,15 @@ ipcMain.on('get_food_name_lists_channel', (event, args) => {
   }
 });
 
+// Get Currency Lists
+getListItems('get_currency_lists', 'get_currency_lists_response', 'currency');
+
+deleteListItem(
+  'delete_currency_list_item',
+  'delete_currency_list_item_response',
+  'currency'
+);
+
 /*==================================================================
   FUNCTIONS DEFINITIONS
 ==================================================================*/
@@ -1075,128 +1084,88 @@ insertData();
 function insertData() {
   ipcMain.on('insert_currency', (event, args) => {
     let { id, currency_name, currency_icon, position, currency_rate } = args;
-    console.log(args);
 
     // Execute if the event has row ID / data ID. It is used to update a specific item
-    // if (args.row_id !== undefined) {
-    //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    if (args.id !== undefined) {
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-    //   db.serialize(() => {
-    //     db.run(
-    //       `INSERT OR REPLACE INTO menu_add_on (id, currency_name, currency_icon, position, currency_rate)
-    //       VALUES (?, ?, ?, ?)`,
-    //       [id, currency_name, currency_icon, position, currency_rate],
-    //       (err) => {
-    //         err
-    //           ? mainWindow.webContents.send(
-    //               'context_bridge_menu_addons_response',
-    //               err.message
-    //             )
-    //           : mainWindow.webContents.send(
-    //               'context_bridge_menu_addons_response',
-    //               {
-    //                 status: 'updated',
-    //               }
-    //             );
-    //       }
-    //     );
-    //   });
-    //   db.close();
-    // } else {
-
-    // Execute if it is new, then insert it
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    db.serialize(() => {
-      db.run(
-        `CREATE TABLE IF NOT EXISTS currency (
+      db.serialize(() => {
+        db.run(
+          `INSERT OR REPLACE INTO menu_add_on (id, currency_name, currency_icon, position, currency_rate)
+          VALUES (?, ?, ?, ?)`,
+          [id, currency_name, currency_icon, position, currency_rate],
+          (err) => {
+            err
+              ? mainWindow.webContents.send(
+                  'insert_currency_response',
+                  err.message
+                )
+              : mainWindow.webContents.send('insert_currency_response', {
+                  status: 'updated',
+                });
+          }
+        );
+      });
+      db.close();
+    } else {
+      // Execute if it is new, then insert it
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+      db.serialize(() => {
+        db.run(
+          `CREATE TABLE IF NOT EXISTS currency (
             'id' INTEGER PRIMARY KEY AUTOINCREMENT,
             'currency_name' varchar(50),
             'currency_icon' varchar(50),
-            'position' INT COMMENT '1=left.2=right'
-            'currency_rate' decimal(10,2) DEFAULT '0.00'
+            'position' INT,
+            'currency_rate' real
           )`
-      ).run(
-        `INSERT OR REPLACE INTO currency (currency_name, currency_icon, position, currency_rate)
+        ).run(
+          `INSERT OR REPLACE INTO currency (currency_name, currency_icon, position, currency_rate)
             VALUES (?, ?, ?, ?)`,
-        [currency_name, currency_icon, position, currency_rate],
-        (err) => {
-          err
-            ? mainWindow.webContents.send(
-                'insert_currency_response',
-                err.message
-              )
-            : mainWindow.webContents.send('insert_currency_response', {
-                status: 'inserted',
-              });
-        }
-      );
-    });
-    db.close();
-    // }
+          [currency_name, currency_icon, position, currency_rate],
+          (err) => {
+            console.log('curr insert err', err);
+            err
+              ? mainWindow.webContents.send(
+                  'insert_currency_response',
+                  err.message
+                )
+              : mainWindow.webContents.send('insert_currency_response', {
+                  status: 'inserted',
+                });
+          }
+        );
+      });
+      db.close();
+    }
   });
 }
-// ipcMain.on('context_bridge_menu_addons', (event, args) => {
-//   let { row_id, menu_id, add_on_id, is_active } = args;
 
-//   // Execute if the event has row ID / data ID. It is used to update a specific item
-//   if (args.row_id !== undefined) {
-//     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+/**
+ * Delete single item from the database based on the ID
+ *
+ * @params string channel name
+ * @params string event response
+ * */
+function deleteListItem(channel, eventResponse, table) {
+  ipcMain.on(channel, (event, args) => {
+    let { id } = args;
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-//     db.serialize(() => {
-//       db.run(
-//         `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id, is_active)
-//         VALUES (?, ?, ?, ?)`,
-//         [row_id, menu_id, add_on_id, is_active],
-//         (err) => {
-//           err
-//             ? mainWindow.webContents.send(
-//                 'context_bridge_menu_addons_response',
-//                 err.message
-//               )
-//             : mainWindow.webContents.send(
-//                 'context_bridge_menu_addons_response',
-//                 {
-//                   status: 'updated',
-//                 }
-//               );
-//         }
-//       );
-//     });
-//     db.close();
-//   } else {
-//     console.log('menu_addons else', args);
-//     // Execute if it is new, then insert it
-//     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-//     db.serialize(() => {
-//       db.run(
-//         `CREATE TABLE IF NOT EXISTS menu_add_on (
-//           'row_id' INTEGER PRIMARY KEY AUTOINCREMENT,
-//           'menu_id' INT,
-//           'add_on_id' INT,
-//           'is_active' INT
-//         )`
-//       ).run(
-//         `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
-//           VALUES (?, ?, ?)`,
-//         [menu_id, add_on_id, is_active],
-//         (err) => {
-//           err
-//             ? mainWindow.webContents.send(
-//                 'context_bridge_menu_addons_response',
-//                 err.message
-//               )
-//             : mainWindow.webContents.send(
-//                 'context_bridge_menu_addons_response',
-//                 {
-//                   status: 'inserted',
-//                 }
-//               );
-//         }
-//       );
-//     });
-//     db.close();
-//   }
-// });
+    db.serialize(() => {
+      db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
+        err
+          ? mainWindow.webContents.send(eventResponse, {
+              status: err,
+            })
+          : mainWindow.webContents.send(eventResponse, {
+              status: true,
+            });
+      });
+    });
+    db.close();
+  });
+}
 
 // Get addons lists in names as an Array
 function getListItems(channelName, response, table, query = '*', condition) {
