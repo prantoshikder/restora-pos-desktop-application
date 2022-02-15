@@ -101,7 +101,6 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
-
 // Get parent category data
 ipcMain.on('parent_category', (event, args) => {
   if (args.status) {
@@ -246,8 +245,6 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
   }
 });
 
-
-
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
   let {
@@ -378,8 +375,6 @@ ipcMain.on('delete_category', (event, args) => {
 
   db.close();
 });
-
-
 
 // Insert and update addons data
 ipcMain.on('add_addons', (event, args) => {
@@ -1072,9 +1067,106 @@ ipcMain.on('get_food_name_lists_channel', (event, args) => {
   }
 });
 
+// Get Currency Lists
+getListItems('get_currency_lists', 'get_currency_lists_response', 'currency');
+
+deleteListItem(
+  'delete_currency_list_item',
+  'delete_currency_list_item_response',
+  'currency'
+);
+
 /*==================================================================
   FUNCTIONS DEFINITIONS
 ==================================================================*/
+insertData();
+// INSERT Method
+function insertData() {
+  ipcMain.on('insert_currency', (event, args) => {
+    let { id, currency_name, currency_icon, position, currency_rate } = args;
+
+    // Execute if the event has row ID / data ID. It is used to update a specific item
+    if (args.id !== undefined) {
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+      db.serialize(() => {
+        db.run(
+          `INSERT OR REPLACE INTO menu_add_on (id, currency_name, currency_icon, position, currency_rate)
+          VALUES (?, ?, ?, ?)`,
+          [id, currency_name, currency_icon, position, currency_rate],
+          (err) => {
+            err
+              ? mainWindow.webContents.send(
+                  'insert_currency_response',
+                  err.message
+                )
+              : mainWindow.webContents.send('insert_currency_response', {
+                  status: 'updated',
+                });
+          }
+        );
+      });
+      db.close();
+    } else {
+      // Execute if it is new, then insert it
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+      db.serialize(() => {
+        db.run(
+          `CREATE TABLE IF NOT EXISTS currency (
+            'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+            'currency_name' varchar(50),
+            'currency_icon' varchar(50),
+            'position' INT,
+            'currency_rate' real
+          )`
+        ).run(
+          `INSERT OR REPLACE INTO currency (currency_name, currency_icon, position, currency_rate)
+            VALUES (?, ?, ?, ?)`,
+          [currency_name, currency_icon, position, currency_rate],
+          (err) => {
+            console.log('curr insert err', err);
+            err
+              ? mainWindow.webContents.send(
+                  'insert_currency_response',
+                  err.message
+                )
+              : mainWindow.webContents.send('insert_currency_response', {
+                  status: 'inserted',
+                });
+          }
+        );
+      });
+      db.close();
+    }
+  });
+}
+
+/**
+ * Delete single item from the database based on the ID
+ *
+ * @params string channel name
+ * @params string event response
+ * */
+function deleteListItem(channel, eventResponse, table) {
+  ipcMain.on(channel, (event, args) => {
+    let { id } = args;
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
+        err
+          ? mainWindow.webContents.send(eventResponse, {
+              status: err,
+            })
+          : mainWindow.webContents.send(eventResponse, {
+              status: true,
+            });
+      });
+    });
+    db.close();
+  });
+}
+
 // Get addons lists in names as an Array
 function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
@@ -1115,6 +1207,3 @@ app
     });
   })
   .catch(console.log);
-
-
-
