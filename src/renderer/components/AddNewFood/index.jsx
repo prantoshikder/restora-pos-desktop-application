@@ -32,7 +32,7 @@ const AddNewFood = ({ state }) => {
   let navigate = useNavigate();
 
   const plainOptions = ['Party', 'Coffee', 'Dinner', 'Lunch', 'Breakfast'];
-  const selectedValue = state?.menutype.split(',');
+  const selectedValue = state?.menu_type.split(',');
 
   const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
@@ -54,11 +54,11 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['kitchen_select'],
-        value: state?.kitchenid,
+        value: state?.kitchen_id,
       },
       {
         name: ['food_name'],
-        value: state?.ProductName,
+        value: state?.product_name,
       },
       {
         name: ['component'],
@@ -66,23 +66,23 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['notes'],
-        value: state?.itemnotes,
+        value: state?.item_note,
       },
       {
         name: ['description'],
-        value: state?.descrip,
+        value: state?.description,
       },
       {
         name: ['food_image'],
-        value: state?.ProductImage,
+        value: state?.product_image,
       },
       {
         name: ['vat'],
-        value: state?.productvat || '0.00%',
+        value: state?.product_vat || '0.00%',
       },
       {
         name: ['is_offer'],
-        value: state?.offerIsavailable,
+        value: state?.offer_is_available,
       },
       {
         name: ['special'],
@@ -90,31 +90,31 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['custom_quantity'],
-        value: state?.is_customqty,
+        value: state?.is_custom_quantity,
       },
       {
         name: ['offer_rate'],
-        value: state?.OffersRate,
+        value: state?.offers_rate,
       },
       // {
       //   name: ['offer_start_date'],
-      //   value: state?.offerstartdate,
+      //   value: state?.offer_start_date,
       // },
       // {
       //   name: ['offer_end_date'],
-      //   value: state?.offerendate,
+      //   value: state?.offer_end_date,
       // },
       {
         name: ['cooking_time'],
-        value: state?.cookedtime,
+        value: state?.cooked_time,
       },
       {
         name: ['menu_type'],
-        value: state?.menutype,
+        value: state?.menu_type,
       },
       {
         name: ['food_status'],
-        value: state?.ProductsIsActive || 'Active',
+        value: state?.products_is_active || 'Active',
       },
     ]);
 
@@ -227,10 +227,10 @@ const AddNewFood = ({ state }) => {
     newFoods.cooking_time = timePicker;
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
-    newFoods.ProductsID = state?.ProductsID;
+    newFoods.product_id = state?.product_id;
 
-    if (state?.CategoryID) {
-      newFoods.category_name = state?.CategoryID;
+    if (state?.category_id) {
+      newFoods.category_name = state?.category_id;
     }
 
     newFoods.custom_quantity === true

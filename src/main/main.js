@@ -468,14 +468,14 @@ ipcMain.on('add_new_foods', (event, args) => {
     offer_end_date,
   } = args;
 
-  if (args.ProductsID !== undefined) {
+  if (args.product_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO item_foods (ProductsID, CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable, offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+        `INSERT OR REPLACE INTO item_foods (product_id, category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available, offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, products_is_active)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          args.ProductsID,
+          args.product_id,
           category_name,
           food_name,
           food_image,
@@ -509,41 +509,41 @@ ipcMain.on('add_new_foods', (event, args) => {
     db.serialize(() => {
       db.run(
         `CREATE TABLE IF NOT EXISTS item_foods (
-          'ProductsID' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'CategoryID' INT NOT NULL,
-          'ProductName' varchar(255),
-          'ProductImage' varchar(200),
-          'bigthumb' varchar(255),
+          'product_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'category_id' INT NOT NULL,
+          'product_name' varchar(255),
+          'product_image' varchar(200),
+          'big_thumb' varchar(255),
           'medium_thumb' varchar(255),
           'small_thumb' varchar(255),
           'component' TEXT,
-          'descrip' TEXT,
-          'itemnotes' varchar(255),
-          'menutype' varchar(25),
-          'productvat' REAL DEFAULT 0.00,
+          'description' TEXT,
+          'item_note' varchar(255),
+          'menu_type' varchar(25),
+          'product_vat' REAL DEFAULT 0.00,
           'special' INT,
-          'OffersRate' INT,
-          'offerIsavailable' INT,
-          'offerstartdate' DATETIME ,
-          'offerendate' DATETIME,
-          'Position' INT,
-          'kitchenid' INT,
-          'isgroup' INT,
-          'is_customqty' INT,
-          'cookedtime' varchar(10),
-          'ProductsIsActive' INT,
-          'UserIDInserted' INT,
-          'UserIDUpdated' INT,
-          'UserIDLocked' INT,
-          'DateInserted' DATETIME,
-          'DateUpdated' DATETIME,
-          'DateLocked' DATETIME,
+          'offers_rate' INT,
+          'offer_is_available' INT,
+          'offer_start_date' DATETIME ,
+          'offer_end_date' DATETIME,
+          'position' INT,
+          'kitchen_id' INT,
+          'is_group' INT,
+          'is_custom_quantity' INT,
+          'cooked_time' varchar(10),
+          'products_is_active' INT,
+          'user_id_inserted' INT,
+          'user_id_updated' INT,
+          'user_id_locked' INT,
+          'date_inserted' DATETIME,
+          'date_updated' DATETIME,
+          'date_locked' DATETIME,
           'tax0' TEXT,
           'tax1' TEXT
         )`
       ).run(
-        `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
-          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+        `INSERT OR REPLACE INTO item_foods (category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available,
+          offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, products_is_active)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           category_name,
@@ -580,11 +580,11 @@ ipcMain.on('add_new_foods', (event, args) => {
 // Get all food list from DB
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args;
-  let sql = `SELECT item_foods.ProductsID, item_foods.CategoryID, add_item_category.category_name, item_foods.ProductName, item_foods.ProductImage, item_foods.component, item_foods.descrip, item_foods.itemnotes, item_foods.menutype,
-  item_foods.productvat, item_foods.special, item_foods.OffersRate, item_foods.offerIsavailable, item_foods.offerstartdate, item_foods.offerendate,item_foods.kitchenid, item_foods.productvat, item_foods.ProductsIsActive,
-  item_foods.is_customqty, item_foods.cookedtime, item_foods.ProductsIsActive
+  let sql = `SELECT item_foods.product_id, item_foods.category_id, add_item_category.category_name, item_foods.product_name, item_foods.product_image, item_foods.component, item_foods.description, item_foods.item_note, item_foods.menu_type,
+  item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.offer_start_date, item_foods.offer_end_date,item_foods.kitchen_id, item_foods.product_vat, item_foods.products_is_active,
+  item_foods.is_custom_quantity, item_foods.cooked_time, item_foods.products_is_active
   FROM item_foods
-  INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`;
+  INNER JOIN add_item_category ON item_foods.category_id=add_item_category.category_id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -602,7 +602,7 @@ ipcMain.on('delete_foods', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM item_foods WHERE ProductsID = ?`, id, (err) => {
+    db.run(`DELETE FROM item_foods WHERE product_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
@@ -617,7 +617,7 @@ ipcMain.on('delete_foods', (event, args) => {
 ipcMain.on('food_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
+    let sql = `SELECT product_name, product_id from item_foods WHERE products_is_active = 1`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('food_lists_response', rows);
@@ -700,9 +700,9 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
 ipcMain.on('variant_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.ProductName
+    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.product_name
     FROM variants
-    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`;
+    INNER JOIN item_foods ON variants.food_id=item_foods.product_id`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
@@ -747,7 +747,7 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO foodvariable (available_id, food_id, avail_day, avail_time, is_active)
+        `INSERT OR REPLACE INTO food_variable (available_id, food_id, avail_day, avail_time, is_active)
         VALUES (?, ?, ?, ?, ?)`,
         [args.available_id, food_id, avail_day, avail_time, is_active],
         (err) => {
@@ -770,7 +770,7 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `CREATE TABLE IF NOT EXISTS foodvariable (
+        `CREATE TABLE IF NOT EXISTS food_variable (
           'available_id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'food_id' INT,
           'avail_day' varchar(30),
@@ -778,7 +778,7 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
           'is_active' INT
         )`
       ).run(
-        `INSERT OR REPLACE INTO foodvariable (food_id, avail_day, avail_time, is_active)
+        `INSERT OR REPLACE INTO food_variable (food_id, avail_day, avail_time, is_active)
           VALUES (?, ?, ?, ?)`,
         [food_id, avail_day, avail_time, is_active],
         (err) => {
@@ -800,11 +800,11 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
   }
 });
 
-//Get all lists of food availability from foodvariable
+//Get all lists of food availability from food_variable
 ipcMain.on('get_food_availability_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT available_id, food_id, avail_day, avail_time, is_active FROM foodvariable`;
+    let sql = `SELECT available_id, food_id, avail_day, avail_time, is_active FROM food_variable`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
@@ -823,7 +823,7 @@ ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM foodvariable WHERE available_id = ?`, id, (err) => {
+    db.run(`DELETE FROM food_variable WHERE available_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send(
             'delete_food_available_day_time_response',
@@ -1040,11 +1040,11 @@ getListItems(
   true
 );
 
-// Get food lists as an Array from the DB only [ProductsID, ProductName]
+// Get food lists as an Array from the DB only [product_id, product_name]
 ipcMain.on('get_food_name_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT ProductsID, ProductName FROM item_foods WHERE ProductsIsActive = 1`;
+    let sql = `SELECT product_id, product_name FROM item_foods WHERE products_is_active = 1`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);

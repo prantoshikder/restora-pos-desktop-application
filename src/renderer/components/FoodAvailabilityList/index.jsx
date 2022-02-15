@@ -70,13 +70,13 @@ const FoodAvailabilityList = () => {
           Array.isArray(args) &&
           args?.map((element) => {
             // const availableFoodName = args.find(
-            //   (item) => item?.ProductsID === element?.food_id
+            //   (item) => item?.product_id === element?.food_id
             // );
 
             // if (availableFoodName) {
             //   console.log('availableFoodName', availableFoodName);
 
-            //   element.food_id = availableFoodName?.ProductName;
+            //   element.food_id = availableFoodName?.product_name;
             // }
 
             if (element.is_active === 1) {
@@ -97,8 +97,8 @@ const FoodAvailabilityList = () => {
         Array.isArray(args) &&
         args?.filter(
           (foodItem) =>
-            foodItem.ProductsIsActive !== 0 &&
-            foodItem.ProductsIsActive !== null
+            foodItem.products_is_active !== 0 &&
+            foodItem.products_is_active !== null
         );
       setFoodName(foodNameList);
     });
@@ -340,10 +340,10 @@ const FoodAvailabilityList = () => {
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodName?.map((foodName) => (
                     <Option
-                      key={foodName?.ProductsID}
-                      value={foodName?.ProductsID}
+                      key={foodName?.product_id}
+                      value={foodName?.product_id}
                     >
-                      {foodName?.ProductName}
+                      {foodName?.product_name}
                     </Option>
                   ))}
                 </Select>

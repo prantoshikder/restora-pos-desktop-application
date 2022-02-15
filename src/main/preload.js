@@ -387,7 +387,7 @@ contextBridge.exposeInMainWorld('delete_menu_addons_item', {
   },
 });
 
-// Get food lists as an Array from the DB only [ProductsID, ProductName]
+// Get food lists as an Array from the DB only [product_id, product_name]
 contextBridge.exposeInMainWorld('get_food_name_lists_channel', {
   send: (channel, data) => {
     let validChannels = ['get_food_name_lists_channel'];
