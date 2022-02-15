@@ -36,6 +36,10 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 const CurrencyList = () => {
+  window.insert_currency.send('insert_currency', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -193,6 +197,8 @@ const CurrencyList = () => {
   const handleSubmit = () => {
     const addNewCurrencyList = {};
 
+    console.log('addCurrency', addCurrency);
+
     for (const data of addCurrency) {
       addNewCurrencyList[data.name[0]] =
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
@@ -203,6 +209,7 @@ const CurrencyList = () => {
     // }
 
     console.log('addNewCurrencyList', addNewCurrencyList);
+    window.insert_currency.send('insert_currency', addNewCurrencyList);
 
     // // Insert or update Data
     // window.context_bridge_menu_addons.send(
