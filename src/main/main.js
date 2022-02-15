@@ -101,7 +101,6 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
-
 // Get parent category data
 ipcMain.on('parent_category', (event, args) => {
   if (args.status) {
@@ -246,8 +245,6 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
   }
 });
 
-
-
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
   let {
@@ -378,8 +375,6 @@ ipcMain.on('delete_category', (event, args) => {
 
   db.close();
 });
-
-
 
 // Insert and update addons data
 ipcMain.on('add_addons', (event, args) => {
@@ -1075,6 +1070,134 @@ ipcMain.on('get_food_name_lists_channel', (event, args) => {
 /*==================================================================
   FUNCTIONS DEFINITIONS
 ==================================================================*/
+insertData();
+// INSERT Method
+function insertData() {
+  ipcMain.on('insert_currency', (event, args) => {
+    let { id, currency_name, currency_icon, position, currency_rate } = args;
+    console.log(args);
+
+    // Execute if the event has row ID / data ID. It is used to update a specific item
+    // if (args.row_id !== undefined) {
+    //   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    //   db.serialize(() => {
+    //     db.run(
+    //       `INSERT OR REPLACE INTO menu_add_on (id, currency_name, currency_icon, position, currency_rate)
+    //       VALUES (?, ?, ?, ?)`,
+    //       [id, currency_name, currency_icon, position, currency_rate],
+    //       (err) => {
+    //         err
+    //           ? mainWindow.webContents.send(
+    //               'context_bridge_menu_addons_response',
+    //               err.message
+    //             )
+    //           : mainWindow.webContents.send(
+    //               'context_bridge_menu_addons_response',
+    //               {
+    //                 status: 'updated',
+    //               }
+    //             );
+    //       }
+    //     );
+    //   });
+    //   db.close();
+    // } else {
+
+    // Execute if it is new, then insert it
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS currency (
+            'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+            'currency_name' varchar(50),
+            'currency_icon' varchar(50),
+            'position' INT COMMENT '1=left.2=right'
+            'currency_rate' decimal(10,2) DEFAULT '0.00'
+          )`
+      ).run(
+        `INSERT OR REPLACE INTO currency (currency_name, currency_icon, position, currency_rate)
+            VALUES (?, ?, ?, ?)`,
+        [currency_name, currency_icon, position, currency_rate],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'insert_currency_response',
+                err.message
+              )
+            : mainWindow.webContents.send('insert_currency_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
+    // }
+  });
+}
+// ipcMain.on('context_bridge_menu_addons', (event, args) => {
+//   let { row_id, menu_id, add_on_id, is_active } = args;
+
+//   // Execute if the event has row ID / data ID. It is used to update a specific item
+//   if (args.row_id !== undefined) {
+//     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+//     db.serialize(() => {
+//       db.run(
+//         `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id, is_active)
+//         VALUES (?, ?, ?, ?)`,
+//         [row_id, menu_id, add_on_id, is_active],
+//         (err) => {
+//           err
+//             ? mainWindow.webContents.send(
+//                 'context_bridge_menu_addons_response',
+//                 err.message
+//               )
+//             : mainWindow.webContents.send(
+//                 'context_bridge_menu_addons_response',
+//                 {
+//                   status: 'updated',
+//                 }
+//               );
+//         }
+//       );
+//     });
+//     db.close();
+//   } else {
+//     console.log('menu_addons else', args);
+//     // Execute if it is new, then insert it
+//     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+//     db.serialize(() => {
+//       db.run(
+//         `CREATE TABLE IF NOT EXISTS menu_add_on (
+//           'row_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+//           'menu_id' INT,
+//           'add_on_id' INT,
+//           'is_active' INT
+//         )`
+//       ).run(
+//         `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
+//           VALUES (?, ?, ?)`,
+//         [menu_id, add_on_id, is_active],
+//         (err) => {
+//           err
+//             ? mainWindow.webContents.send(
+//                 'context_bridge_menu_addons_response',
+//                 err.message
+//               )
+//             : mainWindow.webContents.send(
+//                 'context_bridge_menu_addons_response',
+//                 {
+//                   status: 'inserted',
+//                 }
+//               );
+//         }
+//       );
+//     });
+//     db.close();
+//   }
+// });
+
 // Get addons lists in names as an Array
 function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
@@ -1115,6 +1238,3 @@ app
     });
   })
   .catch(console.log);
-
-
-

@@ -193,6 +193,13 @@ sendDataThroughMiddleware(
   'get_addons_name_list_response' //Response
 );
 
+// Insert Currency
+sendDataThroughMiddleware(
+  'insert_currency', //Event Name
+  'insert_currency', // Channel Name
+  'insert_currency_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARETIONS
 ========================================================================*/
