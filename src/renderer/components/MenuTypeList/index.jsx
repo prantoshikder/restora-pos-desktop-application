@@ -17,6 +17,7 @@ import {
   Table,
   Upload,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import React, { useEffect, useState } from 'react';
 
 const { Option } = Select;
@@ -41,7 +42,7 @@ const rowSelection = {
 
 const MenuTypeList = () => {
   // Get Menu type list
-  window.get_menu_type_lists_channel.send('get_menu_type_lists_channel', {
+  window.get_menu_type_lists.send('get_menu_type_lists', {
     status: true,
   });
 
@@ -54,25 +55,6 @@ const MenuTypeList = () => {
   const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
-    window.get_menu_type_lists_channel.once(
-      'get_menu_type_lists_channel_response',
-      (args = []) => {
-        console.log('menu tyoe list', args);
-
-        const foodAvailableList =
-          Array.isArray(args) &&
-          args?.map((element) => {
-            if (element.is_active === 1) {
-              element.is_active = 'Active';
-            } else {
-              element.is_active = 'Inactive';
-            }
-          });
-
-        setMenuTypesList(args);
-      }
-    );
-
     setMenuTypes([
       {
         name: 'menu_type',
@@ -88,6 +70,25 @@ const MenuTypeList = () => {
       },
     ]);
   }, [reRender]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_type_lists_response',
+      window.get_menu_type_lists
+    ).then((res) => {
+      const foodAvailableList =
+        Array.isArray(res) &&
+        res?.map((element) => {
+          if (element.is_active === 1) {
+            element.is_active = 'Active';
+          } else {
+            element.is_active = 'Inactive';
+          }
+        });
+
+      setMenuTypesList(res);
+    });
+  }, []);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -188,8 +189,6 @@ const MenuTypeList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    console.log('newMenuType first', newMenuType);
-
     newMenuType.is_active === 'Active'
       ? (newMenuType.is_active = 1)
       : parseInt(newMenuType.is_active) === 1
@@ -199,8 +198,6 @@ const MenuTypeList = () => {
     if (updateMenuType?.menu_type_id) {
       newMenuType.menu_type_id = updateMenuType?.menu_type_id;
     }
-
-    console.log('newMenuType', newMenuType);
 
     // Insert Data
     window.context_bridge_menu_type.send(

@@ -305,15 +305,15 @@ contextBridge.exposeInMainWorld('context_bridge_menu_type', {
 });
 
 // Get menu type data from the DB
-contextBridge.exposeInMainWorld('get_menu_type_lists_channel', {
+contextBridge.exposeInMainWorld('get_menu_type_lists', {
   send: (channel, data) => {
-    let validChannels = ['get_menu_type_lists_channel'];
+    let validChannels = ['get_menu_type_lists'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   once: (channel, func) => {
-    let validChannels = ['get_menu_type_lists_channel_response'];
+    let validChannels = ['get_menu_type_lists_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }

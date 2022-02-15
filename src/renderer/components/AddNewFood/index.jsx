@@ -249,8 +249,6 @@ const AddNewFood = ({ state }) => {
     // Get add food name insert & update response
     window.add_new_foods.once('add_new_foods_response', ({ status }) => {
       if (status === 'updated') {
-        console.log('status', status);
-
         message.success({
           content: 'Food name has been updated successfully',
           className: 'custom-class',
@@ -266,8 +264,6 @@ const AddNewFood = ({ state }) => {
         setReRender((prevState) => !prevState);
 
         setCheckedList('');
-
-        console.log('status', status);
 
         message.success({
           content: 'Foods name added successfully',
