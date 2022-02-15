@@ -12,9 +12,9 @@ const { Text } = Typography;
 const AddFood = ({ direction }) => {
   const [show, setShow] = useState(false);
 
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
-  const handleShow = () => setVisible(true);
+  const handleShow = () => setOpenModal(true);
   const { state } = useLocation();
 
   return (
@@ -29,7 +29,7 @@ const AddFood = ({ direction }) => {
 
               <Col lg={21}>
                 <div className="flex content_between item_center">
-                  {state?.ProductsID ? (
+                  {state?.product_id ? (
                     <Heading title=" Update Food Name" />
                   ) : (
                     <Heading title=" Add Food" />
@@ -53,9 +53,9 @@ const AddFood = ({ direction }) => {
 
         <Modal
           title="Bulk Upload"
-          visible={visible}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
+          visible={openModal}
+          onOk={() => setOpenModal(false)}
+          onCancel={() => setOpenModal(false)}
           footer={null}
           width={650}
         >

@@ -429,22 +429,8 @@ ipcMain.on('add_addons', (event, args) => {
   }
 });
 
-// Get all addons list
-ipcMain.on('addons_list', (event, args) => {
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  let { status } = args;
-  let sql = `SELECT * FROM addons`;
-
-  if (status) {
-    db.serialize(() => {
-      db.all(sql, [], (err, rows) => {
-        mainWindow.webContents.send('addons_list_response', rows);
-      });
-    });
-  }
-
-  db.close();
-});
+// Get all addons from DB
+getListItems('addons_list', 'addons_list_response', 'addons');
 
 // Delete addons data
 ipcMain.on('delete_addons', (event, args) => {
@@ -462,9 +448,10 @@ ipcMain.on('delete_addons', (event, args) => {
   db.close();
 });
 
+/*==================================================================
 
-
-// Insert and update foods
+==================================================================*/
+// Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
   let {
     category_name,
@@ -486,15 +473,14 @@ ipcMain.on('add_new_foods', (event, args) => {
     offer_end_date,
   } = args;
 
-  if (args.ProductsID !== undefined) {
+  if (args.product_id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO item_foods (ProductsID, CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
-          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+        `INSERT OR REPLACE INTO item_foods (product_id, category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available, offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, products_is_active)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          args.ProductsID,
+          args.product_id,
           category_name,
           food_name,
           food_image,
@@ -528,41 +514,41 @@ ipcMain.on('add_new_foods', (event, args) => {
     db.serialize(() => {
       db.run(
         `CREATE TABLE IF NOT EXISTS item_foods (
-          'ProductsID' INTEGER PRIMARY KEY AUTOINCREMENT,
-          'CategoryID' INT NOT NULL,
-          'ProductName' varchar(255),
-          'ProductImage' varchar(200),
-          'bigthumb' varchar(255),
+          'product_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'category_id' INT NOT NULL,
+          'product_name' varchar(255),
+          'product_image' varchar(200),
+          'big_thumb' varchar(255),
           'medium_thumb' varchar(255),
           'small_thumb' varchar(255),
           'component' TEXT,
-          'descrip' TEXT,
-          'itemnotes' varchar(255),
-          'menutype' varchar(25),
-          'productvat' REAL DEFAULT 0.00,
+          'description' TEXT,
+          'item_note' varchar(255),
+          'menu_type' varchar(25),
+          'product_vat' REAL DEFAULT 0.00,
           'special' INT,
-          'OffersRate' INT,
-          'offerIsavailable' INT,
-          'offerstartdate' DATETIME ,
-          'offerendate' DATETIME,
-          'Position' INT,
-          'kitchenid' INT,
-          'isgroup' INT,
-          'is_customqty' INT,
-          'cookedtime' varchar(10),
-          'ProductsIsActive' INT,
-          'UserIDInserted' INT,
-          'UserIDUpdated' INT,
-          'UserIDLocked' INT,
-          'DateInserted' DATETIME,
-          'DateUpdated' DATETIME,
-          'DateLocked' DATETIME,
+          'offers_rate' INT,
+          'offer_is_available' INT,
+          'offer_start_date' DATETIME ,
+          'offer_end_date' DATETIME,
+          'position' INT,
+          'kitchen_id' INT,
+          'is_group' INT,
+          'is_custom_quantity' INT,
+          'cooked_time' varchar(10),
+          'products_is_active' INT,
+          'user_id_inserted' INT,
+          'user_id_updated' INT,
+          'user_id_locked' INT,
+          'date_inserted' DATETIME,
+          'date_updated' DATETIME,
+          'date_locked' DATETIME,
           'tax0' TEXT,
           'tax1' TEXT
         )`
       ).run(
-        `INSERT OR REPLACE INTO item_foods (CategoryID, ProductName, ProductImage, component, descrip, itemnotes, menutype, productvat, special, OffersRate, offerIsavailable,
-          offerstartdate, offerendate, kitchenid, is_customqty, cookedtime, ProductsIsActive)
+        `INSERT OR REPLACE INTO item_foods (category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available,
+          offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, products_is_active)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           category_name,
@@ -599,11 +585,11 @@ ipcMain.on('add_new_foods', (event, args) => {
 // Get all foods list
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args;
-  let sql = `SELECT item_foods.ProductsID, item_foods.CategoryID, add_item_category.category_name, item_foods.ProductName, item_foods.ProductImage, item_foods.component, item_foods.descrip, item_foods.itemnotes, item_foods.menutype,
-  item_foods.productvat, item_foods.special, item_foods.OffersRate, item_foods.offerIsavailable, item_foods.offerstartdate, item_foods.offerendate,item_foods.kitchenid, item_foods.productvat, item_foods.ProductsIsActive,
-  item_foods.is_customqty, item_foods.cookedtime, item_foods.ProductsIsActive
+  let sql = `SELECT item_foods.product_id, item_foods.category_id, add_item_category.category_name, item_foods.product_name, item_foods.product_image, item_foods.component, item_foods.description, item_foods.item_note, item_foods.menu_type,
+  item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.offer_start_date, item_foods.offer_end_date,item_foods.kitchen_id, item_foods.product_vat, item_foods.products_is_active,
+  item_foods.is_custom_quantity, item_foods.cooked_time, item_foods.products_is_active
   FROM item_foods
-  INNER JOIN add_item_category ON item_foods.CategoryID=add_item_category.category_id`;
+  INNER JOIN add_item_category ON item_foods.category_id=add_item_category.category_id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -621,7 +607,7 @@ ipcMain.on('delete_foods', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
-    db.run(`DELETE FROM item_foods WHERE ProductsID = ?`, id, (err) => {
+    db.run(`DELETE FROM item_foods WHERE product_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
@@ -636,7 +622,7 @@ ipcMain.on('delete_foods', (event, args) => {
 ipcMain.on('food_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT ProductName, ProductsID from item_foods WHERE ProductsIsActive = 1`;
+    let sql = `SELECT product_name, product_id from item_foods WHERE products_is_active = 1`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('food_lists_response', rows);
@@ -646,6 +632,20 @@ ipcMain.on('food_lists_channel', (event, args) => {
   }
 });
 
+/*==================================================================
+  MENU TYPE - in the add food item
+==================================================================*/
+getListItems(
+  'get_menu_type_list',
+  'get_menu_type_list_response',
+  'menu_type',
+  'menu_type_id, menu_type',
+  true
+);
+
+/*==================================================================
+  FOOD VARIANT
+==================================================================*/
 // Insert and update foods variant
 ipcMain.on('add_new_foods_variant', (event, args) => {
   let { food_id, food_variant, food_price } = args;
@@ -660,8 +660,13 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         [args.variant_id, food_id, food_variant, Number(food_price)],
         (err) => {
           err
-            ? mainWindow.webContents.send('add_new_foods_variant_response', err.message)
-            : mainWindow.webContents.send('add_new_foods_variant_response', { status: 'updated' });
+            ? mainWindow.webContents.send(
+                'add_new_foods_variant_response',
+                err.message
+              )
+            : mainWindow.webContents.send('add_new_foods_variant_response', {
+                status: 'updated',
+              });
         }
       );
     });
@@ -700,9 +705,9 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
 ipcMain.on('variant_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.ProductName
+    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.product_name
     FROM variants
-    INNER JOIN item_foods ON variants.food_id=item_foods.ProductsID`;
+    INNER JOIN item_foods ON variants.food_id=item_foods.product_id`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         console.log(rows);
@@ -732,6 +737,356 @@ ipcMain.on('delete_foods_variant', (event, args) => {
   db.close();
 });
 
+/*==================================================================
+  FOOD AVAILABILITY
+==================================================================*/
+// Insert Food availability data
+// Insert and update foods variant
+ipcMain.on('context_bridge_food_available_time', (event, args) => {
+  let { food_id, avail_day, avail_time, is_active } = args;
+
+  // available_id
+
+  if (args.available_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO food_variable (available_id, food_id, avail_day, avail_time, is_active)
+        VALUES (?, ?, ?, ?, ?)`,
+        [args.available_id, food_id, avail_day, avail_time, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'updated',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  } else {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS food_variable (
+          'available_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'food_id' INT,
+          'avail_day' varchar(30),
+          'avail_time' varchar(50),
+          'is_active' INT
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO food_variable (food_id, avail_day, avail_time, is_active)
+          VALUES (?, ?, ?, ?)`,
+        [food_id, avail_day, avail_time, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'inserted',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  }
+});
+
+//Get all lists of food availability from food_variable
+ipcMain.on('get_food_availability_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT available_id, food_id, avail_day, avail_time, is_active FROM food_variable`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_food_availability_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
+// Delete food available day & time list channel from
+ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM food_variable WHERE available_id = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send(
+            'delete_food_available_day_time_response',
+            {
+              status: err,
+            }
+          )
+        : mainWindow.webContents.send(
+            'delete_food_available_day_time_response',
+            {
+              status: true,
+            }
+          );
+    });
+  });
+  db.close();
+});
+
+/*==================================================================
+  MENU TYPE
+====================================================================*/
+// Insert Menu type
+ipcMain.on('context_bridge_menu_type', (event, args) => {
+  let { menu_type_id, menu_type, menu_icon, is_active } = args;
+
+  // Execute if the event has menu type ID. It is used to update a specific item
+  if (args.menu_type_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO menu_type (menu_type_id, menu_type, menu_icon, is_active)
+        VALUES (?, ?, ?, ?)`,
+        [menu_type_id, menu_type, menu_icon, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_type_response',
+                err.message
+              )
+            : mainWindow.webContents.send('context_bridge_menu_type_response', {
+                status: 'updated',
+              });
+        }
+      );
+    });
+    db.close();
+  } else {
+    // Execute if it is new and then insert it
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS menu_type (
+          'menu_type_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'menu_type' varchar(120),
+          'menu_icon' varchar(150),
+          'is_active' INT
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO menu_type (menu_type, menu_icon, is_active)
+          VALUES (?, ?, ?)`,
+        [menu_type, menu_icon, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_type_response',
+                err.message
+              )
+            : mainWindow.webContents.send('context_bridge_menu_type_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
+  }
+});
+
+//Delete menu type from the DB
+ipcMain.on('delete_menu_type_item', (event, args) => {
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(`DELETE FROM menu_type WHERE menu_type_id = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send('delete_menu_type_item_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_menu_type_item_response', {
+            status: true,
+          });
+    });
+  });
+  db.close();
+});
+
+/*==================================================================
+  MENU ADDONS
+==================================================================*/
+// Insert menu addons
+ipcMain.on('context_bridge_menu_addons', (event, args) => {
+  let { row_id, menu_id, add_on_id, is_active } = args;
+
+  // Execute if the event has row ID / data ID. It is used to update a specific item
+  if (args.row_id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO menu_add_on (row_id, menu_id, add_on_id, is_active)
+        VALUES (?, ?, ?, ?)`,
+        [row_id, menu_id, add_on_id, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'updated',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  } else {
+    console.log('menu_addons else', args);
+    // Execute if it is new, then insert it
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS menu_add_on (
+          'row_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'menu_id' INT,
+          'add_on_id' INT,
+          'is_active' INT
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
+          VALUES (?, ?, ?)`,
+        [menu_id, add_on_id, is_active],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                err.message
+              )
+            : mainWindow.webContents.send(
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'inserted',
+                }
+              );
+        }
+      );
+    });
+    db.close();
+  }
+});
+
+// Get addons lists as an Array
+ipcMain.on('get_menu_add_on_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT row_id, menu_id, add_on_id FROM menu_add_on`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_menu_add_on_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
+//Delete menu addons from the DB
+ipcMain.on('delete_menu_addons_item', (event, args) => {
+  let { id } = args;
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  db.serialize(() => {
+    db.run(`DELETE FROM menu_add_on WHERE row_id = ?`, id, (err) => {
+      err
+        ? mainWindow.webContents.send('delete_menu_addons_item_response', {
+            status: err,
+          })
+        : mainWindow.webContents.send('delete_menu_addons_item_response', {
+            status: true,
+          });
+    });
+  });
+  db.close();
+});
+
+// Get MENU TYPE lists as an Array
+getListItems(
+  'get_menu_type_lists',
+  'get_menu_type_lists_response',
+  'menu_type'
+);
+
+// Get addons lists in names as an Array
+getListItems(
+  'get_addons_name_list',
+  'get_addons_name_list_response',
+  'addons',
+  'add_on_id, add_on_name',
+  true
+);
+
+// Get food lists as an Array from the DB only [product_id, product_name]
+ipcMain.on('get_food_name_lists_channel', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT product_id, product_name FROM item_foods WHERE products_is_active = 1`;
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        console.log(rows);
+        mainWindow.webContents.send(
+          'get_food_name_lists_channel_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
+/*==================================================================
+  FUNCTIONS DEFINITIONS
+==================================================================*/
+// Get addons lists in names as an Array
+function getListItems(channelName, response, table, query = '*', condition) {
+  ipcMain.on(channelName, (event, args) => {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let { status } = args;
+    let sql = `SELECT ${query} FROM ${table} ${
+      condition && 'WHERE is_active = 1'
+    }`;
+
+    if (status) {
+      db.serialize(() => {
+        db.all(sql, [], (err, rows) => {
+          mainWindow.webContents.send(response, rows);
+        });
+      });
+    }
+
+    db.close();
+  });
+}
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -753,4 +1108,4 @@ app
   .catch(console.log);
 
 
-  
+

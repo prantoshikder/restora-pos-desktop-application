@@ -1,8 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
-  InfoCircleOutlined,
-  PictureOutlined,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -18,10 +17,12 @@ import {
   Table,
   Upload,
 } from 'antd';
-import React, { useState } from 'react';
+import { getDataFromDatabase } from 'helpers';
+import React, { useEffect, useState } from 'react';
 
 const { Option } = Select;
 const { Dragger } = Upload;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -39,44 +40,76 @@ const rowSelection = {
   },
 };
 
-const props = {
-  name: 'file',
-  multiple: true,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
-
 const MenuTypeList = () => {
+  // Get Menu type list
+  window.get_menu_type_lists.send('get_menu_type_lists', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
-  const [status, setStatus] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [updateMenuType, setUpdateMenuType] = useState(null);
+  const [menuTypes, setMenuTypes] = useState();
+  const [menuTypesList, setMenuTypesList] = useState(null);
+  const [reRender, setReRender] = useState(false);
+
+  useEffect(() => {
+    setMenuTypes([
+      {
+        name: 'menu_type',
+        value: updateMenuType?.menu_type,
+      },
+      {
+        name: 'menu_icon',
+        // value: updateMenuType?.menu_type,
+      },
+      {
+        name: 'is_active',
+        value: updateMenuType?.is_active || 'Active',
+      },
+    ]);
+  }, [reRender]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_type_lists_response',
+      window.get_menu_type_lists
+    ).then((res) => {
+      const foodAvailableList =
+        Array.isArray(res) &&
+        res?.map((element) => {
+          if (element.is_active === 1) {
+            element.is_active = 'Active';
+          } else {
+            element.is_active = 'Inactive';
+          }
+        });
+
+      setMenuTypesList(res);
+    });
+  }, []);
+
+  const normFile = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e;
+  };
 
   const columns = [
     {
       title: 'Menu Type',
-      dataIndex: 'menuType',
-      key: 'menuType',
+      dataIndex: 'menu_type',
+      key: 'menu_type',
       width: '30%',
     },
     {
       title: 'Icon',
-      dataIndex: 'icon',
+      dataIndex: 'menu_icon',
+      key: 'menu_icon',
       width: '55%',
-      key: 'icon',
     },
     {
       title: 'Action',
@@ -98,58 +131,120 @@ const MenuTypeList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      menuType: 'Party',
-      icon: './application/modules/itemmanage/assets/images/2020-11-21/p.png',
-    },
-    {
-      key: 2,
-      menuType: 'Coffee',
-      icon: './application/modules/itemmanage/assets/images/2020-11-21/p.png',
-    },
-  ];
+  const handleEditCategory = (menuTypeItem) => {
+    setOpenModal(true);
+    setReRender((prevState) => !prevState);
+    setUpdateMenuType(menuTypeItem);
+    form.resetFields();
+  };
 
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
-  }
+  const handleDeleteCategory = (menuTypeItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.delete_menu_type_item.send('delete_menu_type_item', {
+          id: menuTypeItem.menu_type_id,
+        });
 
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+        setMenuTypesList(
+          menuTypesList.filter(
+            (item) => item.menu_type_id !== menuTypeItem.menu_type_id
+          )
+        );
+
+        // get delete response
+        window.delete_menu_type_item.once(
+          'delete_menu_type_item_response',
+          ({ is_active }) => {
+            if (is_active) {
+              message.success({
+                content: 'Menu type deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
+      onCancel() {},
     });
-  }
-
-  const handleChangeStatus = (value) => {
-    console.log('status', value);
-    setStatus(value);
   };
 
   const handleReset = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const newMenuType = {};
+
+    for (const data of menuTypes) {
+      newMenuType[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    newMenuType.is_active === 'Active'
+      ? (newMenuType.is_active = 1)
+      : parseInt(newMenuType.is_active) === 1
+      ? (newMenuType.is_active = 1)
+      : (newMenuType.is_active = 0);
+
+    if (updateMenuType?.menu_type_id) {
+      newMenuType.menu_type_id = updateMenuType?.menu_type_id;
+    }
+
+    // Insert Data
+    window.context_bridge_menu_type.send(
+      'context_bridge_menu_type',
+      newMenuType
+    );
+
+    // Insert or update response
+    window.context_bridge_menu_type.once(
+      'context_bridge_menu_type_response',
+      ({ is_active }) => {
+        if (is_active === 'updated') {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
+          message.success({
+            content: 'Food menu type update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        } else {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
+          message.success({
+            content: 'Food menu type added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        }
+      }
+    );
   };
+
+  function closeModal() {
+    setOpenModal(false);
+    setUpdateMenuType(null);
+    form.resetFields();
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -167,7 +262,7 @@ const MenuTypeList = () => {
           <Button
             type="primary"
             className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
+            onClick={() => setOpenModal(true)}
           >
             <PlusCircleOutlined />
             Add Menu Type
@@ -177,17 +272,17 @@ const MenuTypeList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={menuTypesList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record.menu_type_id}
         />
       </div>
 
       <Modal
         title="Add Menu Type"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
         footer={null}
         width={650}
       >
@@ -196,13 +291,17 @@ const MenuTypeList = () => {
             <Form
               form={form}
               onFinish={handleSubmit}
+              fields={menuTypes}
+              onFieldsChange={(_, allFields) => {
+                setMenuTypes(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
                 label="Menu Type"
-                name="menuType"
+                name="menu_type"
                 rules={[
                   {
                     required: true,
@@ -213,34 +312,29 @@ const MenuTypeList = () => {
                 <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
-              <Form.Item
+              {/* <Form.Item
                 label="Icon"
-                name="icon"
+                name="menu_icon"
+                getValueFromEvent={normFile}
                 tooltip={{
                   title: 'Use only .jpg,.jpeg,.gif and .png Images & Image',
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Dragger {...props}>
+                <Upload.Dragger name="files" action="/upload.do">
                   <p className="ant-upload-drag-icon">
                     <PictureOutlined />
                   </p>
                   <p className="ant-upload-hint">
                     Click or drag file to this area to upload
                   </p>
-                </Dragger>
-              </Form.Item>
+                </Upload.Dragger>
+              </Form.Item> */}
 
-              <Form.Item name="status" label="Status">
-                <Select
-                  placeholder="Select an Option"
-                  value={status}
-                  onChange={handleChangeStatus}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="active">Active</Option>
-                  <Option value="inactive">Inactive</Option>
+              <Form.Item name="is_active" label="Status">
+                <Select placeholder="Select an Option" size="large" allowClear>
+                  <Option value="1">Active</Option>
+                  <Option value="0">Inactive</Option>
                 </Select>
               </Form.Item>
 
@@ -255,7 +349,7 @@ const MenuTypeList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {updateMenuType?.menu_type_id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>

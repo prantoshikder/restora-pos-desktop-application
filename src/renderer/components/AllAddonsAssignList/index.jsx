@@ -1,6 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -15,10 +16,12 @@ import {
   Table,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getDataFromDatabase } from '../../../helpers';
 
 const { Title } = Typography;
 const { Option } = Select;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -37,11 +40,82 @@ const rowSelection = {
 };
 
 const AllAddonsAssignList = () => {
+  window.get_menu_add_on_lists_channel.send('get_menu_add_on_lists_channel', {
+    status: true,
+  });
+  window.get_food_name_lists_channel.send('get_food_name_lists_channel', {
+    status: true,
+  });
+
+  window.get_addons_name_list.send('get_addons_name_list', { status: true });
+
   const [form] = Form.useForm();
-  const [addonsName, setAddonsName] = useState('');
-  const [foodName, setFoodName] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [reRender, setReRender] = useState(false);
+  const [updateAssignAddons, setUpdateAssignAddons] = useState(null);
+  const [addonsAssign, setAddonsAssign] = useState(null);
+  const [addonsAssignList, setAddonsAssignList] = useState(null);
+  const [foodNames, setFoodNames] = useState(null);
+  const [addonNames, setAddonNames] = useState(null);
+  const [addonsList, setAddonsList] = useState(null);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_menu_add_on_lists_channel_response',
+      window.get_menu_add_on_lists_channel
+    ).then((res) => {
+      setAddonsList(res);
+    });
+
+    setAddonsAssign([
+      {
+        name: ['add_on_id'],
+        value: updateAssignAddons?.addonsName,
+      },
+      {
+        name: ['menu_id'],
+        value: updateAssignAddons?.foodName,
+      },
+    ]);
+  }, [reRender]);
+
+  useEffect(() => {
+    Promise.all([
+      getDataFromDatabase(
+        'get_addons_name_list_response',
+        window.get_addons_name_list
+      ),
+      getDataFromDatabase(
+        'get_food_name_lists_channel_response',
+        window.get_food_name_lists_channel
+      ),
+    ])
+      .then(([addonNames, foodNames]) => {
+        setAddonNames(addonNames);
+        setFoodNames(foodNames);
+        let newAddonNames = [];
+
+        addonsList?.map((addon, index) => {
+          const newAddons = addonNames.find(
+            (addonName) => addonName.add_on_id === addon.add_on_id
+          );
+
+          const newFoodItems = foodNames.find(
+            (foodItem) => foodItem.product_id === addon.menu_id
+          );
+
+          newAddonNames.push({
+            row_id: index,
+            addonsName: newAddons.add_on_name,
+            foodName: newFoodItems.product_name,
+          });
+        });
+
+        setAddonsAssignList(newAddonNames);
+      })
+      .catch((err) => console.log(err));
+  }, [addonsList]);
 
   const columns = [
     {
@@ -63,11 +137,11 @@ const AllAddonsAssignList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditAddonsItem(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteAddonsItem(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -76,64 +150,115 @@ const AllAddonsAssignList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      addonsName: 'Coffee',
-      foodName: 'takos',
-    },
-    {
-      key: 2,
-      addonsName: 'Burger',
-      foodName: 'Chicken fry',
-    },
-    {
-      key: 3,
-      addonsName: 'Drinks',
-      foodName: 'Chicken Kebab',
-    },
-    {
-      key: 4,
-      addonsName: 'Butter',
-      foodName: 'Chicken Kebab',
-    },
-  ];
-
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-  }
-
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
-      },
-    });
-  }
-
-  const changeAddonsName = (addonsName) => {
-    console.log('addonsName', addonsName);
-    setAddonsName(addonsName);
+  const handleEditAddonsItem = (addonsItem) => {
+    setOpenModal(true);
+    setReRender((prevState) => !prevState);
+    setUpdateAssignAddons(addonsItem);
+    form.resetFields();
   };
 
-  const changeFoodName = (foodName) => {
-    console.log('status', foodName);
-    setFoodName(foodName);
+  const handleDeleteAddonsItem = (addonsItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.delete_menu_addons_item.send('delete_menu_addons_item', {
+          id: addonsItem.row_id,
+        });
+
+        setAddonsAssignList(
+          addonsAssignList.filter((item) => item.row_id !== addonsItem.row_id)
+        );
+
+        // get delete response
+        window.delete_menu_addons_item.once(
+          'delete_menu_addons_item_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Menu type deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
+      },
+      onCancel() {},
+    });
   };
 
   const handleReset = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const newAddonsAssignList = {};
+
+    for (const data of addonsAssign) {
+      newAddonsAssignList[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    if (updateAssignAddons?.row_id) {
+      newAddonsAssignList.row_id = updateAssignAddons.row_id;
+    }
+
+    // // Insert or update Data
+    window.context_bridge_menu_addons.send(
+      'context_bridge_menu_addons',
+      newAddonsAssignList
+    );
+
+    // Insert or update response
+    window.context_bridge_menu_addons.once(
+      'context_bridge_menu_addons_response',
+      ({ status }) => {
+        if (status === 'updated') {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
+          message.success({
+            content: 'Assign addons update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        } else {
+          setReRender((prevState) => !prevState);
+          closeModal();
+
+          message.success({
+            content: 'Assign new addons successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        }
+      }
+    );
   };
+
+  function closeModal() {
+    setOpenModal(false);
+    setUpdateAssignAddons({
+      add_on_id: '',
+      menu_id: '',
+    });
+    form.resetFields();
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -148,11 +273,7 @@ const AllAddonsAssignList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
-          >
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add-ons Assign
           </Button>
@@ -161,17 +282,17 @@ const AllAddonsAssignList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={addonsAssignList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record?.row_id}
         />
       </div>
 
       <Modal
         title="Add-ons Assign"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
         footer={null}
         width={650}
       >
@@ -179,35 +300,36 @@ const AllAddonsAssignList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={addonsAssign}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setAddonsAssign(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                name="addonsName"
+                name="add_on_id"
                 label="Add-ons Name"
                 rules={[
                   { required: true, message: 'Please input your addons name!' },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeAddonsName}
-                  value={addonsName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  {addonNames?.map((addonItem) => (
+                    <Option
+                      key={addonItem?.add_on_id}
+                      value={addonItem?.add_on_id}
+                    >
+                      {addonItem?.add_on_name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
               <Form.Item
-                name="foodName"
+                name="menu_id"
                 label="Food Name"
                 rules={[
                   {
@@ -216,18 +338,15 @@ const AllAddonsAssignList = () => {
                   },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeFoodName}
-                  value={foodName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  {foodNames?.map((foodItem) => (
+                    <Option
+                      key={foodItem?.product_id}
+                      value={foodItem?.product_id}
+                    >
+                      {foodItem?.product_name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 

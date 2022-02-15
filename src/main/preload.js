@@ -221,7 +221,6 @@ contextBridge.exposeInMainWorld('delete_foods_variant', {
   },
 });
 
-
 // Get variant lists channel
 contextBridge.exposeInMainWorld('variant_lists_channel', {
   send: (channel, data) => {
@@ -232,6 +231,203 @@ contextBridge.exposeInMainWorld('variant_lists_channel', {
   },
   once: (channel, func) => {
     let validChannels = ['variant_lists_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Insert food available day & time channel
+contextBridge.exposeInMainWorld('context_bridge_food_available_time', {
+  send: (channel, data) => {
+    let validChannels = ['context_bridge_food_available_time'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['context_bridge_food_available_time_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get food available time lists
+contextBridge.exposeInMainWorld('get_food_availability_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_food_availability_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_food_availability_lists_channel_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Delete food available day & time list channel
+contextBridge.exposeInMainWorld('channel_delete_food_available_day_time', {
+  send: (channel, data) => {
+    let validChannels = ['channel_delete_food_available_day_time'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_food_available_day_time_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+/*=================================================================
+  MENU TYPE
+=================================================================*/
+// Insert menu type data
+contextBridge.exposeInMainWorld('context_bridge_menu_type', {
+  send: (channel, data) => {
+    let validChannels = ['context_bridge_menu_type'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['context_bridge_menu_type_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get menu type data from the DB
+contextBridge.exposeInMainWorld('get_menu_type_lists', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_type_lists'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_type_lists_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Delete menu type from the DB
+contextBridge.exposeInMainWorld('delete_menu_type_item', {
+  send: (channel, data) => {
+    let validChannels = ['delete_menu_type_item'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_menu_type_item_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+/*=================================================================
+  MENU ADDONS
+=================================================================*/
+// Insert menu addons data
+contextBridge.exposeInMainWorld('context_bridge_menu_addons', {
+  send: (channel, data) => {
+    let validChannels = ['context_bridge_menu_addons'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['context_bridge_menu_addons_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get menu addons as an Array from the DB
+contextBridge.exposeInMainWorld('get_menu_add_on_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_add_on_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_add_on_lists_channel_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Delete menu addons from the DB
+contextBridge.exposeInMainWorld('delete_menu_addons_item', {
+  send: (channel, data) => {
+    let validChannels = ['delete_menu_addons_item'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['delete_menu_addons_item_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get food lists as an Array from the DB only [product_id, product_name]
+contextBridge.exposeInMainWorld('get_food_name_lists_channel', {
+  send: (channel, data) => {
+    let validChannels = ['get_food_name_lists_channel'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_food_name_lists_channel_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+contextBridge.exposeInMainWorld('get_addons_name_list', {
+  send: (channel, data) => {
+    let validChannels = ['get_addons_name_list'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_addons_name_list_response'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
+    }
+  },
+});
+
+// Get Menu Types as Array
+contextBridge.exposeInMainWorld('get_menu_type_list', {
+  send: (channel, data) => {
+    let validChannels = ['get_menu_type_list'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  once: (channel, func) => {
+    let validChannels = ['get_menu_type_list_response'];
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }

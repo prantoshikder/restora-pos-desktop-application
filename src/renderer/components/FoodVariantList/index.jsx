@@ -40,20 +40,21 @@ const rowSelection = {
 };
 
 const FoodVariantList = () => {
-  // Food list
+  // Food name list
   window.food_lists_channel.send('food_lists_channel', { status: true });
+
   // Variant list
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
 
   const [form] = Form.useForm();
   const [foodName, setFoodName] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
 
   const [foodVariant, setFoodVariant] = useState([]);
   const [updateFoodVariant, setUpdateFoodVariant] = useState({});
   const [foodVariantList, setFoodVariantList] = useState(null);
-  const [ReRender, setReRender] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
     // Get active food name
@@ -62,8 +63,8 @@ const FoodVariantList = () => {
         Array.isArray(args) &&
         args?.filter(
           (foodItem) =>
-            foodItem.ProductsIsActive !== 0 &&
-            foodItem.ProductsIsActive !== null
+            foodItem.products_is_active !== 0 &&
+            foodItem.products_is_active !== null
         );
       setFoodName(foodNameList);
     });
@@ -76,7 +77,7 @@ const FoodVariantList = () => {
     setFoodVariant([
       {
         name: ['food_id'],
-        value: updateFoodVariant?.ProductName,
+        value: updateFoodVariant?.product_name,
       },
       {
         name: ['food_variant'],
@@ -87,7 +88,7 @@ const FoodVariantList = () => {
         value: updateFoodVariant?.price,
       },
     ]);
-  }, [ReRender]);
+  }, [reRender]);
 
   const columns = [
     {
@@ -98,8 +99,8 @@ const FoodVariantList = () => {
     },
     {
       title: 'Food Name',
-      dataIndex: 'ProductName',
-      key: 'ProductName',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '45%',
     },
     {
@@ -124,7 +125,7 @@ const FoodVariantList = () => {
   ];
 
   const handleEditCategory = (variantItem) => {
-    setVisible(true);
+    setOpenModal(true);
     setUpdateFoodVariant(variantItem);
     setReRender((prevState) => !prevState);
   };
@@ -185,7 +186,6 @@ const FoodVariantList = () => {
 
     if (updateFoodVariant.food_id) {
       newFoodVariant.food_id = updateFoodVariant.food_id;
-      console.log('updateFoodVariant.food_id', updateFoodVariant.food_id);
     }
 
     console.log('newFoodVariant', newFoodVariant);
@@ -196,8 +196,7 @@ const FoodVariantList = () => {
     window.add_new_foods_variant.once(
       'add_new_foods_variant_response',
       (args) => {
-        if (args === 'update') {
-          console.log('args update', args);
+        if (args === 'updated') {
           message.success({
             content: 'Food variant deleted successfully',
             className: 'custom-class',
@@ -208,10 +207,9 @@ const FoodVariantList = () => {
             },
           });
 
-          setVisible(false);
+          setOpenModal(false);
         } else {
           setReRender((prevState) => !prevState);
-          console.log('args else', args);
 
           message.success({
             content: 'Food variant deleted successfully',
@@ -223,7 +221,7 @@ const FoodVariantList = () => {
             },
           });
 
-          setVisible(false);
+          setOpenModal(false);
           form.resetFields();
         }
       }
@@ -242,8 +240,8 @@ const FoodVariantList = () => {
           boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         }}
       >
-        <div className="flex content_end mb-3">
-          <Button type="primary" onClick={() => setVisible(true)}>
+        <div className="flex  mb-3">
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Variant
           </Button>
@@ -260,9 +258,9 @@ const FoodVariantList = () => {
 
       <Modal
         title="Add Variant"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >
@@ -289,10 +287,10 @@ const FoodVariantList = () => {
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodName?.map((foodName) => (
                     <Option
-                      key={foodName?.ProductsID}
-                      value={foodName?.ProductsID}
+                      key={foodName?.product_id}
+                      value={foodName?.product_id}
                     >
-                      {foodName?.ProductName}
+                      {foodName?.product_name}
                     </Option>
                   ))}
                 </Select>

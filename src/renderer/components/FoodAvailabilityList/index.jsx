@@ -1,6 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   InfoCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
@@ -17,10 +18,11 @@ import {
   TimePicker,
   Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
+const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -39,31 +41,106 @@ const rowSelection = {
 };
 
 const FoodAvailabilityList = () => {
+  // Get food name list channel
+  window.food_lists_channel.send('food_lists_channel', { status: true });
+
+  // Get food availability day & time lists
+  window.get_food_availability_lists_channel.send(
+    'get_food_availability_lists_channel',
+    { status: true }
+  );
+
   const [form] = Form.useForm();
-  const [status, setStatus] = useState('');
-  const [foodName, setFoodName] = useState('');
-  const [availableDay, setAvailableDay] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [foodName, setFoodName] = useState(null);
+  const [availableStartTime, setAvailableStartTime] = useState('');
+  const [availableEndTime, setAvailableEndTime] = useState('');
+  const [reRender, setReRender] = useState(false);
+  const [foodAvailability, setFoodAvailability] = useState([]);
+  const [updateAvailableItem, setUpdateAvailableItem] = useState({});
+  const [foodAvailabilityList, setFoodAvailabilityList] = useState(null);
+
+  useEffect(() => {
+    // Get food availability day & time lists
+    window.get_food_availability_lists_channel.once(
+      'get_food_availability_lists_channel_response',
+      (args = []) => {
+        const foodAvailableList =
+          Array.isArray(args) &&
+          args?.map((element) => {
+            // const availableFoodName = args.find(
+            //   (item) => item?.product_id === element?.food_id
+            // );
+
+            // if (availableFoodName) {
+            //   console.log('availableFoodName', availableFoodName);
+
+            //   element.food_id = availableFoodName?.product_name;
+            // }
+
+            if (element.is_active === 1) {
+              element.is_active = 'Active';
+            } else {
+              element.is_active = 'Inactive';
+            }
+          });
+
+        setFoodAvailabilityList(args);
+        console.log('Food available lists', args);
+      }
+    );
+
+    // Get active food name
+    window.food_lists_channel.once('food_lists_response', (args = []) => {
+      const foodNameList =
+        Array.isArray(args) &&
+        args?.filter(
+          (foodItem) =>
+            foodItem.products_is_active !== 0 &&
+            foodItem.products_is_active !== null
+        );
+      setFoodName(foodNameList);
+    });
+
+    setFoodAvailability([
+      {
+        name: ['food_id'],
+        value: updateAvailableItem?.food_id,
+      },
+      {
+        name: ['avail_day'],
+        value: updateAvailableItem?.avail_day,
+      },
+      {
+        name: ['avail_time'],
+        // value: ,
+      },
+      {
+        name: ['is_active'],
+        value: updateAvailableItem?.is_active || 'Active',
+      },
+    ]);
+  }, [reRender]);
 
   const columns = [
     {
       title: 'Food Name',
-      dataIndex: 'foodName',
-      key: 'foodName',
+      dataIndex: 'food_id',
+      key: 'food_id',
       width: '30%',
     },
     {
       title: 'Available Day',
-      dataIndex: 'availableDay',
+      dataIndex: 'avail_day',
+      key: 'avail_day',
       width: '35%',
-      key: 'availableDay',
     },
     {
       title: 'Available Time',
-      dataIndex: 'availableTime',
+      dataIndex: 'avail_time',
+      key: 'avail_time',
       width: '25%',
-      key: 'availableTime',
     },
     {
       title: 'Action',
@@ -85,60 +162,123 @@ const FoodAvailabilityList = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      foodName: 'Chicken Fry',
-      availableDay: 'Saturday',
-      availableTime: '00:00:00 - 00:00:00',
-    },
-    {
-      key: 2,
-      foodName: 'Burger',
-      availableDay: 'Monday',
-      availableTime: '00:00:00 - 00:00:00',
-    },
-  ];
+  const handleEditCategory = (availableFoodItem) => {
+    setOpenModal(true);
+    setReRender((prevState) => !prevState);
+    setUpdateAvailableItem(availableFoodItem);
+    console.log('Edit', availableFoodItem);
+  };
 
-  function handleEditCategory(record) {
-    setVisible(true);
-    console.log('Edit', record);
-  }
+  const handleDeleteCategory = (availableFoodItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        window.channel_delete_food_available_day_time.send(
+          'channel_delete_food_available_day_time',
+          { id: availableFoodItem.available_id }
+        );
 
-  function handleDeleteCategory(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+        setFoodAvailabilityList(
+          foodAvailabilityList.filter(
+            (item) => item.available_id !== availableFoodItem.available_id
+          )
+        );
+
+        // get delete response
+        window.channel_delete_food_available_day_time.once(
+          'delete_food_available_day_time_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Available food deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
+      onCancel() {},
     });
-  }
-
-  const changeFoodName = (foodName) => {
-    console.log('status', foodName);
-    setFoodName(foodName);
-  };
-
-  const changeAvailableDay = (availableDay) => {
-    console.log('status', availableDay);
-    setFoodName(availableDay);
-  };
-
-  const handleChangeStatus = (value) => {
-    console.log('status', value);
-    setStatus(value);
   };
 
   const handleReset = () => {
     form.resetFields();
   };
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleSubmit = () => {
+    const newFoodAvailable = {};
+
+    const avail_time = `${availableStartTime}, ${availableEndTime}`;
+
+    for (const data of foodAvailability) {
+      newFoodAvailable[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    newFoodAvailable.is_active === 'Active'
+      ? (newFoodAvailable.is_active = 1)
+      : parseInt(newFoodAvailable.is_active) === 1
+      ? (newFoodAvailable.is_active = 1)
+      : (newFoodAvailable.is_active = 0);
+
+    newFoodAvailable.avail_time = avail_time;
+
+    if (updateAvailableItem.available_id) {
+      newFoodAvailable.available_id = updateAvailableItem.available_id;
+    }
+
+    console.log('newFoodAvailable', newFoodAvailable);
+
+    // Insert or updated add_food_available_day_time
+    window.context_bridge_food_available_time.send(
+      'context_bridge_food_available_time',
+      newFoodAvailable
+    );
+
+    // Insert or update response
+    window.context_bridge_food_available_time.once(
+      'context_bridge_food_available_time_response',
+      ({ status }) => {
+        if (status === 'updated') {
+          message.success({
+            content: 'Food availability update successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setReRender((prevState) => !prevState);
+          setOpenModal(false);
+          form.resetFields();
+        } else {
+          setReRender((prevState) => !prevState);
+
+          message.success({
+            content: 'Food availability added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+
+          setOpenModal(false);
+          form.resetFields();
+        }
+      }
+    );
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -154,11 +294,7 @@ const FoodAvailabilityList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setVisible(true)}
-          >
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Available Day & Time
           </Button>
@@ -167,17 +303,17 @@ const FoodAvailabilityList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={foodAvailabilityList}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record?.available_id}
         />
       </div>
 
       <Modal
         title="Add Available Day & Time"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >
@@ -185,35 +321,36 @@ const FoodAvailabilityList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={foodAvailability}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setFoodAvailability(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                name="foodName"
+                name="food_id"
                 label="Food Name"
                 rules={[
                   { required: true, message: 'Please input your food name!' },
                 ]}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeFoodName}
-                  value={foodName}
-                  allowClear
-                >
-                  <Option value="pizza">Pizza</Option>
-                  <Option value="dosa">Dhosa</Option>
-                  <Option value="frenchFries">French Fries</Option>
-                  <Option value="chickenKebab">Chicken Kebab</Option>
-                  <Option value="burger">Burger</Option>
+                <Select placeholder="Select Option" size="large" allowClear>
+                  {foodName?.map((foodName) => (
+                    <Option
+                      key={foodName?.product_id}
+                      value={foodName?.product_id}
+                    >
+                      {foodName?.product_name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
               <Form.Item
-                name="availableDay"
+                name="avail_day"
                 label="Available Day"
                 rules={[
                   {
@@ -226,13 +363,7 @@ const FoodAvailabilityList = () => {
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Select
-                  placeholder="Select Option"
-                  size="large"
-                  onChange={changeAvailableDay}
-                  value={availableDay}
-                  allowClear
-                >
+                <Select placeholder="Select Option" size="large" allowClear>
                   <Option value="saturday">Saturday</Option>
                   <Option value="sunday">Sunday</Option>
                   <Option value="monday">Monday</Option>
@@ -243,39 +374,52 @@ const FoodAvailabilityList = () => {
                 </Select>
               </Form.Item>
 
-              <div className="d-flex">
-                <Form.Item
-                  label="From Time"
-                  name="fromTime"
-                  rules={[
-                    { required: true, message: 'Please input your from time!' },
-                  ]}
-                >
-                  <TimePicker placeholder="From Time" size="large" />
-                </Form.Item>
+              <Row gutter={20}>
+                <Col lg={12}>
+                  <Form.Item
+                    label="From Time"
+                    name="avail_time"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your from time!',
+                      },
+                    ]}
+                  >
+                    <TimePicker
+                      placeholder="From Time"
+                      size="large"
+                      onChange={(value, timeString) =>
+                        setAvailableStartTime(timeString)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
 
-                <Form.Item
-                  label="To Time"
-                  name="toTime"
-                  style={{ marginLeft: 'auto' }}
-                  rules={[
-                    { required: true, message: 'Please input your to time!' },
-                  ]}
-                >
-                  <TimePicker placeholder="To Time" size="large" />
-                </Form.Item>
-              </div>
+                <Col lg={12}>
+                  <Form.Item
+                    label="To Time"
+                    name="avail_time"
+                    style={{ marginLeft: 'auto' }}
+                    rules={[
+                      { required: true, message: 'Please input your to time!' },
+                    ]}
+                  >
+                    <TimePicker
+                      placeholder="To Time"
+                      size="large"
+                      onChange={(value, timeString) =>
+                        setAvailableEndTime(timeString)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
 
-              <Form.Item name="status" label="Status">
-                <Select
-                  placeholder="Select an Option"
-                  value={status}
-                  onChange={handleChangeStatus}
-                  size="large"
-                  allowClear
-                >
-                  <Option value="active">Active</Option>
-                  <Option value="inactive">Inactive</Option>
+              <Form.Item name="is_active" label="Status">
+                <Select placeholder="Select an Option" size="large" allowClear>
+                  <Option value="1">Active</Option>
+                  <Option value="0">Inactive</Option>
                 </Select>
               </Form.Item>
 
