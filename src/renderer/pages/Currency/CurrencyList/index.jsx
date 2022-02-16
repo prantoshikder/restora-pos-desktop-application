@@ -1,6 +1,20 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, message, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Table,
+} from 'antd';
+import React, { useEffect, useState } from 'react';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -18,9 +32,38 @@ const rowSelection = {
   },
 };
 
+const { Option } = Select;
+const { confirm } = Modal;
+
 const CurrencyList = () => {
+  const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [addCurrency, setAddCurrency] = useState([]);
+  const [reRender, setReRender] = useState(false);
+  const [updateCurrencyAdd, setUpdateCurrencyAdd] = useState({});
+  const [currencyLists, setCurrencyLists] = useState([]);
+
+  useEffect(() => {
+    setAddCurrency([
+      {
+        name: ['currency_name'],
+        value: updateCurrencyAdd?.currency_name,
+      },
+      {
+        name: ['currency_icon'],
+        value: updateCurrencyAdd?.currency_icon,
+      },
+      {
+        name: ['currency_rate'],
+        value: updateCurrencyAdd?.currency_rate,
+      },
+      {
+        name: ['position'],
+        value: updateCurrencyAdd?.position,
+      },
+    ]);
+  }, [reRender]);
 
   const columns = [
     {
@@ -98,46 +141,227 @@ const CurrencyList = () => {
     },
   ];
 
-  function handleEditCurrency(record) {
+  const handleEditCurrency = (currencyItem) => {
     setOpenModal(true);
-    console.log('Edit', record);
-    // message.success({
-    //   content: 'Foods category added successfully ',
-    //   className: 'custom-class',
-    //   duration: 1,
-    //   style: {
-    //     marginTop: '5vh',
-    //     float: 'right',
-    //   },
-    // });
-  }
-  function handleDeleteCurrency(record) {
-    console.log('Delete', record);
-    message.success({
-      content: 'Foods category added successfully ',
-      className: 'custom-class',
-      duration: 1,
-      style: {
-        marginTop: '5vh',
-        float: 'right',
+    setReRender((prevState) => !prevState);
+    setUpdateCurrencyAdd(currencyItem);
+    console.log('currencyItem edit', currencyItem);
+  };
+
+  const handleDeleteCurrency = (currencyItem) => {
+    confirm({
+      title: 'Are you sure to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      content:
+        'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
+      onOk() {
+        console.log('currencyItem delete', currencyItem);
+        // window.delete_menu_addons_item.send('delete_menu_addons_item', {
+        //   id: addonsItem.row_id,
+        // });
+
+        // setCurrencyLists(
+        //   currencyLists.filter((item) => item.row_id !== currencyItem.row_id)
+        // );
+
+        // // get delete response
+        // window.delete_menu_addons_item.once(
+        //   'delete_menu_addons_item_response',
+        //   ({ status }) => {
+        //     if (status) {
+        //       message.success({
+        //         content: 'Menu type deleted successfully',
+        //         className: 'custom-class',
+        //         duration: 1,
+        //         style: {
+        //           marginTop: '5vh',
+        //           float: 'right',
+        //         },
+        //       });
+        //     }
+        //   }
+        // );
       },
+      onCancel() {},
     });
-  }
+  };
+
+  const handleReset = () => {
+    form.resetFields();
+  };
+
+  const handleSubmit = () => {
+    const addNewCurrencyList = {};
+
+    for (const data of addCurrency) {
+      addNewCurrencyList[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    // if (addCurrency?.currency_id) {
+    //   addNewCurrencyList.currency_id = addCurrency.currency_id;
+    // }
+
+    console.log('addNewCurrencyList', addNewCurrencyList);
+
+    // // Insert or update Data
+    // window.context_bridge_menu_addons.send(
+    //   'context_bridge_menu_addons',
+    //   newAddonsAssignList
+    // );
+
+    // Insert or update response
+    // window.context_bridge_menu_addons.once(
+    //   'context_bridge_menu_addons_response',
+    //   ({ status }) => {
+    //     if (status === 'updated') {
+    //       setReRender((prevState) => !prevState);
+    //       closeModal();
+
+    //       message.success({
+    //         content: 'Assign addons update successfully',
+    //         className: 'custom-class',
+    //         duration: 1,
+    //         style: {
+    //           marginTop: '5vh',
+    //           float: 'right',
+    //         },
+    //       });
+    //     } else {
+    //       setReRender((prevState) => !prevState);
+    //       closeModal();
+
+    //       message.success({
+    //         content: 'Assign new addons successfully',
+    //         className: 'custom-class',
+    //         duration: 1,
+    //         style: {
+    //           marginTop: '5vh',
+    //           float: 'right',
+    //         },
+    //       });
+    //     }
+    //   }
+    // );
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
 
   return (
-    <div
-      style={{
-        margin: '0rem 1.5rem',
-        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-      }}
-    >
-      <Table
-        columns={columns}
-        rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
-        pagination={false}
-      />
-    </div>
+    <>
+      <div
+        style={{
+          margin: '0rem 1.5rem',
+          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+        }}
+      >
+        <div className="d-flex justify-content_end mb-3">
+          <Button type="primary" onClick={() => setOpenModal(true)}>
+            <PlusCircleOutlined />
+            Add Currency
+          </Button>
+        </div>
+
+        <Table
+          columns={columns}
+          rowSelection={{ ...rowSelection, checkStrictly }}
+          dataSource={data}
+          pagination={false}
+        />
+      </div>
+
+      <Modal
+        title="Add Currency"
+        visible={openModal}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
+        footer={null}
+        width={650}
+      >
+        <Row>
+          <Col lg={24}>
+            <Form
+              form={form}
+              onFinish={handleSubmit}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Form.Item
+                label="Currency Name"
+                name="currency_name"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Currency Name is required',
+                  },
+                ]}
+                required
+              >
+                <Input placeholder="Currency Name" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="Currency Icon"
+                name="currency_icon"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Currency Icon is required',
+                  },
+                ]}
+                required
+              >
+                <Input placeholder="Currency Icon" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="Conversion Rate"
+                name="currency_rate"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Conversion Rate is required',
+                  },
+                ]}
+                required
+              >
+                <Input placeholder="Conversion Rate" size="large" />
+              </Form.Item>
+              <Form.Item
+                label="Position"
+                name="position"
+                rules={[
+                  { required: true, message: 'Please input your Position!' },
+                ]}
+              >
+                <Select placeholder="Select Option" size="large" allowClear>
+                  <Option value="left">Left</Option>
+                  <Option value="right">Right</Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="danger"
+                  style={{
+                    marginRight: '1rem',
+                  }}
+                  onClick={handleReset}
+                >
+                  Reset
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  Add
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Modal>
+    </>
   );
 };
 
