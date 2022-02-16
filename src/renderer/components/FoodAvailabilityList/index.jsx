@@ -69,16 +69,6 @@ const FoodAvailabilityList = () => {
         const foodAvailableList =
           Array.isArray(args) &&
           args?.map((element) => {
-            // const availableFoodName = args.find(
-            //   (item) => item?.product_id === element?.food_id
-            // );
-
-            // if (availableFoodName) {
-            //   console.log('availableFoodName', availableFoodName);
-
-            //   element.food_id = availableFoodName?.product_name;
-            // }
-
             if (element.is_active === 1) {
               element.is_active = 'Active';
             } else {
@@ -87,7 +77,6 @@ const FoodAvailabilityList = () => {
           });
 
         setFoodAvailabilityList(args);
-        console.log('Food available lists', args);
       }
     );
 
@@ -149,11 +138,17 @@ const FoodAvailabilityList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button
+            type="primary"
+            onClick={() => updateFoodAvailabilityItem(record)}
+          >
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button
+            type="danger"
+            onClick={() => deleteFoodAvailabilityItem(record)}
+          >
             <DeleteOutlined />
             Delete
           </Button>
@@ -162,14 +157,14 @@ const FoodAvailabilityList = () => {
     },
   ];
 
-  const handleEditCategory = (availableFoodItem) => {
+  const updateFoodAvailabilityItem = (availableFoodItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
     setUpdateAvailableItem(availableFoodItem);
     console.log('Edit', availableFoodItem);
   };
 
-  const handleDeleteCategory = (availableFoodItem) => {
+  const deleteFoodAvailabilityItem = (availableFoodItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,

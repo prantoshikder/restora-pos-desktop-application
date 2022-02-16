@@ -77,11 +77,11 @@ const AllAddonsList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditAddonsItem(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteAddonsItem(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -90,11 +90,11 @@ const AllAddonsList = () => {
     },
   ];
 
-  const handleEditCategory = (addonsItem) => {
+  const handleEditAddonsItem = (addonsItem) => {
     navigate('/add_addons', { state: addonsItem });
   };
 
-  const handleDeleteCategory = (addonsItem) => {
+  const handleDeleteAddonsItem = (addonsItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,
