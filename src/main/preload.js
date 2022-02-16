@@ -193,6 +193,14 @@ sendDataThroughMiddleware(
   'get_addons_name_list_response' //Response
 );
 
+// Get sub-category list
+sendDataThroughMiddlewareOn(
+  'get_sub_category_list', //Event Name
+  'get_sub_category_list', // Channel Name
+  'get_sub_category_list_response' //Response
+)
+
+
 // Insert Currency
 sendDataThroughMiddleware(
   'insert_currency', //Event Name
@@ -243,6 +251,23 @@ function sendDataThroughMiddleware(event, channel, response) {
       let validChannels = [response];
       if (validChannels.includes(channel)) {
         ipcRenderer.once(channel, (event, ...args) => func(...args));
+      }
+    },
+  });
+}
+
+function sendDataThroughMiddlewareOn(event, channel, response) {
+  contextBridge.exposeInMainWorld(event, {
+    send: (channel, data) => {
+      let validChannels = [channel];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.send(channel, data);
+      }
+    },
+    once: (channel, func) => {
+      let validChannels = [response];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
     },
   });
