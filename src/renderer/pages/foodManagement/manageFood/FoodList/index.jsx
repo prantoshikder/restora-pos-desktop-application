@@ -1,15 +1,14 @@
 import { Col, ConfigProvider, Row } from 'antd';
-import React from 'react';
 import Heading from 'renderer/components/Heading';
 import AllFoodList from './../../../../components/AllFoodList';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './FoodList.style.scss';
 
-const FoodList = ({ direction }) => {
+const FoodList = ({ settings }) => {
   return (
     <div className="main_wrapper">
       <div className="pos_system">
-        <ConfigProvider direction={direction}>
+        <ConfigProvider direction={settings.direction}>
           <Row>
             <Col lg={3}>
               <Sidebar />

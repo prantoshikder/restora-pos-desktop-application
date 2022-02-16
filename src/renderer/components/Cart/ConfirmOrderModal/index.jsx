@@ -1,6 +1,6 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../cart.styles.scss';
 import QuickOrderModal from '../QuickOrderModal';
 
@@ -19,7 +19,7 @@ const ConfirmOrderModal = (props) => {
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
-    window.print();
+    // window.print();
     document.body.innerHTML = originalContents;
   };
 

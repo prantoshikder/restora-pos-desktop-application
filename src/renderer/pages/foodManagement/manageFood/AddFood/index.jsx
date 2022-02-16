@@ -1,6 +1,6 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, ConfigProvider, Modal, Row, Typography } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Heading from 'renderer/components/Heading';
 import AddNewFood from './../../../../components/AddNewFood';
@@ -9,7 +9,7 @@ import './AddFood.style.scss';
 
 const { Text } = Typography;
 
-const AddFood = ({ direction }) => {
+const AddFood = ({ settings }) => {
   const [show, setShow] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
@@ -19,7 +19,7 @@ const AddFood = ({ direction }) => {
 
   return (
     <>
-      <ConfigProvider direction={direction}>
+      <ConfigProvider direction={settings.direction}>
         <div className="main_wrapper">
           <div className="pos_system">
             <Row>

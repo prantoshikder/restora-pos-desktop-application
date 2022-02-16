@@ -1,19 +1,17 @@
 import { ConfigProvider, Header, Layout, Menu } from 'antd';
-// import { shell } from 'electron';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import './systemMenu.styles.scss';
 
 const { SubMenu, Item } = Menu;
 const { Header, Content, Footer } = Layout;
 
-const SystemMenu = ({ direction }) => {
+const SystemMenu = ({ settings }) => {
   const getExternalLink = (url) => {
     // shell.openExternal(url);
   };
 
   return (
-    <ConfigProvider direction={direction}>
+    <ConfigProvider direction={settings.direction}>
       <Header className="header">
         <Menu mode="horizontal" className="system-menu">
           <SubMenu
