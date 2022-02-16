@@ -345,7 +345,7 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let settingSqlQ = `SELECT * FROM add_item_category WHERE parent_id IS NULL`;
+    let settingSqlQ = `SELECT * FROM add_item_category`;
 
     db.serialize(() => {
       db.all(settingSqlQ, [], (err, rows) => {
