@@ -101,6 +101,7 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
+
 // Get parent category data
 ipcMain.on('parent_category', (event, args) => {
   if (args.status) {
@@ -245,7 +246,9 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
   }
 });
 
-// Insert Category item data
+
+
+// Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
   let {
     category_name,
@@ -339,7 +342,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
   db.close();
 });
 
-// Send category item data
+// Get all category list
 ipcMain.on('sendResponseForCategory', (event, args) => {
   let { status } = args;
 
@@ -376,7 +379,9 @@ ipcMain.on('delete_category', (event, args) => {
   db.close();
 });
 
-// Insert and update addons data to db
+
+
+// Insert and update addons data
 ipcMain.on('add_addons', (event, args) => {
   let { add_on_name, price, is_active } = args;
 
@@ -427,7 +432,7 @@ ipcMain.on('add_addons', (event, args) => {
 // Get all addons from DB
 getListItems('addons_list', 'addons_list_response', 'addons');
 
-// Delete addons from DB
+// Delete addons data
 ipcMain.on('delete_addons', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -577,7 +582,7 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 });
 
-// Get all food list from DB
+// Get all foods list
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args;
   let sql = `SELECT item_foods.product_id, item_foods.category_id, add_item_category.category_name, item_foods.product_name, item_foods.product_image, item_foods.component, item_foods.description, item_foods.item_note, item_foods.menu_type,
@@ -597,7 +602,7 @@ ipcMain.on('get_food_list', (event, args) => {
   }
 });
 
-// Delete food from DB
+// Delete food
 ipcMain.on('delete_foods', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -902,6 +907,22 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
   }
 });
 
+// Get menu type lists as an Array
+getListItems(
+  'get_menu_type_lists',
+  'get_menu_type_lists_response',
+  'menu_type'
+);
+
+// Get menu_type only is_active items & menu_type_id, menu_type etc.
+getListItems(
+  'get_active_menu_type_lists',
+  'get_active_menu_type_lists_response',
+  'menu_type',
+  'menu_type',
+  true
+);
+
 //Delete menu type from the DB
 ipcMain.on('delete_menu_type_item', (event, args) => {
   let { id } = args;
@@ -1024,13 +1045,6 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
   db.close();
 });
 
-// Get MENU TYPE lists as an Array
-getListItems(
-  'get_menu_type_lists',
-  'get_menu_type_lists_response',
-  'menu_type'
-);
-
 // Get addons lists in names as an Array
 getListItems(
   'get_addons_name_list',
@@ -1101,3 +1115,6 @@ app
     });
   })
   .catch(console.log);
+
+
+
