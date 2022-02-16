@@ -202,7 +202,7 @@ const CurrencyList = () => {
     window.insert_currency.once('insert_currency_response', ({ status }) => {
       if (status === 'updated') {
         setReRender((prevState) => !prevState);
-        setOpenModal(false);
+        closeModal();
 
         message.success({
           content: 'Currency updated successfully',
@@ -215,7 +215,7 @@ const CurrencyList = () => {
         });
       } else {
         setReRender((prevState) => !prevState);
-        setOpenModal(false);
+        closeModal();
 
         message.success({
           content: 'Currency added successfully',
@@ -229,6 +229,11 @@ const CurrencyList = () => {
       }
     });
   };
+
+  function closeModal() {
+    form.resetFields();
+    setOpenModal(false);
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -261,8 +266,8 @@ const CurrencyList = () => {
       <Modal
         title="Add Currency"
         visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
         footer={null}
         width={650}
       >
