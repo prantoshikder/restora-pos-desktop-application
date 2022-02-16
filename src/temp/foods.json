@@ -25,7 +25,13 @@
           "id": 1,
           "addons_name": "Drinks",
           "quantity": 1,
-          "addons_price": 15 
+          "addons_price": 35 
+        },
+        {
+          "id": 2,
+          "addons_name": "Sprite",
+          "quantity": 1,
+          "addons_price": 25 
         }
       ]
     },
@@ -35,7 +41,8 @@
       "price": 499,
       "variant": [],
       "quantity": 1,
-      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/CIB_1-1068x601.jpg"
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/CIB_1-1068x601.jpg",
+      "addons" : []
     },
     {
       "id": 3,
@@ -43,7 +50,21 @@
       "price": 299,
       "variant": [],
       "quantity": 1,
-      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg"
+      "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg",
+      "addons" : [
+        {
+          "id": 1,
+          "addons_name": "Drinks",
+          "quantity": 1,
+          "addons_price": 35 
+        },
+        {
+          "id": 2,
+          "addons_name": "Sprite",
+          "quantity": 1,
+          "addons_price": 25 
+        }
+      ]
     },
     {
       "id": 4,

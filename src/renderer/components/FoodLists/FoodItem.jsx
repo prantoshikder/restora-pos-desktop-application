@@ -1,4 +1,13 @@
-import { Button, Col, InputNumber, message, Modal, Row, Space } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  InputNumber,
+  message,
+  Modal,
+  Row,
+  Space,
+} from 'antd';
 import React, { useContext, useState } from 'react';
 import foodPlaceholder from '../../../../assets/food-placeholder.png';
 import { ContextData } from './../../contextApi';
@@ -16,6 +25,12 @@ const FoodItem = ({ item }) => {
 
     if (
       item?.addons?.length > 0 ||
+      (Array.isArray(item?.addons) && item?.addons?.length > 0)
+    ) {
+      setAddonsAdd(item);
+      setOpenModal(true);
+    } else if (
+      item?.variant?.length > 0 ||
       (Array.isArray(item?.variant) && item?.variant?.length > 0)
     ) {
       setAddonsAdd(item);
@@ -37,10 +52,6 @@ const FoodItem = ({ item }) => {
             },
           });
         }
-        // item.isSelected = false;
-        // e.currentTarget.style.border = '';
-        // setCartItems(cartItems.filter((cartId) => cartId.id !== item.id));
-        // return;
       }
     }
   };
@@ -52,7 +63,6 @@ const FoodItem = ({ item }) => {
       item.foodVariant = foodVariantName;
       item.price = quantityValue * item.price;
       item.quantity = quantityValue;
-      // e.currentTarget.style.border = '2px solid #297600';
       setCartItems([...cartItems, item]);
       setOpenModal(false);
     } else {
@@ -69,7 +79,11 @@ const FoodItem = ({ item }) => {
     }
   };
 
-  console.log('quantityValue', quantityValue);
+  function onChange(e) {
+    console.log(`checked = ${e.target.checked}`);
+  }
+
+  console.log('addonsAdd', addonsAdd?.addons);
 
   return (
     <>
@@ -99,46 +113,84 @@ const FoodItem = ({ item }) => {
       >
         <Row>
           <Col lg={24}>
-            <div className="select_item">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item Information</th>
-                    <th>Variant</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
+            {addonsAdd?.variant?.length > 0 && (
+              <div className="select_item">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Item Information</th>
+                      <th>Variant</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  <tr>
-                    <td>{addonsAdd?.name}</td>
-                    <td>
-                      <select
-                        name=""
-                        onChange={(e) => setFoodVariantName(e.target.value)}
-                      >
-                        {addonsAdd?.variant?.map((addonItem, index) => (
-                          <option key={index} value={addonItem?.variant_name}>
-                            {addonItem?.variant_name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <InputNumber
-                        min={1}
-                        max={100}
-                        defaultValue={addonsAdd?.quantity}
-                        bordered={true}
-                        onChange={setQuantityValue}
-                      />
-                    </td>
-                    <td>{addonsAdd?.price}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                  <tbody>
+                    <tr>
+                      <td>{addonsAdd?.name}</td>
+                      <td>
+                        <select
+                          name=""
+                          onChange={(e) => setFoodVariantName(e.target.value)}
+                        >
+                          {addonsAdd?.variant?.map((addonItem, index) => (
+                            <option key={index} value={addonItem?.variant_name}>
+                              {addonItem?.variant_name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <InputNumber
+                          min={1}
+                          max={100}
+                          defaultValue={addonsAdd?.quantity}
+                          bordered={true}
+                          onChange={setQuantityValue}
+                        />
+                      </td>
+                      <td>{addonsAdd?.price}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {addonsAdd?.addons?.length > 0 && (
+              <div className="select_item" style={{ marginTop: '1rem' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Add-ons Name</th>
+                      <th>Add-ons Quantity</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+
+                  {addonsAdd?.addons?.map((addonsItem) => (
+                    <tbody key={addonsItem?.id}>
+                      <tr>
+                        <td>
+                          <Checkbox onChange={onChange} />
+                        </td>
+                        <td>{addonsItem?.addons_name}</td>
+                        <td>
+                          <InputNumber
+                            min={1}
+                            max={100}
+                            defaultValue={addonsAdd?.quantity}
+                            bordered={true}
+                            // onChange={setQuantityValue}
+                          />
+                        </td>
+                        <td>{addonsItem?.addons_price}</td>
+                      </tr>
+                    </tbody>
+                  ))}
+                </table>
+              </div>
+            )}
 
             <Space className="group_addToCart_btn flex ">
               <Button type="primary" onClick={(e) => handleAddToCart(e, item)}>
