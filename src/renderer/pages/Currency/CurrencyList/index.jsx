@@ -15,6 +15,7 @@ import {
   Space,
   Table,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import React, { useEffect, useState } from 'react';
 
 const rowSelection = {
@@ -37,6 +38,13 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 const CurrencyList = () => {
+  window.get_currency_lists.send('get_currency_lists', {
+    status: true,
+  });
+  window.delete_currency_list_item.send('delete_currency_list_item', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -44,6 +52,20 @@ const CurrencyList = () => {
   const [reRender, setReRender] = useState(false);
   const [updateCurrencyAdd, setUpdateCurrencyAdd] = useState({});
   const [currencyLists, setCurrencyLists] = useState([]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_currency_lists_response',
+      window.get_currency_lists
+    )
+      .then((res) => {
+        console.log(res);
+        // Array.isArray(res) &&
+        //   res?.length &&
+        //   setMenuTypes(res.map((item) => item.menu_type));
+      })
+      .catch((err) => console.log('Getting menu types erro', err));
+  }, []);
 
   useEffect(() => {
     setAddCurrency([
@@ -204,6 +226,7 @@ const CurrencyList = () => {
     // }
 
     console.log('addNewCurrencyList', addNewCurrencyList);
+    window.insert_currency.send('insert_currency', addNewCurrencyList);
 
     // // Insert or update Data
     // window.context_bridge_menu_addons.send(

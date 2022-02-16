@@ -193,6 +193,34 @@ sendDataThroughMiddleware(
   'get_addons_name_list_response' //Response
 );
 
+// Insert Currency
+sendDataThroughMiddleware(
+  'insert_currency', //Event Name
+  'insert_currency', // Channel Name
+  'insert_currency_response' //Response
+);
+
+// Get currency list
+sendDataThroughMiddleware(
+  'get_currency_lists', //Event Name
+  'get_currency_lists', // Channel Name
+  'get_currency_lists_response' //Response
+);
+
+// Update currency item
+sendDataThroughMiddleware(
+  'update_currency_list_item', //Event Name
+  'update_currency_list_item', // Channel Name
+  'update_currency_list_item_response' //Response
+);
+
+// Delect Currency Item
+sendDataThroughMiddleware(
+  'delete_currency_list_item', //Event Name
+  'delete_currency_list_item', // Channel Name
+  'delete_currency_list_item_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARETIONS
 ========================================================================*/
