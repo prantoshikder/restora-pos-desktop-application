@@ -193,6 +193,13 @@ sendDataThroughMiddleware(
   'get_addons_name_list_response' //Response
 );
 
+// Get sub-category list
+sendDataThroughMiddleware(
+  'get_sub_category_list', //Event Name
+  'get_sub_category_list', // Channel Name
+  'get_sub_category_list_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARETIONS
 ========================================================================*/
