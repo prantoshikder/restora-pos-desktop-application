@@ -26,9 +26,9 @@ const PosSidebar = ({ direction }) => {
   }, []);
 
   const handelClick = (category_id) => {
-    window.get_sub_category_list.send('get_sub_category_list', {'category_id': 1})
+    window.get_sub_category_list.send('get_sub_category_list', { 'category_id': category_id })
   }
-  window.get_sub_category_list.once('get_sub_category_list_response', (args)=>{
+  window.get_sub_category_list.once('get_sub_category_list_response', (args) => {
     console.log(args);
   })
   return (
