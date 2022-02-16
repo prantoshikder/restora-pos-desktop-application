@@ -1,6 +1,7 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -14,6 +15,7 @@ import {
   Space,
   Table,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import React, { useEffect, useState } from 'react';
 
 const rowSelection = {
@@ -36,10 +38,17 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 const CurrencyList = () => {
+  window.get_currency_lists.send('get_currency_lists', {
+    status: true,
+  });
+  window.delete_currency_list_item.send('delete_currency_list_item', {
+    status: true,
+  });
+
   const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [addCurrency, setAddCurrency] = useState([]);
+  const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
   const [updateCurrencyAdd, setUpdateCurrencyAdd] = useState({});
   const [currencyLists, setCurrencyLists] = useState([]);
@@ -65,17 +74,29 @@ const CurrencyList = () => {
     ]);
   }, [reRender]);
 
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_currency_lists_response',
+      window.get_currency_lists
+    )
+      .then((res) => {
+        // console.log(res);
+        Array.isArray(res) && res?.length && setCurrencyLists(res);
+      })
+      .catch((err) => console.log('Getting menu types error', err));
+  }, []);
+
   const columns = [
     {
       title: 'Currency Name',
-      dataIndex: 'currencyName',
-      key: 'currencyName',
+      dataIndex: 'currency_name',
+      key: 'currency_name',
       width: '20%',
     },
     {
       title: 'Currency Icon',
-      dataIndex: 'currencyIcon',
-      key: 'currencyIcon',
+      dataIndex: 'currency_icon',
+      key: 'currency_icon',
       width: '20%',
     },
     {
@@ -86,8 +107,8 @@ const CurrencyList = () => {
     },
     {
       title: 'Conversion Rate',
-      dataIndex: 'conversionRate',
-      key: 'conversionRate',
+      dataIndex: 'currency_rate',
+      key: 'currency_rate',
       width: '20%',
     },
     {
@@ -107,37 +128,6 @@ const CurrencyList = () => {
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      currencyName: 'USD',
-      currencyIcon: '	©',
-      position: 'Left',
-      conversionRate: '5.00',
-    },
-    {
-      key: 2,
-      currencyName: 'BDT',
-      currencyIcon: '$',
-      position: 'Right',
-      conversionRate: '0.50',
-    },
-    {
-      key: 3,
-      currencyName: 'INR',
-      currencyIcon: 'R',
-      position: 'Left',
-      conversionRate: '35.00',
-    },
-    {
-      key: 4,
-      currencyName: 'BDT',
-      currencyIcon: '৳',
-      position: 'Right',
-      conversionRate: '1.00',
     },
   ];
 
@@ -203,12 +193,11 @@ const CurrencyList = () => {
     // }
 
     console.log('addNewCurrencyList', addNewCurrencyList);
+    setReRender((prevState) => !prevState);
+    // Insert or update Data
+    window.insert_currency.send('insert_currency', addNewCurrencyList);
 
-    // // Insert or update Data
-    // window.context_bridge_menu_addons.send(
-    //   'context_bridge_menu_addons',
-    //   newAddonsAssignList
-    // );
+    setOpenModal(false);
 
     // Insert or update response
     // window.context_bridge_menu_addons.once(
@@ -267,8 +256,9 @@ const CurrencyList = () => {
         <Table
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
-          dataSource={data}
+          dataSource={currencyLists}
           pagination={false}
+          rowKey={(record) => record?.id}
         />
       </div>
 
@@ -284,14 +274,18 @@ const CurrencyList = () => {
           <Col lg={24}>
             <Form
               form={form}
+              fields={addCurrency}
               onFinish={handleSubmit}
+              onFieldsChange={(_, allFields) => {
+                setAddCurrency(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
-                label="Currency Name"
                 name="currency_name"
+                label="Currency Name"
                 rules={[
                   {
                     required: true,
@@ -304,8 +298,8 @@ const CurrencyList = () => {
               </Form.Item>
 
               <Form.Item
-                label="Currency Icon"
                 name="currency_icon"
+                label="Currency Icon"
                 rules={[
                   {
                     required: true,
@@ -318,8 +312,8 @@ const CurrencyList = () => {
               </Form.Item>
 
               <Form.Item
-                label="Conversion Rate"
                 name="currency_rate"
+                label="Conversion Rate"
                 rules={[
                   {
                     required: true,
@@ -331,8 +325,8 @@ const CurrencyList = () => {
                 <Input placeholder="Conversion Rate" size="large" />
               </Form.Item>
               <Form.Item
-                label="Position"
                 name="position"
+                label="Position"
                 rules={[
                   { required: true, message: 'Please input your Position!' },
                 ]}
