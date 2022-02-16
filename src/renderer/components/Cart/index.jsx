@@ -21,6 +21,7 @@ import {
   TimePicker,
 } from 'antd';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
+import Calculator from '../Calculator';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
@@ -371,7 +372,7 @@ const Cart = () => {
             </Row>
           </div>
         </div>
-
+        Calculator: <Calculator />
         <div id="printId" className="select_product_item">
           <div className="product_item_table">
             {cartItems?.length === 0 ? (
@@ -393,7 +394,6 @@ const Cart = () => {
             )}
           </div>
         </div>
-
         <div className="cart_footer">
           <div className="service_charge">
             <table bordered="true">
