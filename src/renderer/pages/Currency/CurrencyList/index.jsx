@@ -9,6 +9,7 @@ import {
   Col,
   Form,
   Input,
+  message,
   Modal,
   Row,
   Select,
@@ -50,26 +51,26 @@ const CurrencyList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
-  const [updateCurrencyAdd, setUpdateCurrencyAdd] = useState({});
+  const [updateCurrency, setUpdateCurrency] = useState({});
   const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     setAddCurrency([
       {
         name: ['currency_name'],
-        value: updateCurrencyAdd?.currency_name,
+        value: updateCurrency?.currency_name,
       },
       {
         name: ['currency_icon'],
-        value: updateCurrencyAdd?.currency_icon,
+        value: updateCurrency?.currency_icon,
       },
       {
         name: ['currency_rate'],
-        value: updateCurrencyAdd?.currency_rate,
+        value: updateCurrency?.currency_rate,
       },
       {
         name: ['position'],
-        value: updateCurrencyAdd?.position,
+        value: updateCurrency?.position,
       },
     ]);
   }, [reRender]);
@@ -84,7 +85,7 @@ const CurrencyList = () => {
         Array.isArray(res) && res?.length && setCurrencyLists(res);
       })
       .catch((err) => console.log('Getting menu types error', err));
-  }, []);
+  }, [reRender]);
 
   const columns = [
     {
@@ -134,7 +135,7 @@ const CurrencyList = () => {
   const handleEditCurrency = (currencyItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
-    setUpdateCurrencyAdd(currencyItem);
+    setUpdateCurrency(currencyItem);
     console.log('currencyItem edit', currencyItem);
   };
 
@@ -146,31 +147,31 @@ const CurrencyList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         console.log('currencyItem delete', currencyItem);
-        // window.delete_menu_addons_item.send('delete_menu_addons_item', {
-        //   id: addonsItem.row_id,
-        // });
+        window.delete_currency_list_item.send('delete_currency_list_item', {
+          id: currencyItem.id,
+        });
 
-        // setCurrencyLists(
-        //   currencyLists.filter((item) => item.row_id !== currencyItem.row_id)
-        // );
+        setCurrencyLists(
+          currencyLists.filter((item) => item.id !== currencyItem.id)
+        );
 
-        // // get delete response
-        // window.delete_menu_addons_item.once(
-        //   'delete_menu_addons_item_response',
-        //   ({ status }) => {
-        //     if (status) {
-        //       message.success({
-        //         content: 'Menu type deleted successfully',
-        //         className: 'custom-class',
-        //         duration: 1,
-        //         style: {
-        //           marginTop: '5vh',
-        //           float: 'right',
-        //         },
-        //       });
-        //     }
-        //   }
-        // );
+        // get delete response
+        window.delete_currency_list_item.once(
+          'delete_currency_list_item_response',
+          ({ status }) => {
+            if (status) {
+              message.success({
+                content: 'Menu type deleted successfully',
+                className: 'custom-class',
+                duration: 1,
+                style: {
+                  marginTop: '5vh',
+                  float: 'right',
+                },
+              });
+            }
+          }
+        );
       },
       onCancel() {},
     });
@@ -188,50 +189,45 @@ const CurrencyList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    // if (addCurrency?.currency_id) {
-    //   addNewCurrencyList.currency_id = addCurrency.currency_id;
-    // }
+    if (updateCurrency?.id) {
+      addNewCurrencyList.id = updateCurrency.id;
+    }
 
-    console.log('addNewCurrencyList', addNewCurrencyList);
-    setReRender((prevState) => !prevState);
     // Insert or update Data
     window.insert_currency.send('insert_currency', addNewCurrencyList);
 
     setOpenModal(false);
 
     // Insert or update response
-    // window.context_bridge_menu_addons.once(
-    //   'context_bridge_menu_addons_response',
-    //   ({ status }) => {
-    //     if (status === 'updated') {
-    //       setReRender((prevState) => !prevState);
-    //       closeModal();
+    window.insert_currency.once('insert_currency_response', ({ status }) => {
+      if (status === 'updated') {
+        setReRender((prevState) => !prevState);
+        setOpenModal(false);
 
-    //       message.success({
-    //         content: 'Assign addons update successfully',
-    //         className: 'custom-class',
-    //         duration: 1,
-    //         style: {
-    //           marginTop: '5vh',
-    //           float: 'right',
-    //         },
-    //       });
-    //     } else {
-    //       setReRender((prevState) => !prevState);
-    //       closeModal();
+        message.success({
+          content: 'Currency updated successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      } else {
+        setReRender((prevState) => !prevState);
+        setOpenModal(false);
 
-    //       message.success({
-    //         content: 'Assign new addons successfully',
-    //         className: 'custom-class',
-    //         duration: 1,
-    //         style: {
-    //           marginTop: '5vh',
-    //           float: 'right',
-    //         },
-    //       });
-    //     }
-    //   }
-    // );
+        message.success({
+          content: 'Currency added successfully',
+          className: 'custom-class',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      }
+    });
   };
 
   const onFinishFailed = (errorInfo) => {

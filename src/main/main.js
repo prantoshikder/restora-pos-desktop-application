@@ -1128,8 +1128,8 @@ function insertData() {
 
       db.serialize(() => {
         db.run(
-          `INSERT OR REPLACE INTO menu_add_on (id, currency_name, currency_icon, position, currency_rate)
-          VALUES (?, ?, ?, ?)`,
+          `INSERT OR REPLACE INTO currency (id, currency_name, currency_icon, position, currency_rate)
+          VALUES (?, ?, ?, ?, ?)`,
           [id, currency_name, currency_icon, position, currency_rate],
           (err) => {
             err

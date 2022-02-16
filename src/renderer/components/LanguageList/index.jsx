@@ -37,11 +37,11 @@ const LanguageList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCurrency(record)}>
+          <Button type="primary" onClick={() => handleEditLanguage(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCurrency(record)}>
+          <Button type="danger" onClick={() => handleDeleteLanguage(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -69,10 +69,10 @@ const LanguageList = () => {
     },
   ];
 
-  function handleEditCurrency(record) {
+  function handleEditLanguage(record) {
     console.log('Edit', record);
   }
-  function handleDeleteCurrency(record) {
+  function handleDeleteLanguage(record) {
     console.log('Delete', record);
     message.success({
       content: 'Foods category added successfully ',
