@@ -1,14 +1,13 @@
 import { Col, ConfigProvider, Row } from 'antd';
-import React from 'react';
 import Heading from 'renderer/components/Heading';
 import Sidebar from './../../components/partials/Sidebar';
 import './Currency.styles.scss';
 import CurrencyList from './CurrencyList';
 
-const Currency = ({ direction }) => {
+const Currency = ({ settings }) => {
   return (
     <>
-      <ConfigProvider direction={direction}>
+      <ConfigProvider direction={settings.direction}>
         <div className="main_wrapper">
           <div className="pos_system">
             <Row>

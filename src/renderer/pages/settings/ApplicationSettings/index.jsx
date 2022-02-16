@@ -1,14 +1,13 @@
 import { Col, ConfigProvider, Row } from 'antd';
-import React from 'react';
 import Heading from 'renderer/components/Heading';
 import ApplicationSetting from './../../../components/ApplicationSetting';
 import Sidebar from './../../../components/partials/Sidebar';
 
-const ApplicationSettings = ({ direction }) => {
+const ApplicationSettings = ({ settings }) => {
   return (
     <div className="main_wrapper">
       <div className="pos_system">
-        <ConfigProvider direction={direction}>
+        <ConfigProvider direction={settings.direction}>
           <Row>
             <Col lg={3}>
               <Sidebar />

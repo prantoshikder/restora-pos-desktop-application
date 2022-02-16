@@ -20,77 +20,67 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
-  const [direction, setDirection] = useState('ltr');
   const [cartItems, setCartItems] = useState([]);
+  const [settings, setSettings] = useState({
+    appStatus: 'free',
+    direction: 'ltr',
+    theme: 'light',
+  });
 
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
       <Router>
-        <SystemMenu direction={direction} />
+        <SystemMenu settings={settings} />
         <Routes>
-          {/* <Route
-            path="/"
-            element={<ApplicationSettings direction={direction} />}
-          /> */}
-
-          <Route path="/" element={<Home direction={direction} />} />
+          <Route path="/" element={<Home settings={settings} />} />
 
           <Route
             path="/add_category"
-            element={<AddCategory direction={direction} />}
+            element={<AddCategory settings={settings} />}
           />
           <Route
             path="/category_list"
-            element={<CategoryList direction={direction} />}
+            element={<CategoryList settings={settings} />}
           />
-          <Route path="/add_food" element={<AddFood direction={direction} />} />
-          <Route
-            path="/food_list"
-            element={<FoodList direction={direction} />}
-          />
+          <Route path="/add_food" element={<AddFood settings={settings} />} />
+          <Route path="/food_list" element={<FoodList settings={settings} />} />
           <Route
             path="/food_variant"
-            element={<FoodVariant direction={direction} />}
+            element={<FoodVariant settings={settings} />}
           />
           <Route
             path="/food_availability"
-            element={<FoodAvailability direction={direction} />}
+            element={<FoodAvailability settings={settings} />}
           />
           <Route
             path="/food_menuType"
-            element={<MenuType direction={direction} />}
+            element={<MenuType settings={settings} />}
           />
           <Route
             path="/add_addons"
-            element={<AddAddons direction={direction} />}
+            element={<AddAddons settings={settings} />}
           />
           <Route
             path="/addons_list"
-            element={<AddonsList direction={direction} />}
+            element={<AddonsList settings={settings} />}
           />
           <Route
             path="/addons_assign_list"
-            element={<AddonsAssignList direction={direction} />}
+            element={<AddonsAssignList settings={settings} />}
           />
           <Route
             path="/application_setting"
-            element={<ApplicationSettings direction={direction} />}
+            element={<ApplicationSettings settings={settings} />}
           />
-          <Route
-            path="/currency"
-            element={<Currency direction={direction} />}
-          />
-          <Route
-            path="/language"
-            element={<Language direction={direction} />}
-          />
+          <Route path="/currency" element={<Currency settings={settings} />} />
+          <Route path="/language" element={<Language settings={settings} />} />
           <Route
             path="/sales_report"
-            element={<SalesReport direction={direction} />}
+            element={<SalesReport settings={settings} />}
           />
           <Route
             path="/items_sales_report"
-            element={<ItemSalesReport direction={direction} />}
+            element={<ItemSalesReport settings={settings} />}
           />
         </Routes>
       </Router>
