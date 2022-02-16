@@ -137,11 +137,11 @@ const AllAddonsAssignList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditAddonsItem(record)}>
+          <Button type="primary" onClick={() => updateAddonsAssignItem(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteAddonsItem(record)}>
+          <Button type="danger" onClick={() => deleteAddonsAssignItem(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -150,14 +150,14 @@ const AllAddonsAssignList = () => {
     },
   ];
 
-  const handleEditAddonsItem = (addonsItem) => {
+  const updateAddonsAssignItem = (addonsItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
     setUpdateAssignAddons(addonsItem);
     form.resetFields();
   };
 
-  const handleDeleteAddonsItem = (addonsItem) => {
+  const deleteAddonsAssignItem = (addonsItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,

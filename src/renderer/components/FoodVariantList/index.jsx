@@ -110,12 +110,12 @@ const FoodVariantList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditFoodVariant(record)}>
             <EditOutlined />
             Edit
           </Button>
 
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteFoodVariant(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -124,13 +124,13 @@ const FoodVariantList = () => {
     },
   ];
 
-  const handleEditCategory = (variantItem) => {
+  const handleEditFoodVariant = (variantItem) => {
     setOpenModal(true);
     setUpdateFoodVariant(variantItem);
     setReRender((prevState) => !prevState);
   };
 
-  const handleDeleteCategory = (variantItem) => {
+  const handleDeleteFoodVariant = (variantItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,

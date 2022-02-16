@@ -59,10 +59,10 @@ const FoodItem = ({ item }) => {
   const handleAddToCart = (e, item) => {
     if (!item.isSelected) {
       item.isSelected = true;
-
       item.foodVariant = foodVariantName;
       item.price = quantityValue * item.price;
       item.quantity = quantityValue;
+
       setCartItems([...cartItems, item]);
       setOpenModal(false);
     } else {
@@ -82,8 +82,6 @@ const FoodItem = ({ item }) => {
   function onChange(e) {
     console.log(`checked = ${e.target.checked}`);
   }
-
-  console.log('addonsAdd', addonsAdd?.addons);
 
   return (
     <>

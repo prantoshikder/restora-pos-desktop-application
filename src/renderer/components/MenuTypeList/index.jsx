@@ -118,11 +118,11 @@ const MenuTypeList = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditCategory(record)}>
+          <Button type="primary" onClick={() => handleEditMenuType(record)}>
             <EditOutlined />
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDeleteCategory(record)}>
+          <Button type="danger" onClick={() => handleDeleteMenuType(record)}>
             <DeleteOutlined />
             Delete
           </Button>
@@ -131,14 +131,14 @@ const MenuTypeList = () => {
     },
   ];
 
-  const handleEditCategory = (menuTypeItem) => {
+  const handleEditMenuType = (menuTypeItem) => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
     setUpdateMenuType(menuTypeItem);
     form.resetFields();
   };
 
-  const handleDeleteCategory = (menuTypeItem) => {
+  const handleDeleteMenuType = (menuTypeItem) => {
     confirm({
       title: 'Are you sure to delete this item?',
       icon: <ExclamationCircleOutlined />,

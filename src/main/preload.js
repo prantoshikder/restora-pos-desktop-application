@@ -207,14 +207,7 @@ sendDataThroughMiddleware(
   'get_currency_lists_response' //Response
 );
 
-// Update currency item
-sendDataThroughMiddleware(
-  'update_currency_list_item', //Event Name
-  'update_currency_list_item', // Channel Name
-  'update_currency_list_item_response' //Response
-);
-
-// Delect Currency Item
+// Delete Currency Item
 sendDataThroughMiddleware(
   'delete_currency_list_item', //Event Name
   'delete_currency_list_item', // Channel Name
@@ -222,7 +215,7 @@ sendDataThroughMiddleware(
 );
 
 /*======================================================================
-  FUNCTION DECLARETIONS
+  FUNCTION DECLARATIONS
 ========================================================================*/
 /**
  * Used as middleware to communicate between main.js & nodejs
