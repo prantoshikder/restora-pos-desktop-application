@@ -30,12 +30,14 @@ const PosSidebar = ({ settings }) => {
       category_id: category_id,
     });
   };
+
   window.get_sub_category_list.once(
     'get_sub_category_list_response',
     (args) => {
       console.log(args);
     }
   );
+
   return (
     <div className="pos_sidebar">
       <div className="btn_wrapper">

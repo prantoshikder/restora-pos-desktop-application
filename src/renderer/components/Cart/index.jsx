@@ -345,7 +345,6 @@ const Cart = ({ settings }) => {
             )}
           </div>
         </div>
-
         <div className="cart_footer">
           <div className="service_charge">
             <table bordered="true">
