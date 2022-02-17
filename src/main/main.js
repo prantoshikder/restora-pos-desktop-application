@@ -740,7 +740,6 @@ ipcMain.on('variant_lists_channel', (event, args) => {
 
 // Delete variant from DB
 ipcMain.on('delete_foods_variant', (event, args) => {
-  console.log(args);
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
@@ -1028,7 +1027,6 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
     });
     db.close();
   } else {
-    console.log('menu_addons else', args);
     // Execute if it is new, then insert it
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
@@ -1171,7 +1169,6 @@ ipcMain.on('insert_customer_info', (event, args) => {
     });
     db.close();
   } else {
-    console.log('customer_info else', args);
     // Execute if it is new, then insert it
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
