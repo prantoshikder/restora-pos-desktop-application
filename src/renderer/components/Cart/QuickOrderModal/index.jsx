@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Row, Typography } from 'antd';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { ContextData } from './../../../contextApi';
 import './QuickOrderModal.style.scss';
 
@@ -11,7 +11,7 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
   return (
     <Modal
       title="Select Your Payment Method"
-      openModal={quickOrder}
+      visible={quickOrder}
       onOk={() => setQuickOrder(false)}
       onCancel={() => setQuickOrder(false)}
       footer={null}
@@ -105,29 +105,32 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
               <Text>Do you Want to Print Invoice???</Text>
             </div>
 
-            <div style={{ background: '#ddd' }}>
-              <Title level={2}>Order Payment Successfully</Title>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. At,
-                iusto dolorem fugit, eligendi veritatis, corporis inventore
-                aspernatur perspiciatis ab facere consectetur aliquam
-                exercitationem repudiandae aut magnam et cupiditate natus
-                voluptates? Aut voluptates ad suscipit earum amet tenetur
-                expedita quas in et eaque quo magni quae doloribus at non quod
-                ipsum sed est veniam neque eligendi adipisci ducimus, corrupti
-                ut. Dolor optio vel illo labore debitis, quibusdam saepe,
-                architecto molestiae, deleniti unde quo eos? Incidunt
-                praesentium excepturi aliquid quaerat enim consequuntur,
-                accusamus id tempore quisquam fugiat quas sint nulla eius
-                suscipit a veniam quis similique aut expedita beatae voluptas
-                aperiam quam. Similique omnis error cupiditate, itaque a eveniet
-                animi explicabo, maxime sit corporis vel non? Nesciunt, culpa
-                inventore, adipisci libero ipsa saepe magnam provident
-                voluptates unde sapiente odit facilis. Aspernatur ducimus minima
-                provident aperiam commodi adipisci similique consectetur,
-                molestiae, corrupti sapiente repellendus, quae mollitia ullam.
-                Dolor, aliquid tempore! Recusandae, laborum consequuntur.
-              </Text>
+            <div
+              style={{
+                background: '#ddd',
+                minHeight: '280px',
+                padding: '1.5rem',
+              }}
+            >
+              <Row gutter={20}>
+                <Col lg={15}>
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. At,
+                    iusto dolorem fugit, eligendi veritatis, corporis inventore
+                    aspernatur perspiciatis ab facere consectetur aliquam
+                    exercitationem repudiandae aut magnam et cupiditate natus
+                    voluptates? Aut voluptates ad suscipit earum amet tenetur
+                    expedita quas in et eaque quo magni quae doloribus at non
+                    quod
+                  </Text>
+                </Col>
+                <Col lg={9}>
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. At,
+                    iusto dolorem fugit, eligendi veritatis, corporis inventore
+                  </Text>
+                </Col>
+              </Row>
             </div>
           </div>
         </Col>

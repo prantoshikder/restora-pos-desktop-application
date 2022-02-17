@@ -1,5 +1,5 @@
 import { Col, ConfigProvider, Input, Row } from 'antd';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
@@ -7,20 +7,20 @@ import PosSidebar from './../../components/PosSidebar';
 import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
-const Home = ({ direction }) => {
+const Home = ({ settings }) => {
   // const [cartItems, setCartItems] = useState([]);
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
   return (
     <div className="main_wrapper">
-      <Header direction={direction} />
+      <Header settings={settings} />
 
       <div className="pos_wrapper">
-        <ConfigProvider direction={direction}>
+        <ConfigProvider direction={settings.direction}>
           <Row className="pos_system">
             <Col lg={4}>
-              <PosSidebar direction={direction} />
+              <PosSidebar settings={settings} />
             </Col>
 
             <Col lg={20}>
@@ -43,7 +43,11 @@ const Home = ({ direction }) => {
                 </Col>
 
                 <Col lg={10}>
-                  <Cart setCartItems={setCartItems} cartItems={cartItems} />
+                  <Cart
+                    settings={settings}
+                    setCartItems={setCartItems}
+                    cartItems={cartItems}
+                  />
                 </Col>
               </Row>
             </Col>

@@ -1,42 +1,53 @@
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Form,
-  Input,
-  Menu,
-  Modal,
-  Row,
-  Select,
-} from 'antd';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
+import { Button, ConfigProvider, Row } from 'antd';
+// import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
-const { SubMenu } = Menu;
+// const { SubMenu } = Menu;
+// const { Option } = Select;
 
-const Header = ({ direction }) => {
-  const [form] = Form.useForm();
-  const [openModal, setOpenModal] = useState(false);
-  const [value, setValue] = useState('');
+const Header = ({ settings }) => {
+  // const [form] = Form.useForm();
+  // const [openModal, setOpenModal] = useState(false);
+  // const [cashRegister, setCashRegister] = useState([]);
+  // const [reRender, setReRender] = useState(false);
 
-  const handleChangeStatus = (value) => {
-    console.log('status', value);
-    setValue(value);
-  };
+  // useEffect(() => {
+  //   setCashRegister([
+  //     {
+  //       name: 'counter_number',
+  //       // value: ,
+  //     },
+  //     {
+  //       name: 'total_amount',
+  //       // value: ,
+  //     },
+  //     {
+  //       name: 'notes',
+  //       // value: ,
+  //     },
+  //   ]);
+  // }, []);
 
-  const handleCashRegister = (values) => {
-    console.log('Success:', values);
-  };
+  // const handleSubmit = () => {
+  //   const userCashRegister = {};
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
+  //   for (const data of cashRegister) {
+  //     userCashRegister[data.name[0]] =
+  //       typeof data.value === 'string' ? data?.value.trim() : data?.value;
+  //   }
+
+  //   console.log('userCashRegister', userCashRegister);
+  //   setOpenModal(false);
+  //   form.resetFields();
+  // };
+
+  // const onFinishFailed = (errorInfo) => {
+  //   console.log('Failed:', errorInfo);
+  // };
 
   return (
     <>
-      <ConfigProvider direction={direction}>
+      <ConfigProvider direction={settings.direction}>
         <Row>
           <div className="pos_header">
             <div>
@@ -76,7 +87,7 @@ const Header = ({ direction }) => {
               </Button>
             </div>
 
-            <div className="right_panel_wrapper">
+            {/* <div className="right_panel_wrapper">
               <div
                 onClick={() => setOpenModal(true)}
                 title="Cash Register"
@@ -84,11 +95,11 @@ const Header = ({ direction }) => {
               >
                 <img src={cashRegisterIcon} alt="Cash Register" />
               </div>
-            </div>
+            </div> */}
           </div>
         </Row>
 
-        <Modal
+        {/* <Modal
           title="Cash Register"
           centered
           visible={openModal}
@@ -101,26 +112,30 @@ const Header = ({ direction }) => {
             <Col lg={24}>
               <Form
                 form={form}
-                onFinish={handleCashRegister}
+                fields={cashRegister}
+                onFinish={handleSubmit}
+                onFieldsChange={(_, allFields) => {
+                  setCashRegister(allFields);
+                }}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 layout="vertical"
               >
-                <Form.Item name="counterNumber" label="Counter Number">
+                <Form.Item name="counter_number" label="Counter Number">
                   <Select
                     placeholder="Select Counter No"
-                    onChange={handleChangeStatus}
-                    value={value}
                     size="large"
                     allowClear
                   >
-                    <Option value="0">0</Option>
+                    <Option value="1">1</Option>
                     <Option value="2">2</Option>
                     <Option value="3">3</Option>
+                    <Option value="4">4</Option>
+                    <Option value="5">5</Option>
                   </Select>
                 </Form.Item>
 
-                <Form.Item label="Total Amount" name="totalAmount">
+                <Form.Item label="Total Amount" name="total_amount">
                   <Input placeholder="Amount" size="large" />
                 </Form.Item>
 
@@ -145,7 +160,7 @@ const Header = ({ direction }) => {
               </Form>
             </Col>
           </Row>
-        </Modal>
+        </Modal> */}
       </ConfigProvider>
     </>
   );
