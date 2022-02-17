@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row, Typography } from 'antd';
+import { Button, Col, Modal, Row, Space, Typography } from 'antd';
 import { useContext } from 'react';
 import { ContextData } from './../../../contextApi';
 import './QuickOrderModal.style.scss';
@@ -125,10 +125,18 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
                   </Text>
                 </Col>
                 <Col lg={9}>
-                  <Text>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. At,
-                    iusto dolorem fugit, eligendi veritatis, corporis inventore
-                  </Text>
+                  <Space className="flex" style={{ flexDirection: 'column' }}>
+                    <Button style={{ padding: '0 3.4rem' }} type="primary">
+                      Due Invoice
+                    </Button>
+                    <Button style={{ padding: '0 3.2rem' }} type="primary">
+                      Change Due:
+                    </Button>
+                    <Button style={{ padding: '0 2.4rem' }} type="primary">
+                      Payable Amount:
+                    </Button>
+                    <Button type="primary">Pay Now & Print Invoice</Button>
+                  </Space>
                 </Col>
               </Row>
             </div>

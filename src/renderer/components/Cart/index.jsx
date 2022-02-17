@@ -243,6 +243,7 @@ const Cart = ({ settings }) => {
                     placeholder="Select a Customer Name"
                     size="large"
                     allowClear
+                    disabled
                   >
                     <Option value="walkIn">Walk In</Option>
                     <Option value="onlineCustomer">Online Customer</Option>
@@ -260,7 +261,12 @@ const Cart = ({ settings }) => {
                   className="custom_level"
                   name="waiter"
                 >
-                  <Select placeholder="Select Waiter" size="large" allowClear>
+                  <Select
+                    placeholder="Select Waiter"
+                    size="large"
+                    allowClear
+                    disabled
+                  >
                     <Option value="kabir">Kabir</Option>
                     <Option value="junayed">Junayed</Option>
                     <Option value="devid">Devid</Option>
@@ -270,7 +276,12 @@ const Cart = ({ settings }) => {
               </Col>
 
               <Col lg={3}>
-                <Button size="large" type="primary" className="add_customer">
+                <Button
+                  size="large"
+                  type="primary"
+                  className="add_customer"
+                  disabled
+                >
                   Person
                 </Button>
               </Col>
@@ -281,7 +292,12 @@ const Cart = ({ settings }) => {
                   className="custom_level"
                   name="table_no"
                 >
-                  <Select placeholder="Select Table No" size="large" allowClear>
+                  <Select
+                    placeholder="Select Table No"
+                    size="large"
+                    allowClear
+                    disabled
+                  >
                     <Option value="1">1</Option>
                     <Option value="2">2</Option>
                     <Option value="3">3</Option>
@@ -300,6 +316,7 @@ const Cart = ({ settings }) => {
                     size="large"
                     onChange={selectTime}
                     format={format}
+                    disabled
                   />
                 </Form.Item>
               </Col>
