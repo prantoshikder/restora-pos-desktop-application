@@ -21,6 +21,7 @@ import {
   TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import { getDataFromDatabase } from './../../../helpers';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
@@ -32,14 +33,47 @@ const { TextArea } = Input;
 const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
-  const [addCustomer] = Form.useForm();
+  const [addCustomerName] = Form.useForm();
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
+  const [addCustomer, setAddCustomer] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
+  const [reRender, setReRender] = useState(false);
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  window.get_customer_names.send('get_customer_names', { status: true });
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      setCustomerList(data);
+    });
+
+    setAddCustomer([
+      {
+        name: ['customer_name'],
+        // value: ,
+      },
+      {
+        name: ['customer_email'],
+        // value: ,
+      },
+      {
+        name: ['customer_phone'],
+        // value: ,
+      },
+      {
+        name: ['customer_address'],
+        // value: ,
+      },
+    ]);
+  }, [reRender]);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
@@ -179,8 +213,43 @@ const Cart = ({ settings }) => {
     setOpenModal(true);
   };
 
-  const submitCustomer = () => {
-    console.log('Add Customer');
+  const handleClose = () => {
+    setOpenModal(false);
+    addCustomerName.resetFields();
+  };
+
+  const submitNewCustomer = () => {
+    const addCustomerInfo = {};
+
+    for (const data of addCustomer) {
+      addCustomerInfo[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    // Insert through the event & channel
+    window.insert_customer_info.send('insert_customer_info', addCustomerInfo);
+
+    // Customer name insert response
+    window.insert_customer_info.once(
+      'insert_customer_info_response',
+      ({ status }) => {
+        if (status === 'inserted') {
+          setReRender((prevState) => !prevState);
+          setOpenModal(false);
+          addCustomerName.resetFields();
+
+          message.success({
+            content: 'Customer info added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        }
+      }
+    );
   };
 
   const handleSubmit = () => {
@@ -218,8 +287,14 @@ const Cart = ({ settings }) => {
                     size="large"
                     allowClear
                   >
-                    <Option value="walkin">Walkin</Option>
-                    <Option value="jamil">Jamil</Option>
+                    {customerList?.map((customer) => (
+                      <Option
+                        key={customer?.id}
+                        value={customer?.customer_name}
+                      >
+                        {customer?.customer_name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -240,7 +315,7 @@ const Cart = ({ settings }) => {
                   name="customer_type"
                 >
                   <Select
-                    placeholder="Select a Customer Name"
+                    placeholder="Select a Customer Type"
                     size="large"
                     allowClear
                     disabled
@@ -414,7 +489,7 @@ const Cart = ({ settings }) => {
       </Form>
 
       <Modal
-        title="Add Variant"
+        title="Add Customer"
         visible={openModal}
         onOk={() => setOpenModal(false)}
         onCancel={() => setOpenModal(false)}
@@ -424,8 +499,12 @@ const Cart = ({ settings }) => {
         <Row>
           <Col lg={24}>
             <Form
-              form={addCustomer}
-              onFinish={submitCustomer}
+              form={addCustomerName}
+              fields={addCustomer}
+              onFinish={submitNewCustomer}
+              onFieldsChange={(_, allFields) => {
+                setAddCustomer(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
@@ -458,7 +537,7 @@ const Cart = ({ settings }) => {
 
               <Form.Item
                 label="Mobile "
-                name="mobile"
+                name="customer_phone"
                 rules={[
                   {
                     required: true,
@@ -469,7 +548,7 @@ const Cart = ({ settings }) => {
                 <Input placeholder="Customer Mobile" size="large" />
               </Form.Item>
 
-              <Form.Item label="Address" name="address">
+              <Form.Item label="Address" name="customer_address">
                 <TextArea placeholder="Customer Address" size="large" />
               </Form.Item>
 
@@ -479,7 +558,7 @@ const Cart = ({ settings }) => {
                   style={{
                     marginRight: '1rem',
                   }}
-                  onClick={() => setOpenModal(false)}
+                  onClick={handleClose}
                 >
                   Close
                 </Button>

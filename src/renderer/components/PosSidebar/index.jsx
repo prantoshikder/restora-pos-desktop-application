@@ -2,6 +2,7 @@ import defaultIcon from '';
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { getDataFromDatabase } from './../../../helpers';
+import CategoryItem from './CategoryItem';
 import './PosSidebar.style.scss';
 
 const PosSidebar = ({ settings }) => {
@@ -12,7 +13,7 @@ const PosSidebar = ({ settings }) => {
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
-        console.log("$$$$$$", data);
+        console.log('$$$$$$', data);
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(
@@ -38,35 +39,11 @@ const PosSidebar = ({ settings }) => {
         </Button>
 
         {categories?.map((category) => (
-          <Button
+          <CategoryItem
             key={category?.category_id}
-            // onClick={() => handelClick(category?.category_id)}
-            size="large"
-            type="primary"
-            style={{
-              textAlign: settings.direction === 'rtl' ? 'right' : 'left',
-              backgroundColor: category.category_color
-                ? category.category_color
-                : '#6900ff',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ width: '30px', marginRight: '5px' }}>
-              {category?.category_icon ? (
-                <img src="" alt="" />
-              ) : (
-                <img
-                  src="https://i.postimg.cc/bvzKkjn3/image.png"
-                  width="20px"
-                  height="20px"
-                  alt=""
-                />
-              )}
-            </div>
-
-            {category?.category_name}
-          </Button>
+            settings={settings}
+            category={category}
+          />
         ))}
       </div>
     </div>
