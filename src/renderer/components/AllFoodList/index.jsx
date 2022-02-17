@@ -4,7 +4,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Image, message, Modal, Space, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AllFoodList.style.scss';
 
@@ -35,7 +35,6 @@ const AllFoodList = () => {
 
   useEffect(() => {
     window.get_food_list.once('get_food_list_response', (data = []) => {
-      console.log('data', data);
       const foodLists =
         Array.isArray(data) &&
         data?.map((element) => {
