@@ -1,7 +1,9 @@
+import { rejects } from 'assert';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import { resolve } from 'path/posix';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -344,18 +346,64 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
   let { status } = args;
 
   if (status) {
+
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let settingSqlQ = `SELECT * FROM add_item_category`;
+    let db2 = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    let sqlQ = `SELECT * FROM add_item_category WHERE parent_id IS NULL`;
+    let sqlQ2 = `SELECT * FROM add_item_category WHERE parent_id IS NOT NULL`
 
     db.serialize(() => {
-      db.all(settingSqlQ, [], (err, rows) => {
-        mainWindow.webContents.send('sendCategoryData', rows);
-      });
-    });
 
-    db.close();
+      db.all(sqlQ, [], (err, categories) => {
+
+        db2.all(sqlQ2, [], (err, sub_categories) => {
+
+          sub_categories.map((s) => {
+
+            categories.map((c) => {
+
+              if (c.category_id === s.parent_id) {
+
+                let sub_cat = {
+                  category_id: s.category_id,
+                  category_name: s.category_name,
+                  category_image: s.category_image,
+                  category_is_active: s.category_is_active,
+                  category_color: s.category_color,
+                  parent_id: s.parent_id,
+                  category_icon: s.category_icon
+                };
+
+                if (Array.isArray(c.subCategories)) {
+                  c.subCategories.push(sub_cat);
+                }
+                else {
+                  c.subCategories = [{ ...sub_cat }];
+                }
+
+              }
+
+            })
+
+          })
+
+        })
+
+        db2.close()
+        setTimeout(() => {
+          mainWindow.webContents.send('sendCategoryData', categories);
+        }, 1000);
+
+      })
+
+    })
+
+    db.close()
+
   }
-});
+
+})
 
 // Delete category data
 ipcMain.on('delete_category', (event, args) => {
@@ -733,35 +781,40 @@ ipcMain.on('delete_foods_variant', (event, args) => {
 });
 
 // Get all sub-category from DB (Sub-category is a category who does not have any parent category)
-ipcMain.on('get_sub_category_list', (event, args) => {
-  let { category_id } = args;
-  let sql = `SELECT * FROM add_item_category WHERE parent_id = ${category_id}`;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+// ipcMain.on('get_sub_category_list', (event, args) => {
 
-  db.serialize(() => {
-    // !==0
-    db.all(sql, [], (err, rows) => {
-      if (rows.length) {
-        console.log('rows 1', rows);
-        mainWindow.webContents.send('get_sub_category_list_response', rows);
-      } else {
-        // ===0
-        db.close();
-        let db_t = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-        console.log('rows 2', rows);
+//   let { category_id } = args
+//   let sql = `SELECT * FROM add_item_category WHERE parent_id = ${category_id}`
+//   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-        let get_all_foods_sql = `SELECT * FROM item_foods WHERE category_id = ${category_id}`;
-        db_t.serialize(() => {
-          db_t.all(get_all_foods_sql, [], (err, row) => {
-            console.log('rows 1---', row);
-            mainWindow.webContents.send('get_sub_category_list_response', row);
-          });
-          db_t.close();
-        });
-      }
-    });
-  });
-});
+//   db.serialize(() => { // !==0
+//     db.all(sql, [], (err, rows) => {
+
+//       if (rows.length) {
+
+//         console.log('rows 1', rows);
+//         mainWindow.webContents.send('get_sub_category_list_response', rows)
+
+//       }
+//       else { // ===0
+//         db.close()
+//         let db_t = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+//         console.log('rows 2', rows);
+
+//         let get_all_foods_sql = `SELECT * FROM item_foods WHERE category_id = ${category_id}`
+//         db_t.serialize(() => {
+//           db_t.all(get_all_foods_sql, [], (err, row) => {
+//             console.log("rows 1---", row);
+//             mainWindow.webContents.send('get_sub_category_list_response', row)
+//           })
+//           db_t.close()
+//         })
+//       }
+//     })
+//   })
+
+
+// })
 
 /*==================================================================
   FOOD AVAILABILITY
@@ -1196,11 +1249,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-              status: err,
-            })
+            status: err,
+          })
           : mainWindow.webContents.send(eventResponse, {
-              status: true,
-            });
+            status: true,
+          });
       });
     });
     db.close();

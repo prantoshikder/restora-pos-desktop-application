@@ -12,6 +12,7 @@ const PosSidebar = ({ settings }) => {
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
+        console.log("$$$$$$", data);
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(
@@ -24,19 +25,6 @@ const PosSidebar = ({ settings }) => {
       }
     );
   }, []);
-
-  const handelClick = (category_id) => {
-    window.get_sub_category_list.send('get_sub_category_list', {
-      category_id: category_id,
-    });
-  };
-
-  window.get_sub_category_list.once(
-    'get_sub_category_list_response',
-    (args) => {
-      console.log(args);
-    }
-  );
 
   return (
     <div className="pos_sidebar">
@@ -52,7 +40,7 @@ const PosSidebar = ({ settings }) => {
         {categories?.map((category) => (
           <Button
             key={category?.category_id}
-            onClick={() => handelClick(category?.category_id)}
+            // onClick={() => handelClick(category?.category_id)}
             size="large"
             type="primary"
             style={{
