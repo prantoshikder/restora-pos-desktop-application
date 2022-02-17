@@ -32,16 +32,36 @@ const { TextArea } = Input;
 const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
-  const [addCustomer] = Form.useForm();
+  const [addCustomerName] = Form.useForm();
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
+  const [addCustomer, setAddCustomer] = useState([]);
   const { cartItems, setCartItems } = useContext(ContextData);
 
   useEffect(() => {
+    setAddCustomer([
+      {
+        name: ['customer_name'],
+        // value: ,
+      },
+      {
+        name: ['customer_email'],
+        // value: ,
+      },
+      {
+        name: ['customer_phone'],
+        // value: ,
+      },
+      {
+        name: ['customer_address'],
+        // value: ,
+      },
+    ]);
+
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
 
@@ -179,8 +199,22 @@ const Cart = ({ settings }) => {
     setOpenModal(true);
   };
 
-  const submitCustomer = () => {
-    console.log('Add Customer');
+  const handleClose = () => {
+    setOpenModal(false);
+    addCustomerName.resetFields();
+  };
+
+  const submitNewCustomer = () => {
+    const addNewCustomer = {};
+
+    for (const data of addCustomer) {
+      addNewCustomer[data.name[0]] =
+        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    console.log('addNewCustomer', addNewCustomer);
+    setOpenModal(false);
+    addCustomerName.resetFields();
   };
 
   const handleSubmit = () => {
@@ -414,7 +448,7 @@ const Cart = ({ settings }) => {
       </Form>
 
       <Modal
-        title="Add Variant"
+        title="Add Customer"
         visible={openModal}
         onOk={() => setOpenModal(false)}
         onCancel={() => setOpenModal(false)}
@@ -424,8 +458,12 @@ const Cart = ({ settings }) => {
         <Row>
           <Col lg={24}>
             <Form
-              form={addCustomer}
-              onFinish={submitCustomer}
+              form={addCustomerName}
+              fields={addCustomer}
+              onFinish={submitNewCustomer}
+              onFieldsChange={(_, allFields) => {
+                setAddCustomer(allFields);
+              }}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
@@ -479,7 +517,7 @@ const Cart = ({ settings }) => {
                   style={{
                     marginRight: '1rem',
                   }}
-                  onClick={() => setOpenModal(false)}
+                  onClick={handleClose}
                 >
                   Close
                 </Button>
