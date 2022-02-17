@@ -20,7 +20,7 @@ import {
   Table,
   TimePicker,
 } from 'antd';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
@@ -29,59 +29,31 @@ import WarmingModal from './WarmingModal';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const Cart = () => {
+const Cart = ({ settings }) => {
+  const format = 'HH:mm';
   const [form] = Form.useForm();
-  const [foodNote] = Form.useForm();
   const [addCustomer] = Form.useForm();
 
-  const [show, setShow] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
-
   const { cartItems, setCartItems } = useContext(ContextData);
-
-  const [state, dispatch] = useReducer([]);
 
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
 
   const [cartData, setCartData] = useState({
-    customerName: '',
-    customerType: '',
-    waiter: '',
-    tableNo: '',
-    cookingTime: '',
     cartItems,
-    vat: '',
-    serviceCharge: '',
-    total: '',
   });
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   const increaseQuantity = (cartData) => {
-    console.log('cartData', cartData);
-
     const index = cartItems.indexOf(cartData);
-    console.log('index', index);
-
     const newQuantity = (cartData.quantity += 1);
 
-    console.log('cartData.price * newQuantity', cartData.price * newQuantity);
     setQuantityValue(newQuantity);
-
-    // const newData = [
-    //   ...cartItems.slice(0, index),
-    //   { ...cartData, quantity: newQuantity },
-    //   ...cartItems.slice(index + 1),
-    // ];
-
-    // dispatch(newData);
   };
 
   const decreaseQuantity = (cartData) => {
@@ -91,15 +63,6 @@ const Cart = () => {
 
     const newQuantity = (cartData.quantity -= 1);
     setQuantityValue(newQuantity);
-
-    // const newData = [
-    //   ...cartItems.slice(0, index),
-    //   { ...cartData, quantity: newQuantity },
-    //   ...cartItems.slice(index + 1),
-    // ];
-
-    // console.log('newData', newData);
-    // setQuantityValue(newQuantity);
   };
 
   const columns = [
@@ -149,7 +112,7 @@ const Cart = () => {
     {
       title: 'Total',
       dataIndex: 'price',
-      key: 'total',
+      key: 'price',
       align: 'center',
     },
     {
@@ -167,24 +130,8 @@ const Cart = () => {
     },
   ];
 
-  const selectCustomerName = (value) => {
-    setCartData({ ...cartData, customerName: value });
-  };
-
-  const selectCustomerType = (value) => {
-    setCartData({ ...cartData, customerType: value });
-  };
-
-  const selectWaiter = (value) => {
-    setCartData({ ...cartData, waiter: value });
-  };
-
-  const selectTableNum = (value) => {
-    setCartData({ ...cartData, tableNo: value });
-  };
-
-  const selectTime = (value) => {
-    setCartData({ ...cartData, cookingTime: value });
+  const selectTime = (time, timeString) => {
+    console.log('Cooking time', timeString);
   };
 
   const handleDeleteItem = (item) => {
@@ -228,31 +175,35 @@ const Cart = () => {
     }
   };
 
-  const handleUpdateNote = () => {
-    foodNote.resetFields();
-    setShow(false);
+  const handleAddCustomer = () => {
+    setOpenModal(true);
+  };
 
-    message.success({
-      content: 'Added Food Note',
-      className: 'custom-class',
-      duration: 1,
-      style: { marginTop: '5vh', float: 'right' },
-    });
+  const submitCustomer = () => {
+    console.log('Add Customer');
+  };
+
+  const handleSubmit = () => {
+    console.log('submitted');
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
-  const handleAddCustomer = () => {
-    setOpenModal(true);
-  };
-
-  const submitCustomer = () => {};
-
   return (
     <div className="cart_wrapper">
-      <Form form={form} layout="vertical" autoComplete="off">
+      <Form
+        form={form}
+        // fields={categories}
+        onFinish={handleSubmit}
+        // onFieldsChange={(_, allFields) => {
+        //   setCategories(allFields);
+        // }}
+        onFinishFailed={onFinishFailed}
+        layout="vertical"
+        autoComplete="off"
+      >
         <div className="form_content">
           <div className="banner_card">
             <Row gutter={30}>
@@ -260,12 +211,10 @@ const Cart = () => {
                 <Form.Item
                   label="Customer Name"
                   className="custom_level"
-                  name="customerName"
+                  name="customer_name"
                 >
                   <Select
                     placeholder="Select a Customer Name"
-                    value={cartData.customerName}
-                    onChange={selectCustomerName}
                     size="large"
                     allowClear
                   >
@@ -288,14 +237,13 @@ const Cart = () => {
                 <Form.Item
                   label="Customer Type"
                   className="custom_level"
-                  name="customerType"
+                  name="customer_type"
                 >
                   <Select
                     placeholder="Select a Customer Name"
-                    value={cartData.customerType}
-                    onChange={selectCustomerType}
                     size="large"
                     allowClear
+                    disabled
                   >
                     <Option value="walkIn">Walk In</Option>
                     <Option value="onlineCustomer">Online Customer</Option>
@@ -315,10 +263,9 @@ const Cart = () => {
                 >
                   <Select
                     placeholder="Select Waiter"
-                    value={cartData.waiter}
-                    onChange={selectWaiter}
                     size="large"
                     allowClear
+                    disabled
                   >
                     <Option value="kabir">Kabir</Option>
                     <Option value="junayed">Junayed</Option>
@@ -329,7 +276,12 @@ const Cart = () => {
               </Col>
 
               <Col lg={3}>
-                <Button size="large" type="primary" className="add_customer">
+                <Button
+                  size="large"
+                  type="primary"
+                  className="add_customer"
+                  disabled
+                >
                   Person
                 </Button>
               </Col>
@@ -338,14 +290,13 @@ const Cart = () => {
                 <Form.Item
                   label="Table"
                   className="custom_level"
-                  name="tableNo"
+                  name="table_no"
                 >
                   <Select
                     placeholder="Select Table No"
-                    value={cartData.tableNo}
-                    onChange={selectTableNum}
                     size="large"
                     allowClear
+                    disabled
                   >
                     <Option value="1">1</Option>
                     <Option value="2">2</Option>
@@ -363,8 +314,9 @@ const Cart = () => {
                 >
                   <TimePicker
                     size="large"
-                    value={cartData.cookingTime}
                     onChange={selectTime}
+                    format={format}
+                    disabled
                   />
                 </Form.Item>
               </Col>
@@ -393,7 +345,6 @@ const Cart = () => {
             )}
           </div>
         </div>
-
         <div className="cart_footer">
           <div className="service_charge">
             <table bordered="true">
@@ -481,7 +432,7 @@ const Cart = () => {
             >
               <Form.Item
                 label="Customer Name"
-                name="customerName"
+                name="customer_name"
                 rules={[
                   {
                     required: true,
@@ -494,7 +445,7 @@ const Cart = () => {
 
               <Form.Item
                 label="Email Address"
-                name="customerName"
+                name="customer_email"
                 rules={[
                   {
                     required: true,

@@ -280,12 +280,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -327,12 +327,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -413,11 +413,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -438,8 +438,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -463,8 +463,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -484,8 +484,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -546,8 +546,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -616,8 +616,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -654,8 +654,8 @@ ipcMain.on('delete_foods', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_foods_response', { status: err })
         : mainWindow.webContents.send('delete_foods_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -704,12 +704,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -731,12 +731,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -770,16 +770,15 @@ ipcMain.on('delete_foods_variant', (event, args) => {
     db.run(`DELETE FROM variants WHERE variant_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_foods_variant_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_foods_variant_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
 });
-
 
 // Get all sub-category from DB (Sub-category is a category who does not have any parent category)
 // ipcMain.on('get_sub_category_list', (event, args) => {
@@ -838,15 +837,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -869,15 +868,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -911,17 +910,17 @@ ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
     db.run(`DELETE FROM food_variable WHERE available_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send(
-          'delete_food_available_day_time_response',
-          {
-            status: err,
-          }
-        )
+            'delete_food_available_day_time_response',
+            {
+              status: err,
+            }
+          )
         : mainWindow.webContents.send(
-          'delete_food_available_day_time_response',
-          {
-            status: true,
-          }
-        );
+            'delete_food_available_day_time_response',
+            {
+              status: true,
+            }
+          );
     });
   });
   db.close();
@@ -946,12 +945,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -974,12 +973,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -1011,11 +1010,11 @@ ipcMain.on('delete_menu_type_item', (event, args) => {
     db.run(`DELETE FROM menu_type WHERE menu_type_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_menu_type_item_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_menu_type_item_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -1040,15 +1039,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -1072,15 +1071,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -1115,11 +1114,11 @@ ipcMain.on('delete_menu_addons_item', (event, args) => {
     db.run(`DELETE FROM menu_add_on WHERE row_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_menu_addons_item_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_menu_addons_item_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -1161,14 +1160,29 @@ deleteListItem(
   'currency'
 );
 
+// const columns
+insertData(
+  'insert_currency', //Event Name
+  'insert_currency_response', //Event response
+  'currency', //Table name
+  'currency_name, currency_icon, position, currency_rate' //columns name
+);
+
 /*==================================================================
   FUNCTIONS DEFINITIONS
 ==================================================================*/
-insertData();
-// INSERT Method
-function insertData() {
-  ipcMain.on('insert_currency', (event, args) => {
+/**
+ *
+ *
+ * @params string event name
+ * @params string event response
+ * @params string database table name
+ * @params string event name
+ */
+function insertData(eventName, eventResponse, table, columns) {
+  ipcMain.on(eventName, (event, args) => {
     let { id, currency_name, currency_icon, position, currency_rate } = args;
+    console.log(columns);
 
     // Execute if the event has row ID / data ID. It is used to update a specific item
     if (args.id !== undefined) {
@@ -1176,18 +1190,15 @@ function insertData() {
 
       db.serialize(() => {
         db.run(
-          `INSERT OR REPLACE INTO currency (id, currency_name, currency_icon, position, currency_rate)
+          `INSERT OR REPLACE INTO ${table} (id, currency_name, currency_icon, position, currency_rate)
           VALUES (?, ?, ?, ?, ?)`,
           [id, currency_name, currency_icon, position, currency_rate],
           (err) => {
             err
-              ? mainWindow.webContents.send(
-                'insert_currency_response',
-                err.message
-              )
-              : mainWindow.webContents.send('insert_currency_response', {
-                status: 'updated',
-              });
+              ? mainWindow.webContents.send(eventResponse, err.message)
+              : mainWindow.webContents.send(eventResponse, {
+                  status: 'updated',
+                });
           }
         );
       });
@@ -1197,7 +1208,7 @@ function insertData() {
       let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
       db.serialize(() => {
         db.run(
-          `CREATE TABLE IF NOT EXISTS currency (
+          `CREATE TABLE IF NOT EXISTS ${table} (
             'id' INTEGER PRIMARY KEY AUTOINCREMENT,
             'currency_name' varchar(50),
             'currency_icon' varchar(50),
@@ -1205,19 +1216,16 @@ function insertData() {
             'currency_rate' real
           )`
         ).run(
-          `INSERT OR REPLACE INTO currency (currency_name, currency_icon, position, currency_rate)
+          `INSERT OR REPLACE INTO ${table} (${columns})
             VALUES (?, ?, ?, ?)`,
           [currency_name, currency_icon, position, currency_rate],
           (err) => {
             console.log('curr insert err', err);
             err
-              ? mainWindow.webContents.send(
-                'insert_currency_response',
-                err.message
-              )
-              : mainWindow.webContents.send('insert_currency_response', {
-                status: 'inserted',
-              });
+              ? mainWindow.webContents.send(eventResponse, err.message)
+              : mainWindow.webContents.send(eventResponse, {
+                  status: 'inserted',
+                });
           }
         );
       });
@@ -1257,8 +1265,9 @@ function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let { status } = args;
-    let sql = `SELECT ${query} FROM ${table} ${condition && 'WHERE is_active = 1'
-      }`;
+    let sql = `SELECT ${query} FROM ${table} ${
+      condition && 'WHERE is_active = 1'
+    }`;
 
     if (status) {
       db.serialize(() => {

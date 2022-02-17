@@ -198,9 +198,11 @@ sendDataThroughMiddlewareOn(
   'get_sub_category_list', //Event Name
   'get_sub_category_list', // Channel Name
   'get_sub_category_list_response' //Response
-)
+);
 
-
+/*============================================
+  CURRENCY
+==============================================*/
 // Insert Currency
 sendDataThroughMiddleware(
   'insert_currency', //Event Name

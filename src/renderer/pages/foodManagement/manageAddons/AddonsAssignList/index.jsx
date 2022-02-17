@@ -1,15 +1,14 @@
 import { Col, ConfigProvider, Row } from 'antd';
-import React from 'react';
 import AllAddonsAssignList from 'renderer/components/AllAddonsAssignList';
 import Heading from 'renderer/components/Heading';
 import Sidebar from './../../../../components/partials/Sidebar';
 import './AddonsAssignList.style.scss';
 
-const AddonsAssignList = ({ direction }) => {
+const AddonsAssignList = ({ settings }) => {
   return (
     <div className="main_wrapper">
       <div className=" pos_system">
-        <ConfigProvider direction={direction}>
+        <ConfigProvider direction={settings.direction}>
           <Row>
             <Col lg={3}>
               <Sidebar />

@@ -1,10 +1,10 @@
 import defaultIcon from '';
 import { Button } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDataFromDatabase } from './../../../helpers';
 import './PosSidebar.style.scss';
 
-const PosSidebar = ({ direction }) => {
+const PosSidebar = ({ settings }) => {
   const [categories, setCategories] = useState([]);
 
   window.get_category.send('sendResponseForCategory', { status: true });
@@ -32,7 +32,7 @@ const PosSidebar = ({ direction }) => {
         <Button
           size="large"
           type="primary"
-          style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
+          style={{ textAlign: settings.direction === 'rtl' ? 'right' : 'left' }}
         >
           All
         </Button>
@@ -44,7 +44,7 @@ const PosSidebar = ({ direction }) => {
             size="large"
             type="primary"
             style={{
-              textAlign: direction === 'rtl' ? 'right' : 'left',
+              textAlign: settings.direction === 'rtl' ? 'right' : 'left',
               backgroundColor: category.category_color
                 ? category.category_color
                 : '#6900ff',
