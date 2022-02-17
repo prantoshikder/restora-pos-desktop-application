@@ -1,9 +1,7 @@
-import { rejects } from 'assert';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
-import { resolve } from 'path/posix';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -346,25 +344,18 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
   let { status } = args;
 
   if (status) {
-
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let db2 = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
     let sqlQ = `SELECT * FROM add_item_category WHERE parent_id IS NULL`;
-    let sqlQ2 = `SELECT * FROM add_item_category WHERE parent_id IS NOT NULL`
+    let sqlQ2 = `SELECT * FROM add_item_category WHERE parent_id IS NOT NULL`;
 
     db.serialize(() => {
-
       db.all(sqlQ, [], (err, categories) => {
-
         db2.all(sqlQ2, [], (err, sub_categories) => {
-
           sub_categories.map((s) => {
-
             categories.map((c) => {
-
               if (c.category_id === s.parent_id) {
-
                 let sub_cat = {
                   category_id: s.category_id,
                   category_name: s.category_name,
@@ -372,38 +363,29 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
                   category_is_active: s.category_is_active,
                   category_color: s.category_color,
                   parent_id: s.parent_id,
-                  category_icon: s.category_icon
+                  category_icon: s.category_icon,
                 };
 
                 if (Array.isArray(c.subCategories)) {
                   c.subCategories.push(sub_cat);
-                }
-                else {
+                } else {
                   c.subCategories = [{ ...sub_cat }];
                 }
-
               }
+            });
+          });
+        });
 
-            })
-
-          })
-
-        })
-
-        db2.close()
+        db2.close();
         setTimeout(() => {
           mainWindow.webContents.send('sendCategoryData', categories);
         }, 1000);
+      });
+    });
 
-      })
-
-    })
-
-    db.close()
-
+    db.close();
   }
-
-})
+});
 
 // Delete category data
 ipcMain.on('delete_category', (event, args) => {
@@ -813,7 +795,6 @@ ipcMain.on('delete_foods_variant', (event, args) => {
 //     })
 //   })
 
-
 // })
 
 /*==================================================================
@@ -1168,6 +1149,83 @@ insertData(
   'currency_name, currency_icon, position, currency_rate' //columns name
 );
 
+/*===================================================
+  New Customer Name in to POS
+=====================================================*/
+// Insert New Customer Info
+ipcMain.on('insert_customer_info', (event, args) => {
+  let {
+    id,
+    customer_name,
+    customer_email,
+    customer_phone,
+    customer_address,
+    is_active,
+  } = args;
+
+  // Execute if the event has row ID / data ID. It is used to update a specific item
+  if (args.id !== undefined) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+    db.serialize(() => {
+      db.run(
+        `INSERT OR REPLACE INTO customer_info (id, customer_name, customer_email, customer_phone, customer_address)
+        VALUES (?, ?, ?, ?, ?)`,
+        [id, customer_name, customer_email, customer_phone, customer_address],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'insert_customer_info_response',
+                err.message
+              )
+            : mainWindow.webContents.send('insert_customer_info_response', {
+                status: 'updated',
+              });
+        }
+      );
+    });
+    db.close();
+  } else {
+    console.log('menu_addons else', args);
+    // Execute if it is new, then insert it
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.run(
+        `CREATE TABLE IF NOT EXISTS customer_info (
+          'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'customer_name' varchar(150),
+          'customer_email' varchar(100),
+          'customer_phone' varchar(200),
+          'customer_address' varchar(250),
+        )`
+      ).run(
+        `INSERT OR REPLACE INTO customer_info (customer_name, customer_email, customer_phone, customer_address)
+          VALUES (?, ?, ?, ?)`,
+        [customer_name, customer_email, customer_phone, customer_address],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'insert_customer_info_response',
+                err.message
+              )
+            : mainWindow.webContents.send('insert_customer_info_response', {
+                status: 'inserted',
+              });
+        }
+      );
+    });
+    db.close();
+  }
+});
+
+// Get Customer names as an Array
+getListItems(
+  'get_customer_names',
+  'get_customer_names_response',
+  'customer_info',
+  'id, customer_name'
+);
+
 /*==================================================================
   FUNCTIONS DEFINITIONS
 ==================================================================*/
@@ -1249,11 +1307,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-            status: err,
-          })
+              status: err,
+            })
           : mainWindow.webContents.send(eventResponse, {
-            status: true,
-          });
+              status: true,
+            });
       });
     });
     db.close();
