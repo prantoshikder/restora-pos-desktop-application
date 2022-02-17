@@ -224,6 +224,19 @@ sendDataThroughMiddleware(
   'delete_currency_list_item_response' //Response
 );
 
+// Insert Customer Info
+sendDataThroughMiddleware(
+  'insert_customer_info', //Event Name
+  'insert_customer_info', // Channel Name
+  'insert_customer_info_response' //Response
+);
+
+sendDataThroughMiddleware(
+  'get_customer_names', //Event Name
+  'get_customer_names', // Channel Name
+  'get_customer_names_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARATIONS
 ========================================================================*/
