@@ -102,7 +102,7 @@ const AllAddonsAssignList = () => {
           );
 
           const newFoodItems = foodNames.find(
-            (foodItem) => foodItem.product_id === addon.menu_id
+            (foodItem) => foodItem.id === addon.menu_id
           );
 
           newAddonNames.push({
@@ -340,10 +340,7 @@ const AllAddonsAssignList = () => {
               >
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodNames?.map((foodItem) => (
-                    <Option
-                      key={foodItem?.product_id}
-                      value={foodItem?.product_id}
-                    >
+                    <Option key={foodItem?.id} value={foodItem?.id}>
                       {foodItem?.product_name}
                     </Option>
                   ))}

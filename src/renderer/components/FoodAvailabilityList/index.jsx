@@ -85,9 +85,7 @@ const FoodAvailabilityList = () => {
       const foodNameList =
         Array.isArray(args) &&
         args?.filter(
-          (foodItem) =>
-            foodItem.products_is_active !== 0 &&
-            foodItem.products_is_active !== null
+          (foodItem) => foodItem.is_active !== 0 && foodItem.is_active !== null
         );
       setFoodName(foodNameList);
     });
@@ -115,8 +113,8 @@ const FoodAvailabilityList = () => {
   const columns = [
     {
       title: 'Food Name',
-      dataIndex: 'food_id',
-      key: 'food_id',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '30%',
     },
     {
@@ -161,7 +159,6 @@ const FoodAvailabilityList = () => {
     setOpenModal(true);
     setReRender((prevState) => !prevState);
     setUpdateAvailableItem(availableFoodItem);
-    console.log('Edit', availableFoodItem);
   };
 
   const deleteFoodAvailabilityItem = (availableFoodItem) => {
@@ -173,12 +170,12 @@ const FoodAvailabilityList = () => {
       onOk() {
         window.channel_delete_food_available_day_time.send(
           'channel_delete_food_available_day_time',
-          { id: availableFoodItem.available_id }
+          { id: availableFoodItem.id }
         );
 
         setFoodAvailabilityList(
           foodAvailabilityList.filter(
-            (item) => item.available_id !== availableFoodItem.available_id
+            (item) => item.id !== availableFoodItem.id
           )
         );
 
@@ -226,11 +223,9 @@ const FoodAvailabilityList = () => {
 
     newFoodAvailable.avail_time = avail_time;
 
-    if (updateAvailableItem.available_id) {
-      newFoodAvailable.available_id = updateAvailableItem.available_id;
+    if (updateAvailableItem.id) {
+      newFoodAvailable.id = updateAvailableItem.id;
     }
-
-    console.log('newFoodAvailable', newFoodAvailable);
 
     // Insert or updated add_food_available_day_time
     window.context_bridge_food_available_time.send(
@@ -300,7 +295,7 @@ const FoodAvailabilityList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={foodAvailabilityList}
           pagination={false}
-          rowKey={(record) => record?.available_id}
+          rowKey={(record) => record?.id}
         />
       </div>
 
@@ -334,10 +329,7 @@ const FoodAvailabilityList = () => {
               >
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodName?.map((foodName) => (
-                    <Option
-                      key={foodName?.product_id}
-                      value={foodName?.product_id}
-                    >
+                    <Option key={foodName?.id} value={foodName?.id}>
                       {foodName?.product_name}
                     </Option>
                   ))}
