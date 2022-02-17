@@ -179,7 +179,7 @@ sendDataThroughMiddleware(
   'delete_menu_addons_item_response' //Response
 );
 
-// Get food lists as an Array from the DB only [product_id, product_name]
+// Get food lists as an Array from the DB only [id, product_name]
 sendDataThroughMiddleware(
   'get_food_name_lists_channel', //Event Name
   'get_food_name_lists_channel', // Channel Name
