@@ -1186,7 +1186,7 @@ ipcMain.on('insert_customer_info', (event, args) => {
     });
     db.close();
   } else {
-    console.log('menu_addons else', args);
+    console.log('customer_info else', args);
     // Execute if it is new, then insert it
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
@@ -1196,7 +1196,7 @@ ipcMain.on('insert_customer_info', (event, args) => {
           'customer_name' varchar(150),
           'customer_email' varchar(100),
           'customer_phone' varchar(200),
-          'customer_address' varchar(250),
+          'customer_address' varchar(250)
         )`
       ).run(
         `INSERT OR REPLACE INTO customer_info (customer_name, customer_email, customer_phone, customer_address)

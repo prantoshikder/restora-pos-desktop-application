@@ -21,6 +21,7 @@ import {
   TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import { getDataFromDatabase } from './../../../helpers';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
@@ -40,9 +41,20 @@ const Cart = ({ settings }) => {
   const [warmingModal, setWarmingModal] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
   const [addCustomer, setAddCustomer] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
+  const [reRender, setReRender] = useState(false);
   const { cartItems, setCartItems } = useContext(ContextData);
 
+  window.get_customer_names.send('get_customer_names', { status: true });
+
   useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      setCustomerList(data);
+    });
+
     setAddCustomer([
       {
         name: ['customer_name'],
@@ -61,7 +73,9 @@ const Cart = ({ settings }) => {
         // value: ,
       },
     ]);
+  }, [reRender]);
 
+  useEffect(() => {
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
 
@@ -205,16 +219,37 @@ const Cart = ({ settings }) => {
   };
 
   const submitNewCustomer = () => {
-    const addNewCustomer = {};
+    const addCustomerInfo = {};
 
     for (const data of addCustomer) {
-      addNewCustomer[data.name[0]] =
+      addCustomerInfo[data.name[0]] =
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    console.log('addNewCustomer', addNewCustomer);
-    setOpenModal(false);
-    addCustomerName.resetFields();
+    // Insert through the event & channel
+    window.insert_customer_info.send('insert_customer_info', addCustomerInfo);
+
+    // Customer name insert response
+    window.insert_customer_info.once(
+      'insert_customer_info_response',
+      ({ status }) => {
+        if (status === 'inserted') {
+          setReRender((prevState) => !prevState);
+          setOpenModal(false);
+          addCustomerName.resetFields();
+
+          message.success({
+            content: 'Customer info added successfully',
+            className: 'custom-class',
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        }
+      }
+    );
   };
 
   const handleSubmit = () => {
@@ -252,8 +287,14 @@ const Cart = ({ settings }) => {
                     size="large"
                     allowClear
                   >
-                    <Option value="walkin">Walkin</Option>
-                    <Option value="jamil">Jamil</Option>
+                    {customerList?.map((customer) => (
+                      <Option
+                        key={customer?.id}
+                        value={customer?.customer_name}
+                      >
+                        {customer?.customer_name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -274,7 +315,7 @@ const Cart = ({ settings }) => {
                   name="customer_type"
                 >
                   <Select
-                    placeholder="Select a Customer Name"
+                    placeholder="Select a Customer Type"
                     size="large"
                     allowClear
                     disabled
@@ -496,7 +537,7 @@ const Cart = ({ settings }) => {
 
               <Form.Item
                 label="Mobile "
-                name="mobile"
+                name="customer_phone"
                 rules={[
                   {
                     required: true,
@@ -507,7 +548,7 @@ const Cart = ({ settings }) => {
                 <Input placeholder="Customer Mobile" size="large" />
               </Form.Item>
 
-              <Form.Item label="Address" name="address">
+              <Form.Item label="Address" name="customer_address">
                 <TextArea placeholder="Customer Address" size="large" />
               </Form.Item>
 
