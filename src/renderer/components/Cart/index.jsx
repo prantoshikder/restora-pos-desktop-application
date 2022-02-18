@@ -25,6 +25,7 @@ import { getDataFromDatabase } from './../../../helpers';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
+import PremiumVersion from './PremiumVersion/index';
 import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
@@ -43,6 +44,7 @@ const Cart = ({ settings }) => {
   const [addCustomer, setAddCustomer] = useState([]);
   const [customerList, setCustomerList] = useState([]);
   const [reRender, setReRender] = useState(false);
+  const [premiumVersion, setPremiumVersion] = useState(false);
   const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
@@ -313,6 +315,7 @@ const Cart = ({ settings }) => {
                   label="Customer Type"
                   className="custom_level"
                   name="customer_type"
+                  onClick={() => setPremiumVersion(true)}
                 >
                   <Select
                     placeholder="Select a Customer Type"
@@ -335,6 +338,7 @@ const Cart = ({ settings }) => {
                   label="Waiter"
                   className="custom_level"
                   name="waiter"
+                  onClick={() => setPremiumVersion(true)}
                 >
                   <Select
                     placeholder="Select Waiter"
@@ -356,6 +360,7 @@ const Cart = ({ settings }) => {
                   type="primary"
                   className="add_customer"
                   disabled
+                  onClick={() => setPremiumVersion(true)}
                 >
                   Person
                 </Button>
@@ -366,6 +371,7 @@ const Cart = ({ settings }) => {
                   label="Table"
                   className="custom_level"
                   name="table_no"
+                  onClick={() => setPremiumVersion(true)}
                 >
                   <Select
                     placeholder="Select Table No"
@@ -386,6 +392,7 @@ const Cart = ({ settings }) => {
                   label="Cooking Time"
                   className="custom_level"
                   name="cookingTime"
+                  onClick={() => setPremiumVersion(true)}
                 >
                   <TimePicker
                     size="large"
@@ -582,6 +589,11 @@ const Cart = ({ settings }) => {
         setConfirmOrder={setConfirmOrder}
         confirmBtn={confirmBtn}
         printId={'printId'}
+      />
+
+      <PremiumVersion
+        premiumVersion={premiumVersion}
+        setPremiumVersion={setPremiumVersion}
       />
     </div>
   );
