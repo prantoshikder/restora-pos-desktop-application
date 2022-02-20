@@ -34,7 +34,7 @@ export const getDataFromDatabase = (event, channel) => {
  * Insert data into the database based on event & channel
  * Event must be unique and channel name too.
  * All the channels name is declared in the preload.js file in the main folder
- * And event is declard in the main.js in the mian folder
+ * And event is declared in the main.js in the main folder
  * This function returns a promise of object or an array if promise resolves
  *
  * @return promise
@@ -59,7 +59,7 @@ export const insertData = (event, channel) => {
  * Delete data from the database based on event & channel
  * Event must be unique and channel name too.
  * All the channels name is declared in the preload.js file in the main folder
- * And event is declard in the main.js in the mian folder
+ * And event is declared in the main.js in the main folder
  * This function returns a promise of object or an array if promise resolves
  *
  * @return promise
@@ -78,4 +78,11 @@ export const deleteData = (event, channel) => {
       }
     });
   });
+};
+
+// First latter of a string uppercase
+export const getWords = (string) => {
+  const newString = string.charAt(0).toUpperCase() + string.slice(1);
+
+  return newString;
 };
