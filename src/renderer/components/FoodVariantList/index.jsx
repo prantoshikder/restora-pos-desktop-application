@@ -136,12 +136,12 @@ const FoodVariantList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         window.delete_foods_variant.send('delete_foods_variant', {
-          id: variantItem.variant_id,
+          id: variantItem.id,
         });
 
         setFoodVariantList(
           foodVariantList.filter(
-            (variantName) => variantName.variant_id !== variantItem.variant_id
+            (variantName) => variantName.id !== variantItem.id
           )
         );
 
@@ -178,8 +178,8 @@ const FoodVariantList = () => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    if (updateFoodVariant.variant_id) {
-      newFoodVariant.variant_id = updateFoodVariant.variant_id;
+    if (updateFoodVariant.id) {
+      newFoodVariant.id = updateFoodVariant.id;
     }
 
     if (updateFoodVariant.food_id) {
@@ -250,7 +250,7 @@ const FoodVariantList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={foodVariantList}
           pagination={false}
-          rowKey={(record) => record?.variant_id}
+          rowKey={(record) => record?.id}
         />
       </div>
 

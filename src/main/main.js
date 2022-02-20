@@ -459,6 +459,12 @@ ipcMain.on('add_addons', (event, args) => {
 getListItems('addons_list', 'addons_list_response', 'addons');
 
 // Delete addons data
+deleteListItem(
+  'delete_addons', //channel name
+  'delete_addons_response', //response event,
+  'addons' //table name
+);
+
 ipcMain.on('delete_addons', (event, args) => {
   let { id } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -629,20 +635,11 @@ ipcMain.on('get_food_list', (event, args) => {
 });
 
 // Delete food
-ipcMain.on('delete_foods', (event, args) => {
-  let { id } = args;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(`DELETE FROM item_foods WHERE id = ?`, id, (err) => {
-      err
-        ? mainWindow.webContents.send('delete_foods_response', { status: err })
-        : mainWindow.webContents.send('delete_foods_response', {
-            status: true,
-          });
-    });
-  });
-  db.close();
-});
+deleteListItem(
+  'delete_foods', //channel name
+  'delete_foods_response', //response event,
+  'item_foods' //table name
+);
 
 // Get only food lists as an Array for (Food Availability)
 getListItems(
@@ -671,14 +668,14 @@ getListItems(
 ipcMain.on('add_new_foods_variant', (event, args) => {
   let { food_id, food_variant, food_price } = args;
 
-  if (args.variant_id !== undefined) {
+  if (args.id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO variants (variant_id, food_id, variant_name, price)
+        `INSERT OR REPLACE INTO variants (id, food_id, variant_name, price)
         VALUES (?, ?, ?, ?)`,
-        [args.variant_id, food_id, food_variant, Number(food_price)],
+        [args.id, food_id, food_variant, Number(food_price)],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -697,7 +694,7 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
     db.serialize(() => {
       db.run(
         `CREATE TABLE IF NOT EXISTS variants (
-          'variant_id' INTEGER PRIMARY KEY AUTOINCREMENT,
+          'id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'food_id' INT,
           'variant_name' varchar(255),
           'price' REAL
@@ -726,7 +723,7 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
 ipcMain.on('variant_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT variants.variant_id,  variants.variant_name,  variants.price, variants.food_id, item_foods.product_name
+    let sql = `SELECT variants.id,  variants.variant_name,  variants.price, variants.food_id, item_foods.product_name
     FROM variants
     INNER JOIN item_foods ON variants.food_id=item_foods.id`;
     db.serialize(() => {
@@ -740,57 +737,11 @@ ipcMain.on('variant_lists_channel', (event, args) => {
 });
 
 // Delete variant from DB
-ipcMain.on('delete_foods_variant', (event, args) => {
-  let { id } = args;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(`DELETE FROM variants WHERE variant_id = ?`, id, (err) => {
-      err
-        ? mainWindow.webContents.send('delete_foods_variant_response', {
-            status: err,
-          })
-        : mainWindow.webContents.send('delete_foods_variant_response', {
-            status: true,
-          });
-    });
-  });
-  db.close();
-});
-
-// Get all sub-category from DB (Sub-category is a category who does not have any parent category)
-// ipcMain.on('get_sub_category_list', (event, args) => {
-
-//   let { category_id } = args
-//   let sql = `SELECT * FROM add_item_category WHERE parent_id = ${category_id}`
-//   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-
-//   db.serialize(() => { // !==0
-//     db.all(sql, [], (err, rows) => {
-
-//       if (rows.length) {
-
-//         console.log('rows 1', rows);
-//         mainWindow.webContents.send('get_sub_category_list_response', rows)
-
-//       }
-//       else { // ===0
-//         db.close()
-//         let db_t = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-//         console.log('rows 2', rows);
-
-//         let get_all_foods_sql = `SELECT * FROM item_foods WHERE category_id = ${category_id}`
-//         db_t.serialize(() => {
-//           db_t.all(get_all_foods_sql, [], (err, row) => {
-//             console.log("rows 1---", row);
-//             mainWindow.webContents.send('get_sub_category_list_response', row)
-//           })
-//           db_t.close()
-//         })
-//       }
-//     })
-//   })
-
-// })
+deleteListItem(
+  'delete_foods_variant', //channel name
+  'delete_foods_variant_response', //response event,
+  'variants' //table name
+);
 
 /*==================================================================
   FOOD AVAILABILITY
@@ -878,28 +829,11 @@ ipcMain.on('get_food_availability_lists_channel', (event, args) => {
 });
 
 // Delete food available day & time list channel from
-ipcMain.on('channel_delete_food_available_day_time', (event, args) => {
-  let { id } = args;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(`DELETE FROM food_variable WHERE id = ?`, id, (err) => {
-      err
-        ? mainWindow.webContents.send(
-            'delete_food_available_day_time_response',
-            {
-              status: err,
-            }
-          )
-        : mainWindow.webContents.send(
-            'delete_food_available_day_time_response',
-            {
-              status: true,
-            }
-          );
-    });
-  });
-  db.close();
-});
+deleteListItem(
+  'channel_delete_food_available_day_time', //channel name
+  'delete_food_available_day_time_response', //response event,
+  'food_variable' //table name
+);
 
 /*==================================================================
   MENU TYPE

@@ -130,6 +130,12 @@ const FoodAvailabilityList = () => {
       width: '25%',
     },
     {
+      title: 'Status',
+      dataIndex: 'is_active',
+      key: 'is_active',
+      width: '25%',
+    },
+    {
       title: 'Action',
       dataIndex: 'action',
       width: '20%',
