@@ -114,7 +114,7 @@ const AddNewFood = ({ state }) => {
       },
       {
         name: ['food_status'],
-        value: state?.products_is_active || 'Active',
+        value: state?.is_active || 'Active',
       },
     ]);
 
@@ -230,7 +230,7 @@ const AddNewFood = ({ state }) => {
     newFoods.cooking_time = timePicker;
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
-    newFoods.product_id = state?.product_id;
+    newFoods.id = state?.id;
 
     if (state?.category_id) {
       newFoods.category_name = state?.category_id;

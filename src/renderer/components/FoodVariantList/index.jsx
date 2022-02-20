@@ -62,9 +62,7 @@ const FoodVariantList = () => {
       const foodNameList =
         Array.isArray(args) &&
         args?.filter(
-          (foodItem) =>
-            foodItem.products_is_active !== 0 &&
-            foodItem.products_is_active !== null
+          (foodItem) => foodItem.is_active !== 0 && foodItem.is_active !== null
         );
       setFoodName(foodNameList);
     });
@@ -138,12 +136,12 @@ const FoodVariantList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         window.delete_foods_variant.send('delete_foods_variant', {
-          id: variantItem.variant_id,
+          id: variantItem.id,
         });
 
         setFoodVariantList(
           foodVariantList.filter(
-            (variantName) => variantName.variant_id !== variantItem.variant_id
+            (variantName) => variantName.id !== variantItem.id
           )
         );
 
@@ -180,8 +178,8 @@ const FoodVariantList = () => {
         typeof data.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    if (updateFoodVariant.variant_id) {
-      newFoodVariant.variant_id = updateFoodVariant.variant_id;
+    if (updateFoodVariant.id) {
+      newFoodVariant.id = updateFoodVariant.id;
     }
 
     if (updateFoodVariant.food_id) {
@@ -252,7 +250,7 @@ const FoodVariantList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={foodVariantList}
           pagination={false}
-          rowKey={(record) => record?.variant_id}
+          rowKey={(record) => record?.id}
         />
       </div>
 
@@ -286,10 +284,7 @@ const FoodVariantList = () => {
               >
                 <Select placeholder="Select Option" size="large" allowClear>
                   {foodName?.map((foodName) => (
-                    <Option
-                      key={foodName?.product_id}
-                      value={foodName?.product_id}
-                    >
+                    <Option key={foodName?.id} value={foodName?.id}>
                       {foodName?.product_name}
                     </Option>
                   ))}

@@ -76,6 +76,8 @@ const MenuTypeList = () => {
       'get_menu_type_lists_response',
       window.get_menu_type_lists
     ).then((res) => {
+      console.log('menuTypes', res);
+
       const foodAvailableList =
         Array.isArray(res) &&
         res?.map((element) => {
@@ -109,6 +111,12 @@ const MenuTypeList = () => {
       title: 'Icon',
       dataIndex: 'menu_icon',
       key: 'menu_icon',
+      width: '55%',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'is_active',
+      key: 'is_active',
       width: '55%',
     },
     {
@@ -146,13 +154,11 @@ const MenuTypeList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         window.delete_menu_type_item.send('delete_menu_type_item', {
-          id: menuTypeItem.menu_type_id,
+          id: menuTypeItem.id,
         });
 
         setMenuTypesList(
-          menuTypesList.filter(
-            (item) => item.menu_type_id !== menuTypeItem.menu_type_id
-          )
+          menuTypesList.filter((item) => item.id !== menuTypeItem.id)
         );
 
         // get delete response
@@ -195,8 +201,8 @@ const MenuTypeList = () => {
       ? (newMenuType.is_active = 1)
       : (newMenuType.is_active = 0);
 
-    if (updateMenuType?.menu_type_id) {
-      newMenuType.menu_type_id = updateMenuType?.menu_type_id;
+    if (updateMenuType?.id) {
+      newMenuType.id = updateMenuType?.id;
     }
 
     // Insert Data
@@ -274,7 +280,7 @@ const MenuTypeList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={menuTypesList}
           pagination={false}
-          rowKey={(record) => record.menu_type_id}
+          rowKey={(record) => record.id}
         />
       </div>
 
@@ -349,7 +355,7 @@ const MenuTypeList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  {updateMenuType?.menu_type_id ? 'Update' : 'Add'}
+                  {updateMenuType?.id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>

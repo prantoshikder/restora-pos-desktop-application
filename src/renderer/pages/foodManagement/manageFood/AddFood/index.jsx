@@ -29,7 +29,7 @@ const AddFood = ({ settings }) => {
 
               <Col lg={21}>
                 <div className="flex content_between item_center">
-                  {state?.product_id ? (
+                  {state?.id ? (
                     <Heading title=" Update Food Name" />
                   ) : (
                     <Heading title=" Add Food" />

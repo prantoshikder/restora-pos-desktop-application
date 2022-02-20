@@ -33,6 +33,13 @@ sendDataThroughMiddleware(
   'parent_category' //Response
 );
 
+// Get sub-category list
+sendDataThroughMiddlewareOn(
+  'get_sub_category_list', //Event Name
+  'get_sub_category_list', // Channel Name
+  'get_sub_category_list_response' //Response
+);
+
 // Add new addons - channel
 sendDataThroughMiddleware(
   'add_addons', //Event Name
@@ -179,7 +186,7 @@ sendDataThroughMiddleware(
   'delete_menu_addons_item_response' //Response
 );
 
-// Get food lists as an Array from the DB only [product_id, product_name]
+// Get food lists as an Array from the DB only [id, product_name]
 sendDataThroughMiddleware(
   'get_food_name_lists_channel', //Event Name
   'get_food_name_lists_channel', // Channel Name
@@ -191,13 +198,6 @@ sendDataThroughMiddleware(
   'get_addons_name_list', //Event Name
   'get_addons_name_list', // Channel Name
   'get_addons_name_list_response' //Response
-);
-
-// Get sub-category list
-sendDataThroughMiddlewareOn(
-  'get_sub_category_list', //Event Name
-  'get_sub_category_list', // Channel Name
-  'get_sub_category_list_response' //Response
 );
 
 /*============================================

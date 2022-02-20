@@ -38,10 +38,10 @@ const AllFoodList = () => {
       const foodLists =
         Array.isArray(data) &&
         data?.map((element) => {
-          if (element.products_is_active === 1) {
-            return { ...element, products_is_active: 'Active' };
+          if (element.is_active === 1) {
+            return { ...element, is_active: 'Active' };
           } else {
-            return { ...element, products_is_active: 'Inactive' };
+            return { ...element, is_active: 'Inactive' };
           }
         });
 
@@ -89,8 +89,8 @@ const AllFoodList = () => {
     },
     {
       title: 'Status',
-      dataIndex: 'products_is_active',
-      key: 'products_is_active',
+      dataIndex: 'is_active',
+      key: 'is_active',
       width: '15%',
     },
     {
@@ -126,11 +126,9 @@ const AllFoodList = () => {
       content:
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
-        window.delete_foods.send('delete_foods', { id: foodItem.product_id });
+        window.delete_foods.send('delete_foods', { id: foodItem.id });
 
-        setFoodData(
-          foodData.filter((item) => item.product_id !== foodItem.product_id)
-        );
+        setFoodData(foodData.filter((item) => item.id !== foodItem.id));
 
         // Delete Food item
         window.delete_foods.once('delete_foods_response', ({ status }) => {
@@ -163,7 +161,7 @@ const AllFoodList = () => {
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={foodData}
         pagination={false}
-        rowKey={(record) => record.product_id}
+        rowKey={(record) => record.id}
       />
     </div>
   );
