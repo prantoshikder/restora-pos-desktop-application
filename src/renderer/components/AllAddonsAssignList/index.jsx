@@ -106,7 +106,7 @@ const AllAddonsAssignList = () => {
           );
 
           newAddonNames.push({
-            row_id: index,
+            id: index,
             addonsName: newAddons.add_on_name,
             foodName: newFoodItems.product_name,
           });
@@ -165,11 +165,11 @@ const AllAddonsAssignList = () => {
         'If you click on the ok button the item will be deleted permanently from the database. Undo is not possible.',
       onOk() {
         window.delete_menu_addons_item.send('delete_menu_addons_item', {
-          id: addonsItem.row_id,
+          id: addonsItem.id,
         });
 
         setAddonsAssignList(
-          addonsAssignList.filter((item) => item.row_id !== addonsItem.row_id)
+          addonsAssignList.filter((item) => item.id !== addonsItem.id)
         );
 
         // get delete response
@@ -206,8 +206,8 @@ const AllAddonsAssignList = () => {
         typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
     }
 
-    if (updateAssignAddons?.row_id) {
-      newAddonsAssignList.row_id = updateAssignAddons.row_id;
+    if (updateAssignAddons?.id) {
+      newAddonsAssignList.id = updateAssignAddons.id;
     }
 
     // // Insert or update Data
@@ -284,7 +284,7 @@ const AllAddonsAssignList = () => {
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={addonsAssignList}
           pagination={false}
-          rowKey={(record) => record?.row_id}
+          rowKey={(record) => record?.id}
         />
       </div>
 
