@@ -33,26 +33,31 @@ const AllCategoryList = () => {
 
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category)
-      .then((allCategories) => {
-        const categoryLists = allCategories.map((categoryObj, i) => {
-          // Find the parent category Object
-          const getParentCategory = allCategories.find(
-            (item) => item.category_id === categoryObj.parent_id
-          );
+      .then((categories) => {
+        // Declared a global state
+        let allCats = [];
 
-          // Assign the parent category name into a new property
-          categoryObj.parent_category_name = getParentCategory?.category_name;
+        categories.map((category) => {
+          // Push all the parent category into the 'allCats' state
+          allCats.push(category);
 
-          // 1 represents Active & 0 represents Inactive
-          // We only show the active items but it is category lists that's why we show all
-          if (categoryObj.category_is_active === 1) {
-            categoryObj.category_is_active = 'Active';
-          } else {
-            categoryObj.category_is_active = 'Inactive';
+          // Push those cateogries who have child categories into the 'allCats' state
+          if (category.subCategories.length) {
+            allCats.push(...category.subCategories);
           }
         });
 
-        setCategories(allCategories);
+        const updatedCategories = allCats.map((category) => {
+          // 1 represents Active & 0 represents Inactive
+          // We only show the active items but it is category lists that's why we show all
+          if (category.category_is_active === 1) {
+            category.category_is_active = 'Active';
+          } else {
+            category.category_is_active = 'Inactive';
+          }
+        });
+
+        setCategories(allCats);
       })
       .catch((err) => console.log('error', err));
   }, []);
@@ -123,8 +128,8 @@ const AllCategoryList = () => {
     },
     {
       title: 'Parent Menu',
-      dataIndex: 'parent_category_name',
-      key: 'parent_category_name',
+      dataIndex: 'parent_cat',
+      key: 'parent_cat',
       width: '20%',
     },
     {

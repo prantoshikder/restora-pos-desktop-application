@@ -364,6 +364,7 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
                   category_color: s.category_color,
                   parent_id: s.parent_id,
                   category_icon: s.category_icon,
+                  parent_cat: c.category_name,
                 };
 
                 if (Array.isArray(c.subCategories)) {
