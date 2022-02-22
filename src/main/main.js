@@ -247,7 +247,17 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
-  console.log('cat img', JSON.parse(args.category_image));
+  let cat_img, cat_icon;
+
+  if (args.category_image) {
+    cat_img = JSON.parse(args.category_image);
+  }
+  if (args.category_icon) {
+    cat_icon = JSON.parse(args.category_icon);
+  }
+
+  console.log('cat img', cat_img);
+  console.log('cat icon', cat_icon);
   let {
     category_name,
     parent_id,
