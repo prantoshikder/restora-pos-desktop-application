@@ -119,6 +119,15 @@ ipcMain.on('parent_category', (event, args) => {
 // This is for settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
   let { status } = args;
+  let favicon, logo;
+  if (args.favicon) {
+    favicon = JSON.parse(args.favicon);
+  }
+  if (args.logo) {
+    logo = JSON.parse(args.logo);
+  }
+
+  console.log('app icon', favicon, logo);
 
   let settingSqlQ = `select * from setting`;
 
@@ -256,8 +265,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
     cat_icon = JSON.parse(args.category_icon);
   }
 
-  console.log('cat img', cat_img);
-  console.log('cat icon', cat_icon);
   let {
     category_name,
     parent_id,
@@ -496,6 +503,11 @@ ipcMain.on('delete_addons', (event, args) => {
 ==================================================================*/
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
+  let product_img;
+  if (args?.food_image) {
+    product_img = JSON.parse(args.food_image);
+  }
+
   let {
     category_name,
     kitchen_select,

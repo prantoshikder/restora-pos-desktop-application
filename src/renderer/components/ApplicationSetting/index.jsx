@@ -26,6 +26,8 @@ const ApplicationSetting = () => {
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [defaultData, setDefaultData] = useState([]);
+  const [favIcon, setFavIcon] = useState(null);
+  const [appLogo, setAppLogo] = useState(null);
 
   useEffect(() => {
     getDataFromDatabase('sendSettingDataFromMain', window.api).then((data) => {
@@ -138,6 +140,21 @@ const ApplicationSetting = () => {
       settingsValue[data.name[0]] = data.value;
     }
 
+    if (favicon) {
+      settingsValue.favicon = JSON.stringify({
+        name: favIcon.name,
+        path: favIcon.path,
+      });
+    }
+    if (appLogo) {
+      settingsValue.logo = JSON.stringify({
+        name: appLogo.name,
+        path: appLogo.path,
+      });
+    }
+
+    console.log('settingsValue', settingsValue);
+
     // send data to the main process
     window.api.send('getSettingDataFromDB', settingsValue);
 
@@ -219,7 +236,12 @@ const ApplicationSetting = () => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload.Dragger name="files" action="/upload.do">
+                    <Upload.Dragger
+                      name="files"
+                      customRequest={(imageObj) => {
+                        setFavIcon(imageObj.file);
+                      }}
+                    >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
@@ -230,9 +252,12 @@ const ApplicationSetting = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
-                  <h4>Preview Image</h4>
+                  <h4>Preview</h4>
                   {appSettingsData?.favicon && (
                     <img src={appSettingsData?.favicon} alt="Favicon" />
+                  )}
+                  {favIcon && (
+                    <img src={URL.createObjectURL(favIcon)} alt="Favicon" />
                   )}
                   {/* <img src='../../../../assets/icon.ico' alt="Favicon" /> */}
                 </Col>
@@ -248,7 +273,12 @@ const ApplicationSetting = () => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload.Dragger name="files" action="/upload.do">
+                    <Upload.Dragger
+                      name="files"
+                      customRequest={(imageObj) => {
+                        setAppLogo(imageObj.file);
+                      }}
+                    >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
@@ -259,9 +289,12 @@ const ApplicationSetting = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
-                  <h4>Preview Image</h4>
+                  <h4>Preview</h4>
                   {appSettingsData?.logo && (
                     <img src={appSettingsData?.logo} alt="Logo" />
+                  )}
+                  {appLogo && (
+                    <img src={URL.createObjectURL(appLogo)} alt="Logo" />
                   )}
                 </Col>
               </Row>
