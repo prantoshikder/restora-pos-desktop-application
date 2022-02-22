@@ -1,11 +1,12 @@
 import React from 'react';
-import foodLists from '../../../temp/foods.json';
+import foodItems from '../../../temp/foods.json';
 import FoodItem from './FoodItem';
 
-const FoodLists = () => {
+const FoodLists = ({ foodLists, setFoodLists }) => {
+  console.log('foodItems json', foodItems.foods);
   return (
     <>
-      {foodLists.foods?.map((item) => (
+      {foodLists?.map((item) => (
         <FoodItem key={item?.id} item={item} />
       ))}
     </>

@@ -42,6 +42,7 @@ const AddNewFood = ({ state }) => {
   const [timePicker, setTimePicker] = useState('');
   const [menuType, setMenuType] = useState([]);
   const [reRender, setReRender] = useState(false);
+  const [productImage, setProductImage] = useState(null);
 
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
@@ -231,6 +232,7 @@ const AddNewFood = ({ state }) => {
     newFoods.menu_type = menuType;
     newFoods.offer_rate = newFoods.offer_rate ? newFoods.offer_rate : undefined;
     newFoods.id = state?.id;
+    // productImage
 
     if (state?.category_id) {
       newFoods.category_name = state?.category_id;
@@ -246,6 +248,8 @@ const AddNewFood = ({ state }) => {
 
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
 
+    console.log('newFoods', newFoods);
+    return;
     // Insert & update through the same event & channel
     window.add_new_foods.send('add_new_foods', newFoods);
 
@@ -385,7 +389,12 @@ const AddNewFood = ({ state }) => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload.Dragger name="files" action="/upload.do">
+                    <Upload.Dragger
+                      name="files"
+                      customRequest={(imageObj) => {
+                        setProductImage(imageObj.file);
+                      }}
+                    >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
@@ -397,7 +406,13 @@ const AddNewFood = ({ state }) => {
                 </Col>
 
                 <Col lg={8}>
-                  <h4>Preview Image</h4>
+                  <h3>Preview</h3>
+                  {productImage && (
+                    <img
+                      src={URL.createObjectURL(productImage)}
+                      alt="Product"
+                    />
+                  )}
                 </Col>
               </Row>
             </Form.Item>

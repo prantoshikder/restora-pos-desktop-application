@@ -147,10 +147,8 @@ const AddNewCategory = ({ state }) => {
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
-    newCategory.category_image = categoryImage.path;
-    newCategory.category_icon = categoryIcon.path;
-    console.log('newCategory', categoryImage);
-    // return;
+    newCategory.category_image = categoryImage?.file;
+    newCategory.category_icon = categoryIcon?.file;
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
@@ -259,8 +257,7 @@ const AddNewCategory = ({ state }) => {
                     <Upload.Dragger
                       name="files"
                       customRequest={(imageObj) => {
-                        setCategoryImage(imageObj.file);
-                        console.log(imageObj);
+                        setCategoryImage(imageObj);
                       }}
                     >
                       <p className="ant-upload-drag-icon">
@@ -274,9 +271,9 @@ const AddNewCategory = ({ state }) => {
                 </Col>
                 <Col lg={8}>
                   <h3>Preview</h3>
-                  {categoryImage && (
+                  {categoryImage?.file && (
                     <img
-                      src={URL.createObjectURL(categoryImage)}
+                      src={URL.createObjectURL(categoryImage.file)}
                       alt="Category"
                     />
                   )}
@@ -305,8 +302,7 @@ const AddNewCategory = ({ state }) => {
                     <Upload.Dragger
                       name="files"
                       customRequest={(icon) => {
-                        setCategoryIcon(icon.file);
-                        console.log(URL.createObjectURL(icon.file));
+                        setCategoryIcon(icon);
                       }}
                     >
                       <p className="ant-upload-drag-icon">
@@ -319,9 +315,12 @@ const AddNewCategory = ({ state }) => {
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
-                  <h4>Preview Icon</h4>
-                  {categoryIcon && (
-                    <img src={URL.createObjectURL(categoryIcon)} alt="" />
+                  <h4>Preview</h4>
+                  {categoryIcon?.file && (
+                    <img
+                      src={URL.createObjectURL(categoryIcon.file)}
+                      alt="Icon"
+                    />
                   )}
                 </Col>
               </Row>
