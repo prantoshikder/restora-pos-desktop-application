@@ -146,6 +146,8 @@ const AddNewCategory = ({ state }) => {
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
+    newCategory.category_image = categoryImage?.file;
+    newCategory.category_icon = categoryIcon?.file;
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
@@ -251,7 +253,12 @@ const AddNewCategory = ({ state }) => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload.Dragger name="files" action="/upload.do">
+                    <Upload.Dragger
+                      name="files"
+                      customRequest={(imageObj) => {
+                        setCategoryImage(imageObj);
+                      }}
+                    >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
@@ -262,7 +269,13 @@ const AddNewCategory = ({ state }) => {
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
-                  <h4>Preview Image</h4>
+                  <h3>Preview</h3>
+                  {categoryImage?.file && (
+                    <img
+                      src={URL.createObjectURL(categoryImage.file)}
+                      alt="Category"
+                    />
+                  )}
                 </Col>
               </Row>
             </Form.Item>
@@ -285,7 +298,12 @@ const AddNewCategory = ({ state }) => {
                     getValueFromEvent={normFile}
                     noStyle
                   >
-                    <Upload.Dragger name="files" action="/upload.do">
+                    <Upload.Dragger
+                      name="files"
+                      customRequest={(icon) => {
+                        setCategoryIcon(icon);
+                      }}
+                    >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
                       </p>
@@ -296,7 +314,13 @@ const AddNewCategory = ({ state }) => {
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
-                  <h4>Preview Icon</h4>
+                  <h4>Preview</h4>
+                  {categoryIcon?.file && (
+                    <img
+                      src={URL.createObjectURL(categoryIcon.file)}
+                      alt="Icon"
+                    />
+                  )}
                 </Col>
               </Row>
             </Form.Item>

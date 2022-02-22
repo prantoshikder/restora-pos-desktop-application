@@ -88,15 +88,19 @@ const FoodItem = ({ item }) => {
       <Col lg={4}>
         <div className="food_card" onClick={(e) => handleFoodItem(e, item)}>
           <div className="food_image">
-            {item?.image ? (
-              <img variant="top" src={item.image} />
+            {item?.product_image ? (
+              <img
+                variant="top"
+                src={item.product_image}
+                alt={item.product_name}
+              />
             ) : (
               <img variant="top" src={foodPlaceholder} />
             )}
           </div>
 
           <div className="card_body">
-            <p>{item.name}</p>
+            <p>{item.product_name}</p>
           </div>
         </div>
       </Col>
