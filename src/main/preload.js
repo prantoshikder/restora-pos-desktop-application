@@ -1,10 +1,25 @@
 const { channel } = require('diagnostics_channel');
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Insert settings data
 sendDataThroughMiddleware(
-  'api', //Event Name
-  'getSettingDataFromDB', // Channel Name
-  'sendSettingDataFromMain' //Response
+  'insert_settings', //Event Name
+  'insert_settings', // Channel Name
+  'insert_settings_response' //Response
+);
+
+// Get Settings for the application settings to display them in the fields
+sendDataThroughMiddleware(
+  'get_app_settings', //Event Name
+  'get_app_settings', // Channel Name
+  'get_app_settings_response' //Response
+);
+
+// Get Settings for UI
+sendDataThroughMiddleware(
+  'get_settings', //Event Name
+  'get_settings', // Channel Name
+  'get_settings_response' //Response
 );
 
 sendDataThroughMiddleware(

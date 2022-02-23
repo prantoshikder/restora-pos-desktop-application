@@ -1,14 +1,12 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import { fstat } from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
-const { mkdirSync, copyFileSync, existsSync } = require('fs')
-
+const { mkdirSync, copyFileSync, existsSync } = require('fs');
 
 var dbPath = app.getPath('userData');
 
@@ -119,72 +117,68 @@ ipcMain.on('parent_category', (event, args) => {
   }
 });
 
-// This is for settings
-ipcMain.on('getSettingDataFromDB', (event, args) => {
-  let { status } = args;
-  let favicon, logo;
+/*======================================================
+  SETTINGS
+========================================================*/
+// Insert & Update Settings
+ipcMain.on('insert_settings', (event, args) => {
+  let appFavicon = null,
+    appLogo = null;
+
   if (args.favicon) {
-    favicon = JSON.parse(args.favicon);
+    appFavicon = JSON.parse(args.favicon);
   }
   if (args.logo) {
-    logo = JSON.parse(args.logo);
+    appLogo = JSON.parse(args.logo);
   }
 
-  console.log('app icon', favicon, logo);
+  let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
-  let settingSqlQ = `select * from setting`;
-
-  if (status) {
-    // Create DB connection
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    db.serialize(() => {
-      db.all(settingSqlQ, [], (err, rows = []) => {
-        try {
-          if (rows[0] !== undefined && Object.keys(rows[0])) {
-            mainWindow.webContents.send('sendSettingDataFromMain', rows[0]);
-          } else {
-            rows[0] = {};
-          }
-        } catch (error) {
-          console.log('Settings error', error);
-        }
-      });
-    });
-    // DB connection close
-    db.close();
+  if (existsSync(folderToCreate)) {
+    let fileToCopy = appLogo.path;
+    let newFileName = appLogo.name;
+    let dest = path.join(folderToCreate, newFileName);
+    copyFileSync(fileToCopy, dest);
   } else {
-    let {
-      title,
-      storename,
-      address,
-      email,
-      phone,
-      logo,
-      favcon,
-      opentime,
-      closetime,
-      vat,
-      vattinno,
-      discount_type,
-      discountrate,
-      servicecharge,
-      service_chargeType,
-      currency,
-      min_prepare_time,
-      language,
-      timezone,
-      dateformat,
-      site_align,
-      powerbytxt,
-      footer_text,
-    } = args;
-    // Create DB connection
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let fileToCopy = appLogo.path;
+    let newFileName = appLogo.name;
+    let dest = path.join(folderToCreate, newFileName);
+    mkdirSync(folderToCreate);
+    copyFileSync(fileToCopy, dest);
+  }
 
-    db.serialize(() => {
-      db.run(`DROP TABLE IF EXISTS setting`)
-        .run(
-          `CREATE TABLE IF NOT EXISTS setting (
+  let {
+    title,
+    storename,
+    address,
+    email,
+    phone,
+    logo,
+    favcon,
+    opentime,
+    closetime,
+    vat,
+    vattinno,
+    discount_type,
+    discountrate,
+    servicecharge,
+    service_chargeType,
+    currency,
+    min_prepare_time,
+    language,
+    timezone,
+    dateformat,
+    site_align,
+    powerbytxt,
+    footer_text,
+  } = args;
+  // Create DB connection
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  db.serialize(() => {
+    db.run(`DROP TABLE IF EXISTS setting`)
+      .run(
+        `CREATE TABLE IF NOT EXISTS setting (
           "id" INTEGER PRIMARY KEY AUTOINCREMENT,
           "title" varchar(255),
           "storename" varchar(100),
@@ -210,82 +204,101 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
           "powerbytxt" TEXT,
           "footer_text" varchar(255)
         )`
-        )
-        .run(
-          `INSERT INTO setting
+      )
+      .run(
+        `INSERT INTO setting
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [
-            title,
-            storename,
-            address,
-            email,
-            phone,
-            logo,
-            favcon,
-            opentime,
-            closetime,
-            vat,
-            vattinno,
-            discount_type,
-            discountrate,
-            servicecharge,
-            service_chargeType,
-            currency,
-            min_prepare_time,
-            language,
-            timezone,
-            dateformat,
-            site_align,
-            powerbytxt,
-            footer_text,
-          ],
-          function (err) {
-            if (err) {
-              console.log('Error message settings table ', err.message);
-              return;
-            }
+        [
+          title,
+          storename,
+          address,
+          email,
+          phone,
+          logo,
+          favcon,
+          opentime,
+          closetime,
+          vat,
+          vattinno,
+          discount_type,
+          discountrate,
+          servicecharge,
+          service_chargeType,
+          currency,
+          min_prepare_time,
+          language,
+          timezone,
+          dateformat,
+          site_align,
+          powerbytxt,
+          footer_text,
+        ],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'insert_settings_response',
+                err.message
+              )
+            : mainWindow.webContents.send('insert_settings_response', {
+                status: 'inserted',
+              });
+        }
+      );
+  });
 
-            console.log(`row inserted ${this.applicationTitle}`);
-          }
-        );
-    });
-
-    // DB connection close
-    db.close();
-  }
+  db.close();
 });
+
+// Get Settings for the application settings fields to display them in the fields
+getListItems(
+  'get_app_settings', //Channel Name
+  'get_app_settings_response', //Channel response
+  'setting' //Table Name
+);
+
+// Get Settings for the whole application
+getListItems(
+  'get_settings', //Channel Name
+  'get_settings_response', //Channel response
+  'setting', //Table Name
+  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
+);
 
 // TODO: want to do daynamic
 function setImagePath() {
-
   // let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category')
   // let fileToCopy = cat_img.path
   // let newFileName = cat_img.name
-
 }
 
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
-  let cat_img = JSON.parse(args.category_image)
-  let cat_icon = JSON.parse(args.category_icon)
+  let cat_img, cat_icon;
 
-  let folderToCreate = path.join(app.getPath('userData'), 'assets', 'categories')
-
-  if (existsSync(folderToCreate)) {
-      let fileToCopy = cat_img.path
-      let newFileName = cat_img.name
-      let dest = path.join(folderToCreate, newFileName)
-      copyFileSync(fileToCopy, dest)
-  } else {
-    let fileToCopy = cat_img.path
-    let newFileName = cat_img.name
-    let dest = path.join(folderToCreate, newFileName)
-    mkdirSync(folderToCreate)
-    copyFileSync(fileToCopy, dest)
+  if (args.category_image) {
+    cat_img = JSON.parse(args.category_image);
   }
 
+  if (args.category_icon) {
+    cat_icon = JSON.parse(args.category_icon);
+  }
+
+  let folderToCreate = path.join(app.getPath('userData'), 'assets');
+
+  if (existsSync(folderToCreate)) {
+    let fileToCopy = cat_img.path;
+    let newFileName = cat_img.name;
+    let dest = path.join(folderToCreate, newFileName);
+    copyFileSync(fileToCopy, dest);
+  } else {
+    let fileToCopy = cat_img.path;
+    let newFileName = cat_img.name;
+    let dest = path.join(folderToCreate, newFileName);
+    mkdirSync(folderToCreate);
+    copyFileSync(fileToCopy, dest);
+  }
 
   let {
     category_name,
@@ -297,7 +310,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
     offer_end_date,
     category_color,
   } = args;
-
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
@@ -320,12 +332,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -367,12 +379,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -438,11 +450,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -463,8 +475,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -488,8 +500,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -515,8 +527,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -582,8 +594,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -652,8 +664,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -726,12 +738,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -753,12 +765,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -810,15 +822,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -841,15 +853,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -901,12 +913,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -929,12 +941,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -984,15 +996,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -1015,15 +1027,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -1107,12 +1119,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'insert_customer_info_response',
-              err.message
-            )
+                'insert_customer_info_response',
+                err.message
+              )
             : mainWindow.webContents.send('insert_customer_info_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -1136,12 +1148,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'insert_customer_info_response',
-              err.message
-            )
+                'insert_customer_info_response',
+                err.message
+              )
             : mainWindow.webContents.send('insert_customer_info_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -1186,8 +1198,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                status: 'updated',
-              });
+                  status: 'updated',
+                });
           }
         );
       });
@@ -1213,8 +1225,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                status: 'inserted',
-              });
+                  status: 'inserted',
+                });
           }
         );
       });
@@ -1239,11 +1251,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-            status: err,
-          })
+              status: err,
+            })
           : mainWindow.webContents.send(eventResponse, {
-            status: true,
-          });
+              status: true,
+            });
       });
     });
     db.close();
@@ -1255,8 +1267,9 @@ function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let { status } = args;
-    let sql = `SELECT ${query} FROM ${table} ${condition && 'WHERE is_active = 1'
-      }`;
+    let sql = `SELECT ${query} FROM ${table} ${
+      condition && 'WHERE is_active = 1'
+    }`;
 
     if (status) {
       db.serialize(() => {

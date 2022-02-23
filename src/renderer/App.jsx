@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { getDataFromDatabase } from 'helpers';
+import { useEffect, useState } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SystemMenu from './components/partials/SystemMenu';
 import { ContextData } from './contextApi';
@@ -20,12 +21,23 @@ import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
+  window.get_settings.send('get_settings', { status: true });
+
   const [cartItems, setCartItems] = useState([]);
+  const [reRenderOnSettings, setReRenderOnSettings] = useState(false);
   const [settings, setSettings] = useState({
     appStatus: 'free',
-    direction: 'ltr',
+    site_align: 'ltr',
     theme: 'light',
   });
+
+  useEffect(() => {
+    getDataFromDatabase('get_settings_response', window.get_settings).then(
+      (result) => {
+        setSettings({ ...settings, ...result[0] });
+      }
+    );
+  }, [reRenderOnSettings]);
 
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
@@ -70,7 +82,12 @@ export default function App() {
           />
           <Route
             path="/application_setting"
-            element={<ApplicationSettings settings={settings} />}
+            element={
+              <ApplicationSettings
+                settings={settings}
+                setReRenderOnSettings={setReRenderOnSettings}
+              />
+            }
           />
           <Route path="/currency" element={<Currency settings={settings} />} />
           <Route path="/language" element={<Language settings={settings} />} />
