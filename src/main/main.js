@@ -250,8 +250,10 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
+  let cat_img = JSON.parse(args.category_image)
+  let cat_icon = JSON.parse(args.category_icon)
+  console.log(cat_img);
 
-  console.log(args);
   let {
     category_name,
     parent_id,
@@ -262,10 +264,13 @@ ipcMain.on('insertCategoryData', (event, args) => {
     offer_end_date,
     category_color,
   } = args;
+  let newFileName = cat_img.name
+  let fileToCopy = cat_img.path
+  let dest = path.join(dbPath, newFileName)
+  let new_dest = app.setPath('userData', 'newFolder')
+  console.log(new_dest);
 
-  // const dest = path.join('folder', 'image')
-
-  // copyFileSync(category_image, dest)
+  copyFileSync(fileToCopy, dest)
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 

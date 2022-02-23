@@ -29,6 +29,8 @@ const AddNewCategory = ({ state }) => {
   const [offerStartDate, setOfferStartDate] = useState('');
   const [parentCategory, setParentCategory] = useState([]);
   const [reRender, setReRender] = useState(false);
+  const [categoryIcon, setCategoryIcon] = useState(null);
+  const [categoryImage, setCategoryImage] = useState(null);
 
   // Get only 3 columns from the add_item_category table from database
   // category_id, category_name, parent_id
@@ -146,8 +148,14 @@ const AddNewCategory = ({ state }) => {
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
     newCategory.category_id = state?.category_id;
-    newCategory.category_image = categoryImage?.file;
-    newCategory.category_icon = categoryIcon?.file;
+    newCategory.category_image = JSON.stringify({
+      name: categoryImage.file.name,
+      path: categoryImage.file.path,
+    });
+    newCategory.category_icon = JSON.stringify({
+      name: categoryIcon.file.name,
+      path: categoryIcon.file.path,
+    });
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
