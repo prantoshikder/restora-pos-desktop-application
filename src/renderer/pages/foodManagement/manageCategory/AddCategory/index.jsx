@@ -11,7 +11,7 @@ const AddCategory = ({ settings }) => {
   return (
     <div className="main_wrapper">
       <div className="pos_system">
-        <ConfigProvider direction={settings.direction}>
+        <ConfigProvider direction={settings.site_align}>
           <Row>
             <Col lg={3}>
               <Sidebar />

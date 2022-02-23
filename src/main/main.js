@@ -116,7 +116,10 @@ ipcMain.on('parent_category', (event, args) => {
   }
 });
 
-// This is for settings
+/*======================================================
+  SETTINGS
+========================================================*/
+// Insert & Update Settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
   let { status } = args;
   let favicon, logo;
@@ -253,6 +256,14 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
     db.close();
   }
 });
+
+// Get Settings
+getListItems(
+  'get_settings', //Channel Name
+  'get_settings_response', //Channel response
+  'setting', //Table Name
+  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
+);
 
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {

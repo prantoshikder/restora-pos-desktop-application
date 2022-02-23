@@ -11,7 +11,7 @@ const SystemMenu = ({ settings }) => {
   };
 
   return (
-    <ConfigProvider direction={settings.direction}>
+    <ConfigProvider direction={settings.site_align}>
       <Header className="header">
         <Menu mode="horizontal" className="system-menu">
           <SubMenu

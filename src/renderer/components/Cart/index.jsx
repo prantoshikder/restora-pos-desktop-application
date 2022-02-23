@@ -429,14 +429,29 @@ const Cart = ({ settings }) => {
         </div>
         <div className="cart_footer">
           <div className="service_charge">
-            <table bordered="true">
+            <Row>
+              <Col span={12}>
+                <b>Vat/Tax: </b>
+                {settings?.vat}%
+              </Col>
+              <Col span={12}>
+                <b>
+                  Service Charge(
+                  {settings?.service_chargeType === 'amount'
+                    ? 'Fixed'
+                    : '%'}):{' '}
+                </b>
+                {settings?.servicecharge}
+              </Col>
+            </Row>
+            {/* <table bordered="true">
               <tbody size="small">
                 <tr>
                   <td>Vat/Tax:</td>
                   <td>Service Charge(%):</td>
                 </tr>
               </tbody>
-            </table>
+            </table> */}
           </div>
 
           <div className="grand_total">

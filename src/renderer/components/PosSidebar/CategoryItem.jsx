@@ -21,7 +21,7 @@ const CategoryItem = ({ category, settings, show }) => {
         size="large"
         type="primary"
         style={{
-          textAlign: settings.direction === 'rtl' ? 'right' : 'left',
+          textAlign: settings.site_align === 'rtl' ? 'right' : 'left',
           backgroundColor: category.category_color
             ? category.category_color
             : '#000',

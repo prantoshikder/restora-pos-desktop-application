@@ -33,7 +33,9 @@ const PosSidebar = ({ settings }) => {
         <Button
           size="large"
           type="primary"
-          style={{ textAlign: settings.direction === 'rtl' ? 'right' : 'left' }}
+          style={{
+            textAlign: settings.site_align === 'rtl' ? 'right' : 'left',
+          }}
         >
           All
         </Button>

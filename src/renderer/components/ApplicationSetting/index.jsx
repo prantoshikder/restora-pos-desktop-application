@@ -6,6 +6,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   message,
   Row,
@@ -19,12 +20,11 @@ import './ApplicationSetting.style.scss';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const ApplicationSetting = () => {
+const ApplicationSetting = ({ setReRenderOnSettings }) => {
   window.api.send('getSettingDataFromDB', { status: true });
 
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [defaultData, setDefaultData] = useState([]);
   const [favIcon, setFavIcon] = useState(null);
   const [appLogo, setAppLogo] = useState(null);
@@ -140,7 +140,7 @@ const ApplicationSetting = () => {
       settingsValue[data.name[0]] = data.value;
     }
 
-    if (favicon) {
+    if (favIcon) {
       settingsValue.favicon = JSON.stringify({
         name: favIcon.name,
         path: favIcon.path,
@@ -153,10 +153,10 @@ const ApplicationSetting = () => {
       });
     }
 
-    console.log('settingsValue', settingsValue);
-
     // send data to the main process
     window.api.send('getSettingDataFromDB', settingsValue);
+
+    setReRenderOnSettings((prevState) => !prevState);
 
     message.success({
       content: 'Settings done successfully',
@@ -254,12 +254,11 @@ const ApplicationSetting = () => {
                 <Col lg={8}>
                   <h4>Preview</h4>
                   {appSettingsData?.favicon && (
-                    <img src={appSettingsData?.favicon} alt="Favicon" />
+                    <Image width={125} src={appSettingsData?.favicon} />
                   )}
                   {favIcon && (
-                    <img src={URL.createObjectURL(favIcon)} alt="Favicon" />
+                    <Image width={125} src={URL.createObjectURL(favIcon)} />
                   )}
-                  {/* <img src='../../../../assets/icon.ico' alt="Favicon" /> */}
                 </Col>
               </Row>
             </Form.Item>
@@ -363,8 +362,8 @@ const ApplicationSetting = () => {
 
             <Row gutter={20}>
               <Col lg={12}>
-                <Form.Item label="Vat Setting" name="vat">
-                  <Input placeholder="Vat Setting" size="large" />
+                <Form.Item label="Vat %" name="vat">
+                  <Input placeholder="0.00" size="large" />
                 </Form.Item>
               </Col>
 
@@ -459,8 +458,8 @@ const ApplicationSetting = () => {
                 size="large"
                 allowClear
               >
-                <Option value="leftToRight">Left to Right</Option>
-                <Option value="rightToLeft">Right to Left</Option>
+                <Option value="ltr">Left to Right</Option>
+                <Option value="rtl">Right to Left</Option>
               </Select>
             </Form.Item>
 

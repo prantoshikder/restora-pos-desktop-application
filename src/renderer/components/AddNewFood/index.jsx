@@ -5,6 +5,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   message,
   Row,
@@ -412,9 +413,9 @@ const AddNewFood = ({ state }) => {
                 <Col lg={8}>
                   <h3>Preview</h3>
                   {productImage && (
-                    <img
+                    <Image
+                      width={125}
                       src={URL.createObjectURL(productImage)}
-                      alt="Product"
                     />
                   )}
                 </Col>

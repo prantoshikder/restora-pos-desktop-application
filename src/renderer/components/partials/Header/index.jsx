@@ -47,7 +47,7 @@ const Header = ({ settings }) => {
 
   return (
     <>
-      <ConfigProvider direction={settings.direction}>
+      <ConfigProvider direction={settings.site_align}>
         <Row>
           <div className="pos_header">
             <div>

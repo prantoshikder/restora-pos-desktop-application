@@ -29,7 +29,7 @@ const Home = ({ settings }) => {
       <Header settings={settings} />
 
       <div className="pos_wrapper">
-        <ConfigProvider direction={settings.direction}>
+        <ConfigProvider direction={settings.site_align}>
           <Row className="pos_system">
             <Col lg={4}>
               <PosSidebar settings={settings} />

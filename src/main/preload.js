@@ -7,6 +7,13 @@ sendDataThroughMiddleware(
   'sendSettingDataFromMain' //Response
 );
 
+// Get Settings for UI
+sendDataThroughMiddleware(
+  'get_settings', //Event Name
+  'get_settings', // Channel Name
+  'get_settings_response' //Response
+);
+
 sendDataThroughMiddleware(
   'add_category', //Event Name
   'insertCategoryData', // Channel Name

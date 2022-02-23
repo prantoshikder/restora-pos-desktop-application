@@ -5,6 +5,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   message,
   Row,
@@ -284,9 +285,9 @@ const AddNewCategory = ({ state }) => {
                 <Col lg={8}>
                   <h3>Preview</h3>
                   {categoryImage?.file && (
-                    <img
+                    <Image
+                      width={125}
                       src={URL.createObjectURL(categoryImage.file)}
-                      alt="Category"
                     />
                   )}
                 </Col>
@@ -329,9 +330,9 @@ const AddNewCategory = ({ state }) => {
                 <Col lg={8}>
                   <h4>Preview</h4>
                   {categoryIcon?.file && (
-                    <img
+                    <Image
+                      width={125}
                       src={URL.createObjectURL(categoryIcon.file)}
-                      alt="Icon"
                     />
                   )}
                 </Col>

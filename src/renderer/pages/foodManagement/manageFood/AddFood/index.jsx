@@ -19,7 +19,7 @@ const AddFood = ({ settings }) => {
 
   return (
     <>
-      <ConfigProvider direction={settings.direction}>
+      <ConfigProvider direction={settings.site_align}>
         <div className="main_wrapper">
           <div className="pos_system">
             <Row>
