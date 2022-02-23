@@ -6,6 +6,7 @@ import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
+const { mkdirSync, copyFileSync } = require('fs');
 
 var dbPath = app.getPath('userData');
 
@@ -265,16 +266,21 @@ getListItems(
   'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
 );
 
+// TODO: want to do daynamic
+function setImagePath() {
+  let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category');
+  let fileToCopy = cat_img.path;
+  let newFileName = cat_img.name;
+  let dest = path.join(folderToCreate, newFileName);
+  mkdirSync(folderToCreate);
+  copyFileSync(fileToCopy, dest);
+}
+
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
-  let cat_img, cat_icon;
-
-  if (args.category_image) {
-    cat_img = JSON.parse(args.category_image);
-  }
-  if (args.category_icon) {
-    cat_icon = JSON.parse(args.category_icon);
-  }
+  let cat_img = JSON.parse(args.category_image);
+  let cat_icon = JSON.parse(args.category_icon);
+  console.log(cat_img);
 
   let {
     category_name,
@@ -286,6 +292,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
     offer_end_date,
     category_color,
   } = args;
+
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
   if (args.category_id !== undefined) {
