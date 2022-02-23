@@ -13,15 +13,15 @@ import {
   Select,
   Upload,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import React, { useEffect, useState } from 'react';
-import { getDataFromDatabase } from '../../../helpers';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const ApplicationSetting = ({ setReRenderOnSettings }) => {
-  window.api.send('getSettingDataFromDB', { status: true });
+  window.get_app_settings.send('get_app_settings', { status: true });
 
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
@@ -30,91 +30,95 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
   const [appLogo, setAppLogo] = useState(null);
 
   useEffect(() => {
-    getDataFromDatabase('sendSettingDataFromMain', window.api).then((data) => {
+    getDataFromDatabase(
+      'get_app_settings_response',
+      window.get_app_settings
+    ).then((data) => {
+      const response = data[0];
       setDefaultData([
         {
           name: ['title'],
-          value: data?.title,
+          value: response?.title,
         },
         {
           name: ['storename'],
-          value: data?.storename,
+          value: response?.storename,
         },
         {
           name: ['address'],
-          value: data?.address,
+          value: response?.address,
         },
         {
           name: ['email'],
-          value: data?.email,
+          value: response?.email,
         },
         {
           name: ['phone'],
-          value: data?.phone,
+          value: response?.phone,
         },
         {
           name: ['favicon'],
-          value: data?.favicon,
+          value: response?.favicon,
         },
         {
           name: ['opentime'],
-          value: data?.opentime,
+          value: response?.opentime,
         },
         {
           name: ['closetime'],
-          value: data?.closetime,
+          value: response?.closetime,
         },
         {
           name: ['discount_type'],
-          value: data?.discount_type,
+          value: response?.discount_type,
         },
         {
           name: ['discountrate'],
-          value: data?.discountrate,
+          value: response?.discountrate,
         },
         {
           name: ['servicecharge'],
-          value: data?.servicecharge,
+          value: response?.servicecharge,
         },
         {
           name: ['service_chargeType'],
-          value: data?.service_chargeType,
+          value: response?.service_chargeType,
         },
         {
           name: ['vat'],
-          value: data?.vat,
+          value: response?.vat,
         },
         {
           name: ['vattinno'],
-          value: data?.vattinno,
+          value: response?.vattinno,
         },
         {
           name: ['currency'],
-          value: data?.currency,
+          value: response?.currency,
         },
         {
           name: ['min_prepare_time'],
-          value: data?.min_prepare_time,
+          value: response?.min_prepare_time,
         },
         {
           name: ['language'],
-          value: data?.language,
+          value: response?.language,
         },
         {
           name: ['dateformat'],
-          value: data?.dateformat,
+          value: response?.dateformat,
         },
         {
           name: ['timezone'],
-          value: data?.timezone,
+          value: response?.timezone,
         },
         {
           name: ['site_align'],
-          value: data?.site_align,
+          value: response?.site_align,
         },
         {
           name: ['powerbytxt'],
-          value: data?.powerbytxt,
+          value: response?.powerbytxt,
         },
       ]);
     });
@@ -146,6 +150,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         path: favIcon.path,
       });
     }
+
     if (appLogo) {
       settingsValue.logo = JSON.stringify({
         name: appLogo.name,
@@ -153,8 +158,10 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       });
     }
 
+    console.log('settingsValue', settingsValue);
+
     // send data to the main process
-    window.api.send('getSettingDataFromDB', settingsValue);
+    window.insert_settings.send('insert_settings', settingsValue);
 
     setReRenderOnSettings((prevState) => !prevState);
 

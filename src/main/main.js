@@ -121,69 +121,64 @@ ipcMain.on('parent_category', (event, args) => {
   SETTINGS
 ========================================================*/
 // Insert & Update Settings
-ipcMain.on('getSettingDataFromDB', (event, args) => {
-  let { status } = args;
-  let favicon, logo;
+ipcMain.on('insert_settings', (event, args) => {
+  let appFavicon = null,
+    appLogo = null;
+
   if (args.favicon) {
-    favicon = JSON.parse(args.favicon);
+    appFavicon = JSON.parse(args.favicon);
   }
   if (args.logo) {
-    logo = JSON.parse(args.logo);
+    appLogo = JSON.parse(args.logo);
   }
 
-  let settingSqlQ = `select * from setting`;
+  let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
-  if (status) {
-    // Create DB connection
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    db.serialize(() => {
-      db.all(settingSqlQ, [], (err, rows = []) => {
-        try {
-          if (rows[0] !== undefined && Object.keys(rows[0])) {
-            mainWindow.webContents.send('sendSettingDataFromMain', rows[0]);
-          } else {
-            rows[0] = {};
-          }
-        } catch (error) {
-          console.log('Settings error', error);
-        }
-      });
-    });
-    // DB connection close
-    db.close();
+  if (existsSync(folderToCreate)) {
+    let fileToCopy = appLogo.path;
+    let newFileName = appLogo.name;
+    let dest = path.join(folderToCreate, newFileName);
+    copyFileSync(fileToCopy, dest);
   } else {
-    let {
-      title,
-      storename,
-      address,
-      email,
-      phone,
-      logo,
-      favcon,
-      opentime,
-      closetime,
-      vat,
-      vattinno,
-      discount_type,
-      discountrate,
-      servicecharge,
-      service_chargeType,
-      currency,
-      min_prepare_time,
-      language,
-      timezone,
-      dateformat,
-      site_align,
-      powerbytxt,
-      footer_text,
-    } = args;
-    // Create DB connection
-    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let fileToCopy = appLogo.path;
+    let newFileName = appLogo.name;
+    let dest = path.join(folderToCreate, newFileName);
+    mkdirSync(folderToCreate);
+    copyFileSync(fileToCopy, dest);
+  }
 
-    db.serialize(() => {
-      db.run(`DROP TABLE IF EXISTS setting`)
-        .run(
-          `CREATE TABLE IF NOT EXISTS setting (
+  let {
+    title,
+    storename,
+    address,
+    email,
+    phone,
+    logo,
+    favcon,
+    opentime,
+    closetime,
+    vat,
+    vattinno,
+    discount_type,
+    discountrate,
+    servicecharge,
+    service_chargeType,
+    currency,
+    min_prepare_time,
+    language,
+    timezone,
+    dateformat,
+    site_align,
+    powerbytxt,
+    footer_text,
+  } = args;
+  // Create DB connection
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+  db.serialize(() => {
+    db.run(`DROP TABLE IF EXISTS setting`)
+      .run(
+        `CREATE TABLE IF NOT EXISTS setting (
           "id" INTEGER PRIMARY KEY AUTOINCREMENT,
           "title" varchar(255),
           "storename" varchar(100),
@@ -209,54 +204,61 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
           "powerbytxt" TEXT,
           "footer_text" varchar(255)
         )`
-        )
-        .run(
-          `INSERT INTO setting
+      )
+      .run(
+        `INSERT INTO setting
           ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
-          [
-            title,
-            storename,
-            address,
-            email,
-            phone,
-            logo,
-            favcon,
-            opentime,
-            closetime,
-            vat,
-            vattinno,
-            discount_type,
-            discountrate,
-            servicecharge,
-            service_chargeType,
-            currency,
-            min_prepare_time,
-            language,
-            timezone,
-            dateformat,
-            site_align,
-            powerbytxt,
-            footer_text,
-          ],
-          function (err) {
-            if (err) {
-              console.log('Error message settings table ', err.message);
-              return;
-            }
+        [
+          title,
+          storename,
+          address,
+          email,
+          phone,
+          logo,
+          favcon,
+          opentime,
+          closetime,
+          vat,
+          vattinno,
+          discount_type,
+          discountrate,
+          servicecharge,
+          service_chargeType,
+          currency,
+          min_prepare_time,
+          language,
+          timezone,
+          dateformat,
+          site_align,
+          powerbytxt,
+          footer_text,
+        ],
+        (err) => {
+          err
+            ? mainWindow.webContents.send(
+                'insert_settings_response',
+                err.message
+              )
+            : mainWindow.webContents.send('insert_settings_response', {
+                status: 'inserted',
+              });
+        }
+      );
+  });
 
-            console.log(`row inserted ${this.applicationTitle}`);
-          }
-        );
-    });
-
-    // DB connection close
-    db.close();
-  }
+  db.close();
 });
 
-// Get Settings
+// Get Settings for the application settings fields to display them in the fields
+getListItems(
+  'get_app_settings', //Channel Name
+  'get_app_settings_response', //Channel response
+  'setting' //Table Name
+);
+
+// Get Settings for the whole application
 getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
@@ -283,11 +285,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
     cat_icon = JSON.parse(args.category_icon);
   }
 
-  let folderToCreate = path.join(
-    app.getPath('userData'),
-    'assets',
-    'categories'
-  );
+  let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
   if (existsSync(folderToCreate)) {
     let fileToCopy = cat_img.path;
