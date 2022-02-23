@@ -122,6 +122,15 @@ ipcMain.on('parent_category', (event, args) => {
 // This is for settings
 ipcMain.on('getSettingDataFromDB', (event, args) => {
   let { status } = args;
+  let favicon, logo;
+  if (args.favicon) {
+    favicon = JSON.parse(args.favicon);
+  }
+  if (args.logo) {
+    logo = JSON.parse(args.logo);
+  }
+
+  console.log('app icon', favicon, logo);
 
   let settingSqlQ = `select * from setting`;
 
@@ -248,6 +257,18 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
   }
 });
 
+// TODO: want to do daynamic
+function setImagePath() {
+
+  let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category')
+  let fileToCopy = cat_img.path
+  let newFileName = cat_img.name
+  let dest = path.join(folderToCreate, newFileName)
+  mkdirSync(folderToCreate)
+  copyFileSync(fileToCopy, dest)
+
+}
+
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
   let cat_img = JSON.parse(args.category_image)
@@ -264,13 +285,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
     offer_end_date,
     category_color,
   } = args;
-  let newFileName = cat_img.name
-  let fileToCopy = cat_img.path
-  let dest = path.join(dbPath, newFileName)
-  let new_dest = app.setPath('userData', 'newFolder')
-  console.log(new_dest);
 
-  copyFileSync(fileToCopy, dest)
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
@@ -500,6 +515,11 @@ ipcMain.on('delete_addons', (event, args) => {
 ==================================================================*/
 // Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
+  let product_img;
+  if (args?.food_image) {
+    product_img = JSON.parse(args.food_image);
+  }
+
   let {
     category_name,
     kitchen_select,

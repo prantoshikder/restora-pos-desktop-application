@@ -247,9 +247,13 @@ const AddNewFood = ({ state }) => {
       : (newFoods.is_offer = 0);
 
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
+    if (productImage) {
+      newFoods.food_image = JSON.stringify({
+        name: productImage.name,
+        path: productImage.path,
+      });
+    }
 
-    console.log('newFoods', newFoods);
-    return;
     // Insert & update through the same event & channel
     window.add_new_foods.send('add_new_foods', newFoods);
 
