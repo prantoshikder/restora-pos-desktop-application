@@ -7,7 +7,7 @@ import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
-const { mkdirSync, copyFileSync } = require('fs')
+const { mkdirSync, copyFileSync, existsSync } = require('fs')
 
 
 var dbPath = app.getPath('userData');
@@ -260,12 +260,9 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
 // TODO: want to do daynamic
 function setImagePath() {
 
-  let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category')
-  let fileToCopy = cat_img.path
-  let newFileName = cat_img.name
-  let dest = path.join(folderToCreate, newFileName)
-  mkdirSync(folderToCreate)
-  copyFileSync(fileToCopy, dest)
+  // let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category')
+  // let fileToCopy = cat_img.path
+  // let newFileName = cat_img.name
 
 }
 
@@ -273,7 +270,22 @@ function setImagePath() {
 ipcMain.on('insertCategoryData', (event, args) => {
   let cat_img = JSON.parse(args.category_image)
   let cat_icon = JSON.parse(args.category_icon)
-  console.log(cat_img);
+
+  let folderToCreate = path.join(app.getPath('userData'), 'assets', 'categories')
+
+  if (existsSync(folderToCreate)) {
+      let fileToCopy = cat_img.path
+      let newFileName = cat_img.name
+      let dest = path.join(folderToCreate, newFileName)
+      copyFileSync(fileToCopy, dest)
+  } else {
+    let fileToCopy = cat_img.path
+    let newFileName = cat_img.name
+    let dest = path.join(folderToCreate, newFileName)
+    mkdirSync(folderToCreate)
+    copyFileSync(fileToCopy, dest)
+  }
+
 
   let {
     category_name,
