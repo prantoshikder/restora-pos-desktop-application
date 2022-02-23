@@ -131,8 +131,6 @@ ipcMain.on('getSettingDataFromDB', (event, args) => {
     logo = JSON.parse(args.logo);
   }
 
-  console.log('app icon', favicon, logo);
-
   let settingSqlQ = `select * from setting`;
 
   if (status) {
@@ -268,19 +266,32 @@ getListItems(
 
 // TODO: want to do daynamic
 function setImagePath() {
+  // let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category');
+  // let fileToCopy = cat_img.path;
+  // let newFileName = cat_img.name;
+  // let dest = path.join(folderToCreate, newFileName);
+  // mkdirSync(folderToCreate);
+  // copyFileSync(fileToCopy, dest);
+}
+
+// Insert and Update Category data
+ipcMain.on('insertCategoryData', (event, args) => {
+  let cat_img, cat_icon;
+
+  if (args.category_image) {
+    cat_img = JSON.parse(args.category_image);
+  }
+
+  if (args.category_icon) {
+    cat_icon = JSON.parse(args.category_icon);
+  }
+
   let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category');
   let fileToCopy = cat_img.path;
   let newFileName = cat_img.name;
   let dest = path.join(folderToCreate, newFileName);
   mkdirSync(folderToCreate);
   copyFileSync(fileToCopy, dest);
-}
-
-// Insert and Update Category data
-ipcMain.on('insertCategoryData', (event, args) => {
-  let cat_img = JSON.parse(args.category_image);
-  let cat_icon = JSON.parse(args.category_icon);
-  console.log(cat_img);
 
   let {
     category_name,
