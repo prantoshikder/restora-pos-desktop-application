@@ -711,20 +711,36 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 });
 
-// Get all foods list
+// Get all food list to display in the food list page
 ipcMain.on('get_food_list', (event, args) => {
   let { status } = args;
-  let sql = `SELECT item_foods.id, item_foods.category_id, add_item_category.category_name, item_foods.product_name, item_foods.product_image, item_foods.component, item_foods.description, item_foods.item_note, item_foods.menu_type,
-  item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.offer_start_date, item_foods.offer_end_date,item_foods.kitchen_id, item_foods.product_vat, item_foods.is_active,
-  item_foods.is_custom_quantity, item_foods.cooked_time, item_foods.is_active
-  FROM item_foods
-  INNER JOIN add_item_category ON item_foods.category_id=add_item_category.category_id`;
+  let sql = `SELECT item_foods.id, item_foods.category_id, add_item_category.category_name, item_foods.product_name, item_foods.product_image, item_foods.component, item_foods.description, item_foods.item_note, item_foods.menu_type, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.offer_start_date, item_foods.offer_end_date, item_foods.kitchen_id, item_foods.is_custom_quantity, item_foods.cooked_time, item_foods.is_active FROM item_foods INNER JOIN add_item_category ON item_foods.category_id=add_item_category.category_id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send('get_food_list_response', rows);
+      });
+    });
+    db.close();
+  }
+});
+
+// item_foods.menu_type, item_foods.is_active
+// Food list for the POS with (variants & addons)
+// SELECT variants.id, variants.food_id, variants.variant_name, variants.price FROM variants
+ipcMain.on('get_food_list_pos', (event, args) => {
+  let { status } = args;
+  let sql = `SELECT item_foods.id, item_foods.category_id, item_foods.product_name, item_foods.product_image, item_foods.item_note, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.is_custom_quantity,
+  variants.id AS variant_id, variants.food_id, variants.variant_name, variants.price
+  FROM item_foods JOIN variants ON item_foods.id = variants.food_id`;
+
+  if (status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('get_food_list_pos_response', rows);
       });
     });
     db.close();
@@ -825,7 +841,6 @@ ipcMain.on('variant_lists_channel', (event, args) => {
     INNER JOIN item_foods ON variants.food_id=item_foods.id`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
-        console.log(rows);
         mainWindow.webContents.send('variant_lists_response', rows);
       });
     });
@@ -850,7 +865,6 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
 
   if (args.id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    console.log('updated', args);
 
     db.serialize(() => {
       db.run(
@@ -1221,7 +1235,6 @@ getListItems(
 function insertData(eventName, eventResponse, table, columns) {
   ipcMain.on(eventName, (event, args) => {
     let { id, currency_name, currency_icon, position, currency_rate } = args;
-    console.log(columns);
 
     // Execute if the event has row ID / data ID. It is used to update a specific item
     if (args.id !== undefined) {

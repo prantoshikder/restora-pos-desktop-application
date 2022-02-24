@@ -90,6 +90,13 @@ sendDataThroughMiddleware(
   'get_food_list_response' //Response
 );
 
+// Get food list for the POS
+sendDataThroughMiddleware(
+  'get_food_list_pos', //Event Name
+  'get_food_list_pos', // Channel Name
+  'get_food_list_pos_response' //Response
+);
+
 // Delete foods - channel
 sendDataThroughMiddleware(
   'delete_foods', //Event Name

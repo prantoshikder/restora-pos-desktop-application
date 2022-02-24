@@ -8,7 +8,7 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
-  window.get_food_list.send('get_food_list', {
+  window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
   });
   // const [cartItems, setCartItems] = useState([]);
@@ -17,8 +17,9 @@ const Home = ({ settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   useEffect(() => {
-    window.get_food_list.once('get_food_list_response', (args) => {
-      setFoodLists(args);
+    window.get_food_list_pos.once('get_food_list_pos_response', (args) => {
+      console.log('food pos', args);
+      // setFoodLists(args);
     });
   }, []);
 
