@@ -12,9 +12,6 @@ const Home = ({ settings }) => {
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
   });
-  window.get_addons_and_variant.send('get_addons_and_variant', {
-    status: true,
-  });
 
   const [foodLists, setFoodLists] = useState([]);
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -24,6 +21,7 @@ const Home = ({ settings }) => {
       'get_food_list_pos_response',
       window.get_food_list_pos
     ).then((data) => setFoodLists(data));
+  }, []);
 
   return (
     <div className="main_wrapper">
