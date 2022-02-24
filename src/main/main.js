@@ -304,6 +304,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
     cat_icon = JSON.parse(args.category_icon);
   }
 
+
   try {
     mkdirSync(path.join(app.getPath('userData'), 'assets'));
     if (cat_img) {
@@ -322,7 +323,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
         copyFileSync(fileToCopy, dest);
       }
     }
-
     if (cat_icon) {
       let folderToCreate = path.join(app.getPath('userData'), 'assets', 'icon');
 
@@ -356,7 +356,6 @@ ipcMain.on('insertCategoryData', (event, args) => {
         copyFileSync(fileToCopy, dest);
       }
     }
-
     if (cat_icon) {
       let folderToCreate = path.join(app.getPath('userData'), 'assets', 'icon');
 
