@@ -1,4 +1,5 @@
 import { Col, ConfigProvider, Input, Row } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import { useContext, useEffect, useState } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
@@ -11,19 +12,24 @@ const Home = ({ settings }) => {
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
   });
-  // const [cartItems, setCartItems] = useState([]);
-  const [foodLists, setFoodLists] = useState([]);
+  window.get_addons_and_variant.send('get_addons_and_variant', {
+    status: true,
+  });
 
+  const [foodLists, setFoodLists] = useState([]);
   const { cartItems, setCartItems } = useContext(ContextData);
 
   useEffect(() => {
-    window.get_food_list_pos.once('get_food_list_pos_response', (args) => {
-      console.log('food pos', args);
-      // setFoodLists(args);
-    });
-  }, []);
+    getDataFromDatabase(
+      'get_food_list_pos_response',
+      window.get_food_list_pos
+    ).then((data) => setFoodLists(data));
 
-  console.log('foodLists', foodLists);
+    // getDataFromDatabase(
+    //   'get_addons_and_variant_response',
+    //   window.get_food_list_pos
+    // ).then((data) => console.log('addons var', data));
+  }, []);
 
   return (
     <div className="main_wrapper">
