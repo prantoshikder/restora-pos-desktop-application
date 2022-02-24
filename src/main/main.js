@@ -135,13 +135,13 @@ ipcMain.on('insert_settings', (event, args) => {
   let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
   if (existsSync(folderToCreate)) {
-    let fileToCopy = appLogo.path;
-    let newFileName = appLogo.name;
+    let fileToCopy = appLogo?.path;
+    let newFileName = appLogo?.name;
     let dest = path.join(folderToCreate, newFileName);
     copyFileSync(fileToCopy, dest);
   } else {
-    let fileToCopy = appLogo.path;
-    let newFileName = appLogo.name;
+    let fileToCopy = appLogo?.path;
+    let newFileName = appLogo?.name;
     let dest = path.join(folderToCreate, newFileName);
     mkdirSync(folderToCreate);
     copyFileSync(fileToCopy, dest);
@@ -288,13 +288,13 @@ ipcMain.on('insertCategoryData', (event, args) => {
   let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
   if (existsSync(folderToCreate)) {
-    let fileToCopy = cat_img.path;
-    let newFileName = cat_img.name;
+    let fileToCopy = cat_img?.path;
+    let newFileName = cat_img?.name;
     let dest = path.join(folderToCreate, newFileName);
     copyFileSync(fileToCopy, dest);
   } else {
-    let fileToCopy = cat_img.path;
-    let newFileName = cat_img.name;
+    let fileToCopy = cat_img?.path;
+    let newFileName = cat_img?.name;
     let dest = path.join(folderToCreate, newFileName);
     mkdirSync(folderToCreate);
     copyFileSync(fileToCopy, dest);
