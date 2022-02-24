@@ -259,6 +259,12 @@ sendDataThroughMiddleware(
   'get_customer_names_response' //Response
 );
 
+sendDataThroughMiddlewareOn(
+  'get_addons_and_variant', //Event Name
+  'get_addons_and_variant', // Channel Name
+  'get_addons_and_variant_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARATIONS
 ========================================================================*/
