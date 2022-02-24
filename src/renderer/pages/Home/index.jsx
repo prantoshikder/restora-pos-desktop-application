@@ -25,12 +25,6 @@ const Home = ({ settings }) => {
       window.get_food_list_pos
     ).then((data) => setFoodLists(data));
 
-    // getDataFromDatabase(
-    //   'get_addons_and_variant_response',
-    //   window.get_food_list_pos
-    // ).then((data) => console.log('addons var', data));
-  }, []);
-
   return (
     <div className="main_wrapper">
       <Header settings={settings} />
