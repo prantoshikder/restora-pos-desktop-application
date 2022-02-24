@@ -1221,15 +1221,15 @@ ipcMain.on('get_addons_and_variant', (event, args) => {
 
   db.serialize(() => {
     db.all(sql, [], (err, rows) => {
-      console.log("get rows ####################", rows);
       food_addon_variants['addons'] = rows
     })
     db.all(sql2, [], (err, rows) => {
-      console.log("get varients ####################", rows);
       food_addon_variants['varients'] = rows
     })
   })
+  db.close()
   setTimeout(() => {
+    console.log("######################",food_addon_variants);
     mainWindow.webContents.send('get_addons_and_variant_response', food_addon_variants)
   }, 1000);
 })
