@@ -2,19 +2,19 @@
   "foods": [
     {
       "id": 1,
-      "name": "Chicken Fry",
+      "product_name": "Chicken Fry",
       "price": 399,
       "variant": [
         {
-          "variant_name": "Regular", 
+          "foodVariant": "Regular", 
           "variant_price": 255 
         },
         {
-          "variant_name": "Family", 
+          "foodVariant": "Family", 
           "variant_price": 555 
         },
         {
-          "variant_name": "Large", 
+          "foodVariant": "Large", 
           "variant_price": 999 
         }
       ],
@@ -72,11 +72,11 @@
       "price": 999,
       "variant": [
         {
-          "variant_name": "Regular", 
+          "foodVariant": "Regular", 
           "variant_price": 255 
         },
         {
-          "variant_name": "Family", 
+          "foodVariant": "Family", 
           "variant_price": 555 
         }
       ],

@@ -13,7 +13,7 @@ import {
   Upload,
 } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddNewCategory.style.scss';
 
@@ -131,7 +131,6 @@ const AddNewCategory = ({ state }) => {
 
   const handleSubmit = () => {
     const newCategory = {};
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", newCategory);
 
     for (const data of categories) {
       newCategory[data.name[0]] =
@@ -143,8 +142,8 @@ const AddNewCategory = ({ state }) => {
     newCategory.category_is_active === 'Active'
       ? (newCategory.category_is_active = 1)
       : parseInt(newCategory.category_is_active) === 1
-        ? (newCategory.category_is_active = 1)
-        : (newCategory.category_is_active = 0);
+      ? (newCategory.category_is_active = 1)
+      : (newCategory.category_is_active = 0);
 
     newCategory.offer_start_date = offerStartDate;
     newCategory.offer_end_date = offerEndDate;
