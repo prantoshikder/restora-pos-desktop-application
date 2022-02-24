@@ -135,13 +135,13 @@ ipcMain.on('insert_settings', (event, args) => {
   let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
   if (existsSync(folderToCreate)) {
-    let fileToCopy = appLogo.path;
-    let newFileName = appLogo.name;
+    let fileToCopy = appLogo?.path;
+    let newFileName = appLogo?.name;
     let dest = path.join(folderToCreate, newFileName);
     copyFileSync(fileToCopy, dest);
   } else {
-    let fileToCopy = appLogo.path;
-    let newFileName = appLogo.name;
+    let fileToCopy = appLogo?.path;
+    let newFileName = appLogo?.name;
     let dest = path.join(folderToCreate, newFileName);
     mkdirSync(folderToCreate);
     copyFileSync(fileToCopy, dest);
@@ -288,13 +288,13 @@ ipcMain.on('insertCategoryData', (event, args) => {
   let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
   if (existsSync(folderToCreate)) {
-    let fileToCopy = cat_img.path;
-    let newFileName = cat_img.name;
+    let fileToCopy = cat_img?.path;
+    let newFileName = cat_img?.name;
     let dest = path.join(folderToCreate, newFileName);
     copyFileSync(fileToCopy, dest);
   } else {
-    let fileToCopy = cat_img.path;
-    let newFileName = cat_img.name;
+    let fileToCopy = cat_img?.path;
+    let newFileName = cat_img?.name;
     let dest = path.join(folderToCreate, newFileName);
     mkdirSync(folderToCreate);
     copyFileSync(fileToCopy, dest);
@@ -407,8 +407,8 @@ ipcMain.on('sendResponseForCategory', (event, args) => {
     db.serialize(() => {
       db.all(sqlQ, [], (err, categories) => {
         db2.all(sqlQ2, [], (err, sub_categories) => {
-          sub_categories.map((s) => {
-            categories.map((c) => {
+          sub_categories?.map((s) => {
+            categories?.map((c) => {
               if (c.category_id === s.parent_id) {
                 let sub_cat = {
                   category_id: s.category_id,
