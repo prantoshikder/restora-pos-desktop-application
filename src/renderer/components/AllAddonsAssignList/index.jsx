@@ -65,6 +65,7 @@ const AllAddonsAssignList = () => {
       'get_menu_add_on_lists_channel_response',
       window.get_menu_add_on_lists_channel
     ).then((res) => {
+      console.log('res', res);
       setAddonsList(res);
     });
 
@@ -95,6 +96,7 @@ const AllAddonsAssignList = () => {
         setAddonNames(addonNames);
         setFoodNames(foodNames);
         let newAddonNames = [];
+        console.log(addonNames, foodNames);
 
         addonsList?.map((addon, index) => {
           const newAddons = addonNames.find(
@@ -106,7 +108,7 @@ const AllAddonsAssignList = () => {
           );
 
           newAddonNames.push({
-            id: index,
+            id: addon.id,
             addonsName: newAddons.add_on_name,
             foodName: newFoodItems.product_name,
           });
