@@ -6,32 +6,32 @@
       "price": 399,
       "variant": [
         {
-          "foodVariant": "Regular", 
-          "variant_price": 255 
+          "foodVariant": "Regular",
+          "variant_price": 255
         },
         {
-          "foodVariant": "Family", 
-          "variant_price": 555 
+          "foodVariant": "Family",
+          "variant_price": 555
         },
         {
-          "foodVariant": "Large", 
-          "variant_price": 999 
+          "foodVariant": "Large",
+          "variant_price": 999
         }
       ],
       "quantity": 1,
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/fried_chicken-1024x536.png",
-      "addons" : [
+      "addons": [
         {
           "id": 1,
           "addons_name": "Drinks",
           "quantity": 1,
-          "addons_price": 35 
+          "addons_price": 35
         },
         {
           "id": 2,
           "addons_name": "Sprite",
           "quantity": 1,
-          "addons_price": 25 
+          "addons_price": 25
         }
       ]
     },
@@ -42,7 +42,7 @@
       "variant": [],
       "quantity": 1,
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/CIB_1-1068x601.jpg",
-      "addons" : []
+      "addons": []
     },
     {
       "id": 3,
@@ -51,18 +51,18 @@
       "variant": [],
       "quantity": 1,
       "image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg",
-      "addons" : [
+      "addons": [
         {
           "id": 1,
           "addons_name": "Drinks",
           "quantity": 1,
-          "addons_price": 35 
+          "addons_price": 35
         },
         {
           "id": 2,
           "addons_name": "Sprite",
           "quantity": 1,
-          "addons_price": 25 
+          "addons_price": 25
         }
       ]
     },
@@ -72,12 +72,12 @@
       "price": 999,
       "variant": [
         {
-          "foodVariant": "Regular", 
-          "variant_price": 255 
+          "foodVariant": "Regular",
+          "variant_price": 255
         },
         {
-          "foodVariant": "Family", 
-          "variant_price": 555 
+          "foodVariant": "Family",
+          "variant_price": 555
         }
       ],
       "quantity": 1,

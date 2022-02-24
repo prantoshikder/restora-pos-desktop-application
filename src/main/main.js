@@ -732,9 +732,13 @@ ipcMain.on('get_food_list', (event, args) => {
 // SELECT variants.id, variants.food_id, variants.variant_name, variants.price FROM variants
 ipcMain.on('get_food_list_pos', (event, args) => {
   let { status } = args;
-  let sql = `SELECT item_foods.id, item_foods.category_id, item_foods.product_name, item_foods.product_image, item_foods.item_note, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.is_custom_quantity,
-  variants.id AS variant_id, variants.food_id, variants.variant_name, variants.price
-  FROM item_foods JOIN variants ON item_foods.id = variants.food_id`;
+  // let sql = `SELECT item_foods.id, item_foods.category_id, item_foods.product_name, item_foods.product_image, item_foods.item_note, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.is_custom_quantity,
+  // variants.id AS variant_id, variants.food_id, variants.variant_name, variants.price
+  // FROM item_foods JOIN variants ON item_foods.id = variants.food_id`;
+  let sql = `select DISTINCT item_foods.*
+  FROM item_foods
+  INNER JOIN variants
+  ON variants.food_id = item_foods.id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
