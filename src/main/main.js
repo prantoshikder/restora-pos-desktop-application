@@ -132,19 +132,38 @@ ipcMain.on('insert_settings', (event, args) => {
     appLogo = JSON.parse(args.logo);
   }
 
-  let folderToCreate = path.join(app.getPath('userData'), 'assets');
+  if (appLogo) {
+    let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
-  if (existsSync(folderToCreate)) {
-    let fileToCopy = appLogo?.path;
-    let newFileName = appLogo?.name;
-    let dest = path.join(folderToCreate, newFileName);
-    copyFileSync(fileToCopy, dest);
-  } else {
-    let fileToCopy = appLogo?.path;
-    let newFileName = appLogo?.name;
-    let dest = path.join(folderToCreate, newFileName);
-    mkdirSync(folderToCreate);
-    copyFileSync(fileToCopy, dest);
+    if (existsSync(folderToCreate)) {
+      let fileToCopy = appLogo?.path;
+      let newFileName = appLogo?.name;
+      let dest = path.join(folderToCreate, newFileName);
+      copyFileSync(fileToCopy, dest);
+    } else {
+      let fileToCopy = appLogo?.path;
+      let newFileName = appLogo?.name;
+      let dest = path.join(folderToCreate, newFileName);
+      mkdirSync(folderToCreate);
+      copyFileSync(fileToCopy, dest);
+    }
+  }
+
+  if (appFavicon) {
+    let folderToCreate = path.join(app.getPath('userData'), 'assets');
+
+    if (existsSync(folderToCreate)) {
+      let fileToCopy = appLogo?.path;
+      let newFileName = appLogo?.name;
+      let dest = path.join(folderToCreate, newFileName);
+      copyFileSync(fileToCopy, dest);
+    } else {
+      let fileToCopy = appLogo?.path;
+      let newFileName = appLogo?.name;
+      let dest = path.join(folderToCreate, newFileName);
+      mkdirSync(folderToCreate);
+      copyFileSync(fileToCopy, dest);
+    }
   }
 
   let {
@@ -285,19 +304,38 @@ ipcMain.on('insertCategoryData', (event, args) => {
     cat_icon = JSON.parse(args.category_icon);
   }
 
-  let folderToCreate = path.join(app.getPath('userData'), 'assets');
+  if (cat_img) {
+    let folderToCreate = path.join(app.getPath('userData'), 'assets');
 
-  if (existsSync(folderToCreate)) {
-    let fileToCopy = cat_img?.path;
-    let newFileName = cat_img?.name;
-    let dest = path.join(folderToCreate, newFileName);
-    copyFileSync(fileToCopy, dest);
-  } else {
-    let fileToCopy = cat_img?.path;
-    let newFileName = cat_img?.name;
-    let dest = path.join(folderToCreate, newFileName);
-    mkdirSync(folderToCreate);
-    copyFileSync(fileToCopy, dest);
+    if (existsSync(folderToCreate)) {
+      let fileToCopy = cat_img.path;
+      let newFileName = cat_img.name;
+      let dest = path.join(folderToCreate, newFileName);
+      copyFileSync(fileToCopy, dest);
+    } else {
+      let fileToCopy = cat_img.path;
+      let newFileName = cat_img.name;
+      let dest = path.join(folderToCreate, newFileName);
+      mkdirSync(folderToCreate);
+      copyFileSync(fileToCopy, dest);
+    }
+  }
+
+  if (cat_icon) {
+    let folderToCreate = path.join(app.getPath('userData'), 'assets');
+
+    if (existsSync(folderToCreate)) {
+      let fileToCopy = cat_icon.path;
+      let newFileName = cat_icon.name;
+      let dest = path.join(folderToCreate, newFileName);
+      copyFileSync(fileToCopy, dest);
+    } else {
+      let fileToCopy = cat_icon.path;
+      let newFileName = cat_icon.name;
+      let dest = path.join(folderToCreate, newFileName);
+      mkdirSync(folderToCreate);
+      copyFileSync(fileToCopy, dest);
+    }
   }
 
   let {
