@@ -104,8 +104,8 @@ const Cart = ({ settings }) => {
   const columns = [
     {
       title: 'Item',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'product_name',
+      key: 'product_name',
     },
     {
       title: 'Variant Name',
