@@ -22,8 +22,6 @@ const Home = ({ settings }) => {
     });
   }, []);
 
-  console.log('foodLists', foodLists);
-
   return (
     <div className="main_wrapper">
       <Header settings={settings} />

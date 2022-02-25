@@ -2,16 +2,19 @@ import {
   Button,
   Checkbox,
   Col,
+  Image,
   InputNumber,
   message,
   Modal,
   Row,
   Space,
+  Typography,
 } from 'antd';
-import React, { useContext, useState } from 'react';
-import foodPlaceholder from '../../../../assets/food-placeholder.png';
+import { useContext, useState } from 'react';
 import { ContextData } from './../../contextApi';
 import './food.item.styles.scss';
+
+const { Title } = Typography;
 
 const FoodItem = ({ item }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -89,13 +92,35 @@ const FoodItem = ({ item }) => {
         <div className="food_card" onClick={(e) => handleFoodItem(e, item)}>
           <div className="food_image">
             {item?.product_image ? (
-              <img
+              <Image
                 variant="top"
                 src={item.product_image}
                 alt={item.product_name}
+                preview={false}
+                fallback={
+                  'https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/0a00c70bfef9545def90b28b58b79675.jpg'
+                }
               />
             ) : (
-              <img variant="top" src={foodPlaceholder} />
+              <div style={{ backgroundColor: '#ddd' }}>
+                <Title
+                  style={{
+                    marginBottom: '0',
+                    padding: '2rem 0.5rem',
+                    color: '#818181',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                  level={5}
+                >
+                  {item.product_name}
+                </Title>
+                {/* <p style={{ marginBottom: '0', padding: '2rem 0.5rem' }}>
+                  {item.product_name}
+                </p> */}
+                {/* <img variant="top" src={foodPlaceholder} /> */}
+              </div>
             )}
           </div>
 
