@@ -23,13 +23,25 @@ const FoodItem = ({ item }) => {
   const [quantityValue, setQuantityValue] = useState('');
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  window.get_addons_and_variant.once('get_addons_and_variant_response', (args)=>{
-    console.log(args);
-  })
+  // useEffect(() => {
+  //   window.get_addons_and_variant.once(
+  //     'get_addons_and_variant_response',
+  //     (args) => {
+  //       console.log('******************args', args);
+  //     }
+  //   );
+  // }, []);
 
   const handleFoodItem = (e, item) => {
     console.log('item', item);
-    window.get_addons_and_variant.send('get_addons_and_variant', item.id)
+    window.get_addons_and_variant.send('get_addons_and_variant', item.id);
+
+    window.get_addons_and_variant.once(
+      'get_addons_and_variant_response',
+      (args) => {
+        console.log('******************args', args);
+      }
+    );
 
     if (
       item?.addons?.length > 0 ||
