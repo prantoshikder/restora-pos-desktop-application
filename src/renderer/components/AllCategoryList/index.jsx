@@ -42,8 +42,8 @@ const AllCategoryList = () => {
           allCats.push(category);
 
           // Push those cateogries who have child categories into the 'allCats' state
-          if (category.subCategories.length) {
-            allCats.push(...category.subCategories);
+          if (category?.subCategories?.length) {
+            allCats.push(...category?.subCategories);
           }
         });
 
@@ -56,6 +56,8 @@ const AllCategoryList = () => {
             category.category_is_active = 'Inactive';
           }
         });
+
+        console.log('categories', allCats);
 
         setCategories(allCats);
       })
