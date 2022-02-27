@@ -136,10 +136,10 @@ ipcMain.on('insert_settings', (event, args) => {
   setImagePath(
     'settings_favicon', // Setting images folder name
     'settings_logo', // Setting icons folder name
-    appFavicon.path, // Setting image path
-    appFavicon.name, // Setting image name
-    appLogo.path, // Setting icon path
-    appLogo.name // Setting icon namesettings_logo
+    appFavicon?.path, // Setting image path
+    appFavicon?.name, // Setting image name
+    appLogo?.path, // Setting icon path
+    appLogo?.name // Setting icon namesettings_logo
   );
 
   let {
@@ -210,8 +210,8 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          appLogo.path,
-          appFavicon.path,
+          appLogo?.path,
+          appFavicon?.path,
           opentime,
           closetime,
           vat,
@@ -381,10 +381,10 @@ ipcMain.on('insertCategoryData', (event, args) => {
   setImagePath(
     'categories_images', // Category images folder name
     'categories_icons', // Category icons folder name
-    cat_img.path, // Category image path
-    cat_img.name, // Category image name
-    cat_icon.path, // Category icon path
-    cat_icon.name // Category icon name
+    cat_img?.path, // Category image path
+    cat_img?.name, // Category image name
+    cat_icon?.path, // Category icon path
+    cat_icon?.name // Category icon name
   );
 
   let {
@@ -632,8 +632,8 @@ ipcMain.on('add_new_foods', (event, args) => {
   setImagePath(
     'foods_images', // Food images folder name
     '', // Food icons folder name
-    product_img.path, // Food image path
-    product_img.name, // Food image name
+    product_img?.path, // Food image path
+    product_img?.name, // Food image name
     '', // Food icon path
     '' // Food icon name
   );
@@ -667,7 +667,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          product_img.path,
+          product_img?.path,
           component,
           description,
           notes,
@@ -737,7 +737,7 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          product_img.path,
+          product_img?.path,
           component,
           description,
           notes,
@@ -1205,7 +1205,7 @@ getListItems(
   'get_food_name_lists_channel',
   'get_food_name_lists_channel_response',
   'item_foods',
-  'id, product_name',
+  'id, product_name, product_image',
   true
 );
 
