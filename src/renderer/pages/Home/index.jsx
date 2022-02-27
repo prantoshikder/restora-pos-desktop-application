@@ -23,24 +23,17 @@ const Home = ({ settings }) => {
 
   // Addons lists (Only ID)
   window.get_addons_name_list.send('get_addons_name_list', { status: true });
+  window.get_addons_list_for_pos.send('get_addons_list_for_pos', {
+    status: true,
+  });
 
   const [foodLists, setFoodLists] = useState([]);
   const { cartItems, setCartItems } = useContext(ContextData);
   const [addonNames, setAddonNames] = useState(null);
+  const [addonsList, setAddonsList] = useState(null);
   const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
-    getDataFromDatabase(
-      'variant_lists_response',
-      window.variant_lists_channel
-    ).then((data) => {
-      console.log('variant data', data);
-    });
-
-    // window.variant_lists_channel.once('variant_lists_response', (args) => {
-    //   setFoodVariantList(args);
-    // });
-
     getDataFromDatabase(
       'get_food_list_pos_response',
       window.get_food_list_pos
@@ -53,37 +46,48 @@ const Home = ({ settings }) => {
   useEffect(() => {
     Promise.all([
       getDataFromDatabase(
-        'get_addons_name_list_response',
-        window.get_addons_name_list
-      ),
-      getDataFromDatabase(
         'get_food_name_lists_channel_response',
         window.get_food_name_lists_channel
       ),
+      getDataFromDatabase(
+        'variant_lists_response',
+        window.variant_lists_channel
+      ),
+      getDataFromDatabase(
+        'get_addons_list_for_pos_response',
+        window.get_addons_list_for_pos
+      ),
     ])
-      .then(([addonNames, foodNames]) => {
-        setAddonNames(addonNames);
-        setFoodNames(foodNames);
+      .then(([foodNames, variants, addons]) => {
+        let newFoods = [];
 
-        let newAddonNames = [];
+        foodNames?.map((food, index) => {
+          const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
-        addonsList?.map((addon, index) => {
-          const newAddons = addonNames.find(
-            (addonName) => addonName.add_on_id === addon.add_on_id
+          const newVariants = variants.filter(
+            (variant) => variant.food_id === food.id
           );
 
-          const newFoodItems = foodNames.find(
-            (foodItem) => foodItem.id === addon.menu_id
-          );
-
-          newAddonNames.push({
-            id: addon.id,
-            addonsName: newAddons.add_on_name,
-            foodName: newFoodItems.product_name,
+          newFoods.push({
+            id: food.id,
+            product_name: food.product_name,
+            product_image: food.product_image,
+            quantity: 1,
+            variants: [...newVariants],
+            addons: [...newAddons],
           });
         });
 
-        console.log('newAddonNames', newAddonNames);
+        const foods = newFoods.map((food) => {
+          return {
+            ...food,
+            variants: [
+              ...food.variants.map((variant) => ({ ...variant, quantity: 1 })),
+            ],
+          };
+        });
+
+        console.log('foods', foods);
       })
       .catch((err) => console.log(err));
   }, []);

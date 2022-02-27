@@ -222,6 +222,13 @@ sendDataThroughMiddleware(
   'get_addons_name_list_response' //Response
 );
 
+// Get addons name list
+sendDataThroughMiddleware(
+  'get_addons_list_for_pos', //Event Name
+  'get_addons_list_for_pos', // Channel Name
+  'get_addons_list_for_pos_response' //Response
+);
+
 /*============================================
   CURRENCY
 ==============================================*/
