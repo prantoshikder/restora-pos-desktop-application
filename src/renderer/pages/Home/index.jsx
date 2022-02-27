@@ -13,8 +13,25 @@ const Home = ({ settings }) => {
     status: true,
   });
 
+  // Get all food variant lists as an array
+  window.variant_lists_channel.send('variant_lists_channel', { status: true });
+
+  // Food lists (Only ID)
+  window.get_food_name_lists_channel.send('get_food_name_lists_channel', {
+    status: true,
+  });
+
+  // Addons lists (Only ID)
+  window.get_addons_name_list.send('get_addons_name_list', { status: true });
+  window.get_addons_list_for_pos.send('get_addons_list_for_pos', {
+    status: true,
+  });
+
   const [foodLists, setFoodLists] = useState([]);
   const { cartItems, setCartItems } = useContext(ContextData);
+  const [addonNames, setAddonNames] = useState(null);
+  const [addonsList, setAddonsList] = useState(null);
+  const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -24,6 +41,55 @@ const Home = ({ settings }) => {
       console.log('data', data);
       setFoodLists(data);
     });
+  }, []);
+
+  useEffect(() => {
+    Promise.all([
+      getDataFromDatabase(
+        'get_food_name_lists_channel_response',
+        window.get_food_name_lists_channel
+      ),
+      getDataFromDatabase(
+        'variant_lists_response',
+        window.variant_lists_channel
+      ),
+      getDataFromDatabase(
+        'get_addons_list_for_pos_response',
+        window.get_addons_list_for_pos
+      ),
+    ])
+      .then(([foodNames, variants, addons]) => {
+        let newFoods = [];
+
+        foodNames?.map((food, index) => {
+          const newAddons = addons.filter((addon) => addon.food_id === food.id);
+
+          const newVariants = variants.filter(
+            (variant) => variant.food_id === food.id
+          );
+
+          newFoods.push({
+            id: food.id,
+            product_name: food.product_name,
+            product_image: food.product_image,
+            quantity: 1,
+            variants: [...newVariants],
+            addons: [...newAddons],
+          });
+        });
+
+        const foods = newFoods.map((food) => {
+          return {
+            ...food,
+            variants: [
+              ...food.variants.map((variant) => ({ ...variant, quantity: 1 })),
+            ],
+          };
+        });
+
+        console.log('foods', foods);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (

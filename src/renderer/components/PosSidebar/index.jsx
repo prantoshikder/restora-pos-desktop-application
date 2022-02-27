@@ -13,7 +13,6 @@ const PosSidebar = ({ settings }) => {
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
-        console.log('$$$$$$', data);
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(
