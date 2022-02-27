@@ -133,13 +133,15 @@ ipcMain.on('insert_settings', (event, args) => {
   }
 
   // Set setting images and icons path
+  let settings_favicon_folder_name = 'settings_favicon';
+  let settings_logo_folder_name = 'settings_logo';
   setImagePath(
-    'settings_favicon', // Setting images folder name
-    'settings_logo', // Setting icons folder name
-    appFavicon?.path, // Setting image path
-    appFavicon?.name, // Setting image name
-    appLogo?.path, // Setting icon path
-    appLogo?.name // Setting icon namesettings_logo
+    settings_favicon_folder_name, // Setting images folder name
+    settings_logo_folder_name, // Setting icons folder name
+    appFavicon.path, // Setting image path
+    appFavicon.name, // Setting image name
+    appLogo.path, // Setting icon path
+    appLogo.name // Setting icon namesettings_logo
   );
 
   let {
@@ -210,8 +212,18 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          appLogo?.path,
-          appFavicon?.path,
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            settings_favicon_folder_name,
+            appLogo.name
+          ),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            settings_logo_folder_name,
+            appFavicon.name
+          ),
           opentime,
           closetime,
           vat,
@@ -378,13 +390,15 @@ ipcMain.on('insertCategoryData', (event, args) => {
   }
 
   // Set categories images and icons path
+  let cat_image_folder_name = 'categories_images';
+  let cat_icon_folder_name = 'categories_icons';
   setImagePath(
-    'categories_images', // Category images folder name
-    'categories_icons', // Category icons folder name
-    cat_img?.path, // Category image path
-    cat_img?.name, // Category image name
-    cat_icon?.path, // Category icon path
-    cat_icon?.name // Category icon name
+    cat_image_folder_name, // Category images folder name
+    cat_icon_folder_name, // Category icons folder name
+    cat_img.path, // Category image path
+    cat_img.name, // Category image name
+    cat_icon.path, // Category icon path
+    cat_icon.name // Category icon name
   );
 
   let {
@@ -407,8 +421,18 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          cat_img.path,
-          cat_icon.path,
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_image_folder_name,
+            cat_img.name
+          ),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_icon_folder_name,
+            cat_icon.name
+          ),
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -454,8 +478,18 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          cat_img.path,
-          cat_icon.path,
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_image_folder_name,
+            cat_img.name
+          ),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_icon_folder_name,
+            cat_icon.name
+          ),
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -629,8 +663,9 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 
   // Set food images and icons path
+  let foods_images_folder_name = 'foods_images';
   setImagePath(
-    'foods_images', // Food images folder name
+    foods_images_folder_name, // Food images folder name
     '', // Food icons folder name
     product_img?.path, // Food image path
     product_img?.name, // Food image name
@@ -667,7 +702,12 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          product_img?.path,
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            foods_images_folder_name,
+            product_img.name
+          ),
           component,
           description,
           notes,
@@ -737,7 +777,12 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          product_img?.path,
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            foods_images_folder_name,
+            product_img.name
+          ),
           component,
           description,
           notes,
