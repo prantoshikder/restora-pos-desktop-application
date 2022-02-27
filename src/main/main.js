@@ -62,6 +62,7 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false,
     },
   });
 
@@ -133,15 +134,15 @@ ipcMain.on('insert_settings', (event, args) => {
   }
 
   // Set setting images and icons path
-  let settings_favicon_folder_name = 'settings_favicon'
-  let settings_logo_folder_name = 'settings_logo'
+  let settings_favicon_folder_name = 'settings_favicon';
+  let settings_logo_folder_name = 'settings_logo';
   setImagePath(
     settings_favicon_folder_name, // Setting images folder name
     settings_logo_folder_name, // Setting icons folder name
-    appFavicon.path, // Setting image path
-    appFavicon.name, // Setting image name
-    appLogo.path, // Setting icon path
-    appLogo.name // Setting icon namesettings_logo
+    appFavicon?.path, // Setting image path
+    appFavicon?.name, // Setting image name
+    appLogo?.path, // Setting icon path
+    appLogo?.name // Setting icon namesettings_logo
   );
 
   let {
@@ -212,8 +213,20 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          path.join(app.getPath('userData'), 'assets', settings_favicon_folder_name, appLogo.name),
-          path.join(app.getPath('userData'), 'assets', settings_logo_folder_name, appFavicon.name),
+          appLogo?.name,
+          // path?.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   settings_favicon_folder_name,
+          //   appLogo?.name
+          // ),
+          // path?.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   settings_logo_folder_name,
+          //   appFavicon?.name
+          //   ),
+          appFavicon?.name,
           opentime,
           closetime,
           vat,
@@ -259,7 +272,7 @@ getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
   'setting', //Table Name
-  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
+  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align, dateformat, timezone' //Columns
 );
 
 /**
@@ -380,8 +393,8 @@ ipcMain.on('insertCategoryData', (event, args) => {
   }
 
   // Set categories images and icons path
-  let cat_image_folder_name = 'categories_images'
-  let cat_icon_folder_name = 'categories_icons'
+  let cat_image_folder_name = 'categories_images';
+  let cat_icon_folder_name = 'categories_icons';
   setImagePath(
     cat_image_folder_name, // Category images folder name
     cat_icon_folder_name, // Category icons folder name
@@ -411,8 +424,18 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          path.join(app.getPath('userData'), 'assets', cat_image_folder_name, cat_img.name),
-          path.join(app.getPath('userData'), 'assets', cat_icon_folder_name, cat_icon.name),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_image_folder_name,
+            cat_img.name
+          ),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_icon_folder_name,
+            cat_icon.name
+          ),
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -458,8 +481,18 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          path.join(app.getPath('userData'), 'assets', cat_image_folder_name, cat_img.name),
-          path.join(app.getPath('userData'), 'assets', cat_icon_folder_name, cat_icon.name),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_image_folder_name,
+            cat_img.name
+          ),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            cat_icon_folder_name,
+            cat_icon.name
+          ),
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -633,12 +666,12 @@ ipcMain.on('add_new_foods', (event, args) => {
   }
 
   // Set food images and icons path
-  let foods_images_folder_name = 'foods_images'
+  let foods_images_folder_name = 'foods_images';
   setImagePath(
     foods_images_folder_name, // Food images folder name
     '', // Food icons folder name
-    product_img.path, // Food image path
-    product_img.name, // Food image name
+    product_img?.path, // Food image path
+    product_img?.name, // Food image name
     '', // Food icon path
     '' // Food icon name
   );
@@ -672,7 +705,13 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          path.join(app.getPath('userData'), 'assets', foods_images_folder_name, product_img.name),
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   foods_images_folder_name,
+          //   product_img.name
+          //   ),
+          product_img?.name,
           component,
           description,
           notes,
@@ -742,7 +781,12 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          path.join(app.getPath('userData'), 'assets', foods_images_folder_name, product_img.name),
+          path.join(
+            app.getPath('userData'),
+            'assets',
+            foods_images_folder_name,
+            product_img.name
+          ),
           component,
           description,
           notes,
@@ -1210,7 +1254,7 @@ getListItems(
   'get_food_name_lists_channel',
   'get_food_name_lists_channel_response',
   'item_foods',
-  'id, product_name',
+  'id, product_name, product_image',
   true
 );
 
