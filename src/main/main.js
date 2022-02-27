@@ -1238,7 +1238,7 @@ ipcMain.on('get_addons_and_variant', (event, args) => {
       food_addon_variants['addons'] = rows;
     });
     db.all(sql2, [], (err, rows) => {
-      food_addon_variants['varients'] = rows;
+      food_addon_variants['variants'] = rows;
     });
   });
   db.close();

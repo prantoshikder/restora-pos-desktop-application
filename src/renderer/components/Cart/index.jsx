@@ -45,7 +45,10 @@ const Cart = ({ settings }) => {
   const [customerList, setCustomerList] = useState([]);
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
+
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  console.log('cartItems', cartItems);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
