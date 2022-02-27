@@ -20,7 +20,10 @@ const Home = ({ settings }) => {
     getDataFromDatabase(
       'get_food_list_pos_response',
       window.get_food_list_pos
-    ).then((data) => setFoodLists(data));
+    ).then((data) => {
+      console.log('data', data);
+      setFoodLists(data);
+    });
   }, []);
 
   return (

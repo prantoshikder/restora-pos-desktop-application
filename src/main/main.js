@@ -132,39 +132,15 @@ ipcMain.on('insert_settings', (event, args) => {
     appLogo = JSON.parse(args.logo);
   }
 
-  if (appLogo) {
-    let folderToCreate = path.join(app.getPath('userData'), 'assets');
-
-    if (existsSync(folderToCreate)) {
-      let fileToCopy = appLogo?.path;
-      let newFileName = appLogo?.name;
-      let dest = path.join(folderToCreate, newFileName);
-      copyFileSync(fileToCopy, dest);
-    } else {
-      let fileToCopy = appLogo?.path;
-      let newFileName = appLogo?.name;
-      let dest = path.join(folderToCreate, newFileName);
-      mkdirSync(folderToCreate);
-      copyFileSync(fileToCopy, dest);
-    }
-  }
-
-  if (appFavicon) {
-    let folderToCreate = path.join(app.getPath('userData'), 'assets');
-
-    if (existsSync(folderToCreate)) {
-      let fileToCopy = appLogo?.path;
-      let newFileName = appLogo?.name;
-      let dest = path.join(folderToCreate, newFileName);
-      copyFileSync(fileToCopy, dest);
-    } else {
-      let fileToCopy = appLogo?.path;
-      let newFileName = appLogo?.name;
-      let dest = path.join(folderToCreate, newFileName);
-      mkdirSync(folderToCreate);
-      copyFileSync(fileToCopy, dest);
-    }
-  }
+  // Set setting images and icons path
+  setImagePath(
+    'settings_favicon', // Setting images folder name
+    'settings_logo', // Setting icons folder name
+    appFavicon.path, // Setting image path
+    appFavicon.name, // Setting image name
+    appLogo.path, // Setting icon path
+    appLogo.name // Setting icon namesettings_logo
+  )
 
   let {
     title,
@@ -172,8 +148,6 @@ ipcMain.on('insert_settings', (event, args) => {
     address,
     email,
     phone,
-    logo,
-    favcon,
     opentime,
     closetime,
     vat,
@@ -191,6 +165,7 @@ ipcMain.on('insert_settings', (event, args) => {
     powerbytxt,
     footer_text,
   } = args;
+
   // Create DB connection
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
@@ -235,8 +210,8 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          logo,
-          favcon,
+          appLogo.path,
+          appFavicon.path,
           opentime,
           closetime,
           vat,
@@ -257,12 +232,12 @@ ipcMain.on('insert_settings', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_settings_response',
-                err.message
-              )
+              'insert_settings_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_settings_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
   });
@@ -285,11 +260,87 @@ getListItems(
   'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
 );
 
-// TODO: want to do daynamic
-function setImagePath() {
-  // let folderToCreate = path.join(app.getPath('userData'), 'assets', 'category')
-  // let fileToCopy = cat_img.path
-  // let newFileName = cat_img.name
+
+/**
+ * Set images paths
+ * @params string images folder name
+ * @params string icons folder name
+ * @params string image path
+ * @params string image name
+ * @params string icon path
+ * @params string icon name
+ *
+ */
+function setImagePath(images_folder_name, icons_folder_name, image_path, image_name, icon_path, icon_name) {
+  try {
+    mkdirSync(path.join(app.getPath('userData'), 'assets'));
+    if (image_path) {
+      let folderToCreate = path.join(app.getPath('userData'), 'assets', images_folder_name);
+
+      if (existsSync(folderToCreate)) {
+        let fileToCopy = image_path;
+        let newFileName = image_name;
+        let dest = path.join(folderToCreate, newFileName);
+        copyFileSync(fileToCopy, dest);
+      } else {
+        let fileToCopy = image_path;
+        let newFileName = image_name;
+        let dest = path.join(folderToCreate, newFileName);
+        mkdirSync(folderToCreate);
+        copyFileSync(fileToCopy, dest);
+      }
+    }
+    if (icon_path) {
+      let folderToCreate = path.join(app.getPath('userData'), 'assets', icons_folder_name);
+
+      if (existsSync(folderToCreate)) {
+        let fileToCopy = icon_path;
+        let newFileName = icon_name;
+        let dest = path.join(folderToCreate, newFileName);
+        copyFileSync(fileToCopy, dest);
+      } else {
+        let fileToCopy = icon_path;
+        let newFileName = icon_name;
+        let dest = path.join(folderToCreate, newFileName);
+        mkdirSync(folderToCreate);
+        copyFileSync(fileToCopy, dest);
+      }
+    }
+  }
+  catch (error) {
+    if (image_path) {
+      let folderToCreate = path.join(app.getPath('userData'), 'assets', images_folder_name);
+
+      if (existsSync(folderToCreate)) {
+        let fileToCopy = image_path;
+        let newFileName = image_name;
+        let dest = path.join(folderToCreate, newFileName);
+        copyFileSync(fileToCopy, dest);
+      } else {
+        let fileToCopy = image_path;
+        let newFileName = image_name;
+        let dest = path.join(folderToCreate, newFileName);
+        mkdirSync(folderToCreate);
+        copyFileSync(fileToCopy, dest);
+      }
+    }
+    if (icon_path) {
+      let folderToCreate = path.join(app.getPath('userData'), 'assets', icons_folder_name);
+
+      if (existsSync(folderToCreate)) {
+        let fileToCopy = icon_path;
+        let newFileName = icon_name;
+        let dest = path.join(folderToCreate, newFileName);
+        copyFileSync(fileToCopy, dest);
+      } else {
+        let fileToCopy = icon_path;
+        let newFileName = icon_name;
+        let dest = path.join(folderToCreate, newFileName);
+        mkdirSync(folderToCreate);
+        copyFileSync(fileToCopy, dest);
+      }
+    }
+  }
 }
 
 // Insert and Update Category data
@@ -304,45 +355,19 @@ ipcMain.on('insertCategoryData', (event, args) => {
     cat_icon = JSON.parse(args.category_icon);
   }
 
-  if (cat_img) {
-    let folderToCreate = path.join(app.getPath('userData'), 'assets');
-
-    if (existsSync(folderToCreate)) {
-      let fileToCopy = cat_img.path;
-      let newFileName = cat_img.name;
-      let dest = path.join(folderToCreate, newFileName);
-      copyFileSync(fileToCopy, dest);
-    } else {
-      let fileToCopy = cat_img.path;
-      let newFileName = cat_img.name;
-      let dest = path.join(folderToCreate, newFileName);
-      mkdirSync(folderToCreate);
-      copyFileSync(fileToCopy, dest);
-    }
-  }
-
-  if (cat_icon) {
-    let folderToCreate = path.join(app.getPath('userData'), 'assets');
-
-    if (existsSync(folderToCreate)) {
-      let fileToCopy = cat_icon.path;
-      let newFileName = cat_icon.name;
-      let dest = path.join(folderToCreate, newFileName);
-      copyFileSync(fileToCopy, dest);
-    } else {
-      let fileToCopy = cat_icon.path;
-      let newFileName = cat_icon.name;
-      let dest = path.join(folderToCreate, newFileName);
-      mkdirSync(folderToCreate);
-      copyFileSync(fileToCopy, dest);
-    }
-  }
+  // Set categories images and icons path
+  setImagePath(
+    'categories_images', // Category images folder name
+    'categories_icons', // Category icons folder name
+    cat_img.path, // Category image path
+    cat_img.name, // Category image name
+    cat_icon.path, // Category icon path
+    cat_icon.name // Category icon name
+  )
 
   let {
     category_name,
     parent_id,
-    category_image,
-    category_icon,
     category_is_active,
     offer_start_date,
     offer_end_date,
@@ -360,8 +385,8 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          category_image,
-          category_icon,
+          cat_img.path,
+          cat_icon.path,
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -370,12 +395,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -407,8 +432,8 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          category_image,
-          category_icon,
+          cat_img.path,
+          cat_icon.path,
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -417,12 +442,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -488,11 +513,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-            status: err,
-          })
+          status: err,
+        })
         : mainWindow.webContents.send('delete_category_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
 
@@ -513,8 +538,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -538,8 +563,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -565,22 +590,31 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
   db.close();
 });
 
 /*==================================================================
-
+Insert and update foods to DB
 ==================================================================*/
-// Insert and update foods to DB
 ipcMain.on('add_new_foods', (event, args) => {
   let product_img;
   if (args?.food_image) {
     product_img = JSON.parse(args.food_image);
   }
+
+  // Set food images and icons path
+  setImagePath(
+    'foods_images', // Food images folder name
+    '', // Food icons folder name
+    product_img.path, // Food image path
+    product_img.name, // Food image name
+    '', // Food icon path
+    '' // Food icon name
+  )
 
   let {
     category_name,
@@ -589,7 +623,6 @@ ipcMain.on('add_new_foods', (event, args) => {
     component,
     notes,
     description,
-    food_image,
     vat,
     is_offer,
     special,
@@ -612,7 +645,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          food_image,
+          product_img.path,
           component,
           description,
           notes,
@@ -632,8 +665,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -682,7 +715,7 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          food_image,
+          product_img.path,
           component,
           description,
           notes,
@@ -702,8 +735,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -732,9 +765,13 @@ ipcMain.on('get_food_list', (event, args) => {
 // SELECT variants.id, variants.food_id, variants.variant_name, variants.price FROM variants
 ipcMain.on('get_food_list_pos', (event, args) => {
   let { status } = args;
-  let sql = `SELECT item_foods.id, item_foods.category_id, item_foods.product_name, item_foods.product_image, item_foods.item_note, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.is_custom_quantity,
-  variants.id AS variant_id, variants.food_id, variants.variant_name, variants.price
-  FROM item_foods JOIN variants ON item_foods.id = variants.food_id`;
+  // let sql = `SELECT item_foods.id, item_foods.category_id, item_foods.product_name, item_foods.product_image, item_foods.item_note, item_foods.product_vat, item_foods.special, item_foods.offers_rate, item_foods.offer_is_available, item_foods.is_custom_quantity,
+  // variants.id AS variant_id, variants.food_id, variants.variant_name, variants.price
+  // FROM item_foods JOIN variants ON item_foods.id = variants.food_id`;
+  let sql = `select DISTINCT item_foods.*
+  FROM item_foods
+  INNER JOIN variants
+  ON variants.food_id = item_foods.id`;
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -792,12 +829,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'add_new_foods_variant_response',
-                err.message
-              )
+              'add_new_foods_variant_response',
+              err.message
+            )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -819,12 +856,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'add_new_foods_variant_response',
-                err.message
-              )
+              'add_new_foods_variant_response',
+              err.message
+            )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -874,15 +911,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                err.message
-              )
+              'context_bridge_food_available_time_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                {
-                  status: 'updated',
-                }
-              );
+              'context_bridge_food_available_time_response',
+              {
+                status: 'updated',
+              }
+            );
         }
       );
     });
@@ -905,15 +942,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                err.message
-              )
+              'context_bridge_food_available_time_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                {
-                  status: 'inserted',
-                }
-              );
+              'context_bridge_food_available_time_response',
+              {
+                status: 'inserted',
+              }
+            );
         }
       );
     });
@@ -965,12 +1002,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_type_response',
-                err.message
-              )
+              'context_bridge_menu_type_response',
+              err.message
+            )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -993,12 +1030,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_type_response',
-                err.message
-              )
+              'context_bridge_menu_type_response',
+              err.message
+            )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1048,15 +1085,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                err.message
-              )
+              'context_bridge_menu_addons_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                {
-                  status: 'updated',
-                }
-              );
+              'context_bridge_menu_addons_response',
+              {
+                status: 'updated',
+              }
+            );
         }
       );
     });
@@ -1079,15 +1116,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                err.message
-              )
+              'context_bridge_menu_addons_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                {
-                  status: 'inserted',
-                }
-              );
+              'context_bridge_menu_addons_response',
+              {
+                status: 'inserted',
+              }
+            );
         }
       );
     });
@@ -1171,12 +1208,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_customer_info_response',
-                err.message
-              )
+              'insert_customer_info_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_customer_info_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -1200,12 +1237,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_customer_info_response',
-                err.message
-              )
+              'insert_customer_info_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_customer_info_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1287,8 +1324,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                  status: 'updated',
-                });
+                status: 'updated',
+              });
           }
         );
       });
@@ -1314,8 +1351,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                  status: 'inserted',
-                });
+                status: 'inserted',
+              });
           }
         );
       });
@@ -1340,11 +1377,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-              status: err,
-            })
+            status: err,
+          })
           : mainWindow.webContents.send(eventResponse, {
-              status: true,
-            });
+            status: true,
+          });
       });
     });
     db.close();
@@ -1356,9 +1393,8 @@ function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let { status } = args;
-    let sql = `SELECT ${query} FROM ${table} ${
-      condition && 'WHERE is_active = 1'
-    }`;
+    let sql = `SELECT ${query} FROM ${table} ${condition && 'WHERE is_active = 1'
+      }`;
 
     if (status) {
       db.serialize(() => {

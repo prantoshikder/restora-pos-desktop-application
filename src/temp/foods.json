@@ -27,13 +27,13 @@
           "id": 1,
           "add_on_name": "Drinks",
           "quantity": 1,
-          "addons_price": 35 
+          "addons_price": 35
         },
         {
           "id": 2,
           "add_on_name": "Sprite",
           "quantity": 1,
-          "addons_price": 25 
+          "addons_price": 25
         }
       ]
     },
@@ -68,13 +68,13 @@
           "id": 1,
           "add_on_name": "Drinks",
           "quantity": 1,
-          "addons_price": 35 
+          "addons_price": 35
         },
         {
           "id": 2,
           "add_on_name": "Sprite",
           "quantity": 1,
-          "addons_price": 25 
+          "addons_price": 25
         }
       ]
     },
