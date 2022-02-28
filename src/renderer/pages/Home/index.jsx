@@ -38,7 +38,6 @@ const Home = ({ settings }) => {
       'get_food_list_pos_response',
       window.get_food_list_pos
     ).then((data) => {
-      console.log('data', data);
       setFoodLists(data);
     });
   }, []);
@@ -86,8 +85,6 @@ const Home = ({ settings }) => {
             ],
           };
         });
-
-        console.log('foods', foods);
       })
       .catch((err) => console.log(err));
   }, []);

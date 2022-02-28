@@ -6,7 +6,6 @@ import {
   Col,
   DatePicker,
   Form,
-  Image,
   Input,
   message,
   Row,
@@ -58,7 +57,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['favicon'],
-          value: response?.favicon,
+          // value: response?.favicon,
         },
         {
           name: ['opentime'],
@@ -124,11 +123,19 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
     });
   }, []);
 
+  const handleFavicon = (e) => {
+    console.log('hanlde file', e);
+    // if (Array.isArray(e)) {
+    //   return e;
+    // }
+    // return e && e.fileList;
+  };
   const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
+    console.log('hanlde file norm', e);
+    // if (Array.isArray(e)) {
+    //   return e;
+    // }
+    // return e && e.fileList;
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -240,14 +247,14 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                   <Form.Item
                     name="favicon"
                     valuePropName="fileList"
-                    getValueFromEvent={normFile}
+                    // getValueFromEvent={handleFavicon}
                     noStyle
                   >
                     <Upload.Dragger
                       name="files"
-                      customRequest={(imageObj) => {
-                        setFavIcon(imageObj.file);
-                      }}
+                      // customRequest={(imageObj) => {
+                      //   setFavIcon(imageObj.file);
+                      // }}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -260,12 +267,12 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
-                  {appSettingsData?.favicon && (
+                  {/* {appSettingsData?.favicon && (
                     <Image width={125} src={appSettingsData?.favicon} />
                   )}
                   {favIcon && (
                     <Image width={125} src={URL.createObjectURL(favIcon)} />
-                  )}
+                  )} */}
                 </Col>
               </Row>
             </Form.Item>
@@ -273,10 +280,10 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             <Form.Item label="Logo">
               <Row gutter={20}>
                 <Col lg={16}>
-                  <Form.Item
+                  {/* <Form.Item
                     name="logo"
                     valuePropName="fileList"
-                    getValueFromEvent={normFile}
+                    // getValueFromEvent={normFile}
                     noStyle
                   >
                     <Upload.Dragger
@@ -292,16 +299,21 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                         Click or drag & drop a logo here to upload
                       </p>
                     </Upload.Dragger>
-                  </Form.Item>
+                  </Form.Item> */}
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
-                  {appSettingsData?.logo && (
+                  {/* {appSettingsData?.logo && (
                     <img src={appSettingsData?.logo} alt="Logo" />
                   )}
                   {appLogo && (
                     <img src={URL.createObjectURL(appLogo)} alt="Logo" />
-                  )}
+                  )} */}
+
+                  <img
+                    src="file:///C:/Users/Munir/AppData/Roaming/Electron/assets/settings_favicon/Big_and_small_329.jpg"
+                    alt=""
+                  />
                 </Col>
               </Row>
             </Form.Item>
@@ -427,13 +439,13 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
               <Col lg={12}>
                 <Form.Item label="Date Format" name="dateformat">
                   <Select placeholder="Select Your " size="large" allowClear>
-                    <Option value="dd/mm/yyyy">dd/mm/yyyy</Option>
-                    <Option value="yyyy/mm/dd">yyyy/mm/dd</Option>
-                    <Option value="dd-mm-yyyy">dd-mm-yyyy</Option>
-                    <Option value="yyyy-mm-dd">yyyy-mm-dd</Option>
-                    <Option value="mm/dd/yyyy">mm/dd/yyyy</Option>
-                    <Option value="dd M,yyyy">dd M,yyyy</Option>
-                    <Option value="dd MM,yyyy">dd MM,yyyy</Option>
+                    <Option value="DD/MM/YYYY">dd/mm/yyyy</Option>
+                    <Option value="YYYY/MM/DD">yyyy/mm/dd</Option>
+                    <Option value="DD-MM-YYYY">dd-mm-yyyy</Option>
+                    <Option value="YYYY-MM-DD">yyyy-mm-dd</Option>
+                    <Option value="MM/DD/YYYY">mm/dd/yyyy</Option>
+                    <Option value="DD M,YYYY">dd M,yyyy</Option>
+                    <Option value="DD MM,YYYY">dd MM,yyyy</Option>
                   </Select>
                 </Form.Item>
               </Col>

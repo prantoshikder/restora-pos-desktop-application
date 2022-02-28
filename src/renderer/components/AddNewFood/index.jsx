@@ -22,14 +22,16 @@ import './AddNewFood.style.scss';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const AddNewFood = ({ state }) => {
+const AddNewFood = ({ state, settings }) => {
   // Get menu types e.g lunch, breakfast, dinner etc.
   window.get_active_menu_type_lists.send('get_active_menu_type_lists', {
     status: true,
   });
 
+  const dateFormat = settings?.dateformat ? settings?.dateformat : 'DD/MM/YYYY';
+
   const [form] = Form.useForm();
-  const format = 'HH:mm';
+  const format = 'mm:ss';
   let navigate = useNavigate();
 
   const selectedValue = state?.menu_type.split(',');
@@ -98,18 +100,6 @@ const AddNewFood = ({ state }) => {
         name: ['offer_rate'],
         value: state?.offers_rate,
       },
-      // {
-      //   name: ['offer_start_date'],
-      //   value: state?.offer_start_date,
-      // },
-      // {
-      //   name: ['offer_end_date'],
-      //   value: state?.offer_end_date,
-      // },
-      {
-        name: ['cooking_time'],
-        value: state?.cooked_time,
-      },
       {
         name: ['menu_type'],
         value: state?.menu_type,
@@ -144,7 +134,7 @@ const AddNewFood = ({ state }) => {
           res?.length &&
           setMenuTypes(res.map((item) => item.menu_type));
       })
-      .catch((err) => console.log('Getting menu types erro', err));
+      .catch((err) => console.log('Getting menu types error', err));
   }, []);
 
   const normFile = (e) => {
@@ -176,11 +166,11 @@ const AddNewFood = ({ state }) => {
     setPackageOffer(!packageOffer);
   };
 
-  const handleOfferStart = (value, stringDate) => {
+  const handleOfferStart = (timeObj, stringDate) => {
     setOfferStartDate(stringDate);
   };
 
-  const handleOfferEnd = (value, stringDate) => {
+  const handleOfferEnd = (timeObj, stringDate) => {
     setOfferEndDate(stringDate);
   };
 
@@ -254,6 +244,8 @@ const AddNewFood = ({ state }) => {
         path: productImage.path,
       });
     }
+
+    newFoods.offer_is_available = newFoods.offer_is_available ? 1 : 0;
 
     // Insert & update through the same event & channel
     window.add_new_foods.send('add_new_foods', newFoods);
@@ -333,7 +325,7 @@ const AddNewFood = ({ state }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name="kitchen_select"
               label="Select Kitchen"
               rules={[
@@ -350,7 +342,7 @@ const AddNewFood = ({ state }) => {
                 <Option value="4">Italian</Option>
                 <Option value="5">Chinese</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Food Name"
@@ -437,7 +429,12 @@ const AddNewFood = ({ state }) => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Form.Item valuePropName="checked" name="is_offer">
-                <Checkbox onClick={handleOfferInfo}>Offer</Checkbox>
+                <Checkbox
+                  onClick={handleOfferInfo}
+                  checked={state.offer_is_available === 1 ? true : false}
+                >
+                  Offer
+                </Checkbox>
               </Form.Item>
 
               <Form.Item name="special" valuePropName="checked">
@@ -460,36 +457,70 @@ const AddNewFood = ({ state }) => {
                     icon: <InfoCircleOutlined />,
                   }}
                 >
-                  <Input placeholder="Vat" size="large" />
+                  <Input placeholder="e.g 5%" size="large" />
                 </Form.Item>
 
                 <Row gutter={20}>
                   <Col lg={12}>
                     <Form.Item label="Offer Start Date" name="offer_start_date">
-                      <DatePicker
-                        format="DD-MM-YYYY"
-                        placeholder="Offer Start Date"
-                        disabledDate={disabledDate}
-                        onChange={handleOfferStart}
-                      />
+                      {state?.offer_start_date ? (
+                        <DatePicker
+                          format={dateFormat}
+                          placeholder="Offer Start Date"
+                          disabledDate={disabledDate}
+                          onChange={handleOfferStart}
+                          defaultValue={moment(
+                            `${state.offer_start_date}`,
+                            dateFormat
+                          )}
+                        />
+                      ) : (
+                        <DatePicker
+                          format={dateFormat}
+                          placeholder="Offer Start Date"
+                          disabledDate={disabledDate}
+                          onChange={handleOfferStart}
+                        />
+                      )}
                     </Form.Item>
                   </Col>
                   <Col lg={12}>
                     <Form.Item label="Offer End Date" name="offer_end_date">
-                      <DatePicker
-                        format="DD-MM-YYYY"
-                        placeholder="Offer End Date"
-                        disabledDate={disabledDate}
-                        onChange={handleOfferEnd}
-                      />
+                      {state?.offer_end_date ? (
+                        <DatePicker
+                          format={dateFormat}
+                          placeholder="Offer End Date"
+                          disabledDate={disabledDate}
+                          onChange={handleOfferEnd}
+                          defaultValue={moment(
+                            `${state.offer_end_date}`,
+                            dateFormat
+                          )}
+                        />
+                      ) : (
+                        <DatePicker
+                          format={dateFormat}
+                          placeholder="Offer End Date"
+                          disabledDate={disabledDate}
+                          onChange={handleOfferEnd}
+                        />
+                      )}
                     </Form.Item>
                   </Col>
                 </Row>
               </>
             )}
 
-            <Form.Item label="Cooking Time" name="cooking_time">
-              <TimePicker onChange={handleChangeTime} format={format} />
+            <Form.Item label="Cooking Time">
+              {state?.cooked_time ? (
+                <TimePicker
+                  onChange={handleChangeTime}
+                  format={format}
+                  defaultValue={moment(`${state.cooked_time}`, format)}
+                />
+              ) : (
+                <TimePicker onChange={handleChangeTime} format={format} />
+              )}
             </Form.Item>
 
             <Form.Item
