@@ -2,8 +2,6 @@
 import FoodItem from './FoodItem';
 
 const FoodLists = ({ foodLists, setFoodLists }) => {
-  console.log('foodLists', foodLists);
-
   return (
     <>
       {foodLists?.map((item) => (
