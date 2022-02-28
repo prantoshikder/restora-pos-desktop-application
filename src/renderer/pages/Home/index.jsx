@@ -78,7 +78,6 @@ const Home = ({ settings }) => {
         });
 
         setFoodLists(foods);
-        console.log('foods', foods);
       })
       .catch((err) => console.log(err));
   }, []);

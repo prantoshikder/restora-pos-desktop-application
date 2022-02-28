@@ -26,7 +26,6 @@ const FoodItem = ({ item }) => {
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  console.log('item', item);
   const handleFoodItem = (e, item) => {
     window.get_addons_and_variant.send('get_addons_and_variant', item.id);
 
@@ -39,16 +38,17 @@ const FoodItem = ({ item }) => {
     );
 
     if (
-      item?.addons?.length > 0 ||
-      (Array.isArray(item?.addons) && item?.addons?.length > 0)
-    ) {
-      // setVariantPrice(item.variant[0].price);
-      setAddonsAdd(item);
-      setOpenModal(true);
-    } else if (
       item?.variants?.length > 1 ||
       (Array.isArray(item?.variants) && item?.variants?.length > 1)
     ) {
+      setVariantPrice(item.variants[0].price);
+      setAddonsAdd(item);
+      setOpenModal(true);
+    } else if (
+      item?.addons?.length > 0 ||
+      (Array.isArray(item?.addons) && item?.addons?.length > 0)
+    ) {
+      setVariantPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
     } else {
@@ -95,12 +95,38 @@ const FoodItem = ({ item }) => {
     }
   };
 
+  const handleMultipleItemAdd = (e, item) => {
+    console.log('item', item);
+
+    if (!item.isSelected) {
+      item.isSelected = true;
+      item.foodVariant = foodVariantName;
+      item.price = quantityValue * item.price;
+      item.quantity = quantityValue;
+
+      setCartItems([...cartItems, item]);
+      // setOpenModal(false);
+    } else {
+      if (item.id) {
+        message.info({
+          content: 'Item already added',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      }
+    }
+  };
+
   function onChange(e) {
     console.log(`checked = ${e.target.checked}`);
   }
 
   const handleVariantPrice = (variant) => {
     const variantsPrice = JSON.parse(variant);
+    console.log('variantsPrice', variantsPrice);
     setVariantPrice(variantsPrice.price);
   };
 
@@ -127,11 +153,11 @@ const FoodItem = ({ item }) => {
                 }
               />
             ) : (
-              <div style={{ backgroundColor: '#ddd', height: '100px' }}>
+              <div style={{ backgroundColor: '#ddd', height: '90px' }}>
                 <Title
                   style={{
                     marginBottom: '0',
-                    padding: '2.5rem 0.5rem',
+                    padding: '2rem 0.5rem',
                     color: '#818181',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -252,7 +278,12 @@ const FoodItem = ({ item }) => {
               <Button type="primary" onClick={(e) => handleAddToCart(e, item)}>
                 Add to Cart
               </Button>
-              <Button type="primary">Add Multiple Variant</Button>
+              <Button
+                type="primary"
+                onClick={(e) => handleMultipleItemAdd(e, item)}
+              >
+                Add Multiple Variant
+              </Button>
             </Space>
           </Col>
         </Row>
