@@ -40,12 +40,14 @@ const AddNewFood = ({ state, settings }) => {
   const [parentCategory, setParentCategory] = useState([]);
   const [offerStartDate, setOfferStartDate] = useState('');
   const [offerEndDate, setOfferEndDate] = useState('');
-  const [packageOffer, setPackageOffer] = useState('');
   const [addNewFood, setAddNewFood] = useState([]);
   const [timePicker, setTimePicker] = useState('');
   const [menuType, setMenuType] = useState([]);
   const [reRender, setReRender] = useState(false);
   const [productImage, setProductImage] = useState(null);
+
+  const offerStatus = state?.offer_is_available === 1 ? true : false;
+  const [isOfferChecked, setisOfferChecked] = useState(offerStatus);
 
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
@@ -85,7 +87,7 @@ const AddNewFood = ({ state, settings }) => {
         value: state?.product_vat || '0.00%',
       },
       {
-        name: ['is_offer'],
+        name: ['offer_is_available'],
         value: state?.offer_is_available,
       },
       {
@@ -163,7 +165,7 @@ const AddNewFood = ({ state, settings }) => {
   };
 
   const handleOfferInfo = () => {
-    setPackageOffer(!packageOffer);
+    setisOfferChecked(!isOfferChecked);
   };
 
   const handleOfferStart = (timeObj, stringDate) => {
@@ -428,11 +430,8 @@ const AddNewFood = ({ state, settings }) => {
             </Form.Item>
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Form.Item valuePropName="checked" name="is_offer">
-                <Checkbox
-                  onClick={handleOfferInfo}
-                  checked={state.offer_is_available === 1 ? true : false}
-                >
+              <Form.Item valuePropName="checked" name="offer_is_available">
+                <Checkbox onChange={handleOfferInfo} checked={isOfferChecked}>
                   Offer
                 </Checkbox>
               </Form.Item>
@@ -446,7 +445,7 @@ const AddNewFood = ({ state, settings }) => {
               <Checkbox onChange={customQuantity}>Custom Quantity</Checkbox>
             </Form.Item>
 
-            {packageOffer && (
+            {isOfferChecked && (
               <>
                 <Form.Item
                   label="Offer Rate"
