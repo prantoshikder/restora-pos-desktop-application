@@ -684,7 +684,7 @@ ipcMain.on('add_new_foods', (event, args) => {
     notes,
     description,
     vat,
-    is_offer,
+    offer_is_available,
     special,
     custom_quantity,
     cooking_time,
@@ -719,7 +719,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           vat,
           special,
           offer_rate,
-          is_offer,
+          offer_is_available,
           offer_start_date,
           offer_end_date,
           kitchen_select,
@@ -781,12 +781,13 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            foods_images_folder_name,
-            product_img.name
-          ),
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   foods_images_folder_name,
+          //   product_img.name
+          //   ),
+          product_img?.name,
           component,
           description,
           notes,
@@ -794,7 +795,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           vat,
           special,
           offer_rate,
-          is_offer,
+          offer_is_available,
           offer_start_date,
           offer_end_date,
           kitchen_select,
