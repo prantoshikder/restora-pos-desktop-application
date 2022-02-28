@@ -2,17 +2,33 @@ import { DownOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { useState } from 'react';
 
-const CategoryItem = ({ category, settings, show }) => {
+const CategoryItem = ({
+  category,
+  settings,
+  show,
+  foodLists,
+  setFoodLists,
+}) => {
   const [open, setOpen] = useState(false);
 
-  function handleOpenSubCategory(categoryItem) {
+  const handleOpenSubCategory = (categoryItem) => {
     if (
       category?.category_id === categoryItem?.category_id &&
       categoryItem?.subCategories?.length > 0
     ) {
       setOpen(!open);
+    } else {
+      console.log('category', categoryItem.category_id);
+      const filterData = foodLists.filter((foodList) => {
+        console.log('foodList', foodList);
+        return foodList?.category_id === categoryItem?.category_id;
+      });
+
+      setFoodLists(filterData);
+      console.log('filterData', filterData);
+      // console.log('foodLists', foodLists);
     }
-  }
+  };
 
   return (
     <>

@@ -60,6 +60,7 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
+            category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
             quantity: 1,
@@ -90,7 +91,11 @@ const Home = ({ settings }) => {
         <ConfigProvider direction={settings.site_align}>
           <Row className="pos_system">
             <Col lg={4}>
-              <PosSidebar settings={settings} />
+              <PosSidebar
+                foodLists={foodLists}
+                setFoodLists={setFoodLists}
+                settings={settings}
+              />
             </Col>
 
             <Col lg={20}>

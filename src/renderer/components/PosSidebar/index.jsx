@@ -5,7 +5,7 @@ import { getDataFromDatabase } from './../../../helpers';
 import CategoryItem from './CategoryItem';
 import './PosSidebar.style.scss';
 
-const PosSidebar = ({ settings }) => {
+const PosSidebar = ({ settings, foodLists, setFoodLists }) => {
   const [categories, setCategories] = useState([]);
 
   window.get_category.send('sendResponseForCategory', { status: true });
@@ -13,6 +13,7 @@ const PosSidebar = ({ settings }) => {
   useEffect(() => {
     getDataFromDatabase('sendCategoryData', window.get_category).then(
       (data) => {
+        console.log('************', data);
         const categoryFilter =
           Array.isArray(data) &&
           data?.filter(
@@ -44,6 +45,8 @@ const PosSidebar = ({ settings }) => {
             key={category?.category_id}
             settings={settings}
             category={category}
+            foodLists={foodLists}
+            setFoodLists={setFoodLists}
           />
         ))}
       </div>
