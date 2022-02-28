@@ -47,7 +47,7 @@ const AddNewFood = ({ state, settings }) => {
   const [productImage, setProductImage] = useState(null);
 
   const offerStatus = state?.offer_is_available === 1 ? true : false;
-  const [isOfferChecked, setisOfferChecked] = useState(offerStatus);
+  const [isOfferChecked, setIsOfferChecked] = useState(offerStatus);
 
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
@@ -164,7 +164,7 @@ const AddNewFood = ({ state, settings }) => {
   };
 
   const handleOfferInfo = () => {
-    setisOfferChecked(!isOfferChecked);
+    setIsOfferChecked(!isOfferChecked);
   };
 
   const handleOfferStart = (timeObj, stringDate) => {

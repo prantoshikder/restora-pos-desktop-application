@@ -34,15 +34,6 @@ const Home = ({ settings }) => {
   const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
-    getDataFromDatabase(
-      'get_food_list_pos_response',
-      window.get_food_list_pos
-    ).then((data) => {
-      setFoodLists(data);
-    });
-  }, []);
-
-  useEffect(() => {
     Promise.all([
       getDataFromDatabase(
         'get_food_name_lists_channel_response',
@@ -60,6 +51,8 @@ const Home = ({ settings }) => {
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
 
+        console.log('foodNames', foodNames);
+
         foodNames?.map((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
@@ -69,6 +62,7 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
+            category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
             quantity: 1,
