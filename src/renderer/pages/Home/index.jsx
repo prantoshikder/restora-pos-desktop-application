@@ -34,19 +34,10 @@ const Home = ({ settings }) => {
   const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
-    getDataFromDatabase(
-      'get_food_list_pos_response',
-      window.get_food_list_pos
-    ).then((data) => {
-      setFoodLists(data);
-    });
-  }, []);
-
-  useEffect(() => {
     Promise.all([
       getDataFromDatabase(
-        'get_food_name_lists_channel_response',
-        window.get_food_name_lists_channel
+        'get_food_list_pos_response',
+        window.get_food_list_pos
       ),
       getDataFromDatabase(
         'variant_lists_response',
