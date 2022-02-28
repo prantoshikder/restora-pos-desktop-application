@@ -62,6 +62,7 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false,
     },
   });
 
@@ -136,8 +137,8 @@ ipcMain.on('insert_settings', (event, args) => {
   let settings_favicon_folder_name = 'settings_favicon';
   let settings_logo_folder_name = 'settings_logo';
   setImagePath(
-    'settings_favicon', // Setting images folder name
-    'settings_logo', // Setting icons folder name
+    settings_favicon_folder_name, // Setting images folder name
+    settings_logo_folder_name, // Setting icons folder name
     appFavicon?.path, // Setting image path
     appFavicon?.name, // Setting image name
     appLogo?.path, // Setting icon path
@@ -212,18 +213,20 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            settings_favicon_folder_name,
-            appLogo.name
-          ),
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            settings_logo_folder_name,
-            appFavicon.name
-          ),
+          appLogo?.name,
+          // path?.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   settings_favicon_folder_name,
+          //   appLogo?.name
+          // ),
+          // path?.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   settings_logo_folder_name,
+          //   appFavicon?.name
+          //   ),
+          appFavicon?.name,
           opentime,
           closetime,
           vat,
@@ -269,7 +272,7 @@ getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
   'setting', //Table Name
-  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align' //Columns
+  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align, dateformat, timezone' //Columns
 );
 
 /**
@@ -667,8 +670,8 @@ ipcMain.on('add_new_foods', (event, args) => {
   setImagePath(
     foods_images_folder_name, // Food images folder name
     '', // Food icons folder name
-    product_img.path, // Food image path
-    product_img.name, // Food image name
+    product_img?.path, // Food image path
+    product_img?.name, // Food image name
     '', // Food icon path
     '' // Food icon name
   );
@@ -702,12 +705,13 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            foods_images_folder_name,
-            product_img.name
-          ),
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   foods_images_folder_name,
+          //   product_img.name
+          //   ),
+          product_img?.name,
           component,
           description,
           notes,

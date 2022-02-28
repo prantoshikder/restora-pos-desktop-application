@@ -106,10 +106,10 @@ const AddNewFood = ({ state }) => {
       //   name: ['offer_end_date'],
       //   value: state?.offer_end_date,
       // },
-      {
-        name: ['cooking_time'],
-        value: state?.cooked_time,
-      },
+      // {
+      //   name: ['cooking_time'],
+      //   value: state?.cooked_time,
+      // },
       {
         name: ['menu_type'],
         value: state?.menu_type,
@@ -333,7 +333,7 @@ const AddNewFood = ({ state }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name="kitchen_select"
               label="Select Kitchen"
               rules={[
@@ -350,7 +350,7 @@ const AddNewFood = ({ state }) => {
                 <Option value="4">Italian</Option>
                 <Option value="5">Chinese</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Food Name"
@@ -460,7 +460,7 @@ const AddNewFood = ({ state }) => {
                     icon: <InfoCircleOutlined />,
                   }}
                 >
-                  <Input placeholder="Vat" size="large" />
+                  <Input placeholder="e.g 5%" size="large" />
                 </Form.Item>
 
                 <Row gutter={20}>
@@ -488,8 +488,16 @@ const AddNewFood = ({ state }) => {
               </>
             )}
 
-            <Form.Item label="Cooking Time" name="cooking_time">
-              <TimePicker onChange={handleChangeTime} format={format} />
+            <Form.Item label="Cooking Time">
+              {state?.cooked_time ? (
+                <TimePicker
+                  onChange={handleChangeTime}
+                  format={format}
+                  defaultValue={moment(`${state.cooked_time}`, format)}
+                />
+              ) : (
+                <TimePicker onChange={handleChangeTime} format={format} />
+              )}
             </Form.Item>
 
             <Form.Item
