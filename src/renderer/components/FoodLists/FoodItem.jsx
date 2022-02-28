@@ -55,7 +55,9 @@ const FoodItem = ({ item }) => {
       if (!item.isSelected) {
         item.isSelected = true;
         item.foodVariant = foodVariantName;
+        item.totalPrice = variantPrice;
         e.currentTarget.style.border = '2px solid #297600';
+        // setVariantPrice(item.variants[0].price);
         setCartItems([...cartItems, item]);
       } else {
         if (item.id) {
@@ -76,7 +78,7 @@ const FoodItem = ({ item }) => {
     if (!item.isSelected) {
       item.isSelected = true;
       item.foodVariant = foodVariantName;
-      item.price = quantityValue * item.price;
+      item.totalPrice = variantPrice;
       item.quantity = quantityValue;
 
       setCartItems([...cartItems, item]);
@@ -101,7 +103,7 @@ const FoodItem = ({ item }) => {
     if (!item.isSelected) {
       item.isSelected = true;
       item.foodVariant = foodVariantName;
-      item.price = quantityValue * item.price;
+      item.totalPrice = variantPrice;
       item.quantity = quantityValue;
 
       setCartItems([...cartItems, item]);
@@ -131,7 +133,6 @@ const FoodItem = ({ item }) => {
   };
 
   // TODO: Quantity value & price changes
-
   const calculateAddonQuantity = (quantity) => {
     setVariantPrice(0);
     setVariantPrice(variantPrice * quantity);
