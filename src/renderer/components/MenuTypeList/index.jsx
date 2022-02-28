@@ -2,6 +2,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  InfoCircleOutlined,
+  PictureOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -18,7 +20,7 @@ import {
   Upload,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -69,9 +71,7 @@ const MenuTypeList = () => {
         value: updateMenuType?.is_active || 'Active',
       },
     ]);
-  }, [reRender]);
 
-  useEffect(() => {
     getDataFromDatabase(
       'get_menu_type_lists_response',
       window.get_menu_type_lists
@@ -90,7 +90,7 @@ const MenuTypeList = () => {
 
       setMenuTypesList(res);
     });
-  }, []);
+  }, [reRender]);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -265,11 +265,7 @@ const MenuTypeList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button
-            type="primary"
-            className="bulk_upload_btn"
-            onClick={() => setOpenModal(true)}
-          >
+          <Button type="primary" onClick={() => setOpenModal(true)}>
             <PlusCircleOutlined />
             Add Menu Type
           </Button>
@@ -318,7 +314,7 @@ const MenuTypeList = () => {
                 <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
-              {/* <Form.Item
+              <Form.Item
                 label="Icon"
                 name="menu_icon"
                 getValueFromEvent={normFile}
@@ -335,7 +331,7 @@ const MenuTypeList = () => {
                     Click or drag file to this area to upload
                   </p>
                 </Upload.Dragger>
-              </Form.Item> */}
+              </Form.Item>
 
               <Form.Item name="is_active" label="Status">
                 <Select placeholder="Select an Option" size="large" allowClear>

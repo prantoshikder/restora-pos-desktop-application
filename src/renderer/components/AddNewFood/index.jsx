@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddNewFood.style.scss';
 
@@ -151,7 +151,6 @@ const AddNewFood = ({ state, settings }) => {
 
   // Date Picker
   const disabledDate = (current) => {
-    // Can not select days before today and today
     return current && current < moment().endOf('day');
   };
 

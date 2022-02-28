@@ -21,45 +21,43 @@ const FoodItem = ({ item }) => {
   const [addonsAdd, setAddonsAdd] = useState(null);
   const [foodVariantName, setFoodVariantName] = useState('Regular');
   const [quantityValue, setQuantityValue] = useState('');
+  const [variantPrice, setVariantPrice] = useState(0);
+  const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
+
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  // useEffect(() => {
-  //   window.get_addons_and_variant.once(
-  //     'get_addons_and_variant_response',
-  //     (args) => {
-  //       console.log('******************args', args);
-  //     }
-  //   );
-  // }, []);
-
   const handleFoodItem = (e, item) => {
-    console.log('item', item);
     window.get_addons_and_variant.send('get_addons_and_variant', item.id);
 
     window.get_addons_and_variant.once(
       'get_addons_and_variant_response',
       (args) => {
         console.log('******************args', args);
+        setFoodAddonsOrVariant(args);
       }
     );
 
     if (
-      item?.addons?.length > 0 ||
-      (Array.isArray(item?.addons) && item?.addons?.length > 0)
+      item?.variants?.length > 1 ||
+      (Array.isArray(item?.variants) && item?.variants?.length > 1)
     ) {
+      setVariantPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
     } else if (
-      item?.variant?.length > 0 ||
-      (Array.isArray(item?.variant) && item?.variant?.length > 0)
+      item?.addons?.length > 0 ||
+      (Array.isArray(item?.addons) && item?.addons?.length > 0)
     ) {
+      setVariantPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
     } else {
       if (!item.isSelected) {
         item.isSelected = true;
         item.foodVariant = foodVariantName;
+        item.totalPrice = variantPrice;
         e.currentTarget.style.border = '2px solid #297600';
+        // setVariantPrice(item.variants[0].price);
         setCartItems([...cartItems, item]);
       } else {
         if (item.id) {
@@ -80,7 +78,7 @@ const FoodItem = ({ item }) => {
     if (!item.isSelected) {
       item.isSelected = true;
       item.foodVariant = foodVariantName;
-      item.price = quantityValue * item.price;
+      item.totalPrice = variantPrice;
       item.quantity = quantityValue;
 
       setCartItems([...cartItems, item]);
@@ -99,9 +97,46 @@ const FoodItem = ({ item }) => {
     }
   };
 
+  const handleMultipleItemAdd = (e, item) => {
+    console.log('item', item);
+
+    if (!item.isSelected) {
+      item.isSelected = true;
+      item.foodVariant = foodVariantName;
+      item.totalPrice = variantPrice;
+      item.quantity = quantityValue;
+
+      setCartItems([...cartItems, item]);
+      // setOpenModal(false);
+    } else {
+      if (item.id) {
+        message.info({
+          content: 'Item already added',
+          duration: 1,
+          style: {
+            marginTop: '5vh',
+            float: 'right',
+          },
+        });
+      }
+    }
+  };
+
   function onChange(e) {
     console.log(`checked = ${e.target.checked}`);
   }
+
+  const handleVariantPrice = (variant) => {
+    const variantsPrice = JSON.parse(variant);
+    console.log('variantsPrice', variantsPrice);
+    setVariantPrice(variantsPrice.price);
+  };
+
+  // TODO: Quantity value & price changes
+  const calculateAddonQuantity = (quantity) => {
+    setVariantPrice(0);
+    setVariantPrice(variantPrice * quantity);
+  };
 
   return (
     <>
@@ -119,7 +154,7 @@ const FoodItem = ({ item }) => {
                 }
               />
             ) : (
-              <div style={{ backgroundColor: '#ddd' }}>
+              <div style={{ backgroundColor: '#ddd', height: '90px' }}>
                 <Title
                   style={{
                     marginBottom: '0',
@@ -157,7 +192,7 @@ const FoodItem = ({ item }) => {
       >
         <Row>
           <Col lg={24}>
-            {addonsAdd?.variant?.length > 0 && (
+            {addonsAdd?.variants?.length > 0 && (
               <div className="select_item">
                 <table>
                   <thead>
@@ -171,14 +206,17 @@ const FoodItem = ({ item }) => {
 
                   <tbody>
                     <tr>
-                      <td>{addonsAdd?.name}</td>
+                      <td>{addonsAdd?.product_name}</td>
                       <td>
                         <select
                           name=""
-                          onChange={(e) => setFoodVariantName(e.target.value)}
+                          onChange={(e) => handleVariantPrice(e.target.value)}
                         >
-                          {addonsAdd?.variant?.map((addonItem, index) => (
-                            <option key={index} value={addonItem?.variant_name}>
+                          {addonsAdd?.variants?.map((addonItem, index) => (
+                            <option
+                              key={addonItem.id}
+                              value={JSON.stringify(addonItem)}
+                            >
                               {addonItem?.variant_name}
                             </option>
                           ))}
@@ -190,10 +228,11 @@ const FoodItem = ({ item }) => {
                           max={100}
                           defaultValue={addonsAdd?.quantity}
                           bordered={true}
-                          onChange={setQuantityValue}
+                          onChange={calculateAddonQuantity}
                         />
                       </td>
-                      <td>{addonsAdd?.price}</td>
+                      {/* <td>{addonsAdd?.price}</td> */}
+                      <td>{variantPrice}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -218,7 +257,7 @@ const FoodItem = ({ item }) => {
                         <td>
                           <Checkbox onChange={onChange} />
                         </td>
-                        <td>{addonsItem?.addons_name}</td>
+                        <td>{addonsItem?.add_on_name}</td>
                         <td>
                           <InputNumber
                             min={1}
@@ -240,7 +279,12 @@ const FoodItem = ({ item }) => {
               <Button type="primary" onClick={(e) => handleAddToCart(e, item)}>
                 Add to Cart
               </Button>
-              <Button type="primary">Add Multiple Variant</Button>
+              <Button
+                type="primary"
+                onClick={(e) => handleMultipleItemAdd(e, item)}
+              >
+                Add Multiple Variant
+              </Button>
             </Space>
           </Col>
         </Row>

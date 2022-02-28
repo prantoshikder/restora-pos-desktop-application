@@ -85,6 +85,8 @@ const Home = ({ settings }) => {
             ],
           };
         });
+
+        setFoodLists(foods);
       })
       .catch((err) => console.log(err));
   }, []);
