@@ -25,6 +25,10 @@ const FoodItem = ({ item }) => {
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
   const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
 
+  const [addonsQuantity, setAddonsQuantity] = useState(0);
+  const [addonsPrice, setAddonsPrice] = useState(0);
+  const [addonsItemForCart, setAddonsItemForCart] = useState({});
+
   const { cartItems, setCartItems } = useContext(ContextData);
 
   // Onclick opens a modal
@@ -123,6 +127,8 @@ const FoodItem = ({ item }) => {
       (item) => item.foodVariant === foodVariantName
     );
 
+    console.log('addon', addonsPrice, addonsQuantity);
+
     if (!isCartItemExist) {
       const cartItem = {
         id: item.id,
@@ -149,8 +155,13 @@ const FoodItem = ({ item }) => {
     }
   };
 
-  function onChange(e) {
+  function handleAddonsCheck(e, addonItem) {
     console.log(`checked = ${e.target.checked}`);
+
+    if (e.target.checked) {
+      console.log('addonItem', addonItem);
+    } else {
+    }
   }
 
   const handleVariantPrice = (variant) => {
@@ -164,6 +175,33 @@ const FoodItem = ({ item }) => {
   const calculateVariantQuantity = (quantity) => {
     setFoodQuantity(quantity);
     setVariantPrice(variantFixedPrice * quantity);
+  };
+
+  const handleAddons = (quantity, addonsItem) => {
+    setAddonsQuantity(quantity);
+    setAddonsPrice(quantity * addonsItem.price);
+    setAddonsItemForCart(addonsItem);
+
+    const totalPrice = quantity * addonsItem.price;
+
+    const updateItemPrice = addonsAdd?.addons.find(
+      (item) => item.add_on_id === addonsItem.add_on_id
+    );
+
+    const index = addonsAdd?.addons.findIndex(
+      (item) => item === updateItemPrice
+    );
+
+    const newAddons = [
+      ...addonsAdd?.addons.slice(0, index),
+      { ...updateItemPrice, total_price: totalPrice },
+      ...addonsAdd?.addons.slice(index + 1),
+    ];
+
+    setAddonsAdd((prevState) => ({
+      ...prevState,
+      addons: newAddons,
+    }));
   };
 
   return (
@@ -283,7 +321,9 @@ const FoodItem = ({ item }) => {
                     {addonsAdd?.addons?.map((addonsItem) => (
                       <tr key={addonsItem?.id}>
                         <td>
-                          <Checkbox onChange={onChange} />
+                          <Checkbox
+                            onChange={(e) => handleAddonsCheck(e, addonsItem)}
+                          />
                         </td>
                         <td>{addonsItem?.add_on_name}</td>
                         <td>
@@ -292,10 +332,12 @@ const FoodItem = ({ item }) => {
                             max={100}
                             defaultValue={addonsAdd?.quantity}
                             bordered={true}
-                            // onChange={setFoodQuantity}
+                            onChange={(quantity) =>
+                              handleAddons(quantity, addonsItem)
+                            }
                           />
                         </td>
-                        <td>{addonsItem?.price}</td>
+                        <td>{addonsItem?.total_price}</td>
                       </tr>
                     ))}
                   </tbody>
