@@ -43,15 +43,12 @@ const FoodItem = ({ item }) => {
       }
     );
 
-    if (item?.variants?.length > 1) {
+    if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
-    } else if (
-      item?.addons?.length > 0 ||
-      (Array.isArray(item?.addons) && item?.addons?.length > 0)
-    ) {
+    } else if (Array.isArray(item?.addons) && item?.addons?.length > 0) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);

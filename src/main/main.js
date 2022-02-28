@@ -710,13 +710,15 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   foods_images_folder_name,
-          //   product_img.name
-          //   ),
-          product_img?.name,
+          product_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
+            : 'null',
+          // product_img?.name,
           component,
           description,
           notes,
@@ -786,13 +788,15 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   foods_images_folder_name,
-          //   product_img.name
-          //   ),
-          product_img?.name,
+          product_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
+            : product_img?.name,
+
           component,
           description,
           notes,
