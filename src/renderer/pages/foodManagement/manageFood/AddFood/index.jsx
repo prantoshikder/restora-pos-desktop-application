@@ -45,7 +45,7 @@ const AddFood = ({ settings }) => {
                   </Button>
                 </div>
 
-                <AddNewFood state={state} />
+                <AddNewFood state={state} settings={settings} />
               </Col>
             </Row>
           </div>
