@@ -14,7 +14,7 @@ import {
   Upload,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
