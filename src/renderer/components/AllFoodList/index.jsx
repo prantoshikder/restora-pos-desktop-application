@@ -56,7 +56,7 @@ const AllFoodList = () => {
       key: 'categoryImage',
       render: (text, record) => (
         <Image
-          src={record.categoryImage}
+          src='file:///home/rafiul/.config/Electron/assets/categories/zkt.png' //src={record.categoryImage}
           width="50px"
           height="50px"
           className="category_image"
