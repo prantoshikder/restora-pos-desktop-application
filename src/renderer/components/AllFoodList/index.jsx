@@ -60,6 +60,7 @@ const AllFoodList = () => {
           width="50px"
           height="50px"
           className="category_image"
+          preview={false}
         />
       ),
     },
@@ -115,7 +116,6 @@ const AllFoodList = () => {
 
   let navigate = useNavigate();
   const handleEditFoodItem = (foodItem) => {
-    console.log('foodItem', foodItem);
     navigate('/add_food', { state: foodItem });
   };
 
