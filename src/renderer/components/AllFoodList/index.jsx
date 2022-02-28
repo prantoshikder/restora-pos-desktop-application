@@ -52,11 +52,11 @@ const AllFoodList = () => {
   const columns = [
     {
       title: 'Image',
-      dataIndex: 'categoryImage',
-      key: 'categoryImage',
+      dataIndex: 'product_image',
+      key: 'product_image',
       render: (text, record) => (
         <Image
-          src={record.categoryImage}
+          src={record?.product_image}
           width="50px"
           height="50px"
           className="category_image"
@@ -148,6 +148,8 @@ const AllFoodList = () => {
       onCancel() {},
     });
   };
+
+  console.log('foodData', foodData);
 
   return (
     <div

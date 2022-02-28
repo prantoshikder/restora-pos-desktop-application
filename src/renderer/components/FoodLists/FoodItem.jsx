@@ -22,13 +22,12 @@ const FoodItem = ({ item }) => {
   const [foodVariantName, setFoodVariantName] = useState('Regular');
   const [quantityValue, setQuantityValue] = useState('');
   const [variantPrice, setVariantPrice] = useState(0);
+  const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
-
+  console.log('item', item);
   const handleFoodItem = (e, item) => {
-    // console.log('item', item);
     window.get_addons_and_variant.send('get_addons_and_variant', item.id);
 
     window.get_addons_and_variant.once(
@@ -43,12 +42,12 @@ const FoodItem = ({ item }) => {
       item?.addons?.length > 0 ||
       (Array.isArray(item?.addons) && item?.addons?.length > 0)
     ) {
-      setVariantPrice(item.variant[0].price);
+      // setVariantPrice(item.variant[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
     } else if (
-      item?.variant?.length > 0 ||
-      (Array.isArray(item?.variant) && item?.variant?.length > 0)
+      item?.variants?.length > 1 ||
+      (Array.isArray(item?.variants) && item?.variants?.length > 1)
     ) {
       setAddonsAdd(item);
       setOpenModal(true);
@@ -74,7 +73,6 @@ const FoodItem = ({ item }) => {
   };
 
   const handleAddToCart = (e, item) => {
-    console.log('item', item);
     if (!item.isSelected) {
       item.isSelected = true;
       item.foodVariant = foodVariantName;
@@ -104,18 +102,13 @@ const FoodItem = ({ item }) => {
   const handleVariantPrice = (variant) => {
     const variantsPrice = JSON.parse(variant);
     setVariantPrice(variantsPrice.price);
-    // setFoodVariantName(price);
   };
 
   // TODO: Quantity value & price changes
 
   const calculateAddonQuantity = (quantity) => {
-    console.log('item', item);
     setVariantPrice(0);
-    console.log('quantity', quantity);
     setVariantPrice(variantPrice * quantity);
-    console.log('variantPrice', variantPrice);
-    // setVariantPrice((prevState) => prevState + quantity * variantPrice);
   };
 
   return (
@@ -134,11 +127,11 @@ const FoodItem = ({ item }) => {
                 }
               />
             ) : (
-              <div style={{ backgroundColor: '#ddd' }}>
+              <div style={{ backgroundColor: '#ddd', height: '100px' }}>
                 <Title
                   style={{
                     marginBottom: '0',
-                    padding: '2rem 0.5rem',
+                    padding: '2.5rem 0.5rem',
                     color: '#818181',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -172,7 +165,7 @@ const FoodItem = ({ item }) => {
       >
         <Row>
           <Col lg={24}>
-            {addonsAdd?.variant?.length > 0 && (
+            {addonsAdd?.variants?.length > 0 && (
               <div className="select_item">
                 <table>
                   <thead>
@@ -192,9 +185,9 @@ const FoodItem = ({ item }) => {
                           name=""
                           onChange={(e) => handleVariantPrice(e.target.value)}
                         >
-                          {addonsAdd?.variant?.map((addonItem, index) => (
+                          {addonsAdd?.variants?.map((addonItem, index) => (
                             <option
-                              key={index}
+                              key={addonItem.id}
                               value={JSON.stringify(addonItem)}
                             >
                               {addonItem?.variant_name}

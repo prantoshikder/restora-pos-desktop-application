@@ -6,7 +6,7 @@ const FoodLists = ({ foodLists, setFoodLists }) => {
 
   return (
     <>
-      {foodItems?.foods?.map((item) => (
+      {foodLists?.map((item) => (
         <FoodItem key={item?.id} item={item} />
       ))}
     </>

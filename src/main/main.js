@@ -136,10 +136,10 @@ ipcMain.on('insert_settings', (event, args) => {
   setImagePath(
     'settings_favicon', // Setting images folder name
     'settings_logo', // Setting icons folder name
-    appFavicon.path, // Setting image path
-    appFavicon.name, // Setting image name
-    appLogo.path, // Setting icon path
-    appLogo.name // Setting icon namesettings_logo
+    appFavicon?.path, // Setting image path
+    appFavicon?.name, // Setting image name
+    appLogo?.path, // Setting icon path
+    appLogo?.name // Setting icon namesettings_logo
   );
 
   let {
@@ -210,8 +210,8 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          appLogo.path,
-          appFavicon.path,
+          appLogo?.path,
+          appFavicon?.path,
           opentime,
           closetime,
           vat,
@@ -1205,7 +1205,7 @@ getListItems(
   'get_food_name_lists_channel',
   'get_food_name_lists_channel_response',
   'item_foods',
-  'id, product_name',
+  'id, product_name, product_image',
   true
 );
 
