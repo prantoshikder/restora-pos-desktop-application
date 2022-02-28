@@ -61,6 +61,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false,
     },
