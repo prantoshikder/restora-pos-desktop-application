@@ -6,6 +6,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   message,
   Row,
@@ -33,6 +34,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
+      setAppSettingsData(data[0]);
       const response = data[0];
       setDefaultData([
         {
@@ -55,10 +57,10 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
           name: ['phone'],
           value: response?.phone,
         },
-        {
-          name: ['favicon'],
-          // value: response?.favicon,
-        },
+        // {
+        //   name: ['favicon'],
+        //   value: response?.favicon,
+        // },
         {
           name: ['opentime'],
           value: response?.opentime,
@@ -165,8 +167,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       });
     }
 
-    console.log('settingsValue', settingsValue);
-
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);
 
@@ -246,15 +246,17 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 <Col lg={16}>
                   <Form.Item
                     name="favicon"
-                    valuePropName="fileList"
+                    // valuePropName="fileList"
                     // getValueFromEvent={handleFavicon}
                     noStyle
                   >
                     <Upload.Dragger
                       name="files"
-                      // customRequest={(imageObj) => {
-                      //   setFavIcon(imageObj.file);
-                      // }}
+                      customRequest={(imageObj) => {
+                        setFavIcon(imageObj.file);
+                      }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -267,6 +269,22 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
+                  {favIcon ? (
+                    <Image
+                      width={125}
+                      src={URL.createObjectURL(favIcon)}
+                      preview={false}
+                    />
+                  ) : (
+                    appSettingsData?.favicon && (
+                      <Image
+                        width={125}
+                        src={appSettingsData?.favicon}
+                        preview={false}
+                      />
+                    )
+                  )}
+
                   {/* {appSettingsData?.favicon && (
                     <Image width={125} src={appSettingsData?.favicon} />
                   )}
@@ -280,9 +298,9 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             <Form.Item label="Logo">
               <Row gutter={20}>
                 <Col lg={16}>
-                  {/* <Form.Item
+                  <Form.Item
                     name="logo"
-                    valuePropName="fileList"
+                    // valuePropName="fileList"
                     // getValueFromEvent={normFile}
                     noStyle
                   >
@@ -291,6 +309,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                       customRequest={(imageObj) => {
                         setAppLogo(imageObj.file);
                       }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -299,21 +319,25 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                         Click or drag & drop a logo here to upload
                       </p>
                     </Upload.Dragger>
-                  </Form.Item> */}
+                  </Form.Item>
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
-                  {/* {appSettingsData?.logo && (
-                    <img src={appSettingsData?.logo} alt="Logo" />
+                  {appLogo ? (
+                    <Image
+                      width={125}
+                      src={URL.createObjectURL(appLogo)}
+                      preview={false}
+                    />
+                  ) : (
+                    appSettingsData?.logo && (
+                      <Image
+                        width={125}
+                        src={appSettingsData?.logo}
+                        preview={false}
+                      />
+                    )
                   )}
-                  {appLogo && (
-                    <img src={URL.createObjectURL(appLogo)} alt="Logo" />
-                  )} */}
-
-                  <img
-                    src="file:///C:/Users/Munir/AppData/Roaming/Electron/assets/settings_favicon/Big_and_small_329.jpg"
-                    alt=""
-                  />
                 </Col>
               </Row>
             </Form.Item>
