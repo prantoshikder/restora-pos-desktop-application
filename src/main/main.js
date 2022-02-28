@@ -399,10 +399,10 @@ ipcMain.on('insertCategoryData', (event, args) => {
   setImagePath(
     cat_image_folder_name, // Category images folder name
     cat_icon_folder_name, // Category icons folder name
-    cat_img.path, // Category image path
-    cat_img.name, // Category image name
-    cat_icon.path, // Category icon path
-    cat_icon.name // Category icon name
+    cat_img?.path, // Category image path
+    cat_img?.name, // Category image name
+    cat_icon?.path, // Category icon path
+    cat_icon?.name // Category icon name
   );
 
   let {
@@ -425,18 +425,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_image_folder_name,
-            cat_img.name
-          ),
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_icon_folder_name,
-            cat_icon.name
-          ),
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   cat_image_folder_name,
+          //   cat_img.name
+          // ),
+          cat_img?.name,
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   cat_icon_folder_name,
+          //   cat_icon.name
+          //   ),
+          cat_icon?.name,
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -482,18 +484,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_image_folder_name,
-            cat_img.name
-          ),
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_icon_folder_name,
-            cat_icon.name
-          ),
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   cat_image_folder_name,
+          //   cat_img.name
+          //   ),
+          cat_img?.name,
+          // path.join(
+          //   app.getPath('userData'),
+          //   'assets',
+          //   cat_icon_folder_name,
+          //   cat_icon.name
+          //   ),
+          cat_icon?.name,
           category_is_active,
           offer_start_date,
           offer_end_date,

@@ -51,8 +51,6 @@ const Home = ({ settings }) => {
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
 
-        console.log('foodNames', foodNames);
-
         foodNames?.map((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
@@ -93,7 +91,11 @@ const Home = ({ settings }) => {
         <ConfigProvider direction={settings.site_align}>
           <Row className="pos_system">
             <Col lg={4}>
-              <PosSidebar settings={settings} />
+              <PosSidebar
+                foodLists={foodLists}
+                setFoodLists={setFoodLists}
+                settings={settings}
+              />
             </Col>
 
             <Col lg={20}>

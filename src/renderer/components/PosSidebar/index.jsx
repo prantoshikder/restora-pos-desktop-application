@@ -5,7 +5,7 @@ import { getDataFromDatabase } from './../../../helpers';
 import CategoryItem from './CategoryItem';
 import './PosSidebar.style.scss';
 
-const PosSidebar = ({ settings }) => {
+const PosSidebar = ({ settings, foodLists, setFoodLists }) => {
   const [categories, setCategories] = useState([]);
 
   window.get_category.send('sendResponseForCategory', { status: true });
@@ -27,8 +27,6 @@ const PosSidebar = ({ settings }) => {
     );
   }, []);
 
-  console.log('categories', categories);
-
   return (
     <div className="pos_sidebar">
       <div className="btn_wrapper">
@@ -47,6 +45,8 @@ const PosSidebar = ({ settings }) => {
             key={category?.category_id}
             settings={settings}
             category={category}
+            foodLists={foodLists}
+            setFoodLists={setFoodLists}
           />
         ))}
       </div>
