@@ -38,8 +38,8 @@ const rowSelection = {
 const { Option } = Select;
 const { confirm } = Modal;
 
-const CurrencyList = ({ currencyLists, setCurrencyLists }) => {
-  // Displayed currency list
+const CurrencyList = () => {
+  // Get all currency list as an array
   window.get_currency_lists.send('get_currency_lists', {
     status: true,
   });
@@ -55,6 +55,7 @@ const CurrencyList = ({ currencyLists, setCurrencyLists }) => {
   const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
   const [updateCurrency, setUpdateCurrency] = useState({});
+  const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     setAddCurrency([
@@ -83,7 +84,6 @@ const CurrencyList = ({ currencyLists, setCurrencyLists }) => {
       window.get_currency_lists
     )
       .then((res) => {
-        // console.log(res);
         Array.isArray(res) && res?.length && setCurrencyLists(res);
       })
       .catch((err) => console.log('Getting menu types error', err));

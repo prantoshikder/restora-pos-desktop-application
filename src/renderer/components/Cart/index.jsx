@@ -1,5 +1,6 @@
 import {
   DownOutlined,
+  FileAddOutlined,
   PlusCircleOutlined,
   ShoppingCartOutlined,
   UpOutlined,
@@ -172,6 +173,8 @@ const Cart = ({ settings }) => {
   };
 
   const handleDeleteItem = (item) => {
+    console.log('item', item);
+
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -179,8 +182,11 @@ const Cart = ({ settings }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    item.isSelected = false;
-    setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+    setCartItems(
+      cartItems.filter(
+        (cartItem) => cartItem.variant.foodVariant !== item.variant.foodVariant
+      )
+    );
     return;
   };
 
@@ -417,7 +423,7 @@ const Cart = ({ settings }) => {
               </div>
             ) : (
               <div className="product_list_table">
-                <table class="table">
+                <table className="table table-striped">
                   <thead>
                     <tr>
                       <th scope="col">Item</th>
@@ -428,25 +434,33 @@ const Cart = ({ settings }) => {
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {cartItems.length &&
                       cartItems.map((item, index) => {
                         return (
                           <tr key={index}>
-                            <th>{item.variant.product_name}</th>
+                            <th>
+                              <FileAddOutlined
+                                style={{
+                                  padding: '0rem 0.4rem 0rem 1rem',
+                                  color: '#0037ff',
+                                }}
+                              />
+                              {item.variant.product_name}
+                            </th>
                             <th>{item.variant.foodVariant}</th>
                             <th>{item.variant.price}</th>
-                            <th>{item.variant.quantity}</th>
 
                             <th>
                               <InputNumber
                                 value={item.variant.quantity}
                                 onChange={(value) => {}}
                                 className="quantity_value"
-                                controls={false}
+                                // controls={false}
                               />
 
-                              <div className="quantity_increase_decrease">
+                              {/* <div className="quantity_increase_decrease">
                                 <span
                                   onClick={() =>
                                     increaseQuantity(item.variant.quantity)
@@ -461,7 +475,7 @@ const Cart = ({ settings }) => {
                                 >
                                   <DownOutlined />
                                 </span>
-                              </div>
+                              </div> */}
                             </th>
                             <th>{item.variant.totalPrice}</th>
                             <th>
@@ -666,7 +680,6 @@ const Cart = ({ settings }) => {
         setConfirmOrder={setConfirmOrder}
         confirmBtn={confirmBtn}
         printId={'printId'}
-        settings={settings}
       />
 
       <PremiumVersion

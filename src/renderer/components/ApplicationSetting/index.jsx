@@ -1,6 +1,4 @@
 import { PictureOutlined } from '@ant-design/icons';
-import { faDollarSign, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Col,
@@ -20,14 +18,18 @@ import './ApplicationSetting.style.scss';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const ApplicationSetting = ({ setReRenderOnSettings, currencyLists }) => {
+const ApplicationSetting = ({ setReRenderOnSettings }) => {
   window.get_app_settings.send('get_app_settings', { status: true });
+  window.get_currency_lists.send('get_currency_lists', {
+    status: true,
+  });
 
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [defaultData, setDefaultData] = useState([]);
   const [favIcon, setFavIcon] = useState(null);
   const [appLogo, setAppLogo] = useState(null);
+  const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -123,9 +125,26 @@ const ApplicationSetting = ({ setReRenderOnSettings, currencyLists }) => {
           name: ['powerbytxt'],
           value: response?.powerbytxt,
         },
+        {
+          name: ['footer_text'],
+          value: response?.footer_text,
+        },
       ]);
     });
   }, []);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_currency_lists_response',
+      window.get_currency_lists
+    )
+      .then((res) => {
+        Array.isArray(res) && res?.length && setCurrencyLists(res);
+      })
+      .catch((err) => console.log('Getting menu types error', err));
+  }, []);
+
+  console.log('currencyLists', currencyLists);
 
   const handleFavicon = (e) => {
     console.log('hanlde file', e);
@@ -423,24 +442,11 @@ const ApplicationSetting = ({ setReRenderOnSettings, currencyLists }) => {
               <Col lg={12}>
                 <Form.Item label="Currency" name="currency">
                   <Select placeholder="Select Currency" size="large" allowClear>
-                    <Option value="bdt">
-                      BDT{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faDollarSign} />
-                      </span>
-                    </Option>
-                    <Option value="usd">
-                      USD{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faDollarSign} />
-                      </span>
-                    </Option>
-                    <Option value="inr">
-                      INR{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faRupeeSign} />
-                      </span>
-                    </Option>
+                    {currencyLists?.map((currencyItem) => (
+                      <Option key={currencyItem?.id} value={currencyItem?.id}>
+                        {currencyItem?.currency_name}{' '}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
