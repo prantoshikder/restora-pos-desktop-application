@@ -30,6 +30,7 @@ export default function App() {
     site_align: 'ltr',
     theme: 'light',
   });
+  const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     getDataFromDatabase('get_settings_response', window.get_settings).then(
@@ -87,10 +88,20 @@ export default function App() {
               <ApplicationSettings
                 settings={settings}
                 setReRenderOnSettings={setReRenderOnSettings}
+                currencyLists={currencyLists}
               />
             }
           />
-          <Route path="/currency" element={<Currency settings={settings} />} />
+          <Route
+            path="/currency"
+            element={
+              <Currency
+                currencyLists={currencyLists}
+                setCurrencyLists={setCurrencyLists}
+                settings={settings}
+              />
+            }
+          />
           <Route path="/language" element={<Language settings={settings} />} />
           <Route
             path="/sales_report"
