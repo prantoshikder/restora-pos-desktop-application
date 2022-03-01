@@ -536,7 +536,7 @@ const Cart = ({ settings }) => {
             </div>
 
             <div>
-              {cartItems?.length !== 0 ? (
+              {/* {cartItems?.length !== 0 ? (
                 <span>
                   $
                   {cartItems?.reduce(
@@ -546,7 +546,7 @@ const Cart = ({ settings }) => {
                 </span>
               ) : (
                 <span>$0.00</span>
-              )}
+              )} */}
             </div>
           </div>
 

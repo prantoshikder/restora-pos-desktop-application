@@ -77,8 +77,13 @@ const FoodItem = ({ item }) => {
           quantity: foodQuantity,
         };
 
+        const foodAddonsAndVariant = {
+          variant: cartItem, // Variant is an Object
+          addons: addonForCartItem, //Addons is an Array
+        };
+
         e.currentTarget.style.border = '2px solid #297600';
-        setCartItems([...cartItems, cartItem]);
+        setCartItems([...cartItems, { ...foodAddonsAndVariant }]);
       } else {
         if (item.id) {
           message.info({
@@ -112,7 +117,12 @@ const FoodItem = ({ item }) => {
         quantity: foodQuantity,
       };
 
-      setCartItems([...cartItems, cartItem]);
+      const foodAddonsAndVariant = {
+        variant: cartItem, // Variant is an Object
+        addons: addonForCartItem, //Addons is an Array
+      };
+
+      setCartItems([...cartItems, { ...foodAddonsAndVariant }]);
       setOpenModal(false);
     } else {
       if (item.id) {
@@ -129,6 +139,7 @@ const FoodItem = ({ item }) => {
   };
 
   const handleMultipleItemAdd = (e, item) => {
+    console.log('first', cartItems);
     const isCartItemExist = cartItems.find(
       (item) =>
         item.variant.foodVariant === foodVariantName.variant_name &&
@@ -136,6 +147,7 @@ const FoodItem = ({ item }) => {
     );
 
     if (!isCartItemExist) {
+      console.log('if isCartItemExist', isCartItemExist);
       const cartItem = {
         id: item.id,
         isSelected: true,
@@ -153,16 +165,42 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...cartItems, { ...foodAddonsAndVariant }]);
     } else {
-      if (item.id) {
-        message.info({
-          content: `${foodVariantName.variant_name} variant has already been added`,
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
+      console.log('else isCartItemExist', isCartItemExist);
+      console.log('else addonForCartItem', addonForCartItem);
+
+      const index = cartItems.findIndex(
+        (item) => item.variant.foodVariant === foodVariantName.variant_name
+      );
+
+      const updateExistingCart = [
+        ...cartItems.slice(0, index),
+        {
+          addons: {
+            ...isCartItemExist.addons,
           },
-        });
-      }
+          variant: {
+            ...isCartItemExist.variant,
+            quantity: foodQuantity,
+            totalPrice: variantPrice,
+          },
+        },
+        ...cartItems.slice(index + 1),
+      ];
+
+      console.log('updateExistingCart', updateExistingCart);
+
+      setCartItems(updateExistingCart);
+
+      // if (item.id) {
+      message.info({
+        content: `${foodVariantName.variant_name} variant has already been added`,
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+      // }
     }
   };
 
