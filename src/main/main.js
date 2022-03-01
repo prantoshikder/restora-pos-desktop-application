@@ -183,8 +183,8 @@ ipcMain.on('insert_settings', (event, args) => {
           "address" TEXT,
           "email" varchar(255),
           "phone" varchar(25),
-          "logo" varchar(255),
           "favicon" varchar(100),
+          "logo" varchar(255),
           "opentime" varchar(255),
           "closetime" varchar(255),
           "vat" REAL,
@@ -205,7 +205,7 @@ ipcMain.on('insert_settings', (event, args) => {
       )
       .run(
         `INSERT INTO setting
-          ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
+          ( title, storename, address, email, phone, favicon, logo, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
         [
@@ -214,20 +214,22 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          appLogo?.name,
-          // path?.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   settings_favicon_folder_name,
-          //   appLogo?.name
-          // ),
-          // path?.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   settings_logo_folder_name,
-          //   appFavicon?.name
-          //   ),
-          appFavicon?.name,
+          appFavicon?.name
+            ? path?.join(
+                app.getPath('userData'),
+                'assets',
+                settings_favicon_folder_name,
+                appFavicon.name
+              )
+            : appFavicon?.name,
+          appLogo?.name
+            ? path?.join(
+                app.getPath('userData'),
+                'assets',
+                settings_logo_folder_name,
+                appLogo.name
+              )
+            : appLogo?.name,
           opentime,
           closetime,
           vat,

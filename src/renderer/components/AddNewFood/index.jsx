@@ -52,6 +52,8 @@ const AddNewFood = ({ state, settings }) => {
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
 
+  console.log('state', state);
+
   useEffect(() => {
     setAddNewFood([
       {
@@ -78,10 +80,10 @@ const AddNewFood = ({ state, settings }) => {
         name: ['description'],
         value: state?.description,
       },
-      {
-        name: ['food_image'],
-        value: state?.product_image,
-      },
+      // {
+      //   name: ['food_image'],
+      //   value: state?.product_image,
+      // },
       {
         name: ['vat'],
         value: state?.product_vat || '0.00%',
@@ -392,6 +394,8 @@ const AddNewFood = ({ state, settings }) => {
                       customRequest={(imageObj) => {
                         setProductImage(imageObj.file);
                       }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -405,11 +409,20 @@ const AddNewFood = ({ state, settings }) => {
 
                 <Col lg={8}>
                   <h3>Preview</h3>
-                  {productImage && (
+                  {productImage ? (
                     <Image
                       width={125}
                       src={URL.createObjectURL(productImage)}
+                      preview={false}
                     />
+                  ) : (
+                    state?.product_image && (
+                      <Image
+                        width={125}
+                        src={state?.product_image}
+                        preview={false}
+                      />
+                    )
                   )}
                 </Col>
               </Row>
