@@ -114,11 +114,12 @@ const AllCategoryList = () => {
       key: 'categoryImage',
       render: (text, record) => (
         <Image
-          // src={record.categoryImage}
-          src={defaultImage}
-          width="50px"
-          height="50px"
+          src={record.category_image}
+          width={50}
+          height={50}
           className="category_image"
+          fallback={defaultImage}
+          preview={false}
         />
       ),
     },
