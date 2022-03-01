@@ -3,11 +3,7 @@ import Heading from 'renderer/components/Heading';
 import ApplicationSetting from './../../../components/ApplicationSetting';
 import Sidebar from './../../../components/partials/Sidebar';
 
-const ApplicationSettings = ({
-  settings,
-  setReRenderOnSettings,
-  currencyLists,
-}) => {
+const ApplicationSettings = ({ settings, setReRenderOnSettings }) => {
   return (
     <div className="main_wrapper">
       <div className="pos_system">
@@ -21,7 +17,6 @@ const ApplicationSettings = ({
 
               <ApplicationSetting
                 setReRenderOnSettings={setReRenderOnSettings}
-                currencyLists={currencyLists}
               />
             </Col>
           </Row>
