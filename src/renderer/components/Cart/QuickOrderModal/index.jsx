@@ -5,8 +5,10 @@ import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
 
-const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
+const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  console.log('settings', settings);
 
   return (
     <Modal
@@ -92,16 +94,22 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
               <Title level={5}>Select Payment Type</Title>
             </div>
 
-            <div>
+            <Space>
               <Button>Cash Payment</Button>
               <Button>Card Payment</Button>
               <Button>Mobile Payment</Button>
               <Button>SSL Commerz</Button>
               <Button>Two Checkout</Button>
               <Button>Food Panda</Button>
-            </div>
+            </Space>
 
-            <div style={{ minHeight: '300px' }}>
+            <div
+              style={{
+                minHeight: '265px',
+                marginTop: '2.2rem',
+                marginLeft: '1.5rem',
+              }}
+            >
               <Text>Do you Want to Print Invoice???</Text>
             </div>
 
