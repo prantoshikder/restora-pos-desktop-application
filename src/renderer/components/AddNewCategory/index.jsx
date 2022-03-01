@@ -52,14 +52,6 @@ const AddNewCategory = ({ state }) => {
         value: state?.category_color,
       },
       {
-        name: ['category_image'],
-        value: state?.category_image,
-      },
-      {
-        name: ['category_icon'],
-        value: state?.category_icon,
-      },
-      {
         name: ['category_is_active'],
         value: state?.category_is_active || 'Active',
       },
@@ -272,6 +264,8 @@ const AddNewCategory = ({ state }) => {
                       customRequest={(imageObj) => {
                         setCategoryImage(imageObj);
                       }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -284,11 +278,20 @@ const AddNewCategory = ({ state }) => {
                 </Col>
                 <Col lg={8}>
                   <h3>Preview</h3>
-                  {categoryImage?.file && (
+                  {categoryImage?.file ? (
                     <Image
                       width={125}
                       src={URL.createObjectURL(categoryImage.file)}
+                      preview={false}
                     />
+                  ) : (
+                    state?.category_image && (
+                      <Image
+                        width={125}
+                        src={state?.category_image}
+                        preview={false}
+                      />
+                    )
                   )}
                 </Col>
               </Row>
@@ -317,6 +320,8 @@ const AddNewCategory = ({ state }) => {
                       customRequest={(icon) => {
                         setCategoryIcon(icon);
                       }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -329,11 +334,20 @@ const AddNewCategory = ({ state }) => {
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
-                  {categoryIcon?.file && (
+                  {categoryIcon?.file ? (
                     <Image
                       width={125}
                       src={URL.createObjectURL(categoryIcon.file)}
+                      preview={false}
                     />
+                  ) : (
+                    state?.category_icon && (
+                      <Image
+                        width={125}
+                        src={state?.category_icon}
+                        preview={false}
+                      />
+                    )
                   )}
                 </Col>
               </Row>
