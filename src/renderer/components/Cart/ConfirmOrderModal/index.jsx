@@ -7,7 +7,8 @@ import QuickOrderModal from '../QuickOrderModal';
 const { Text } = Typography;
 
 const ConfirmOrderModal = (props) => {
-  const { confirmOrder, setConfirmOrder, confirmBtn, printId } = props;
+  const { confirmOrder, setConfirmOrder, confirmBtn, printId, settings } =
+    props;
   const [quickOrder, setQuickOrder] = useState(false);
 
   const quickOrderModal = () => {
@@ -68,7 +69,11 @@ const ConfirmOrderModal = (props) => {
         </Row>
       </Modal>
 
-      <QuickOrderModal quickOrder={quickOrder} setQuickOrder={setQuickOrder} />
+      <QuickOrderModal
+        settings={settings}
+        quickOrder={quickOrder}
+        setQuickOrder={setQuickOrder}
+      />
     </>
   );
 };

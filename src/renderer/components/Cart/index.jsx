@@ -605,6 +605,7 @@ const Cart = ({ settings }) => {
         setConfirmOrder={setConfirmOrder}
         confirmBtn={confirmBtn}
         printId={'printId'}
+        settings={settings}
       />
 
       <PremiumVersion
