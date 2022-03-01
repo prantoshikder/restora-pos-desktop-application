@@ -23,7 +23,7 @@ const FoodItem = ({ item }) => {
   const [foodQuantity, setFoodQuantity] = useState(0);
   const [variantPrice, setVariantPrice] = useState(0);
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
-  const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
+  const [foodAddonsAndVariant, setFoodAddonsAndVariant] = useState({});
 
   const [addonsQuantity, setAddonsQuantity] = useState(0);
   const [addonsPrice, setAddonsPrice] = useState(0);
@@ -33,15 +33,15 @@ const FoodItem = ({ item }) => {
 
   // Onclick opens a modal
   const handleFoodItem = (e, item) => {
-    window.get_addons_and_variant.send('get_addons_and_variant', item.id);
+    // window.get_addons_and_variant.send('get_addons_and_variant', item.id);
 
-    window.get_addons_and_variant.once(
-      'get_addons_and_variant_response',
-      (args) => {
-        // console.log('******************args', args);
-        setFoodAddonsOrVariant(args);
-      }
-    );
+    // window.get_addons_and_variant.once(
+    //   'get_addons_and_variant_response',
+    //   (args) => {
+    //     console.log('******************args', args);
+    //     setFoodAddonsAndVariant(args);
+    //   }
+    // );
 
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
@@ -124,7 +124,8 @@ const FoodItem = ({ item }) => {
       (item) => item.foodVariant === foodVariantName
     );
 
-    console.log('addon', addonsPrice, addonsQuantity);
+    console.log('cartItems', cartItems);
+    console.log('item', item);
 
     if (!isCartItemExist) {
       const cartItem = {
@@ -166,6 +167,7 @@ const FoodItem = ({ item }) => {
     const fixedPrice = variantObj.price;
     setVariantFixedPrice(fixedPrice);
     setFoodVariantName(variantObj.variant_name);
+    setVariantPrice(variantObj.price);
   };
 
   // TODO: Quantity value & price changes
