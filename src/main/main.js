@@ -427,20 +427,24 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   cat_image_folder_name,
-          //   cat_img.name
-          // ),
-          cat_img?.name,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   cat_icon_folder_name,
-          //   cat_icon.name
-          //   ),
-          cat_icon?.name,
+          cat_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
+            : cat_img?.name,
+
+          cat_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
+            : cat_icon?.name,
+
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -486,20 +490,23 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   cat_image_folder_name,
-          //   cat_img.name
-          //   ),
-          cat_img?.name,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   cat_icon_folder_name,
-          //   cat_icon.name
-          //   ),
-          cat_icon?.name,
+          cat_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
+            : cat_img?.name,
+
+          cat_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
+            : cat_icon?.name,
           category_is_active,
           offer_start_date,
           offer_end_date,
