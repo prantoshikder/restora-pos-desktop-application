@@ -417,7 +417,7 @@ const Cart = ({ settings }) => {
               </div>
             ) : (
               <div className="product_list_table">
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th scope="col">Item</th>
@@ -522,7 +522,7 @@ const Cart = ({ settings }) => {
             </div>
 
             <div>
-              {cartItems?.length !== 0 ? (
+              {/* {cartItems?.length !== 0 ? (
                 <span>
                   $
                   {cartItems?.reduce(
@@ -532,7 +532,7 @@ const Cart = ({ settings }) => {
                 </span>
               ) : (
                 <span>$0.00</span>
-              )}
+              )} */}
             </div>
           </div>
 

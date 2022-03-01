@@ -8,8 +8,6 @@ const { Text, Title } = Typography;
 const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  console.log('settings', settings);
-
   return (
     <Modal
       title="Select Your Payment Method"
@@ -31,21 +29,21 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
                 Your Cart: {cartItems?.length} items{' '}
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
             </div>
 
             <div style={{ height: '330px', overflowY: 'scroll' }}>
-              {cartItems?.map((item) => (
+              {/* {cartItems?.map((item) => (
                 <div className="flex content_between order_item" key={item?.id}>
                   <h3>{item?.name}</h3>
                   <h3>${item?.price}</h3>
                 </div>
-              ))}
+              ))} */}
             </div>
 
             <div className="total_order">
@@ -53,10 +51,10 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
                 Subtotal{' '}
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
               <Title level={4}>
@@ -78,10 +76,10 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
                 Grand Total:
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
             </div>
