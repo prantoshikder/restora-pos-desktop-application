@@ -20,7 +20,7 @@ import './ApplicationSetting.style.scss';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const ApplicationSetting = ({ setReRenderOnSettings }) => {
+const ApplicationSetting = ({ setReRenderOnSettings, currencyLists }) => {
   window.get_app_settings.send('get_app_settings', { status: true });
 
   const [form] = Form.useForm();

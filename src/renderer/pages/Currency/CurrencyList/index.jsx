@@ -17,7 +17,7 @@ import {
   Table,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -38,10 +38,13 @@ const rowSelection = {
 const { Option } = Select;
 const { confirm } = Modal;
 
-const CurrencyList = () => {
+const CurrencyList = ({ currencyLists, setCurrencyLists }) => {
+  // Displayed currency list
   window.get_currency_lists.send('get_currency_lists', {
     status: true,
   });
+
+  // Delete currency item
   window.delete_currency_list_item.send('delete_currency_list_item', {
     status: true,
   });
@@ -52,7 +55,6 @@ const CurrencyList = () => {
   const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
   const [updateCurrency, setUpdateCurrency] = useState({});
-  const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     setAddCurrency([

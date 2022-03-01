@@ -19,15 +19,19 @@ const { Title } = Typography;
 const FoodItem = ({ item }) => {
   const [openModal, setOpenModal] = useState(false);
   const [addonsAdd, setAddonsAdd] = useState(null);
-  const [foodVariantName, setFoodVariantName] = useState('Regular');
   const [foodQuantity, setFoodQuantity] = useState(0);
   const [variantPrice, setVariantPrice] = useState(0);
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
+  const [foodVariantName, setFoodVariantName] = useState('Regular');
   const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
 
-  const [addonsQuantity, setAddonsQuantity] = useState(0);
   const [addonsPrice, setAddonsPrice] = useState(0);
+  const [addonsQuantity, setAddonsQuantity] = useState(0);
   const [addonsItemForCart, setAddonsItemForCart] = useState({});
+
+  const [addonForCartItem, setAddonForCartItem] = useState([]);
+  // TODO: variant add
+  const [variantForCartItem, setVariantForCartItem] = useState([]);
 
   const { cartItems, setCartItems } = useContext(ContextData);
 
@@ -38,7 +42,6 @@ const FoodItem = ({ item }) => {
     window.get_addons_and_variant.once(
       'get_addons_and_variant_response',
       (args) => {
-        // console.log('******************args', args);
         setFoodAddonsOrVariant(args);
       }
     );
@@ -70,7 +73,6 @@ const FoodItem = ({ item }) => {
         };
 
         e.currentTarget.style.border = '2px solid #297600';
-
         setCartItems([...cartItems, cartItem]);
       } else {
         if (item.id) {
@@ -124,8 +126,6 @@ const FoodItem = ({ item }) => {
       (item) => item.foodVariant === foodVariantName
     );
 
-    console.log('addon', addonsPrice, addonsQuantity);
-
     if (!isCartItemExist) {
       const cartItem = {
         id: item.id,
@@ -152,12 +152,17 @@ const FoodItem = ({ item }) => {
     }
   };
 
+  // Addons list if check & uncheck
   function handleAddonsCheck(e, addonItem) {
     console.log(`checked = ${e.target.checked}`);
 
     if (e.target.checked) {
-      console.log('addonItem', addonItem);
+      setAddonForCartItem([...addonForCartItem, addonItem]);
     } else {
+      const filterAddonsListIfUncheck = addonForCartItem.filter(
+        (addonsItem) => addonsItem.add_on_id !== addonItem.add_on_id
+      );
+      setAddonForCartItem(filterAddonsListIfUncheck);
     }
   }
 
@@ -316,7 +321,7 @@ const FoodItem = ({ item }) => {
 
                   <tbody>
                     {addonsAdd?.addons?.map((addonsItem) => (
-                      <tr key={addonsItem?.id}>
+                      <tr key={addonsItem?.add_on_name}>
                         <td>
                           <Checkbox
                             onChange={(e) => handleAddonsCheck(e, addonsItem)}

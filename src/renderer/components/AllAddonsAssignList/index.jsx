@@ -16,7 +16,7 @@ import {
   Table,
   Typography,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDataFromDatabase } from '../../../helpers';
 
 const { Title } = Typography;
@@ -107,10 +107,12 @@ const AllAddonsAssignList = () => {
             (foodItem) => foodItem.id === addon.menu_id
           );
 
+          console.log('newFoodItems', newFoodItems);
+
           newAddonNames.push({
             id: addon.id,
             addonsName: newAddons.add_on_name,
-            foodName: newFoodItems.product_name,
+            foodName: newFoodItems?.product_name,
           });
         });
 
