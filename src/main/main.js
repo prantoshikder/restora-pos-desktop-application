@@ -1244,7 +1244,7 @@ ipcMain.on('get_addons_list_for_pos', (event, args) => {
   //   condition && 'WHERE is_active = 1'
   // }`;
 
-  let sql = `SELECT menu_add_on.menu_id AS food_id, addons.* FROM addons
+  let sql = `SELECT menu_add_on.menu_id AS food_id, addons.*, addons.price AS total_price FROM addons
   INNER JOIN menu_add_on ON menu_add_on.add_on_id = addons.add_on_id
   WHERE addons.is_active = 1`;
 
