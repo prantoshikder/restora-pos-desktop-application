@@ -17,7 +17,7 @@ import {
   Table,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -39,9 +39,12 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 const CurrencyList = () => {
+  // Get all currency list as an array
   window.get_currency_lists.send('get_currency_lists', {
     status: true,
   });
+
+  // Delete currency item
   window.delete_currency_list_item.send('delete_currency_list_item', {
     status: true,
   });
@@ -81,7 +84,6 @@ const CurrencyList = () => {
       window.get_currency_lists
     )
       .then((res) => {
-        // console.log(res);
         Array.isArray(res) && res?.length && setCurrencyLists(res);
       })
       .catch((err) => console.log('Getting menu types error', err));

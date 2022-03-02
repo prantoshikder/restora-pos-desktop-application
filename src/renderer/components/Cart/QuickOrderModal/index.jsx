@@ -5,7 +5,7 @@ import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
 
-const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
+const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   return (
@@ -29,21 +29,21 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
                 Your Cart: {cartItems?.length} items{' '}
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
             </div>
 
             <div style={{ height: '330px', overflowY: 'scroll' }}>
-              {cartItems?.map((item) => (
+              {/* {cartItems?.map((item) => (
                 <div className="flex content_between order_item" key={item?.id}>
                   <h3>{item?.name}</h3>
                   <h3>${item?.price}</h3>
                 </div>
-              ))}
+              ))} */}
             </div>
 
             <div className="total_order">
@@ -51,10 +51,10 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
                 Subtotal{' '}
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
               <Title level={4}>
@@ -76,10 +76,10 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
                 Grand Total:
                 <span style={{ float: 'right' }}>
                   $
-                  {cartItems.reduce(
+                  {/* {cartItems.reduce(
                     (prevPrice, currentPrice) => prevPrice + currentPrice.price,
                     0
-                  )}
+                  )} */}
                 </span>
               </Title>
             </div>
@@ -92,16 +92,22 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder }) => {
               <Title level={5}>Select Payment Type</Title>
             </div>
 
-            <div>
+            <Space>
               <Button>Cash Payment</Button>
               <Button>Card Payment</Button>
               <Button>Mobile Payment</Button>
               <Button>SSL Commerz</Button>
               <Button>Two Checkout</Button>
               <Button>Food Panda</Button>
-            </div>
+            </Space>
 
-            <div style={{ minHeight: '300px' }}>
+            <div
+              style={{
+                minHeight: '265px',
+                marginTop: '2.2rem',
+                marginLeft: '1.5rem',
+              }}
+            >
               <Text>Do you Want to Print Invoice???</Text>
             </div>
 

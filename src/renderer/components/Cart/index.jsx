@@ -1,5 +1,6 @@
 import {
   DownOutlined,
+  FileAddOutlined,
   PlusCircleOutlined,
   ShoppingCartOutlined,
   UpOutlined,
@@ -17,7 +18,6 @@ import {
   Row,
   Select,
   Space,
-  Table,
   TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
@@ -45,9 +45,11 @@ const Cart = ({ settings }) => {
   const [customerList, setCustomerList] = useState([]);
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
+
   const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
+  console.log('cart cartItems', cartItems);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -115,8 +117,8 @@ const Cart = ({ settings }) => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
       align: 'center',
     },
     {
@@ -147,8 +149,8 @@ const Cart = ({ settings }) => {
     },
     {
       title: 'Total',
-      dataIndex: 'price',
-      key: 'price',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
       align: 'center',
     },
     {
@@ -171,6 +173,8 @@ const Cart = ({ settings }) => {
   };
 
   const handleDeleteItem = (item) => {
+    console.log('item', item);
+
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -178,8 +182,11 @@ const Cart = ({ settings }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    item.isSelected = false;
-    setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+    setCartItems(
+      cartItems.filter(
+        (cartItem) => cartItem.variant.foodVariant !== item.variant.foodVariant
+      )
+    );
     return;
   };
 
@@ -416,13 +423,82 @@ const Cart = ({ settings }) => {
               </div>
             ) : (
               <div className="product_list_table">
-                <Table
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item</th>
+                      <th scope="col">Variant Name</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {cartItems.length &&
+                      cartItems.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <th>
+                              <FileAddOutlined
+                                style={{
+                                  padding: '0rem 0.4rem 0rem 1rem',
+                                  color: '#0037ff',
+                                }}
+                              />
+                              {item.variant.product_name}
+                            </th>
+                            <th>{item.variant.foodVariant}</th>
+                            <th>{item.variant.price}</th>
+
+                            <th>
+                              <InputNumber
+                                value={item.variant.quantity}
+                                onChange={(value) => {}}
+                                className="quantity_value"
+                                // controls={false}
+                              />
+
+                              {/* <div className="quantity_increase_decrease">
+                                <span
+                                  onClick={() =>
+                                    increaseQuantity(item.variant.quantity)
+                                  }
+                                >
+                                  <UpOutlined />
+                                </span>
+                                <span
+                                  onClick={() =>
+                                    decreaseQuantity(item.variant.quantity)
+                                  }
+                                >
+                                  <DownOutlined />
+                                </span>
+                              </div> */}
+                            </th>
+                            <th>{item.variant.totalPrice}</th>
+                            <th>
+                              <Space size="middle" className="delete_icon">
+                                <FontAwesomeIcon
+                                  icon={faTrashAlt}
+                                  onClick={() => handleDeleteItem(item)}
+                                />
+                              </Space>
+                            </th>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+
+                {/* <Table
                   columns={columns}
                   pagination={false}
                   dataSource={cartItems}
                   rowKey={(record) => record.id}
                   className="custom_table"
-                />
+                /> */}
               </div>
             )}
           </div>
@@ -460,7 +536,7 @@ const Cart = ({ settings }) => {
             </div>
 
             <div>
-              {cartItems?.length !== 0 ? (
+              {/* {cartItems?.length !== 0 ? (
                 <span>
                   $
                   {cartItems?.reduce(
@@ -470,7 +546,7 @@ const Cart = ({ settings }) => {
                 </span>
               ) : (
                 <span>$0.00</span>
-              )}
+              )} */}
             </div>
           </div>
 

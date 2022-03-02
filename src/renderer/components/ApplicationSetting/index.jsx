@@ -1,11 +1,10 @@
 import { PictureOutlined } from '@ant-design/icons';
-import { faDollarSign, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   message,
   Row,
@@ -13,7 +12,7 @@ import {
   Upload,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -21,18 +20,23 @@ const { Option } = Select;
 
 const ApplicationSetting = ({ setReRenderOnSettings }) => {
   window.get_app_settings.send('get_app_settings', { status: true });
+  window.get_currency_lists.send('get_currency_lists', {
+    status: true,
+  });
 
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
   const [defaultData, setDefaultData] = useState([]);
   const [favIcon, setFavIcon] = useState(null);
   const [appLogo, setAppLogo] = useState(null);
+  const [currencyLists, setCurrencyLists] = useState([]);
 
   useEffect(() => {
     getDataFromDatabase(
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
+      setAppSettingsData(data[0]);
       const response = data[0];
       setDefaultData([
         {
@@ -56,10 +60,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
           value: response?.phone,
         },
         {
-          name: ['favicon'],
-          // value: response?.favicon,
-        },
-        {
           name: ['opentime'],
           value: response?.opentime,
         },
@@ -69,7 +69,12 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['discount_type'],
-          value: response?.discount_type,
+          value:
+            response?.discount_type === 2
+              ? 'Percent'
+              : response?.discount_type === 1
+              ? 'Amount'
+              : 'Percent',
         },
         {
           name: ['discountrate'],
@@ -119,9 +124,26 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
           name: ['powerbytxt'],
           value: response?.powerbytxt,
         },
+        {
+          name: ['footer_text'],
+          value: response?.footer_text,
+        },
       ]);
     });
   }, []);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_currency_lists_response',
+      window.get_currency_lists
+    )
+      .then((res) => {
+        Array.isArray(res) && res?.length && setCurrencyLists(res);
+      })
+      .catch((err) => console.log('Getting menu types error', err));
+  }, []);
+
+  console.log('currencyLists', currencyLists);
 
   const handleFavicon = (e) => {
     console.log('hanlde file', e);
@@ -164,8 +186,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         path: appLogo.path,
       });
     }
-
-    console.log('settingsValue', settingsValue);
 
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);
@@ -246,15 +266,17 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 <Col lg={16}>
                   <Form.Item
                     name="favicon"
-                    valuePropName="fileList"
+                    // valuePropName="fileList"
                     // getValueFromEvent={handleFavicon}
                     noStyle
                   >
                     <Upload.Dragger
                       name="files"
-                      // customRequest={(imageObj) => {
-                      //   setFavIcon(imageObj.file);
-                      // }}
+                      customRequest={(imageObj) => {
+                        setFavIcon(imageObj.file);
+                      }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -267,6 +289,22 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
+                  {favIcon ? (
+                    <Image
+                      width={125}
+                      src={URL.createObjectURL(favIcon)}
+                      preview={false}
+                    />
+                  ) : (
+                    appSettingsData?.favicon && (
+                      <Image
+                        width={125}
+                        src={appSettingsData?.favicon}
+                        preview={false}
+                      />
+                    )
+                  )}
+
                   {/* {appSettingsData?.favicon && (
                     <Image width={125} src={appSettingsData?.favicon} />
                   )}
@@ -280,9 +318,9 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             <Form.Item label="Logo">
               <Row gutter={20}>
                 <Col lg={16}>
-                  {/* <Form.Item
+                  <Form.Item
                     name="logo"
-                    valuePropName="fileList"
+                    // valuePropName="fileList"
                     // getValueFromEvent={normFile}
                     noStyle
                   >
@@ -291,6 +329,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                       customRequest={(imageObj) => {
                         setAppLogo(imageObj.file);
                       }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}
                     >
                       <p className="ant-upload-drag-icon">
                         <PictureOutlined />
@@ -299,21 +339,25 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                         Click or drag & drop a logo here to upload
                       </p>
                     </Upload.Dragger>
-                  </Form.Item> */}
+                  </Form.Item>
                 </Col>
                 <Col lg={8}>
                   <h4>Preview</h4>
-                  {/* {appSettingsData?.logo && (
-                    <img src={appSettingsData?.logo} alt="Logo" />
+                  {appLogo ? (
+                    <Image
+                      width={125}
+                      src={URL.createObjectURL(appLogo)}
+                      preview={false}
+                    />
+                  ) : (
+                    appSettingsData?.logo && (
+                      <Image
+                        width={125}
+                        src={appSettingsData?.logo}
+                        preview={false}
+                      />
+                    )
                   )}
-                  {appLogo && (
-                    <img src={URL.createObjectURL(appLogo)} alt="Logo" />
-                  )} */}
-
-                  <img
-                    src="file:///C:/Users/Munir/AppData/Roaming/Electron/assets/settings_favicon/Big_and_small_329.jpg"
-                    alt=""
-                  />
                 </Col>
               </Row>
             </Form.Item>
@@ -397,24 +441,11 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
               <Col lg={12}>
                 <Form.Item label="Currency" name="currency">
                   <Select placeholder="Select Currency" size="large" allowClear>
-                    <Option value="bdt">
-                      BDT{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faDollarSign} />
-                      </span>
-                    </Option>
-                    <Option value="usd">
-                      USD{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faDollarSign} />
-                      </span>
-                    </Option>
-                    <Option value="inr">
-                      INR{' '}
-                      <span style={{ float: 'right' }}>
-                        <FontAwesomeIcon icon={faRupeeSign} />
-                      </span>
-                    </Option>
+                    {currencyLists?.map((currencyItem) => (
+                      <Option key={currencyItem?.id} value={currencyItem?.id}>
+                        {currencyItem?.currency_name}{' '}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>

@@ -183,8 +183,8 @@ ipcMain.on('insert_settings', (event, args) => {
           "address" TEXT,
           "email" varchar(255),
           "phone" varchar(25),
-          "logo" varchar(255),
           "favicon" varchar(100),
+          "logo" varchar(255),
           "opentime" varchar(255),
           "closetime" varchar(255),
           "vat" REAL,
@@ -205,7 +205,7 @@ ipcMain.on('insert_settings', (event, args) => {
       )
       .run(
         `INSERT INTO setting
-          ( title, storename, address, email, phone, logo, favicon, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
+          ( title, storename, address, email, phone, favicon, logo, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType,
             currency, min_prepare_time, language, timezone, dateformat, site_align, powerbytxt, footer_text )
           VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
         [
@@ -214,20 +214,22 @@ ipcMain.on('insert_settings', (event, args) => {
           address,
           email,
           phone,
-          appLogo?.name,
-          // path?.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   settings_favicon_folder_name,
-          //   appLogo?.name
-          // ),
-          // path?.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   settings_logo_folder_name,
-          //   appFavicon?.name
-          //   ),
-          appFavicon?.name,
+          appFavicon?.name
+            ? path?.join(
+                app.getPath('userData'),
+                'assets',
+                settings_favicon_folder_name,
+                appFavicon.name
+              )
+            : appFavicon?.name,
+          appLogo?.name
+            ? path?.join(
+                app.getPath('userData'),
+                'assets',
+                settings_logo_folder_name,
+                appLogo.name
+              )
+            : appLogo?.name,
           opentime,
           closetime,
           vat,
@@ -273,7 +275,7 @@ getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
   'setting', //Table Name
-  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, site_align, dateformat, timezone' //Columns
+  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, vat, currency, site_align, dateformat, timezone' //Columns
 );
 
 /**
@@ -399,10 +401,10 @@ ipcMain.on('insertCategoryData', (event, args) => {
   setImagePath(
     cat_image_folder_name, // Category images folder name
     cat_icon_folder_name, // Category icons folder name
-    cat_img.path, // Category image path
-    cat_img.name, // Category image name
-    cat_icon.path, // Category icon path
-    cat_icon.name // Category icon name
+    cat_img?.path, // Category image path
+    cat_img?.name, // Category image name
+    cat_icon?.path, // Category icon path
+    cat_icon?.name // Category icon name
   );
 
   let {
@@ -425,18 +427,24 @@ ipcMain.on('insertCategoryData', (event, args) => {
           args.category_id,
           category_name,
           parent_id,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_image_folder_name,
-            cat_img.name
-          ),
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_icon_folder_name,
-            cat_icon.name
-          ),
+          cat_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
+            : cat_img?.name,
+
+          cat_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
+            : cat_icon?.name,
+
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -482,18 +490,23 @@ ipcMain.on('insertCategoryData', (event, args) => {
         [
           category_name,
           parent_id,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_image_folder_name,
-            cat_img.name
-          ),
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            cat_icon_folder_name,
-            cat_icon.name
-          ),
+          cat_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
+            : cat_img?.name,
+
+          cat_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
+            : cat_icon?.name,
           category_is_active,
           offer_start_date,
           offer_end_date,
@@ -685,7 +698,7 @@ ipcMain.on('add_new_foods', (event, args) => {
     notes,
     description,
     vat,
-    is_offer,
+    offer_is_available,
     special,
     custom_quantity,
     cooking_time,
@@ -706,13 +719,15 @@ ipcMain.on('add_new_foods', (event, args) => {
           args.id,
           category_name,
           food_name,
-          // path.join(
-          //   app.getPath('userData'),
-          //   'assets',
-          //   foods_images_folder_name,
-          //   product_img.name
-          //   ),
-          product_img?.name,
+          product_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
+            : 'null',
+          // product_img?.name,
           component,
           description,
           notes,
@@ -720,7 +735,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           vat,
           special,
           offer_rate,
-          is_offer,
+          offer_is_available,
           offer_start_date,
           offer_end_date,
           kitchen_select,
@@ -782,12 +797,15 @@ ipcMain.on('add_new_foods', (event, args) => {
         [
           category_name,
           food_name,
-          path.join(
-            app.getPath('userData'),
-            'assets',
-            foods_images_folder_name,
-            product_img.name
-          ),
+          product_img?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
+            : product_img?.name,
+
           component,
           description,
           notes,
@@ -795,7 +813,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           vat,
           special,
           offer_rate,
-          is_offer,
+          offer_is_available,
           offer_start_date,
           offer_end_date,
           kitchen_select,
@@ -1235,7 +1253,7 @@ ipcMain.on('get_addons_list_for_pos', (event, args) => {
   //   condition && 'WHERE is_active = 1'
   // }`;
 
-  let sql = `SELECT menu_add_on.menu_id AS food_id, addons.* FROM addons
+  let sql = `SELECT menu_add_on.menu_id AS food_id, addons.*, addons.price AS total_price FROM addons
   INNER JOIN menu_add_on ON menu_add_on.add_on_id = addons.add_on_id
   WHERE addons.is_active = 1`;
 
@@ -1369,7 +1387,7 @@ ipcMain.on('get_addons_and_variant', (event, args) => {
       food_addon_variants['addons'] = rows;
     });
     db.all(sql2, [], (err, rows) => {
-      food_addon_variants['varients'] = rows;
+      food_addon_variants['variants'] = rows;
     });
   });
   db.close();

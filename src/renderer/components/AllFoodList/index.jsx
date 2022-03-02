@@ -52,14 +52,15 @@ const AllFoodList = () => {
   const columns = [
     {
       title: 'Image',
-      dataIndex: 'categoryImage',
-      key: 'categoryImage',
+      dataIndex: 'product_image',
+      key: 'product_image',
       render: (text, record) => (
         <Image
-          src='file:///home/rafiul/.config/Electron/assets/categories/zkt.png' //src={record.categoryImage}
+          src={record?.product_image}
           width="50px"
           height="50px"
           className="category_image"
+          preview={false}
         />
       ),
     },
@@ -115,7 +116,6 @@ const AllFoodList = () => {
 
   let navigate = useNavigate();
   const handleEditFoodItem = (foodItem) => {
-    console.log('foodItem', foodItem);
     navigate('/add_food', { state: foodItem });
   };
 
@@ -148,6 +148,8 @@ const AllFoodList = () => {
       onCancel() {},
     });
   };
+
+  console.log('foodData', foodData);
 
   return (
     <div

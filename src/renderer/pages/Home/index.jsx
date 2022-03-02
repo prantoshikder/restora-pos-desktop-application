@@ -9,6 +9,7 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
+  // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
   });
@@ -34,19 +35,10 @@ const Home = ({ settings }) => {
   const [foodNames, setFoodNames] = useState(null);
 
   useEffect(() => {
-    getDataFromDatabase(
-      'get_food_list_pos_response',
-      window.get_food_list_pos
-    ).then((data) => {
-      setFoodLists(data);
-    });
-  }, []);
-
-  useEffect(() => {
     Promise.all([
       getDataFromDatabase(
-        'get_food_name_lists_channel_response',
-        window.get_food_name_lists_channel
+        'get_food_list_pos_response',
+        window.get_food_list_pos
       ),
       getDataFromDatabase(
         'variant_lists_response',
@@ -69,6 +61,7 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
+            category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
             quantity: 1,
@@ -85,6 +78,8 @@ const Home = ({ settings }) => {
             ],
           };
         });
+
+        setFoodLists(foods);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -97,7 +92,11 @@ const Home = ({ settings }) => {
         <ConfigProvider direction={settings.site_align}>
           <Row className="pos_system">
             <Col lg={4}>
-              <PosSidebar settings={settings} />
+              <PosSidebar
+                foodLists={foodLists}
+                setFoodLists={setFoodLists}
+                settings={settings}
+              />
             </Col>
 
             <Col lg={20}>
