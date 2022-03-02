@@ -19,11 +19,11 @@ const { Title } = Typography;
 const FoodItem = ({ item }) => {
   const [openModal, setOpenModal] = useState(false);
   const [addonsAdd, setAddonsAdd] = useState(null);
-  const [foodQuantity, setFoodQuantity] = useState(0);
+  const [foodQuantity, setFoodQuantity] = useState(1);
   const [variantPrice, setVariantPrice] = useState(0);
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
   const [foodVariantName, setFoodVariantName] = useState('Regular');
-  const [foodAddonsOrVariant, setFoodAddonsOrVariant] = useState({});
+  const [foodAddonsAndVariant, setFoodAddonsAndVariant] = useState({});
 
   const [addonsPrice, setAddonsPrice] = useState(0);
   const [addonsQuantity, setAddonsQuantity] = useState(0);
@@ -37,28 +37,33 @@ const FoodItem = ({ item }) => {
 
   // Onclick opens a modal
   const handleFoodItem = (e, item) => {
-    window.get_addons_and_variant.send('get_addons_and_variant', item.id);
+    // window.get_addons_and_variant.send('get_addons_and_variant', item.id);
 
-    window.get_addons_and_variant.once(
-      'get_addons_and_variant_response',
-      (args) => {
-        setFoodAddonsOrVariant(args);
-      }
-    );
+    // window.get_addons_and_variant.once(
+    //   'get_addons_and_variant_response',
+    //   (args) => {
+    //     console.log('******************args', args);
+    //     setFoodAddonsAndVariant(args);
+    //   }
+    // );
 
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
+      setFoodVariantName(item?.variants[0]);
     } else if (Array.isArray(item?.addons) && item?.addons?.length > 0) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
+      setFoodVariantName(item?.variants[0]);
     } else {
       const isCartItemExist = cartItems.find(
-        (item) => item.foodVariant === foodVariantName
+        (item) =>
+          item.variant.foodVariant === foodVariantName.variant_name &&
+          item.variant.id === foodVariantName.food_id
       );
 
       if (!isCartItemExist) {
@@ -66,7 +71,7 @@ const FoodItem = ({ item }) => {
           id: item.id,
           isSelected: true,
           product_name: item.product_name,
-          foodVariant: foodVariantName,
+          foodVariant: foodVariantName.variant_name,
           price: variantFixedPrice,
           totalPrice: variantPrice,
           quantity: foodQuantity,
@@ -91,7 +96,9 @@ const FoodItem = ({ item }) => {
 
   const handleAddToCart = (e, item) => {
     const isCartItemExist = cartItems.find(
-      (item) => item.foodVariant === foodVariantName
+      (item) =>
+        item.variant.foodVariant === foodVariantName.variant_name &&
+        item.variant.id === foodVariantName.food_id
     );
 
     if (!isCartItemExist) {
@@ -99,7 +106,7 @@ const FoodItem = ({ item }) => {
         id: item.id,
         isSelected: true,
         product_name: item.product_name,
-        foodVariant: foodVariantName,
+        foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         totalPrice: variantPrice,
         quantity: foodQuantity,
@@ -110,7 +117,7 @@ const FoodItem = ({ item }) => {
     } else {
       if (item.id) {
         message.info({
-          content: `${foodVariantName} variant has already been added.`,
+          content: `${foodVariantName.variant_name} variant has already been added.`,
           duration: 1,
           style: {
             marginTop: '5vh',
@@ -123,7 +130,9 @@ const FoodItem = ({ item }) => {
 
   const handleMultipleItemAdd = (e, item) => {
     const isCartItemExist = cartItems.find(
-      (item) => item.foodVariant === foodVariantName
+      (item) =>
+        item.variant.foodVariant === foodVariantName.variant_name &&
+        item.variant.id === foodVariantName.food_id
     );
 
     if (!isCartItemExist) {
@@ -131,17 +140,22 @@ const FoodItem = ({ item }) => {
         id: item.id,
         isSelected: true,
         product_name: item.product_name,
-        foodVariant: foodVariantName,
+        foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         totalPrice: variantPrice,
         quantity: foodQuantity,
       };
 
-      setCartItems([...cartItems, cartItem]);
+      const foodAddonsAndVariant = {
+        variant: cartItem, // Variant is an Object
+        addons: addonForCartItem, //Addons is an Array
+      };
+
+      setCartItems([...cartItems, { ...foodAddonsAndVariant }]);
     } else {
       if (item.id) {
         message.info({
-          content: `${foodVariantName} variant has already been added`,
+          content: `${foodVariantName.variant_name} variant has already been added`,
           duration: 1,
           style: {
             marginTop: '5vh',
@@ -154,8 +168,6 @@ const FoodItem = ({ item }) => {
 
   // Addons list if check & uncheck
   function handleAddonsCheck(e, addonItem) {
-    console.log(`checked = ${e.target.checked}`);
-
     if (e.target.checked) {
       setAddonForCartItem([...addonForCartItem, addonItem]);
     } else {
@@ -170,7 +182,8 @@ const FoodItem = ({ item }) => {
     const variantObj = JSON.parse(variant);
     const fixedPrice = variantObj.price;
     setVariantFixedPrice(fixedPrice);
-    setFoodVariantName(variantObj.variant_name);
+    setFoodVariantName(variantObj);
+    setVariantPrice(variantObj.price);
   };
 
   // TODO: Quantity value & price changes

@@ -17,7 +17,6 @@ import {
   Row,
   Select,
   Space,
-  Table,
   TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
@@ -49,6 +48,7 @@ const Cart = ({ settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
+  console.log('cart cartItems', cartItems);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -417,13 +417,74 @@ const Cart = ({ settings }) => {
               </div>
             ) : (
               <div className="product_list_table">
-                <Table
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item</th>
+                      <th scope="col">Variant Name</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cartItems.length &&
+                      cartItems.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <th>{item.variant.product_name}</th>
+                            <th>{item.variant.foodVariant}</th>
+                            <th>{item.variant.price}</th>
+                            <th>{item.variant.quantity}</th>
+
+                            <th>
+                              <InputNumber
+                                value={item.variant.quantity}
+                                onChange={(value) => {}}
+                                className="quantity_value"
+                                controls={false}
+                              />
+
+                              <div className="quantity_increase_decrease">
+                                <span
+                                  onClick={() =>
+                                    increaseQuantity(item.variant.quantity)
+                                  }
+                                >
+                                  <UpOutlined />
+                                </span>
+                                <span
+                                  onClick={() =>
+                                    decreaseQuantity(item.variant.quantity)
+                                  }
+                                >
+                                  <DownOutlined />
+                                </span>
+                              </div>
+                            </th>
+                            <th>{item.variant.totalPrice}</th>
+                            <th>
+                              <Space size="middle" className="delete_icon">
+                                <FontAwesomeIcon
+                                  icon={faTrashAlt}
+                                  onClick={() => handleDeleteItem(item)}
+                                />
+                              </Space>
+                            </th>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+
+                {/* <Table
                   columns={columns}
                   pagination={false}
                   dataSource={cartItems}
                   rowKey={(record) => record.id}
                   className="custom_table"
-                />
+                /> */}
               </div>
             )}
           </div>
