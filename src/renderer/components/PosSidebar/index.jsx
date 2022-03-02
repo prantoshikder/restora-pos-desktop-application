@@ -5,7 +5,7 @@ import { getDataFromDatabase } from './../../../helpers';
 import CategoryItem from './CategoryItem';
 import './PosSidebar.style.scss';
 
-const PosSidebar = ({ settings, foodLists, setFoodLists }) => {
+const PosSidebar = ({ settings, foodLists, setFoodLists, setSelectedMenu }) => {
   const [categories, setCategories] = useState([]);
 
   window.get_category.send('sendResponseForCategory', { status: true });
@@ -31,6 +31,7 @@ const PosSidebar = ({ settings, foodLists, setFoodLists }) => {
       <div className="btn_wrapper">
         <Button
           size="large"
+          onClick={() => setSelectedMenu()}
           type="primary"
           style={{
             textAlign: settings.site_align === 'rtl' ? 'right' : 'left',
@@ -46,6 +47,7 @@ const PosSidebar = ({ settings, foodLists, setFoodLists }) => {
             category={category}
             foodLists={foodLists}
             setFoodLists={setFoodLists}
+            setSelectedMenu={setSelectedMenu}
           />
         ))}
       </div>

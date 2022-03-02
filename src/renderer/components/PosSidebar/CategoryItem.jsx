@@ -8,32 +8,14 @@ const CategoryItem = ({
   show,
   foodLists,
   setFoodLists,
+  setSelectedMenu,
 }) => {
   const [open, setOpen] = useState(false);
-
-  const handleOpenSubCategory = (categoryItem) => {
-    if (
-      category?.category_id === categoryItem?.category_id &&
-      categoryItem?.subCategories?.length > 0
-    ) {
-      setOpen(!open);
-    } else {
-      console.log('category', categoryItem.category_id);
-      const filterData = foodLists.filter((foodList) => {
-        console.log('foodList', foodList);
-        return foodList?.category_id === categoryItem?.category_id;
-      });
-
-      setFoodLists(filterData);
-      console.log('filterData', filterData);
-      // console.log('foodLists', foodLists);
-    }
-  };
 
   return (
     <>
       <Button
-        onClick={() => handleOpenSubCategory(category)}
+        onClick={() => setSelectedMenu(category.category_id)}
         size="large"
         type="primary"
         style={{
