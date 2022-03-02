@@ -4,7 +4,7 @@ import Sidebar from './../../components/partials/Sidebar';
 import './Currency.styles.scss';
 import CurrencyList from './CurrencyList';
 
-const Currency = ({ settings, currencyLists, setCurrencyLists }) => {
+const Currency = ({ settings }) => {
   return (
     <>
       <ConfigProvider direction={settings.site_align}>
@@ -17,10 +17,7 @@ const Currency = ({ settings, currencyLists, setCurrencyLists }) => {
               <Col md={21}>
                 <Heading title="Currency" />
 
-                <CurrencyList
-                  currencyLists={currencyLists}
-                  setCurrencyLists={setCurrencyLists}
-                />
+                <CurrencyList />
               </Col>
             </Row>
           </div>

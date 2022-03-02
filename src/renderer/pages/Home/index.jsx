@@ -9,6 +9,7 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
+  // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
   });

@@ -8,7 +8,7 @@ const { Text, Title } = Typography;
 const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  console.log('settings', settings);
+  // console.log('settings', settings);
 
   return (
     <Modal
