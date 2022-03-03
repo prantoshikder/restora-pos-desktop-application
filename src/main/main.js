@@ -605,8 +605,8 @@ ipcMain.on('add_addons', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active ) VALUES ( ?, ?, ?, ?)`,
-        [args.add_on_id, add_on_name, price, is_active],
+        `INSERT OR REPLACE INTO addons ( add_on_id, add_on_name, price, is_active, date_inserted ) VALUES ( ?, ?, ?, ?, ?)`,
+        [args.add_on_id, add_on_name, price, is_active, date_inserted],
         (err) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
@@ -627,11 +627,12 @@ ipcMain.on('add_addons', (event, args) => {
         "price" REAL,
         "is_active" INT,
         "tax0" TEXT,
-        "tax1" TEXT
+        "tax1" TEXT,
+        "date_inserted" DATETIME
             )`
       ).run(
-        `INSERT OR REPLACE INTO addons ( add_on_name, price, is_active ) VALUES ( ?, ?, ?)`,
-        [add_on_name, price, is_active],
+        `INSERT OR REPLACE INTO addons ( add_on_name, price, is_active, date_inserted ) VALUES ( ?, ?, ?, ?)`,
+        [add_on_name, price, is_active, Date.now()],
         (err) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
@@ -707,14 +708,15 @@ ipcMain.on('add_new_foods', (event, args) => {
     offer_rate,
     offer_start_date,
     offer_end_date,
+    date_inserted,
   } = args;
 
   if (args.id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO item_foods (id, category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available, offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, is_active)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT OR REPLACE INTO item_foods (id, category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available, offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, is_active, date_inserted)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           args.id,
           category_name,
@@ -742,6 +744,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           custom_quantity,
           cooking_time,
           food_status,
+          date_inserted,
         ],
         (err) => {
           err
@@ -792,8 +795,8 @@ ipcMain.on('add_new_foods', (event, args) => {
         )`
       ).run(
         `INSERT OR REPLACE INTO item_foods (category_id, product_name, product_image, component, description, item_note, menu_type, product_vat, special, offers_rate, offer_is_available,
-          offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, is_active)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          offer_start_date, offer_end_date, kitchen_id, is_custom_quantity, cooked_time, is_active, date_inserted)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           category_name,
           food_name,
@@ -820,6 +823,7 @@ ipcMain.on('add_new_foods', (event, args) => {
           custom_quantity,
           cooking_time,
           food_status,
+          Date.now(),
         ],
         (err) => {
           err
@@ -1169,9 +1173,9 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
 
     db.serialize(() => {
       db.run(
-        `INSERT OR REPLACE INTO menu_add_on (id, menu_id, add_on_id, is_active)
-        VALUES (?, ?, ?, ?)`,
-        [id, menu_id, add_on_id, is_active],
+        `INSERT OR REPLACE INTO menu_add_on (id, menu_id, add_on_id, is_active, date_inserted)
+        VALUES (?, ?, ?, ?, ?)`,
+        [id, menu_id, add_on_id, is_active, date_inserted],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -1197,12 +1201,13 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
           'id' INTEGER PRIMARY KEY AUTOINCREMENT,
           'menu_id' INT,
           'add_on_id' INT,
-          'is_active' INT
+          'is_active' INT,
+          'date_inserted' DATETIME,
         )`
       ).run(
-        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active)
-          VALUES (?, ?, ?)`,
-        [menu_id, add_on_id, is_active],
+        `INSERT OR REPLACE INTO menu_add_on (menu_id, add_on_id, is_active, date_inserted)
+          VALUES (?, ?, ?, ?)`,
+        [menu_id, add_on_id, is_active, Date.now()],
         (err) => {
           err
             ? mainWindow.webContents.send(

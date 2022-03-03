@@ -49,7 +49,6 @@ const Cart = ({ settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
-  console.log('cart cartItems', cartItems);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -184,7 +183,7 @@ const Cart = ({ settings }) => {
 
     setCartItems(
       cartItems.filter(
-        (cartItem) => cartItem.variant.foodVariant !== item.variant.foodVariant
+        (cartItem) => cartItem.product_name !== item.product_name
       )
     );
     return;
@@ -447,14 +446,14 @@ const Cart = ({ settings }) => {
                                   color: '#0037ff',
                                 }}
                               />
-                              {item.variant.product_name}
+                              {item.product_name}
                             </th>
-                            <th>{item.variant.foodVariant}</th>
-                            <th>{item.variant.price}</th>
+                            <th>{item.foodVariant}</th>
+                            <th>{item.price}</th>
 
                             <th>
                               <InputNumber
-                                value={item.variant.quantity}
+                                value={item.quantity}
                                 onChange={(value) => {}}
                                 className="quantity_value"
                                 // controls={false}
@@ -463,21 +462,21 @@ const Cart = ({ settings }) => {
                               {/* <div className="quantity_increase_decrease">
                                 <span
                                   onClick={() =>
-                                    increaseQuantity(item.variant.quantity)
+                                    increaseQuantity(item.quantity)
                                   }
                                 >
                                   <UpOutlined />
                                 </span>
                                 <span
                                   onClick={() =>
-                                    decreaseQuantity(item.variant.quantity)
+                                    decreaseQuantity(item.quantity)
                                   }
                                 >
                                   <DownOutlined />
                                 </span>
                               </div> */}
                             </th>
-                            <th>{item.variant.totalPrice}</th>
+                            <th>{item.total_price}</th>
                             <th>
                               <Space size="middle" className="delete_icon">
                                 <FontAwesomeIcon
