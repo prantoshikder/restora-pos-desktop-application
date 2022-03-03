@@ -33,7 +33,7 @@ const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
-  console.log('settings', settings);
+  // console.log('settings', settings);
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -137,7 +137,8 @@ const Cart = ({ settings }) => {
 
   const handleCalculation = () => {};
 
-  const handleQuickOrder = (data) => {
+  const handleSubmitOrder = (data) => {
+    console.log('data', cartItems);
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -220,27 +221,32 @@ const Cart = ({ settings }) => {
       0
     );
 
-    const totalVatBasedOnPrice = parseFloat(
-      ((totalPrice * settings.vat) / 100).toFixed(2)
-    );
-    const fixedServiceCharge = parseFloat(settings.servicecharge.toFixed(2));
-    const percentServiceChargeWith = parseFloat(
-      ((totalPrice * settings.servicecharge) / 100).toFixed(2)
-    );
-
-    if (settings.service_chargeType === 'amount') {
-      return (
-        parseFloat(totalPrice.toFixed(2)) +
-        fixedServiceCharge +
-        totalVatBasedOnPrice
+    if (settings?.service_chargeType) {
+      const totalVatBasedOnPrice = parseFloat(
+        ((totalPrice * settings?.vat) / 100).toFixed(2)
       );
-    } else {
-      return (
-        parseFloat(totalPrice.toFixed(2)) +
-        percentServiceChargeWith +
-        totalVatBasedOnPrice
+      const fixedServiceCharge = parseFloat(
+        settings?.servicecharge?.toFixed(2)
       );
+      const percentServiceChargeWith = parseFloat(
+        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
+      );
+      if (settings?.service_chargeType === 'amount') {
+        return (
+          parseFloat(totalPrice.toFixed(2)) +
+          fixedServiceCharge +
+          totalVatBasedOnPrice
+        );
+      } else {
+        return (
+          parseFloat(totalPrice.toFixed(2)) +
+          percentServiceChargeWith +
+          totalVatBasedOnPrice
+        );
+      }
     }
+
+    return totalPrice;
   };
 
   return (
@@ -540,7 +546,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="quick_order_btn cartGroup_btn"
-              onClick={() => handleQuickOrder('quickOrder')}
+              onClick={() => handleSubmitOrder('quickOrder')}
             >
               Quick Order
             </Button>
@@ -548,7 +554,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="place_order_btn cartGroup_btn"
-              onClick={() => handleQuickOrder('placeOrder')}
+              onClick={() => handleSubmitOrder('placeOrder')}
             >
               Place Order
             </Button>
