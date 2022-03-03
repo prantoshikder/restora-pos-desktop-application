@@ -33,7 +33,7 @@ const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
-  // console.log('settings', settings);
+  console.log('settings', settings);
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -106,8 +106,6 @@ const Cart = ({ settings }) => {
   };
 
   const handleDeleteItem = (item) => {
-    console.log('item', item);
-
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -138,7 +136,6 @@ const Cart = ({ settings }) => {
   const handleCalculation = () => {};
 
   const handleSubmitOrder = (data) => {
-    console.log('data', cartItems);
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -221,16 +218,52 @@ const Cart = ({ settings }) => {
       0
     );
 
-    if (settings?.service_chargeType) {
-      const totalVatBasedOnPrice = parseFloat(
+    let discount = 0,
+      totalVatBasedOnPrice = 0,
+      serviceCharge = 0;
+
+    // calculate if it has discount type & amount
+    if (settings.discount_type === 'Amount') {
+      discount = parseFloat(settings?.discountrate?.toFixed(2));
+    } else {
+      discount = parseFloat(
+        (totalPrice * settings?.discountrate?.toFixed(2)) / 100
+      );
+    }
+
+    // calculate if it has vat amount in percentage
+    if (settings?.vat) {
+      totalVatBasedOnPrice = parseFloat(
         ((totalPrice * settings?.vat) / 100).toFixed(2)
       );
+    }
+
+    // calculate if service_chargeType and service charge is available
+    if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
+      // Fixed amount
       const fixedServiceCharge = parseFloat(
         settings?.servicecharge?.toFixed(2)
       );
+
+      // Total amount it is percentige
       const percentServiceChargeWith = parseFloat(
         ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
       );
+
+      serviceCharge =
+        parseFloat(totalPrice.toFixed(2)) +
+        fixedServiceCharge +
+        totalVatBasedOnPrice;
+    } else {
+      serviceCharge =
+        parseFloat(totalPrice.toFixed(2)) +
+        percentServiceChargeWith +
+        totalVatBasedOnPrice;
+    }
+
+    if (settings?.service_chargeType) {
+      // Total amount of vat
+
       if (settings?.service_chargeType === 'amount') {
         return (
           parseFloat(totalPrice.toFixed(2)) +
@@ -246,7 +279,7 @@ const Cart = ({ settings }) => {
       }
     }
 
-    return totalPrice;
+    return totalPrice + discount + totalVatBasedOnPrice;
   };
 
   return (

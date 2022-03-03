@@ -10,8 +10,6 @@ const { Text } = Typography;
 const ConfirmOrderModal = (props) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  console.log('cartItems confirmasdfad', cartItems);
-
   const { confirmOrder, setConfirmOrder, confirmBtn, printId, settings } =
     props;
   const [quickOrder, setQuickOrder] = useState(false);
