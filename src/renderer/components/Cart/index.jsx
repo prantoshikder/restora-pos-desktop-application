@@ -49,7 +49,6 @@ const Cart = ({ settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
-  console.log('cart cartItems', cartItems);
 
   useEffect(() => {
     getDataFromDatabase(
