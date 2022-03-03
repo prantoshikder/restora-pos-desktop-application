@@ -137,8 +137,7 @@ const Cart = ({ settings }) => {
 
   const handleCalculation = () => {};
 
-  const handleSubmitOrder = (data) => {
-    console.log('carts', cartItems);
+  const handleQuickOrder = (data) => {
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -215,15 +214,33 @@ const Cart = ({ settings }) => {
     ]);
   };
 
-  const handlePriceCalculate = (prevPrice, currentPrice) => {
-    let totalPrice;
+  const handleCalculatePrice = () => {
+    let totalPrice = cartItems?.reduce(
+      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
+      0
+    );
+
+    const totalVatBasedOnPrice = parseFloat(
+      ((totalPrice * settings.vat) / 100).toFixed(2)
+    );
+    const fixedServiceCharge = parseFloat(settings.servicecharge.toFixed(2));
+    const percentServiceChargeWith = parseFloat(
+      ((totalPrice * settings.servicecharge) / 100).toFixed(2)
+    );
 
     if (settings.service_chargeType === 'amount') {
-      totalPrice = prevPrice + currentPrice + settings.servicecharge;
+      return (
+        parseFloat(totalPrice.toFixed(2)) +
+        fixedServiceCharge +
+        totalVatBasedOnPrice
+      );
+    } else {
+      return (
+        parseFloat(totalPrice.toFixed(2)) +
+        percentServiceChargeWith +
+        totalVatBasedOnPrice
+      );
     }
-
-    console.log('totalPrice', totalPrice);
-    console.log('fun', prevPrice, currentPrice);
   };
 
   return (
@@ -495,18 +512,8 @@ const Cart = ({ settings }) => {
             </div>
 
             <div>
-              {
-                // const serviceCharge = settings.servicecharge
-                console.log(settings.servicecharge)
-              }
               {cartItems?.length !== 0 ? (
-                <span>
-                  $
-                  {cartItems?.reduce((prevPrice, currentPrice) => {
-                    console.log('bott', prevPrice, currentPrice.price);
-                    handlePriceCalculate(prevPrice, currentPrice.price);
-                  }, 0)}
-                </span>
+                <span>${handleCalculatePrice()}</span>
               ) : (
                 <span>$0.00</span>
               )}
@@ -533,7 +540,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="quick_order_btn cartGroup_btn"
-              onClick={() => handleSubmitOrder('quickOrder')}
+              onClick={() => handleQuickOrder('quickOrder')}
             >
               Quick Order
             </Button>
@@ -541,7 +548,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="place_order_btn cartGroup_btn"
-              onClick={() => handleSubmitOrder('placeOrder')}
+              onClick={() => handleQuickOrder('placeOrder')}
             >
               Place Order
             </Button>
