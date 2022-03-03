@@ -67,6 +67,7 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
+            food_id: food.date_inserted,
             category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
