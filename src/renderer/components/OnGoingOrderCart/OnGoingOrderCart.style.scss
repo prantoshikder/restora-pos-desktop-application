@@ -1,0 +1,59 @@
+.on_going_menu_item {
+  align-items: center;
+  transition-duration: 0.4s;
+  // border-radius: 0 25px 25px 0;
+  // padding: 0 15px;
+  // margin: 15px 0;
+
+  .menu_info_content {
+    padding: 22px;
+    background-color: #f5f5f5;
+    color: #000;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+
+  // .table_img {
+  //   padding: 22px;
+  //   background-color: #404040;
+  //   border-radius: 0;
+  //   position: relative;
+  //   transition-duration: 0.4s;
+
+  //   img {
+  //     // height: 100px;
+  //     // width: 100%;
+  //     object-fit: cover;
+  //   }
+
+  //   .table_info {
+  //     font-size: 11px;
+  //     position: absolute;
+  //     left: 50%;
+  //     top: 50%;
+  //     text-align: center;
+  //     transform: translate(-50%, -50%);
+  //     display: flex;
+  //     flex-wrap: wrap;
+  //   }
+  // }
+
+  // .info_menu_content {
+  //   padding-left: 35px;
+  //   // display: flex;
+  //   // flex-wrap: wrap;
+  //   // align-items: center;
+  //   width: 100%;
+  //   border: 1px solid #ddd;
+  //   border-left: 0;
+  //   border-radius: 0 25px 25px 0;
+
+  //   li {
+  //     margin-top: 10px;
+  //     margin-bottom: 10px;
+  //     font-size: 18px;
+  //     font-weight: 400;
+  //     line-height: 1.95rem;
+  //   }
+  // }
+}

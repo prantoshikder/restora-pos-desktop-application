@@ -95,6 +95,42 @@
       ],
       "quantity": 1,
       "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
+    },
+    {
+      "id": 5,
+      "product_name": "Chicken Kebab",
+      "variant": [
+        {
+          "variant_name": "Regular", 
+          "price": 255,
+          "quantity": 1
+        },
+        {
+          "variant_name": "Family", 
+          "price": 555,
+          "quantity": 1
+        }
+      ],
+      "quantity": 1,
+      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
+    },
+    {
+      "id": 6,
+      "product_name": "Chicken Kebab",
+      "variant": [
+        {
+          "variant_name": "Regular", 
+          "price": 255,
+          "quantity": 1
+        },
+        {
+          "variant_name": "Family", 
+          "price": 555,
+          "quantity": 1
+        }
+      ],
+      "quantity": 1,
+      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
     }
   ]
 }
