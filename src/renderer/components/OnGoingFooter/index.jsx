@@ -15,6 +15,10 @@ import './OnGoingFooter.style.scss';
 const OnGoingFooter = () => {
   const [premiumVersion, setPremiumVersion] = useState(false);
 
+  function orderCompleted(orderId) {
+    console.log('orderId:::::::::: ', orderId);
+  }
+
   return (
     <>
       <div className="on_going_footer">
@@ -78,8 +82,11 @@ const OnGoingFooter = () => {
                   <EditOutlined /> Edit
                 </Button>
 
-                <Button type="primary" className="on_going_btn complete_btn">
+                <Button type="primary" className="on_going_btn complete_btn"
+                  onClick={() => orderCompleted(100)}
+                >
                   <CheckCircleOutlined /> Complete
+
                 </Button>
               </div>
             </Col>
