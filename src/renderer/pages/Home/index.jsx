@@ -38,6 +38,7 @@ const Home = ({ settings }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [selectedMenu, setSelectedMenu] = useState();
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -123,19 +124,15 @@ const Home = ({ settings }) => {
 
   const handleAddToCartItem = (foodCartItem) => {
     if (foodCartItem?.variants?.length > 1) {
-      console.log('foodCartItem if', foodCartItem);
       setIsExpanded(false);
       closeModal();
       setCartItems(foodCartItem);
     } else {
-      console.log('foodCartItem else', foodCartItem);
       setIsExpanded(false);
       closeModal();
       setCartItems(foodCartItem);
     }
   };
-
-  const [selectedMenu, setSelectedMenu] = useState();
 
   return (
     <div className="main_wrapper">
