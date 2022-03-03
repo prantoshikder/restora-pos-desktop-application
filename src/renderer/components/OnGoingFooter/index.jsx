@@ -15,6 +15,12 @@ import './OnGoingFooter.style.scss';
 const OnGoingFooter = () => {
   const [premiumVersion, setPremiumVersion] = useState(false);
 
+  window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', { 'status': true })
+
+  window.get_all_order_info_ongoing.once('get_all_order_info_ongoing_response', (args)=>{
+    console.log("***************************", args);
+  })
+
   function orderCompleted(orderId) {
     console.log('orderId:::::::::: ', orderId);
   }
