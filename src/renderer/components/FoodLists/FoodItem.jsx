@@ -36,15 +36,9 @@ const FoodItem = ({ item }) => {
 
   // Onclick opens a modal
   const handleFoodItem = (e, item) => {
-    // window.get_addons_and_variant.send('get_addons_and_variant', item.id);
-
-    // window.get_addons_and_variant.once(
-    //   'get_addons_and_variant_response',
-    //   (args) => {
-    //     console.log('******************args', args);
-    //     setFoodAddonsAndVariant(args);
-    //   }
-    // );
+    const isCartItemExist = cartItems.find(
+      (cartItem) => cartItem.food_id === item.food_id
+    );
 
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
@@ -59,34 +53,40 @@ const FoodItem = ({ item }) => {
       setOpenModal(true);
       setFoodVariantName(item?.variants[0]);
     } else {
-      const isCartItemExist = cartItems.find(
-        (item) =>
-          item.variant.foodVariant === foodVariantName.variant_name &&
-          item.variant.id === foodVariantName.food_id
-      );
-
       if (!isCartItemExist) {
         const cartItem = {
-          id: item.id,
+          id: item.variants[0].date_inserted,
+          food_id: item.food_id,
           isSelected: true,
-          product_name: item.product_name,
-          foodVariant: foodVariantName.variant_name,
-          price: variantFixedPrice,
-          totalPrice: variantPrice,
-          quantity: foodQuantity,
-        };
-
-        const foodAddonsAndVariant = {
-          variant: cartItem, // Variant is an Object
-          addons: addonForCartItem, //Addons is an Array
+          product_name: item.variants[0].product_name,
+          foodVariant: item.variants[0].variant_name,
+          price: item.variants[0].price,
+          total_price: item.variants[0].price,
+          quantity: item.variants[0].quantity,
         };
 
         e.currentTarget.style.border = '2px solid #297600';
-        setCartItems([...cartItems, { ...foodAddonsAndVariant }]);
+        setCartItems([...cartItems, cartItem]);
       } else {
+        const index = cartItems.findIndex(
+          (cartItem) => cartItem.food_id === item.food_id
+        );
+
+        isCartItemExist.quantity += 1;
+        isCartItemExist.total_price =
+          isCartItemExist.quantity * isCartItemExist.price;
+
+        const newCartItems = [
+          ...cartItems.slice(0, index),
+          isCartItemExist,
+          ...cartItems.slice(index + 1),
+        ];
+
+        setCartItems([...newCartItems]);
+
         if (item.id) {
           message.info({
-            content: 'Item already added',
+            content: `${isCartItemExist.product_name} has already been added. That's why we just increased the amount & price.`,
             duration: 1,
             style: {
               marginTop: '5vh',
@@ -100,16 +100,16 @@ const FoodItem = ({ item }) => {
 
   const handleAddToCart = (e, item) => {
     const isCartItemExist = cartItems.find(
-      (item) =>
-        item.foodVariant === foodVariantName.variant_name &&
-        item.id === foodVariantName.food_id
+      (cartItem) => cartItem.food_id === item.food_id
     );
+    console.log('isCartItemExist', isCartItemExist);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
     if (!isCartItemExist) {
       const cartItem = {
         id: item.id,
+        food_id: item.food_id,
         isSelected: true,
         product_name: item.product_name,
         foodVariant: foodVariantName.variant_name,
@@ -122,6 +122,22 @@ const FoodItem = ({ item }) => {
 
       setOpenModal(false);
     } else {
+      const index = cartItems.findIndex(
+        (cartItem) => cartItem.food_id === item.food_id
+      );
+
+      isCartItemExist.quantity += 1;
+      isCartItemExist.total_price =
+        isCartItemExist.quantity * isCartItemExist.price;
+
+      const newCartItems = [
+        ...cartItems.slice(0, index),
+        isCartItemExist,
+        ...cartItems.slice(index + 1),
+      ];
+
+      setCartItems([...newCartItems]);
+
       if (item.id) {
         message.info({
           content: `${foodVariantName.variant_name} variant has already been added, we just increased the amount.`,
@@ -136,20 +152,16 @@ const FoodItem = ({ item }) => {
   };
 
   const handleMultipleItemAdd = (e, item) => {
-    console.log('item', item);
     const isCartItemExist = cartItems.find(
-      (item) =>
-        item.foodVariant === foodVariantName.variant_name &&
-        item.id === foodVariantName.food_id
+      (cartItem) => cartItem.food_id === item.food_id
     );
-
-    console.log('cartItems', cartItems);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
     if (!isCartItemExist) {
       const cartItem = {
         id: item.id,
+        food_id: item.food_id,
         isSelected: true,
         product_name: item.product_name,
         foodVariant: foodVariantName.variant_name,
@@ -160,17 +172,10 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
     } else {
+      // find the food index from the cartItems Array
       const index = cartItems.findIndex(
-        (item) => item.foodVariant === foodVariantName.variant_name
+        (cartItem) => cartItem.food_id === item.food_id
       );
-
-      let myItems = [];
-      const checkAddonExist = cartItems.map((item) => {
-        const ad = checkedAddons.find(
-          (addon) => addon.product_name === item.product_name
-        );
-        console.log('addon ffff', ad);
-      });
 
       const updateExistingCart = [
         ...cartItems.slice(0, index),
@@ -181,11 +186,23 @@ const FoodItem = ({ item }) => {
         },
         ...cartItems.slice(index + 1),
       ];
-      console.log('checkedAddons', checkedAddons);
-      cartItems.map((item) => console.log('item my', item));
 
-      // const filterCheckedAddon = checkedAddons.find(item => item.product_name === )
-      setCartItems([...updateExistingCart]);
+      let newAddons = [];
+      const newCartItems = updateExistingCart.map(
+        (cartItem, index, cartArray) => {
+          const isExistAddon = checkedAddons.find(
+            (addonItem) => addonItem.food_id === cartItem.food_id
+          );
+
+          if (isExistAddon && isExistAddon.food_id === cartItem.food_id) {
+            updateExistingCart.splice(index, 1);
+          } else {
+            newAddons.push(cartItem);
+          }
+        }
+      );
+
+      setCartItems([...newAddons, ...checkedAddons]);
 
       // if (item.id) {
       message.info({
@@ -205,7 +222,7 @@ const FoodItem = ({ item }) => {
     const addonObj = {
       id: addonItem.add_on_id,
       add_on_id: addonItem.add_on_id,
-      addOnId: addonItem.add_on_id,
+      food_id: addonItem.date_inserted,
       price: addonItem.price,
       total_price:
         addonsPrice === 0 ? addonsQuantity * addonItem.price : addonsPrice,
@@ -283,6 +300,7 @@ const FoodItem = ({ item }) => {
         {
           ...addonsItem,
           id: addonsItem.add_on_id,
+          food_id: addonsItem.date_inserted,
           product_name: addonsItem.add_on_name,
           total_price: totalPrice,
           quantity,
