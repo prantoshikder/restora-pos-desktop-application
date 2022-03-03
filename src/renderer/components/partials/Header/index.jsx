@@ -1,4 +1,8 @@
+import { HomeOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Row } from 'antd';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import PremiumVersion from '../PremiumVersion';
 // import cashRegisterIcon from '../../../../../assets/icons/cash-register.png';
 import './Header.style.scss';
 
@@ -6,6 +10,7 @@ import './Header.style.scss';
 // const { Option } = Select;
 
 const Header = ({ settings }) => {
+  const [premiumVersion, setPremiumVersion] = useState(false);
   // const [form] = Form.useForm();
   // const [openModal, setOpenModal] = useState(false);
   // const [cashRegister, setCashRegister] = useState([]);
@@ -51,37 +56,61 @@ const Header = ({ settings }) => {
         <Row>
           <div className="pos_header">
             <div>
-              <Button type="primary" size="large" className="pos_btn new_order">
+              <Button type="primary" size="large" className="pos_btn">
+                <Link to="/">
+                  <HomeOutlined />
+                </Link>
+              </Button>
+
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn new_order premium_btn"
+                onClick={() => setPremiumVersion(true)}
+              >
                 New Order
               </Button>
+
               <Button
                 type="primary"
                 size="large"
                 className="pos_btn on_going_order"
               >
-                On Going Order
+                <Link to="/on_going_order">On Going Order</Link>
               </Button>
+
               <Button
                 type="primary"
                 size="large"
-                className="pos_btn kitchen_status"
+                className="pos_btn kitchen_status premium_btn"
+                onClick={() => setPremiumVersion(true)}
               >
                 Kitchen Status
               </Button>
-              <Button type="primary" size="large" className="pos_btn qr_order">
-                QR Order
-              </Button>
+
               <Button
                 type="primary"
                 size="large"
-                className="pos_btn online_order"
+                className="pos_btn qr_order premium_btn"
+                onClick={() => setPremiumVersion(true)}
+              >
+                QR Order
+              </Button>
+
+              <Button
+                type="primary"
+                size="large"
+                className="pos_btn online_order premium_btn"
+                onClick={() => setPremiumVersion(true)}
               >
                 Online Order
               </Button>
+
               <Button
                 type="primary"
                 size="large"
-                className="pos_btn today_order"
+                className="pos_btn today_order premium_btn"
+                onClick={() => setPremiumVersion(true)}
               >
                 Today Order
               </Button>
@@ -162,6 +191,11 @@ const Header = ({ settings }) => {
           </Row>
         </Modal> */}
       </ConfigProvider>
+
+      <PremiumVersion
+        premiumVersion={premiumVersion}
+        setPremiumVersion={setPremiumVersion}
+      />
     </>
   );
 };

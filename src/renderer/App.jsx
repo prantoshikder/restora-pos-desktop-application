@@ -16,6 +16,7 @@ import FoodVariant from './pages/foodManagement/manageFood/FoodVariant';
 import MenuType from './pages/foodManagement/manageFood/MenuType';
 import Home from './pages/Home';
 import Language from './pages/Language/';
+import OnGoingOrder from './pages/OnGoingOrder';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
@@ -46,6 +47,10 @@ export default function App() {
         <SystemMenu settings={settings} />
         <Routes>
           <Route path="/" element={<Home settings={settings} />} />
+          <Route
+            path="/on_going_order"
+            element={<OnGoingOrder settings={settings} />}
+          />
 
           <Route
             path="/add_category"
