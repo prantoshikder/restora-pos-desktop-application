@@ -21,11 +21,11 @@ import {
   TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import PremiumVersion from '../partials/PremiumVersion/index';
 import { getDataFromDatabase } from './../../../helpers';
 import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
-import PremiumVersion from './PremiumVersion/index';
 import WarmingModal from './WarmingModal';
 
 const { Option } = Select;
