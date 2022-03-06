@@ -1,13 +1,27 @@
-import { Col } from 'antd';
+import { Col, message } from 'antd';
 import './OnGoingOrderCart.style.scss';
 
-const OnGoingOrderCart = ({ orderCard, setOrderComplete }) => {
+const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
+  // console.log('orderCard', orderCard);
+
   const handleCartItem = (e, foodData) => {
-    // console.log('foodData', foodData);
+    if (foodData.selected === true) {
+      message.success({
+        content: 'Customer info added successfully',
+        className: 'custom-class',
+        duration: 1,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+      return;
+    }
 
     if (!foodData.isSelected) {
       foodData.isSelected = true;
       e.currentTarget.style.borderColor = '#0088f2';
+      selectedItem();
       setOrderComplete(foodData);
     } else {
       foodData.isSelected = false;
