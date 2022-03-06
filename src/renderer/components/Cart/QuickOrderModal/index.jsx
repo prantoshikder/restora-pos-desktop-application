@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Row, Space, Typography } from 'antd';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
 import { ContextData } from './../../../contextApi';
 import './QuickOrderModal.style.scss';
