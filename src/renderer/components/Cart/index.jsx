@@ -136,7 +136,6 @@ const Cart = ({ settings }) => {
   const handleCalculation = () => {};
 
   const handleSubmitOrder = (data) => {
-
     console.log('141: data', cartItems);
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
@@ -225,8 +224,6 @@ const Cart = ({ settings }) => {
     let discount = 0,
       totalVatBasedOnPrice = 0,
       serviceCharge = 0,
-      // percentServiceChargeWith = 0,
-      // fixedServiceCharge = 0;
 
     // calculate if it has discount type & amount
     if (settings.discount_type === 'Amount') {
@@ -254,24 +251,6 @@ const Cart = ({ settings }) => {
       serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
     }
 
-    // if (settings?.service_chargeType) {
-    //   // Total amount of vat
-
-    //   if (settings?.service_chargeType === 'amount') {
-    //     return (
-    //       parseFloat(totalPrice.toFixed(2)) +
-    //       fixedServiceCharge +
-    //       totalVatBasedOnPrice
-    //     );
-    //   } else {
-    //     return (
-    //       parseFloat(totalPrice.toFixed(2)) +
-    //       percentServiceChargeWith +
-    //       totalVatBasedOnPrice
-    //     );
-    //   }
-    // }
-console.log(serviceCharge);
     return parseFloat((totalPrice + discount + totalVatBasedOnPrice + serviceCharge).toFixed(2));
   };
 
