@@ -524,6 +524,7 @@ const Cart = ({ settings }) => {
             </table> */}
           </div>
 
+
           <div className="grand_total">
             <div>
               <span>Grand Total</span>

@@ -8,10 +8,13 @@ const { Text, Title } = Typography;
 const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
+  // const [foodItems, setFoodItems] = useState(null);
+  console.log('orderData', orderData);
+  console.log('cartItems', cartItems);
+
   const handlePayBtn = () => {
     // TODO: Status process
 
-    console.log('orderData', orderData);
     window.update_order_info_ongoing.send(
       'update_order_info_ongoing',
       orderData
@@ -47,13 +50,28 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
               </Title>
             </div>
 
+            {/* orderData
+cartItems */}
             <div style={{ height: '330px', overflowY: 'scroll' }}>
-              {/* {cartItems?.map((item) => (
-                <div className="flex content_between order_item" key={item?.id}>
-                  <h3>{item?.name}</h3>
-                  <h3>${item?.price}</h3>
-                </div>
-              ))} */}
+              {cartItems.length > 0 &&
+                cartItems?.map((item) => (
+                  <div
+                    className="flex content_between order_item"
+                    key={item?.id}
+                  >
+                    <h3>{item?.name}</h3>
+                    <h3>${item?.price}</h3>
+                  </div>
+                ))}
+
+              {orderData !== undefined &&
+                JSON.parse(orderData?.order_info).length > 0 &&
+                JSON.parse(orderData?.order_info).map((item, index) => (
+                  <div className="flex content_between order_item" key={index}>
+                    <h3>{item?.product_name}</h3>
+                    <h3>${item?.price}</h3>
+                  </div>
+                ))}
             </div>
 
             <div className="total_order">
