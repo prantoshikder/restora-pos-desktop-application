@@ -12,17 +12,23 @@ import { useState } from 'react';
 import PremiumVersion from '../partials/PremiumVersion';
 import './OnGoingFooter.style.scss';
 
-const OnGoingFooter = () => {
+const OnGoingFooter = ({ orderComplete }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
 
-  window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', { 'status': true })
+  // window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
+  //   status: true,
+  // });
 
-  window.get_all_order_info_ongoing.once('get_all_order_info_ongoing_response', (args)=>{
-    console.log("***************************", args);
-  })
+  // window.get_all_order_info_ongoing.once(
+  //   'get_all_order_info_ongoing_response',
+  //   (args) => {
+  //     console.log('***************************', args);
+  //   }
+  // );
 
-  function orderCompleted(orderId) {
-    console.log('orderId:::::::::: ', orderId);
+  function orderCompleted(orderData) {
+    console.log('orderId:::::::::: ', orderData);
+    window.update_order_info_ongoing.send('update_order_info_ongoing', orderData)
   }
 
   return (
@@ -84,11 +90,12 @@ const OnGoingFooter = () => {
                   <EditOutlined /> Edit
                 </Button>
 
-                <Button type="primary" className="on_going_btn complete_btn"
-                  onClick={() => orderCompleted(100)}
+                <Button
+                  type="primary"
+                  className="on_going_btn complete_btn"
+                  onClick={() => orderCompleted(orderComplete)}
                 >
                   <CheckCircleOutlined /> Complete
-
                 </Button>
               </div>
             </Col>

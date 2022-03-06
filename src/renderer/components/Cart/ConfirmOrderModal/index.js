@@ -20,6 +20,7 @@ const ConfirmOrderModal = (props) => {
   const [quickOrder, setQuickOrder] = useState(false);
 
   const quickOrderModal = () => {
+    setCartItems([]);
     setConfirmOrder(false);
     setQuickOrder(true);
   };
@@ -42,7 +43,6 @@ const ConfirmOrderModal = (props) => {
   const placeOrderModal = () => {
     setConfirmOrder(false);
     // let win = BrowserWindow.getFocusedWindow();
-    console.log('win');
 
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
