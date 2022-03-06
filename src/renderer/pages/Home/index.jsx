@@ -92,6 +92,7 @@ const Home = ({ settings }) => {
       .catch((err) => console.log(err));
   }, []);
 
+  // Search Food Items
   const handleSearchProducts = () => {
     setLoading(true);
 

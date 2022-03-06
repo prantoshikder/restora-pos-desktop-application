@@ -5,24 +5,24 @@ const OnGoingOrderCart = ({ foodItem }) => {
   const handleCartItem = (e, foodData) => {
     if (!foodData.isSelected) {
       foodData.isSelected = true;
-      e.currentTarget.style.border = '2px solid #0088f2';
-      e.currentTarget.style.borderRadius = '4px';
+      e.currentTarget.style.borderColor = '#0088f2';
+      // e.currentTarget.style.borderRadius = '4px';
     } else {
       foodData.isSelected = false;
-      e.currentTarget.style.border = '';
-      e.currentTarget.style.borderRadius = '0px';
+      e.currentTarget.style.borderColor = '';
+      // e.currentTarget.style.borderRadius = '0px';
     }
   };
 
   return (
     <Col lg={4}>
-      <div
-        className="on_going_menu_item"
-        onClick={(e) => handleCartItem(e, foodItem)}
-      >
+      <div className="on_going_menu_item">
         <Row>
           <Col lg={24}>
-            <div className="menu_info_content">
+            <div
+              className="menu_info_content"
+              onClick={(e) => handleCartItem(e, foodItem)}
+            >
               <li>Waiter:</li>
               <li>Order Number:</li>
               <li>Running Time:</li>
