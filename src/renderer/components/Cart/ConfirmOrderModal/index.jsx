@@ -15,11 +15,13 @@ const ConfirmOrderModal = (props) => {
   const [quickOrder, setQuickOrder] = useState(false);
 
   const quickOrderModal = () => {
+    setCartItems([]);
     setConfirmOrder(false);
     setQuickOrder(true);
   };
 
   const placeOrderModal = () => {
+    setCartItems([]);
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
