@@ -1,10 +1,11 @@
 // import InVoiceLogo from '../../../../assets/retora_pos.png';
+import { Modal } from 'antd';
 import moment from 'moment';
 import { useContext } from 'react';
 import { ContextData } from './../../contextApi/index';
 import './InVoiceGenerate.style.scss';
 
-const InVoiceGenerate = ({settings}) => {
+const InVoiceGenerate = ({settings, openModal, setOpenModal, openInvoice, setOpenInvoice}) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   const handleCalculatePrice = () => {
@@ -49,6 +50,15 @@ const InVoiceGenerate = ({settings}) => {
   const date = new Date();
 
   return (
+    <Modal
+        // title="Select Your Payment Method"
+        visible={openInvoice}
+        onOk={() => setOpenInvoice(false)}
+        onCancel={() => setOpenInvoice(false)}
+        // footer={null}
+        width={600}
+      >
+
     <div id="munir" className="inVoice_wrapper">
       <div className="inVoice_print_area">
         <div className="in_voice_logo">
@@ -59,7 +69,7 @@ const InVoiceGenerate = ({settings}) => {
 
         <div className="in_voice_info flex content_between">
           <p style={{fontWeight: '700'}}>Date: {`${moment(date).format('LL')}`}</p>
-          <p>TIN OR VAT NUM.: {settings.vattinno}</p>
+          <p>TIN OR VAT NUM.: {settings?.vattinno}</p>
         </div>
 
         <div style={{ border: '1px dashed #918c8c' }}></div>
@@ -80,9 +90,9 @@ const InVoiceGenerate = ({settings}) => {
           {/* <div className="in_voice_info flex content_between">
             <p>content</p>
             <p>25$</p>
-          </div>
-
-          <div className="in_voice_info flex content_between">
+            </div>
+            
+            <div className="in_voice_info flex content_between">
             <p>content</p>
             <p>25$</p>
           </div> */}
@@ -94,10 +104,10 @@ const InVoiceGenerate = ({settings}) => {
         <div className="in_voice_info flex content_between">
           <h4 style={{fontWeight: '700'}}>Subtotal</h4>
           {/* {cartItems?.length !== 0 ? (
-                <span>${handleCalculatePrice()}</span>
-              ) : (
-                <span>$0.00</span>
-              )} */}
+            <span>${handleCalculatePrice()}</span>
+            ) : (
+              <span>$0.00</span>
+            )} */}
           <h4 style={{fontWeight: '700'}}>100$</h4>
         </div>
 
@@ -144,6 +154,7 @@ const InVoiceGenerate = ({settings}) => {
         <p style={{textAlign: 'center'}}>https://restorapos.com/</p>
       </div>
     </div>
+    </Modal>
   );
 };
 
