@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
 import OnGoingOrderItems from 'renderer/components/OnGoingOrderItems';
-// import OnGoingFooter from '../../components/OnGoingFooter';
+import OnGoingFooter from '../../components/OnGoingFooter';
 import { getDataFromDatabase } from './../../../helpers';
 import Header from './../../components/partials/Header';
 
@@ -19,7 +19,6 @@ const OnGoingOrder = ({ settings }) => {
       window.get_all_order_info_ongoing
     ).then((data) => {
       if (Array.isArray(data) && data?.length > 0) {
-        // console.log('***************************', data);
         setOrderData(data);
       }
     });
@@ -39,7 +38,7 @@ const OnGoingOrder = ({ settings }) => {
 
       <InVoiceGenerate settings={settings} />
 
-      {/* <OnGoingFooter orderComplete={orderComplete} settings={settings} /> */}
+      <OnGoingFooter orderComplete={orderComplete} settings={settings} />
     </div>
   );
 };

@@ -2,9 +2,9 @@ import { Col } from 'antd';
 import './OnGoingOrderCart.style.scss';
 
 const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
-  // console.log('orderCard', orderCard);
-
   const handleCartItem = (foodData) => {
+    console.log('foodData', foodData);
+
     selectedItem(foodData);
     setOrderComplete(foodData);
   };
