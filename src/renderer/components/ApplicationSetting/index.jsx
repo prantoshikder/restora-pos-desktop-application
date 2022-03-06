@@ -36,7 +36,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
-      console.log('!!!!!!!!!!!!!!!!!!', data);
       setAppSettingsData(data[0]);
       const response = data[0];
       setDefaultData([
@@ -74,8 +73,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             response?.discount_type === 2
               ? 'Percent'
               : response?.discount_type === 1
-                ? 'Amount'
-                : 'Percent',
+              ? 'Amount'
+              : 'Percent',
         },
         {
           name: ['discountrate'],
@@ -305,8 +304,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                       />
                     )
                   )}
-
-
                 </Col>
               </Row>
             </Form.Item>

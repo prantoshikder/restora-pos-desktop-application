@@ -41,13 +41,14 @@ const ConfirmOrderModal = (props) => {
   };
 
   const placeOrderModal = () => {
+    setConfirmOrder(false);
     // let win = BrowserWindow.getFocusedWindow();
 
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
+    // document.body.innerHTML = printContents;
+    // window.print();
+    // document.body.innerHTML = originalContents;
 
     // win.webContents.print(options, (success, failureReason) => {
     //   if (!success) console.log(failureReason);
@@ -55,7 +56,7 @@ const ConfirmOrderModal = (props) => {
     //   console.log('Print Initiated');
     // });
 
-    // console.log('printContents', printContents);
+    console.log('printContents', originalContents);
   };
 
   return (

@@ -1,32 +1,12 @@
-import { Col, message } from 'antd';
+import { Col } from 'antd';
 import './OnGoingOrderCart.style.scss';
 
 const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
   // console.log('orderCard', orderCard);
 
-  const handleCartItem = (e, foodData) => {
-    if (foodData.selected === true) {
-      message.success({
-        content: 'Customer info added successfully',
-        className: 'custom-class',
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-      return;
-    }
-
-    if (!foodData.isSelected) {
-      foodData.isSelected = true;
-      e.currentTarget.style.borderColor = '#0088f2';
-      selectedItem();
-      setOrderComplete(foodData);
-    } else {
-      foodData.isSelected = false;
-      e.currentTarget.style.borderColor = '';
-    }
+  const handleCartItem = (foodData) => {
+    selectedItem(foodData);
+    setOrderComplete(foodData);
   };
 
   return (
@@ -34,7 +14,10 @@ const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
       <div className="on_going_menu_item">
         <div
           className="menu_info_content"
-          onClick={(e) => handleCartItem(e, orderCard)}
+          onClick={() => handleCartItem(orderCard)}
+          style={{
+            borderColor: orderCard.isSelected ? '#0088f2' : '#e0e0e0',
+          }}
         >
           <li>Order Number: {orderCard.order_id}</li>
           {orderCard.is_active === 1 ? (

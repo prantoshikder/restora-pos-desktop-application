@@ -879,7 +879,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
   }
 });
 
-// Insert and update order info
+// Insert order info
 ipcMain.on('get_all_order_info', (event, args) => {
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
@@ -905,7 +905,7 @@ ipcMain.on('get_all_order_info_ongoing', (event, args) => {
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT * FROM orders
-    where is_active = 0`;
+    where is_active = 1`;
 
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
