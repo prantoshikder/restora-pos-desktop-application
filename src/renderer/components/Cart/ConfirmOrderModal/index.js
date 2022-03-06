@@ -5,6 +5,11 @@ import '../cart.styles.scss';
 import QuickOrderModal from '../QuickOrderModal';
 import { ContextData } from './../../../contextApi';
 
+// const { BrowserWindow } = require('electron').remote;
+
+// const electron = require('electron');
+// const BrowserWindow = electron.remote.BrowserWindow;
+
 const { Text } = Typography;
 
 const ConfirmOrderModal = (props) => {
@@ -19,12 +24,38 @@ const ConfirmOrderModal = (props) => {
     setQuickOrder(true);
   };
 
+  const options = {
+    silent: false,
+    printBackground: true,
+    color: false,
+    margin: {
+      marginType: 'printableArea',
+    },
+    landscape: false,
+    pagesPerSheet: 1,
+    collate: false,
+    copies: 1,
+    header: 'Header of the Page',
+    footer: 'Footer of the Page',
+  };
+
   const placeOrderModal = () => {
+    // let win = BrowserWindow.getFocusedWindow();
+    console.log('win', window.print());
+
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
-    // window.print();
+    window.print();
     document.body.innerHTML = originalContents;
+
+    // win.webContents.print(options, (success, failureReason) => {
+    //   if (!success) console.log(failureReason);
+
+    //   console.log('Print Initiated');
+    // });
+
+    // console.log('printContents', printContents);
   };
 
   return (
