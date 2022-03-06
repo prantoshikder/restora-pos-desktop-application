@@ -37,7 +37,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
 
     let discount = 0,
       totalVatBasedOnPrice = 0,
-      serviceCharge = 0,
+      serviceCharge = 0
 
     // calculate if it has discount type & amount
     if (settings.discount_type === 1) {
