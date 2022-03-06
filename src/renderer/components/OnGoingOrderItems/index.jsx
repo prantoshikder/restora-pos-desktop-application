@@ -1,12 +1,15 @@
 import { Row } from 'antd';
-import foodItems from '../../../temp/foods.json';
 import OnGoingOrderCart from './../OnGoingOrderCart';
 
-const OnGoingOrderItems = () => {
+const OnGoingOrderItems = ({ orderData, setOrderComplete }) => {
   return (
     <Row gutter={10} style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {foodItems?.foods?.map((foodItem) => (
-        <OnGoingOrderCart key={foodItem?.id} foodItem={foodItem} />
+      {orderData?.map((orderCard) => (
+        <OnGoingOrderCart
+          key={orderCard?.order_id}
+          orderCard={orderCard}
+          setOrderComplete={setOrderComplete}
+        />
       ))}
     </Row>
   );

@@ -20,6 +20,7 @@ const ConfirmOrderModal = (props) => {
   const [quickOrder, setQuickOrder] = useState(false);
 
   const quickOrderModal = () => {
+    setCartItems([]);
     setConfirmOrder(false);
     setQuickOrder(true);
   };
