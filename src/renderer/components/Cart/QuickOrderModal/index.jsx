@@ -9,13 +9,6 @@ const { Text, Title } = Typography;
 const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openInvoice, setOpenInvoice] = useState(false)
-  const [calculatePrice, setCalculatePrice] = useState({
-    subTotal: 0,
-    serviceCharge: 0,
-    gst: 0,
-    discount: 0,
-    grandTotal: 0,
-  });
 
   const handlePayBtn = () => {
     setOpenModal(false);
@@ -32,19 +25,15 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
 
   };
 
-console.log('settings',settings);
   const handleCalculatePrice = () => {
     if(orderData?.order_info === undefined) return;
 
-    const orderArray = JSON.parse(orderData?.order_info);
+    const orderArray = orderData?.order_info && JSON.parse(orderData?.order_info);
 
-    // orderData?.order_info && JSON.parse(orderData?.order_info)
     let totalPrice = orderArray?.reduce(
       (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
       0
     );
-
-
 
     let discount = 0,
       totalVatBasedOnPrice = 0,
@@ -85,12 +74,9 @@ console.log('settings',settings);
       discount,
       grandTotal,
     }
-
   };
 
-  // handleCalculatePrice();
-  console.log(handleCalculatePrice());
-
+  console.log('orderData.order_info', orderData);
 
   return (
     <>
@@ -118,37 +104,48 @@ console.log('settings',settings);
                 </Title>
               </div>
 
-              <div style={{ height: '330px', overflowY: 'scroll' }}>
-                {cartItems.length > 0 &&
-                  cartItems?.map((item) => (
-                    <div
-                      className="flex content_between order_item"
-                      key={item?.id}
-                    >
-                      <h3>{item?.name}</h3>
-                      <h3>${item?.price}</h3>
-                    </div>
-                  ))}
+            <div style={{ height: '330px', overflowY: 'scroll' }}>
+              {cartItems.length > 0 &&
+                cartItems?.map((item, index) => (
+                  <div
+                    className="flex content_between order_item"
+                    key={index}
+                  >
+                    <h3>{item?.name}</h3>
+                    <h3>${item?.price}</h3>
+                  </div>
+                ))}
 
-                {orderData !== undefined &&
-                  JSON.parse(orderData?.order_info).length > 0 &&
-                  JSON.parse(orderData?.order_info).map((item, index) => (
-                    <div className="flex content_between order_item" key={index}>
-                      <h3>{item?.product_name}</h3>
-                      <h3>${item?.price}</h3>
-                    </div>
-                  ))}
-              </div>
+              {orderData !== undefined && Object.keys(orderData).length > 0 &&
+                JSON.parse(orderData.order_info)?.length > 0 &&
+                JSON.parse(orderData.order_info)?.map((item, index) => (
+                  <div className="flex content_between order_item" key={index}>
+                    <h3>{item?.product_name}</h3>
+                    <h3>${item?.price}</h3>
+                  </div>
+                ))}
+            </div>
+
+            <div className="total_order">
+              <Title level={4}>
+                Subtotal{' '}
+                <span style={{ float: 'right' }}>
+                  ${handleCalculatePrice()?.totalPrice}
+                </span>
+              </Title>
+              <Title level={4}>
+                Service Charge <span style={{ float: 'right' }}>${handleCalculatePrice()?.serviceCharge ? handleCalculatePrice()?.serviceCharge : "0.00"}</span>
+              </Title>
+              <Title level={4}>
+                GST @ {settings?.vat}% <span style={{ float: 'right' }}>${handleCalculatePrice()?.totalVatBasedOnPrice ? handleCalculatePrice()?.totalVatBasedOnPrice : "0.00"}</span>
+              </Title>
+            </div>
 
               <div className="total_order">
                 <Title level={4}>
                   Subtotal{' '}
                   <span style={{ float: 'right' }}>
                     ${handleCalculatePrice()?.totalPrice}
-                    {/* {cartItems.reduce(
-                      (prevPrice, currentPrice) => prevPrice + currentPrice.price,
-                      0
-                    )} */}
                   </span>
                 </Title>
                 <Title level={4}>

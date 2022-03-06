@@ -19,9 +19,16 @@ const OnGoingFooter = ({ orderComplete, settings }) => {
   const [orderData, setOrderData] = useState();
 
   function orderCompleted(orderItem) {
-    console.log('orderId:::::::::: ', orderItem);
+    if (Object.keys(orderItem).length === 0) {
+      return true;
+    }
+
     setOpenModal(true);
     setOrderData(orderItem);
+    // window.update_order_info_ongoing.send(
+    //   'update_order_info_ongoing',
+    //   orderItem
+    // );
   }
 
   return (
