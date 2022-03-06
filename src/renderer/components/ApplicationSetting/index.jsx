@@ -36,6 +36,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
+      console.log('!!!!!!!!!!!!!!!!!!', data);
       setAppSettingsData(data[0]);
       const response = data[0];
       setDefaultData([
@@ -73,8 +74,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             response?.discount_type === 2
               ? 'Percent'
               : response?.discount_type === 1
-              ? 'Amount'
-              : 'Percent',
+                ? 'Amount'
+                : 'Percent',
         },
         {
           name: ['discountrate'],
@@ -299,18 +300,13 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     appSettingsData?.favicon && (
                       <Image
                         width={125}
-                        src={appSettingsData?.favicon}
+                        src={`file://${appSettingsData?.favicon}`}
                         preview={false}
                       />
                     )
                   )}
 
-                  {/* {appSettingsData?.favicon && (
-                    <Image width={125} src={appSettingsData?.favicon} />
-                  )}
-                  {favIcon && (
-                    <Image width={125} src={URL.createObjectURL(favIcon)} />
-                  )} */}
+
                 </Col>
               </Row>
             </Form.Item>
@@ -353,7 +349,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     appSettingsData?.logo && (
                       <Image
                         width={125}
-                        src={appSettingsData?.logo}
+                        src={`file://${appSettingsData?.logo}`}
                         preview={false}
                       />
                     )

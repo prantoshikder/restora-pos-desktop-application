@@ -102,7 +102,6 @@ const FoodItem = ({ item }) => {
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.food_id === item.food_id
     );
-    console.log('isCartItemExist', isCartItemExist);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 

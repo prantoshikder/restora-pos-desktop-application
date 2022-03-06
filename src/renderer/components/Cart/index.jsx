@@ -1,9 +1,7 @@
 import {
-  DownOutlined,
   FileAddOutlined,
   PlusCircleOutlined,
-  ShoppingCartOutlined,
-  UpOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,7 +16,7 @@ import {
   Row,
   Select,
   Space,
-  TimePicker,
+  TimePicker
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import PremiumVersion from '../partials/PremiumVersion/index';
@@ -35,6 +33,7 @@ const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
+  console.log('settings', settings);
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -102,78 +101,11 @@ const Cart = ({ settings }) => {
     setQuantityValue(newQuantity);
   };
 
-  const columns = [
-    {
-      title: 'Item',
-      dataIndex: 'product_name',
-      key: 'product_name',
-    },
-    {
-      title: 'Variant Name',
-      dataIndex: 'foodVariant',
-      key: 'foodVariant',
-      align: 'center',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      align: 'center',
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      align: 'center',
-      width: '10%',
-      render: (text, record) => (
-        <div>
-          <InputNumber
-            value={record.quantity}
-            onChange={(value) => {}}
-            className="quantity_value"
-            controls={false}
-          />
-
-          <div className="quantity_increase_decrease">
-            <span onClick={() => increaseQuantity(record)}>
-              <UpOutlined />
-            </span>
-            <span onClick={() => decreaseQuantity(record)}>
-              <DownOutlined />
-            </span>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: 'Total',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      align: 'center',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      align: 'center',
-      render: (text, record) => (
-        <Space size="middle" className="delete_icon">
-          <FontAwesomeIcon
-            icon={faTrashAlt}
-            onClick={() => handleDeleteItem(record)}
-          />
-        </Space>
-      ),
-    },
-  ];
-
   const selectTime = (time, timeString) => {
     console.log('Cooking time', timeString);
   };
 
   const handleDeleteItem = (item) => {
-    console.log('item', item);
-
     message.success({
       content: 'Successfully Delete Item',
       className: 'custom-class',
@@ -203,7 +135,10 @@ const Cart = ({ settings }) => {
 
   const handleCalculation = () => {};
 
-  const handleQuickOrder = (data) => {
+  const handleSubmitOrder = (data) => {
+    console.log('141: data', cartItems);
+    window.get_all_order_info.send('get_all_order_info', cartItems);
+
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -266,6 +201,57 @@ const Cart = ({ settings }) => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
+  };
+
+  const handleFoodQuantity = (quantity, item) => {
+    const index = cartItems.findIndex(
+      (cartItem) => cartItem.food_id === item.food_id
+    );
+
+    setCartItems([
+      ...cartItems.slice(0, index),
+      { ...item, quantity, total_price: quantity * item.price },
+      ...cartItems.slice(index + 1),
+    ]);
+  };
+
+  const handleCalculatePrice = () => {
+    let totalPrice = cartItems?.reduce(
+      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
+      0
+    );
+
+    let discount = 0,
+      totalVatBasedOnPrice = 0,
+      serviceCharge = 0,
+
+    // calculate if it has discount type & amount
+    if (settings.discount_type === 'Amount') {
+      discount = parseFloat(settings?.discountrate?.toFixed(2));
+    } else {
+      discount = parseFloat(
+        (totalPrice * settings?.discountrate?.toFixed(2)) / 100
+      );
+    }
+
+    // calculate if it has vat amount in percentage
+    if (settings?.vat) {
+      totalVatBasedOnPrice = parseFloat(
+        ((totalPrice * settings?.vat) / 100).toFixed(2)
+      );
+    }
+
+    // calculate if service_chargeType and service charge is available
+    if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
+      // Fixed amount
+      serviceCharge = parseFloat(
+        settings?.servicecharge?.toFixed(2)
+      );
+    } else {
+      serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
+    }
+
+    return parseFloat((totalPrice + discount + totalVatBasedOnPrice + serviceCharge).toFixed(2));
   };
 
   return (
@@ -454,7 +440,9 @@ const Cart = ({ settings }) => {
                             <th>
                               <InputNumber
                                 value={item.quantity}
-                                onChange={(value) => {}}
+                                min={1}
+                                max={100}
+                                onChange={(e) => handleFoodQuantity(e, item)}
                                 className="quantity_value"
                                 // controls={false}
                               />
@@ -535,17 +523,11 @@ const Cart = ({ settings }) => {
             </div>
 
             <div>
-              {/* {cartItems?.length !== 0 ? (
-                <span>
-                  $
-                  {cartItems?.reduce(
-                    (prevPrice, currentPrice) => prevPrice + currentPrice.price,
-                    0
-                  )}
-                </span>
+              {cartItems?.length !== 0 ? (
+                <span>${handleCalculatePrice()}</span>
               ) : (
                 <span>$0.00</span>
-              )} */}
+              )}
             </div>
           </div>
 
@@ -569,7 +551,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="quick_order_btn cartGroup_btn"
-              onClick={() => handleQuickOrder('quickOrder')}
+              onClick={() => handleSubmitOrder('quickOrder')}
             >
               Quick Order
             </Button>
@@ -577,7 +559,7 @@ const Cart = ({ settings }) => {
             <Button
               size="large"
               className="place_order_btn cartGroup_btn"
-              onClick={() => handleQuickOrder('placeOrder')}
+              onClick={() => handleSubmitOrder('placeOrder')}
             >
               Place Order
             </Button>

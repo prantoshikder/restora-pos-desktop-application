@@ -1,12 +1,15 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import '../cart.styles.scss';
 import QuickOrderModal from '../QuickOrderModal';
+import { ContextData } from './../../../contextApi';
 
 const { Text } = Typography;
 
 const ConfirmOrderModal = (props) => {
+  const { cartItems, setCartItems } = useContext(ContextData);
+
   const { confirmOrder, setConfirmOrder, confirmBtn, printId, settings } =
     props;
   const [quickOrder, setQuickOrder] = useState(false);
