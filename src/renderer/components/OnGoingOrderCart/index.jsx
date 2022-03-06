@@ -20,7 +20,7 @@ const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
           }}
         >
           <li>Order Number: {orderCard.order_id}</li>
-          {orderCard.is_active === 1 ? (
+          {orderCard.is_active === 0 ? (
             <li>Status: Pending</li>
           ) : (
             <li>Status: Completed</li>
