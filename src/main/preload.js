@@ -287,6 +287,13 @@ sendDataThroughMiddlewareOn(
   'get_all_order_info_ongoing_response' //Response
 );
 
+// Update orders info
+sendDataThroughMiddlewareOn(
+  'update_order_info_ongoing', //Event Name
+  'update_order_info_ongoing', // Channel Name
+  'update_order_info_ongoing_response' //Response
+);
+
 
 /*======================================================================
   FUNCTION DECLARATIONS
