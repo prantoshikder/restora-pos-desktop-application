@@ -225,9 +225,9 @@ const Cart = ({ settings }) => {
       serviceCharge = 0,
 
     // calculate if it has discount type & amount
-    if (settings.discount_type === 'Amount') {
+    if (settings.discount_type === 1) {
       discount = parseFloat(settings?.discountrate?.toFixed(2));
-    } else {
+    } else if(settings.discount_type === 2) {
       discount = parseFloat(
         (totalPrice * settings?.discountrate?.toFixed(2)) / 100
       );
@@ -250,7 +250,7 @@ const Cart = ({ settings }) => {
       serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
     }
 
-    return parseFloat((totalPrice + discount + totalVatBasedOnPrice + serviceCharge).toFixed(2));
+    return parseFloat(((totalPrice + totalVatBasedOnPrice + serviceCharge) - discount) .toFixed(2) );
   };
 
   return (
@@ -492,19 +492,27 @@ const Cart = ({ settings }) => {
         <div className="cart_footer">
           <div className="service_charge">
             <Row>
-              <Col span={12}>
+              <Col span={settings?.discount_type ? 9 : 12}>
                 <b>Vat/Tax: </b>
                 {settings?.vat}%
               </Col>
-              <Col span={12}>
+              <Col span={settings?.discount_type ? 9 : 12}>
                 <b>
-                  Service Charge(
-                  {settings?.service_chargeType === 'amount'
-                    ? 'Fixed'
-                    : '%'}):{' '}
-                </b>
-                {settings?.servicecharge}
+                  Service Charge:
+                  {settings?.service_chargeType === 'amount' && "(Fixed)"}
+                </b> {" "}
+                {settings?.servicecharge}{settings?.service_chargeType !== 'amount' && "(%)"}
               </Col>
+
+              {/* Discount type 2 = percent & Discount type 1 = amount */}
+              {settings?.discount_type && (
+                <Col span={6}>
+                  <b>
+                    Discount: {settings?.discount_type === 1 && '(Fixed)'}
+                  </b>
+                  {settings?.discountrate} {settings?.discount_type === 2 && "(%)"}
+                </Col>
+              )}
             </Row>
             {/* <table bordered="true">
               <tbody size="small">
