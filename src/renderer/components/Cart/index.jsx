@@ -1,7 +1,7 @@
 import {
   FileAddOutlined,
   PlusCircleOutlined,
-  ShoppingCartOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ import {
   Row,
   Select,
   Space,
-  TimePicker,
+  TimePicker
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import PremiumVersion from '../partials/PremiumVersion/index';
@@ -220,7 +220,9 @@ const Cart = ({ settings }) => {
 
     let discount = 0,
       totalVatBasedOnPrice = 0,
-      serviceCharge = 0;
+      serviceCharge = 0,
+      // percentServiceChargeWith = 0,
+      // fixedServiceCharge = 0;
 
     // calculate if it has discount type & amount
     if (settings.discount_type === 'Amount') {
@@ -241,45 +243,32 @@ const Cart = ({ settings }) => {
     // calculate if service_chargeType and service charge is available
     if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
       // Fixed amount
-      const fixedServiceCharge = parseFloat(
+      serviceCharge = parseFloat(
         settings?.servicecharge?.toFixed(2)
       );
-
-      // Total amount it is percentige
-      const percentServiceChargeWith = parseFloat(
-        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
-      );
-
-      serviceCharge =
-        parseFloat(totalPrice.toFixed(2)) +
-        fixedServiceCharge +
-        totalVatBasedOnPrice;
     } else {
-      serviceCharge =
-        parseFloat(totalPrice.toFixed(2)) +
-        percentServiceChargeWith +
-        totalVatBasedOnPrice;
+      serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
     }
 
-    if (settings?.service_chargeType) {
-      // Total amount of vat
+    // if (settings?.service_chargeType) {
+    //   // Total amount of vat
 
-      if (settings?.service_chargeType === 'amount') {
-        return (
-          parseFloat(totalPrice.toFixed(2)) +
-          fixedServiceCharge +
-          totalVatBasedOnPrice
-        );
-      } else {
-        return (
-          parseFloat(totalPrice.toFixed(2)) +
-          percentServiceChargeWith +
-          totalVatBasedOnPrice
-        );
-      }
-    }
-
-    return totalPrice + discount + totalVatBasedOnPrice;
+    //   if (settings?.service_chargeType === 'amount') {
+    //     return (
+    //       parseFloat(totalPrice.toFixed(2)) +
+    //       fixedServiceCharge +
+    //       totalVatBasedOnPrice
+    //     );
+    //   } else {
+    //     return (
+    //       parseFloat(totalPrice.toFixed(2)) +
+    //       percentServiceChargeWith +
+    //       totalVatBasedOnPrice
+    //     );
+    //   }
+    // }
+console.log(serviceCharge);
+    return parseFloat((totalPrice + discount + totalVatBasedOnPrice + serviceCharge).toFixed(2));
   };
 
   return (
