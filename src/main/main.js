@@ -887,7 +887,7 @@ ipcMain.on('get_all_order_info', (event, args) => {
       `CREATE TABLE IF NOT EXISTS orders(
       "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "order_info" varchar(255),
-      "is_active" INT NOT NULL DEFAULT 0
+      "is_active" INT NOT NULL DEFAULT 1
   )`
     ).run(
       `INSERT OR REPLACE INTO orders (order_info)

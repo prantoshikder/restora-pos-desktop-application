@@ -33,7 +33,6 @@ const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
-  console.log('settings', settings);
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
