@@ -10,12 +10,15 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
 
   const handlePayBtn = () => {
     // TODO: Status process
-
-    console.log('orderData', orderData);
     window.update_order_info_ongoing.send(
       'update_order_info_ongoing',
       orderData
     );
+
+    window.update_order_info_ongoing.once('update_order_info_ongoing_response', (args)=>{
+      console.log("))))))))))))))))))))))))))))))))))))))", args);
+    })
+
   };
 
   return (

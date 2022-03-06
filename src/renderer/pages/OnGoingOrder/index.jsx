@@ -19,7 +19,6 @@ const OnGoingOrder = ({ settings }) => {
       window.get_all_order_info_ongoing
     ).then((data) => {
       if (Array.isArray(data) && data?.length > 0) {
-        // console.log('***************************', data);
         setOrderData(data);
       }
     });
