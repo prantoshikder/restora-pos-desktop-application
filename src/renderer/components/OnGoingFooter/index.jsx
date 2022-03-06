@@ -28,6 +28,7 @@ const OnGoingFooter = ({ orderComplete }) => {
 
   function orderCompleted(orderData) {
     console.log('orderId:::::::::: ', orderData);
+    window.update_order_info_ongoing.send('update_order_info_ongoing', orderData)
   }
 
   return (
