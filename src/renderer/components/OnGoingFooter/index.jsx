@@ -16,14 +16,16 @@ import './OnGoingFooter.style.scss';
 const OnGoingFooter = ({ orderComplete, settings }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [orderData, setOrderData] = useState();
 
-  function orderCompleted(orderData) {
-    console.log('orderId:::::::::: ', orderData);
+  function orderCompleted(orderItem) {
+    console.log('orderId:::::::::: ', orderItem);
     setOpenModal(true);
-    window.update_order_info_ongoing.send(
-      'update_order_info_ongoing',
-      orderData
-    );
+    setOrderData(orderItem);
+    // window.update_order_info_ongoing.send(
+    //   'update_order_info_ongoing',
+    //   orderItem
+    // );
   }
 
   return (
@@ -107,6 +109,7 @@ const OnGoingFooter = ({ orderComplete, settings }) => {
         settings={settings}
         openModal={openModal}
         setOpenModal={setOpenModal}
+        orderData={orderData}
       />
     </>
   );

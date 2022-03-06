@@ -5,8 +5,18 @@ import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
 
-const QuickOrderModal = ({ openModal, setOpenModal, settings }) => {
+const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
+
+  const handlePayBtn = () => {
+    // TODO: Status process
+
+    console.log('orderData', orderData);
+    window.update_order_info_ongoing.send(
+      'update_order_info_ongoing',
+      orderData
+    );
+  };
 
   return (
     <Modal
@@ -153,7 +163,9 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings }) => {
                     >
                       Payable Amount:
                     </Button>
-                    <Button type="primary">Pay Now & Print Invoice</Button>
+                    <Button type="primary" onClick={handlePayBtn}>
+                      Pay Now & Print Invoice
+                    </Button>
                   </Space>
                 </Col>
               </Row>
