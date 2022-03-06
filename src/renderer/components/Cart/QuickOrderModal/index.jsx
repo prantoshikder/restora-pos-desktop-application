@@ -95,10 +95,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
 
             <div style={{ height: '330px', overflowY: 'scroll' }}>
               {cartItems.length > 0 &&
-                cartItems?.map((item) => (
+                cartItems?.map((item, index) => (
                   <div
                     className="flex content_between order_item"
-                    key={item?.id}
+                    key={index}
                   >
                     <h3>{item?.name}</h3>
                     <h3>${item?.price}</h3>
