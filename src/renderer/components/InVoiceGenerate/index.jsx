@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { ContextData } from './../../contextApi/index';
 import './InVoiceGenerate.style.scss';
 
-const InVoiceGenerate = ({settings, openModal, setOpenModal}) => {
+const InVoiceGenerate = ({settings, openModal, setOpenModal, openInvoice, setOpenInvoice}) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   const handleCalculatePrice = () => {
@@ -52,11 +52,11 @@ const InVoiceGenerate = ({settings, openModal, setOpenModal}) => {
   return (
     <Modal
         // title="Select Your Payment Method"
-        visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
-        footer={null}
-        width={1200}
+        visible={openInvoice}
+        onOk={() => setOpenInvoice(false)}
+        onCancel={() => setOpenInvoice(false)}
+        // footer={null}
+        width={600}
       >
 
     <div id="munir" className="inVoice_wrapper">

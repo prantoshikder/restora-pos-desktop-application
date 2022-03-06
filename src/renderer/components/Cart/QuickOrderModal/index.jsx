@@ -8,6 +8,7 @@ const { Text, Title } = Typography;
 
 const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
+  const [openInvoice, setOpenInvoice] = useState(false)
   const [calculatePrice, setCalculatePrice] = useState({
     subTotal: 0,
     serviceCharge: 0,
@@ -17,7 +18,8 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   });
 
   const handlePayBtn = () => {
-    setOpenModal(true)
+    setOpenModal(false);
+    setOpenInvoice(true);
     // TODO: Status process
     window.update_order_info_ongoing.send(
       'update_order_info_ongoing',
@@ -253,7 +255,7 @@ console.log('settings',settings);
         </Row>
       </Modal>
 
-      <InVoiceGenerate settings={settings} openModal={openModal} setOpenModal={setOpenModal} />
+      <InVoiceGenerate settings={settings} openModal={openModal} setOpenModal={setOpenModal} openInvoice={openInvoice} setOpenInvoice={setOpenInvoice} />
     </>
   );
 };
