@@ -26,9 +26,8 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const handleCalculatePrice = () => {
     if(orderData?.order_info === undefined) return;
 
-    const orderArray = JSON.parse(orderData?.order_info);
+    const orderArray = orderData?.order_info && JSON.parse(orderData?.order_info);
 
-    // orderData?.order_info && JSON.parse(orderData?.order_info)
     let totalPrice = orderArray?.reduce(
       (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
       0
@@ -75,6 +74,8 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
     }
   };
 
+  console.log('orderData.order_info', orderData);
+
   return (
     <>
       <Modal
@@ -113,9 +114,9 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                   </div>
                 ))}
 
-              {orderData !== undefined &&
-                JSON.parse(orderData?.order_info).length > 0 &&
-                JSON.parse(orderData?.order_info).map((item, index) => (
+              {orderData !== undefined && Object.keys(orderData).length > 0 &&
+                JSON.parse(orderData.order_info)?.length > 0 &&
+                JSON.parse(orderData.order_info)?.map((item, index) => (
                   <div className="flex content_between order_item" key={index}>
                     <h3>{item?.product_name}</h3>
                     <h3>${item?.price}</h3>
