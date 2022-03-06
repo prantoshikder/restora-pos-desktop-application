@@ -10,25 +10,22 @@ import {
 import { Button, Col, Row } from 'antd';
 import { useState } from 'react';
 import PremiumVersion from '../partials/PremiumVersion';
+import QuickOrderModal from './../Cart/QuickOrderModal/index';
 import './OnGoingFooter.style.scss';
 
-const OnGoingFooter = ({ orderComplete }) => {
+const OnGoingFooter = ({ orderComplete, settings }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [orderData, setOrderData] = useState();
 
-  // window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
-  //   status: true,
-  // });
-
-  // window.get_all_order_info_ongoing.once(
-  //   'get_all_order_info_ongoing_response',
-  //   (args) => {
-  //     console.log('***************************', args);
-  //   }
-  // );
-
-  function orderCompleted(orderData) {
-    console.log('orderId:::::::::: ', orderData);
-    window.update_order_info_ongoing.send('update_order_info_ongoing', orderData)
+  function orderCompleted(orderItem) {
+    console.log('orderId:::::::::: ', orderItem);
+    setOpenModal(true);
+    setOrderData(orderItem);
+    // window.update_order_info_ongoing.send(
+    //   'update_order_info_ongoing',
+    //   orderItem
+    // );
   }
 
   return (
@@ -106,6 +103,13 @@ const OnGoingFooter = ({ orderComplete }) => {
       <PremiumVersion
         premiumVersion={premiumVersion}
         setPremiumVersion={setPremiumVersion}
+      />
+
+      <QuickOrderModal
+        settings={settings}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        orderData={orderData}
       />
     </>
   );

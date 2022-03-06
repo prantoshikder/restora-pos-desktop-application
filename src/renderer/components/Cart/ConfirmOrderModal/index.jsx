@@ -1,9 +1,9 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
 import { useContext, useState } from 'react';
+import { ContextData } from '../../../contextApi';
 import '../cart.styles.scss';
 import QuickOrderModal from '../QuickOrderModal';
-import { ContextData } from './../../../contextApi';
 
 // const { BrowserWindow } = require('electron').remote;
 
@@ -17,12 +17,12 @@ const ConfirmOrderModal = (props) => {
 
   const { confirmOrder, setConfirmOrder, confirmBtn, printId, settings } =
     props;
-  const [quickOrder, setQuickOrder] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const quickOrderModal = () => {
     setCartItems([]);
     setConfirmOrder(false);
-    setQuickOrder(true);
+    setOpenModal(true);
   };
 
   const options = {
@@ -105,8 +105,8 @@ const ConfirmOrderModal = (props) => {
 
       <QuickOrderModal
         settings={settings}
-        quickOrder={quickOrder}
-        setQuickOrder={setQuickOrder}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
       />
     </>
   );
