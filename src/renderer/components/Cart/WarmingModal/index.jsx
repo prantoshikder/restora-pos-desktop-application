@@ -1,6 +1,5 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
-import React from 'react';
 import './WarmingModal.styles.scss';
 
 const { Text, Title } = Typography;
@@ -21,12 +20,9 @@ const WarmingModal = ({ warmingModal, setWarmingModal }) => {
               <ExclamationCircleOutlined />
             </div>
 
-            <Title level={2}>Order Failed!!!</Title>
+            <Title level={2}>Sorry, empty cart!</Title>
 
-            <Text>
-              Order not placed due to some reason. Please Try Again!!!. Thank
-              You !!!
-            </Text>
+            <Text>No food items in the cart.</Text>
 
             <div className="flex content_center group_button">
               <Button

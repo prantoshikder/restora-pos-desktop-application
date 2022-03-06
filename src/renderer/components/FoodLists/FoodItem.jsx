@@ -65,7 +65,7 @@ const FoodItem = ({ item }) => {
           quantity: item.variants[0].quantity,
         };
 
-        e.currentTarget.style.border = '2px solid #297600';
+        e.currentTarget.style.borderColor = '#297600';
         setCartItems([...cartItems, cartItem]);
       } else {
         const index = cartItems.findIndex(
@@ -410,6 +410,11 @@ const FoodItem = ({ item }) => {
                         <select
                           name=""
                           onChange={(e) => handleVariantPrice(e.target.value)}
+                          style={{
+                            height: '1.9rem',
+                            width: '5.5rem',
+                            borderColor: '#ddd',
+                          }}
                         >
                           {addonsAdd?.variants?.map((addonItem, index) => (
                             <option

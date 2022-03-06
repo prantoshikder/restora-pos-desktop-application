@@ -80,11 +80,7 @@ const OnGoingFooter = () => {
                   <EditOutlined /> Kot
                 </Button>
 
-                <Button
-                  type="primary"
-                  className="on_going_btn edit_btn premium_btn"
-                  onClick={() => setPremiumVersion(true)}
-                >
+                <Button type="primary" className="on_going_btn edit_btn">
                   <EditOutlined /> Edit
                 </Button>
 
