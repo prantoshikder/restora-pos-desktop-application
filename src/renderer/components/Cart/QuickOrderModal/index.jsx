@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Row, Space, Typography } from 'antd';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ContextData } from './../../../contextApi';
 import './QuickOrderModal.style.scss';
 
@@ -7,13 +7,6 @@ const { Text, Title } = Typography;
 
 const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
-  const [calculatePrice, setCalculatePrice] = useState({
-    subTotal: 0,
-    serviceCharge: 0,
-    gst: 0,
-    discount: 0,
-    grandTotal: 0,
-  });
 
   const handlePayBtn = () => {
     // TODO: Status process
@@ -23,7 +16,6 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
     );
   };
 
-console.log('settings',settings);
   const handleCalculatePrice = () => {
     if(orderData?.order_info === undefined) return;
 
@@ -34,8 +26,6 @@ console.log('settings',settings);
       (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
       0
     );
-
-
 
     let discount = 0,
       totalVatBasedOnPrice = 0,
@@ -76,12 +66,7 @@ console.log('settings',settings);
       discount,
       grandTotal,
     }
-
   };
-
-  // handleCalculatePrice();
-  console.log(handleCalculatePrice());
-
 
   return (
     <Modal
@@ -135,10 +120,6 @@ console.log('settings',settings);
                 Subtotal{' '}
                 <span style={{ float: 'right' }}>
                   ${handleCalculatePrice()?.totalPrice}
-                  {/* {cartItems.reduce(
-                    (prevPrice, currentPrice) => prevPrice + currentPrice.price,
-                    0
-                  )} */}
                 </span>
               </Title>
               <Title level={4}>
