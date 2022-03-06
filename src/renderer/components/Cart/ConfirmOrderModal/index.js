@@ -42,7 +42,6 @@ const ConfirmOrderModal = (props) => {
 
   const placeOrderModal = () => {
     // let win = BrowserWindow.getFocusedWindow();
-    console.log('win', window.print());
 
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
