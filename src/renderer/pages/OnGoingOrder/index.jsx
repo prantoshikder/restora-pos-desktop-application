@@ -10,7 +10,7 @@ const OnGoingOrder = ({ settings }) => {
     status: true,
   });
 
-  const [orderData, setOrderData] = useState(null);
+  const [orderData, setOrderData] = useState([]);
   const [orderComplete, setOrderComplete] = useState({});
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const OnGoingOrder = ({ settings }) => {
       window.get_all_order_info_ongoing
     ).then((data) => {
       if (Array.isArray(data) && data?.length > 0) {
-        console.log('***************************', data);
+        // console.log('***************************', data);
         setOrderData(data);
       }
     });
@@ -32,13 +32,14 @@ const OnGoingOrder = ({ settings }) => {
       <div className="on_going_order_menu" style={{ margin: '0rem 1.2rem' }}>
         <OnGoingOrderItems
           orderData={orderData}
+          setOrderData={setOrderData}
           setOrderComplete={setOrderComplete}
         />
       </div>
 
       <InVoiceGenerate />
 
-      <OnGoingFooter orderComplete={orderComplete} />
+      <OnGoingFooter orderComplete={orderComplete} settings={settings} />
     </div>
   );
 };

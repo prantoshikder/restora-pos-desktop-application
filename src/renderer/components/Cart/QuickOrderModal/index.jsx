@@ -5,15 +5,15 @@ import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
 
-const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
+const QuickOrderModal = ({ openModal, setOpenModal, settings }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
   return (
     <Modal
       title="Select Your Payment Method"
-      visible={quickOrder}
-      onOk={() => setQuickOrder(false)}
-      onCancel={() => setQuickOrder(false)}
+      visible={openModal}
+      onOk={() => setOpenModal(false)}
+      onCancel={() => setOpenModal(false)}
       footer={null}
       width={1200}
     >
@@ -132,13 +132,25 @@ const QuickOrderModal = ({ quickOrder, setQuickOrder, settings }) => {
                 </Col>
                 <Col lg={9}>
                   <Space className="flex" style={{ flexDirection: 'column' }}>
-                    <Button style={{ padding: '0 3.4rem' }} type="primary">
+                    <Button
+                      className="premium_btn"
+                      style={{ padding: '0 3.4rem' }}
+                      type="primary"
+                    >
                       Due Invoice
                     </Button>
-                    <Button style={{ padding: '0 3.2rem' }} type="primary">
+                    <Button
+                      className="premium_btn"
+                      style={{ padding: '0 3.2rem' }}
+                      type="primary"
+                    >
                       Change Due:
                     </Button>
-                    <Button style={{ padding: '0 2.4rem' }} type="primary">
+                    <Button
+                      className="premium_btn"
+                      style={{ padding: '0 2.4rem' }}
+                      type="primary"
+                    >
                       Payable Amount:
                     </Button>
                     <Button type="primary">Pay Now & Print Invoice</Button>
