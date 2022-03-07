@@ -126,21 +126,6 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 ))}
             </div>
 
-            {/* <div className="total_order">
-              <Title level={4}>
-                Subtotal{' '}
-                <span style={{ float: 'right' }}>
-                  ${handleCalculatePrice()?.totalPrice}
-                </span>
-              </Title>
-              <Title level={4}>
-                Service Charge <span style={{ float: 'right' }}>${handleCalculatePrice()?.serviceCharge ? handleCalculatePrice()?.serviceCharge : "0.00"}</span>
-              </Title>
-              <Title level={4}>
-                GST @ {settings?.vat}% <span style={{ float: 'right' }}>${handleCalculatePrice()?.totalVatBasedOnPrice ? handleCalculatePrice()?.totalVatBasedOnPrice : "0.00"}</span>
-              </Title>
-            </div> */}
-
               <div className="total_order">
                 <Title level={4}>
                   Subtotal{' '}
