@@ -22,10 +22,6 @@ const OnGoingFooter = ({ orderComplete, settings }) => {
     console.log('orderId:::::::::: ', orderItem);
     setOpenModal(true);
     setOrderData(orderItem);
-    // window.update_order_info_ongoing.send(
-    //   'update_order_info_ongoing',
-    //   orderItem
-    // );
   }
 
   return (

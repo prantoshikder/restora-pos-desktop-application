@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
 import OnGoingOrderItems from 'renderer/components/OnGoingOrderItems';
-// import OnGoingFooter from '../../components/OnGoingFooter';
+import OnGoingFooter from '../../components/OnGoingFooter';
 import { getDataFromDatabase } from './../../../helpers';
 import Header from './../../components/partials/Header';
 
@@ -39,7 +39,7 @@ const OnGoingOrder = ({ settings }) => {
 
       <InVoiceGenerate settings={settings} />
 
-      {/* <OnGoingFooter orderComplete={orderComplete} settings={settings} /> */}
+      <OnGoingFooter orderComplete={orderComplete} settings={settings} />
     </div>
   );
 };

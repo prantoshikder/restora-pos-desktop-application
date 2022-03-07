@@ -26,7 +26,7 @@ const OnGoingOrderItems = ({ orderData, setOrderData, setOrderComplete }) => {
       {orderData?.map((orderCard) => (
         <OnGoingOrderCart
           key={orderCard?.order_id}
-          // selectedItem={selectedItem}
+          selectedItem={selectedItem}
           orderCard={orderCard}
           setOrderComplete={setOrderComplete}
         />
