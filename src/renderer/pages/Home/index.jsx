@@ -125,15 +125,17 @@ const Home = ({ settings }) => {
   };
 
   const handleAddToCartItem = (foodCartItem) => {
-    if (foodCartItem?.variants?.length > 1) {
-      setIsExpanded(false);
-      closeModal();
-      setCartItems(foodCartItem);
-    } else {
-      setIsExpanded(false);
-      closeModal();
-      setCartItems(foodCartItem);
-    }
+    console.log('foodCartItem', foodCartItem);
+
+    // if (foodCartItem?.variants?.length > 1) {
+    //   setIsExpanded(false);
+    //   closeModal();
+    //   setCartItems(foodCartItem);
+    // } else {
+    //   setIsExpanded(false);
+    //   closeModal();
+    //   setCartItems(foodCartItem);
+    // }
   };
 
   return (

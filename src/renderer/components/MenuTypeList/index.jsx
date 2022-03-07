@@ -265,7 +265,14 @@ const MenuTypeList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              setUpdateMenuType({});
+              form.resetFields();
+            }}
+          >
             <PlusCircleOutlined />
             Add Menu Type
           </Button>

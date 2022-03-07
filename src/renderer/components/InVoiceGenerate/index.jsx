@@ -11,7 +11,7 @@ const InVoiceGenerate = ({
   setOpenModal,
   openInvoice,
   setOpenInvoice,
-  setPrintInvoiceData,
+  // setPrintInvoiceData,
 }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
   const invoiceWrapperRef = useRef(null);
@@ -56,7 +56,7 @@ const InVoiceGenerate = ({
   // };
 
   const date = new Date();
-  setPrintInvoiceData(invoiceWrapperRef.current);
+  // setPrintInvoiceData(invoiceWrapperRef.current);
 
   return (
     <Modal

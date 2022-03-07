@@ -18,7 +18,7 @@ import {
   TimePicker,
   Typography,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -290,7 +290,14 @@ const FoodAvailabilityList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              setUpdateAvailableItem({});
+              form.resetFields();
+            }}
+          >
             <PlusCircleOutlined />
             Add Available Day & Time
           </Button>
@@ -427,7 +434,7 @@ const FoodAvailabilityList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {updateAvailableItem?.food_id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>

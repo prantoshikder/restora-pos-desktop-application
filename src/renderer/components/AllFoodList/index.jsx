@@ -149,8 +149,6 @@ const AllFoodList = () => {
     });
   };
 
-  console.log('foodData', foodData);
-
   return (
     <div
       style={{

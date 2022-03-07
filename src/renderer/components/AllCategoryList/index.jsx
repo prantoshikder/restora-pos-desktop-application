@@ -64,7 +64,6 @@ const AllCategoryList = () => {
 
   let navigate = useNavigate();
   const handleEditCategory = (categoryItem) => {
-    console.log('categoryItem', categoryItem);
     navigate('/add_category', { state: categoryItem });
   };
 
