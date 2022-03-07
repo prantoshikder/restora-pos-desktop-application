@@ -8,7 +8,8 @@ const { Text, Title } = Typography;
 
 const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
-  const [openInvoice, setOpenInvoice] = useState(false)
+  const [openInvoice, setOpenInvoice] = useState(false);
+  const [printInvoiceData, setPrintInvoiceData] = useState(null);
 
   const handlePayBtn = () => {
     setOpenModal(false);
@@ -180,12 +181,12 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
               </div>
 
               <Space>
-                <Button>Cash Payment</Button>
-                <Button>Card Payment</Button>
-                <Button>Mobile Payment</Button>
-                <Button>SSL Commerz</Button>
-                <Button>Two Checkout</Button>
-                <Button>Food Panda</Button>
+                <Button type="primary" style={{backgroundColor: "#1aa25a", borderColor: "#1aa25a", marginLeft: 10}}>Cash Payment</Button>
+                <Button disabled>Card Payment</Button>
+                <Button disabled>Mobile Payment</Button>
+                <Button disabled>SSL Commerz</Button>
+                <Button disabled>Two Checkout</Button>
+                <Button disabled>Food Panda</Button>
               </Space>
 
               <div
@@ -195,7 +196,9 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                   marginLeft: '1.5rem',
                 }}
               >
-                <Text>Do you Want to Print Invoice???</Text>
+                <Text>Total Payment</Text>
+                <h3>${handleCalculatePrice()?.grandTotal}</h3>
+
               </div>
 
               <div
@@ -207,7 +210,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
               >
                 <Row gutter={20}>
                   <Col lg={15}>
-                    <Text>
+                    {/* <Text>
                       Lorem ipsum dolor sit amet consectetur adipisicing elit. At,
                       iusto dolorem fugit, eligendi veritatis, corporis inventore
                       aspernatur perspiciatis ab facere consectetur aliquam
@@ -215,7 +218,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                       voluptates? Aut voluptates ad suscipit earum amet tenetur
                       expedita quas in et eaque quo magni quae doloribus at non
                       quod
-                    </Text>
+                    </Text> */}
                   </Col>
                   <Col lg={9}>
                     <Space className="flex" style={{ flexDirection: 'column' }}>
@@ -252,7 +255,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
         </Row>
       </Modal>
 
-      <InVoiceGenerate settings={settings} openModal={openModal} setOpenModal={setOpenModal} openInvoice={openInvoice} setOpenInvoice={setOpenInvoice} />
+      <InVoiceGenerate settings={settings} openModal={openModal} setOpenModal={setOpenModal} openInvoice={openInvoice} setOpenInvoice={setOpenInvoice} setPrintInvoiceData={setPrintInvoiceData} />
     </>
   );
 };
