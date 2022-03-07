@@ -1167,6 +1167,29 @@ deleteListItem(
 ipcMain.on('context_bridge_menu_type', (event, args) => {
   let { id, menu_type, menu_icon, is_active } = args;
 
+  let menu_type_icon;
+
+  try {
+    if (args.menu_icon) {
+      menu_type_icon = JSON.parse(args.menu_icon);
+    }
+  } catch (error) {
+    menu_type_icon = args.menu_icon;
+  }
+
+  // Set categories images and icons path
+  let menu_icon_folder_name = 'menu_icons';
+
+  setImagePath(
+    menu_icon_folder_name, // Menu images folder name
+    "", // Menu icons folder name
+    menu_type_icon?.path, // Menu image path
+    menu_type_icon?.name, // Menu image name
+    "", // Menu icon path
+    "" // Menu icon name
+  );
+
+
   // Execute if the event has menu type ID. It is used to update a specific item
   if (args.id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -1175,7 +1198,18 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
       db.run(
         `INSERT OR REPLACE INTO menu_type (id, menu_type, menu_icon, is_active)
         VALUES (?, ?, ?, ?)`,
-        [id, menu_type, menu_icon, is_active],
+        [
+          id,
+          menu_type,
+          menu_type_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
+            : menu_type_icon,
+          is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -1203,7 +1237,17 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
       ).run(
         `INSERT OR REPLACE INTO menu_type (menu_type, menu_icon, is_active)
           VALUES (?, ?, ?)`,
-        [menu_type, menu_icon, is_active],
+        [
+          menu_type,
+          menu_type_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
+            : menu_type_icon,
+          is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(
