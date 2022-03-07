@@ -11,6 +11,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const [openInvoice, setOpenInvoice] = useState(false)
 
   const handlePayBtn = () => {
+    console.log("orderData", JSON.parse(orderData.order_info));
     setOpenModal(false);
     setOpenInvoice(true);
     // TODO: Status process
@@ -76,7 +77,6 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
     }
   };
 
-  console.log('orderData.order_info', orderData);
 
   return (
     <>
@@ -126,7 +126,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 ))}
             </div>
 
-            <div className="total_order">
+            {/* <div className="total_order">
               <Title level={4}>
                 Subtotal{' '}
                 <span style={{ float: 'right' }}>
@@ -139,7 +139,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
               <Title level={4}>
                 GST @ {settings?.vat}% <span style={{ float: 'right' }}>${handleCalculatePrice()?.totalVatBasedOnPrice ? handleCalculatePrice()?.totalVatBasedOnPrice : "0.00"}</span>
               </Title>
-            </div>
+            </div> */}
 
               <div className="total_order">
                 <Title level={4}>
@@ -252,7 +252,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
         </Row>
       </Modal>
 
-      <InVoiceGenerate settings={settings} openModal={openModal} setOpenModal={setOpenModal} openInvoice={openInvoice} setOpenInvoice={setOpenInvoice} />
+      <InVoiceGenerate handleCalculatePrice={handleCalculatePrice}  settings={settings} openModal={openModal} setOpenModal={setOpenModal} openInvoice={openInvoice} setOpenInvoice={setOpenInvoice} />
     </>
   );
 };
