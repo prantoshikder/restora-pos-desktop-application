@@ -49,7 +49,7 @@ const InVoiceGenerate = ({settings}) => {
   const date = new Date();
 
   return (
-    <div className="inVoice_wrapper">
+    <div id="munir" className="inVoice_wrapper">
       <div className="inVoice_print_area">
         <div className="in_voice_logo">
           {/* <img src={InVoiceLogo} alt="" /> */}

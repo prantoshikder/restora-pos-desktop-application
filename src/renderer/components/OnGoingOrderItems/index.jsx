@@ -2,13 +2,24 @@ import { Row } from 'antd';
 import OnGoingOrderCart from './../OnGoingOrderCart';
 
 const OnGoingOrderItems = ({ orderData, setOrderData, setOrderComplete }) => {
-  // function selectedItem() {
-  //   orderData.forEach((selectItem) => {
-  //     selectItem.isSelected = false;
-  //   });
+  function selectedItem(foodData) {
+    const deselectAllCards = orderData.map((item) => ({
+      ...item,
+      isSelected: false,
+    }));
 
-  //   setOrderData(orderData);
-  // }
+    const index = orderData.findIndex(
+      (item) => item.order_id === foodData.order_id
+    );
+
+    const newCards = [
+      ...deselectAllCards.slice(0, index),
+      { ...foodData, isSelected: true },
+      ...deselectAllCards.slice(index + 1),
+    ];
+
+    setOrderData(newCards);
+  }
 
   return (
     <Row gutter={[20, 20]} style={{ display: 'flex', flexWrap: 'wrap' }}>
