@@ -19,6 +19,7 @@ import {
   TimePicker
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import Calculator from '../Calculator/index.jsx';
 import PremiumVersion from '../partials/PremiumVersion/index';
 import { getDataFromDatabase } from './../../../helpers';
 import { ContextData } from './../../contextApi';
@@ -132,7 +133,11 @@ const Cart = ({ settings }) => {
     });
   };
 
-  const handleCalculation = () => {};
+  const [openCalculator, setOpenCalculator] = useState(false)
+
+  const handleCalculation = () => {
+    setOpenCalculator(true)
+  };
 
   const handleSubmitOrder = (data) => {
     window.get_all_order_info.send('get_all_order_info', cartItems);
@@ -675,6 +680,18 @@ const Cart = ({ settings }) => {
         premiumVersion={premiumVersion}
         setPremiumVersion={setPremiumVersion}
       />
+
+      <Modal
+        // title="Add Customer"
+        visible={openCalculator}
+        onOk={() => setOpenCalculator(false)}
+        onCancel={() => setOpenCalculator(false)}
+        footer={null}
+        width={0}
+      > 
+        <Calculator />
+      </Modal>
+
     </div>
   );
 };

@@ -62,13 +62,8 @@ const Header = ({ settings }) => {
                 </Link>
               </Button>
 
-              <Button
-                type="primary"
-                size="large"
-                className="pos_btn new_order premium_btn"
-                onClick={() => setPremiumVersion(true)}
-              >
-                New Order
+              <Button type="primary" size="large" className="pos_btn new_order">
+                <Link to="/">New Order</Link>
               </Button>
 
               <Button

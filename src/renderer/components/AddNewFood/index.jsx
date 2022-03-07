@@ -48,11 +48,8 @@ const AddNewFood = ({ state, settings }) => {
 
   const offerStatus = state?.offer_is_available === 1 ? true : false;
   const [isOfferChecked, setIsOfferChecked] = useState(offerStatus);
-
   const [checkedList, setCheckedList] = useState(selectedValue);
   const [indeterminate, setIndeterminate] = useState(true);
-
-  console.log('state', state);
 
   useEffect(() => {
     setAddNewFood([
@@ -567,7 +564,7 @@ const AddNewFood = ({ state, settings }) => {
                 Reset
               </Button>
               <Button type="primary" htmlType="submit">
-                Submit
+                {state?.category_id ? 'Update' : 'Submit'}
               </Button>
             </Form.Item>
           </Col>

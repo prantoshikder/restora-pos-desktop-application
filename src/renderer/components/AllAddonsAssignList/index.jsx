@@ -65,7 +65,6 @@ const AllAddonsAssignList = () => {
       'get_menu_add_on_lists_channel_response',
       window.get_menu_add_on_lists_channel
     ).then((res) => {
-      console.log('res', res);
       setAddonsList(res);
     });
 
@@ -96,7 +95,6 @@ const AllAddonsAssignList = () => {
         setAddonNames(addonNames);
         setFoodNames(foodNames);
         let newAddonNames = [];
-        console.log(addonNames, foodNames);
 
         addonsList?.map((addon, index) => {
           const newAddons = addonNames.find(
@@ -106,8 +104,6 @@ const AllAddonsAssignList = () => {
           const newFoodItems = foodNames.find(
             (foodItem) => foodItem.id === addon.menu_id
           );
-
-          console.log('newFoodItems', newFoodItems);
 
           newAddonNames.push({
             id: addon.id,
@@ -277,7 +273,13 @@ const AllAddonsAssignList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              form.resetFields();
+            }}
+          >
             <PlusCircleOutlined />
             Add-ons Assign
           </Button>
@@ -362,7 +364,7 @@ const AllAddonsAssignList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {updateAssignAddons?.id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>

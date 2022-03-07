@@ -17,7 +17,7 @@ import {
   Table,
   Typography,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -186,7 +186,6 @@ const FoodVariantList = () => {
       newFoodVariant.food_id = updateFoodVariant.food_id;
     }
 
-    console.log('newFoodVariant', newFoodVariant);
     // Insert & update
     window.add_new_foods_variant.send('add_new_foods_variant', newFoodVariant);
 
@@ -196,7 +195,7 @@ const FoodVariantList = () => {
       (args) => {
         if (args === 'updated') {
           message.success({
-            content: 'Food variant deleted successfully',
+            content: 'Food variant updated successfully',
             className: 'custom-class',
             duration: 1,
             style: {
@@ -206,11 +205,12 @@ const FoodVariantList = () => {
           });
 
           setOpenModal(false);
+          form.resetFields();
         } else {
           setReRender((prevState) => !prevState);
 
           message.success({
-            content: 'Food variant deleted successfully',
+            content: 'Food variant added successfully',
             className: 'custom-class',
             duration: 1,
             style: {
@@ -239,7 +239,14 @@ const FoodVariantList = () => {
         }}
       >
         <div className="flex  mb-3">
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              form.resetFields();
+              setUpdateFoodVariant({});
+            }}
+          >
             <PlusCircleOutlined />
             Add Variant
           </Button>
@@ -325,7 +332,7 @@ const FoodVariantList = () => {
                   Reset
                 </Button>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {updateFoodVariant?.food_id ? 'Update' : 'Add'}
                 </Button>
               </Form.Item>
             </Form>

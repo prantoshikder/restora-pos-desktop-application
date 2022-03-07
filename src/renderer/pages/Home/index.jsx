@@ -1,10 +1,10 @@
-import { CloseOutlined } from '@ant-design/icons';
-import { Col, ConfigProvider, Input, Row } from 'antd';
+import { Col, ConfigProvider, Row } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import { useContext, useEffect, useState } from 'react';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
+import Search from 'renderer/components/Search';
 import PosSidebar from './../../components/PosSidebar';
 import { ContextData } from './../../contextApi';
 import './Home.style.scss';
@@ -34,12 +34,7 @@ const Home = ({ settings }) => {
   const [addonsList, setAddonsList] = useState(null);
   const [foodNames, setFoodNames] = useState(null);
   const [foodLists, setFoodLists] = useState([]);
-
-  const [searchResults, setSearchResults] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
   const [selectedMenu, setSelectedMenu] = useState();
-  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -92,50 +87,6 @@ const Home = ({ settings }) => {
       .catch((err) => console.log(err));
   }, []);
 
-  // Search Food Items
-  const handleSearchProducts = () => {
-    setLoading(true);
-
-    if (searchValue?.length > 1) {
-      const searchItems = foodLists.filter((foodItems) =>
-        foodItems.product_name
-          .toLowerCase()
-          .match(new RegExp(searchValue.toLowerCase(), 'g'))
-      );
-
-      if (searchItems?.length > 0) {
-        setSearchResults(searchItems);
-        setLoading(false);
-      }
-    } else {
-      closeModal();
-      setLoading(false);
-    }
-  };
-
-  function closeModal() {
-    setSearchResults('');
-    setSearchValue('');
-  }
-
-  const isEmpty = !searchResults || searchResults.length === 0;
-
-  const expandContainer = () => {
-    setIsExpanded(true);
-  };
-
-  const handleAddToCartItem = (foodCartItem) => {
-    if (foodCartItem?.variants?.length > 1) {
-      setIsExpanded(false);
-      closeModal();
-      setCartItems(foodCartItem);
-    } else {
-      setIsExpanded(false);
-      closeModal();
-      setCartItems(foodCartItem);
-    }
-  };
-
   return (
     <div className="main_wrapper">
       <Header settings={settings} />
@@ -158,75 +109,7 @@ const Home = ({ settings }) => {
                 <Col lg={14}>
                   <Row className="search_food_wrapper">
                     <Col lg={18} push={3}>
-                      <Input
-                        type="text"
-                        placeholder="Search"
-                        size="large"
-                        onFocus={expandContainer}
-                        value={searchValue}
-                        onChange={(e) => {
-                          handleSearchProducts();
-                          setSearchValue(e.target.value);
-                        }}
-                      />
-
-                      {isExpanded && (
-                        <div className="searchResultWrapper">
-                          <CloseOutlined
-                            onClick={() => {
-                              setIsExpanded(false);
-                              closeModal();
-                            }}
-                          />
-
-                          <div className="">
-                            {isLoading && (
-                              <div>
-                                <p>Loading...</p>
-                              </div>
-                            )}
-
-                            {!isLoading && isEmpty && (
-                              <div>
-                                <p>Start typing to search</p>
-                              </div>
-                            )}
-
-                            {searchResults?.length > 0 && (
-                              <>
-                                {searchResults?.map((item) => (
-                                  <div
-                                    key={item?.id}
-                                    className="flex content_between item_center"
-                                    style={{
-                                      marginTop: '10px',
-                                      cursor: 'pointer',
-                                      backgroundColor: '#f4f4f4',
-                                      padding: '0.5rem 2rem',
-                                    }}
-                                    onClick={() => handleAddToCartItem(item)}
-                                  >
-                                    <p>{item?.product_name}</p>
-
-                                    <img
-                                      src={item?.product_image}
-                                      height="50px"
-                                      width="50px"
-                                      style={{
-                                        float: 'right',
-                                        width: '50px',
-                                        height: '50px',
-                                        objectFit: 'cover',
-                                      }}
-                                      alt=""
-                                    />
-                                  </div>
-                                ))}
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      <Search foodLists={foodLists} />
                     </Col>
                   </Row>
 

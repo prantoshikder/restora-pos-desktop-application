@@ -4,7 +4,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Image, message, Modal, Space, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../../../assets/default.jpg';
 import { getDataFromDatabase } from './../../../helpers';
@@ -56,8 +56,6 @@ const AllCategoryList = () => {
             category.category_is_active = 'Inactive';
           }
         });
-
-        console.log('categories', allCats);
 
         setCategories(allCats);
       })
