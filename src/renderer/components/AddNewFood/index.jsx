@@ -241,11 +241,14 @@ const AddNewFood = ({ state, settings }) => {
       : (newFoods.is_offer = 0);
 
     newFoods.special === true ? (newFoods.special = 1) : (newFoods.special = 0);
+
     if (productImage) {
       newFoods.food_image = JSON.stringify({
         name: productImage.name,
         path: productImage.path,
       });
+    } else {
+      newFoods.food_image = state?.product_image;
     }
 
     newFoods.offer_is_available = newFoods.offer_is_available ? 1 : 0;

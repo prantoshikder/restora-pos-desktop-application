@@ -36,8 +36,9 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
-      setAppSettingsData(data[0]);
       const response = data[0];
+      setAppSettingsData(response);
+
       setDefaultData([
         {
           name: ['title'],
