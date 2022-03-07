@@ -23,6 +23,11 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
       'update_order_info_ongoing',
       orderData
     );
+
+    window.update_order_info_ongoing.once('update_order_info_ongoing_response', (args)=>{
+      console.log("))))))))))))))))))))))))))))))))))))))", args);
+    })
+
   };
 
 console.log('settings',settings);

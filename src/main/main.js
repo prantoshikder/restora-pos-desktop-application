@@ -919,7 +919,7 @@ ipcMain.on('get_all_order_info_ongoing', (event, args) => {
   }
 });
 
-// Update order info
+// Complete order info
 ipcMain.on('update_order_info_ongoing', (event, args) => {
   let { order_id, order_info, is_active } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
