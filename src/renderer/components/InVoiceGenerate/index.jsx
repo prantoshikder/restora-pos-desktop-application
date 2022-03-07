@@ -1,7 +1,7 @@
 // import InVoiceLogo from '../../../../assets/retora_pos.png';
 import { Modal } from 'antd';
 import moment from 'moment';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { ContextData } from './../../contextApi/index';
 import './InVoiceGenerate.style.scss';
 
@@ -11,11 +11,10 @@ const InVoiceGenerate = ({
   setOpenModal,
   openInvoice,
   setOpenInvoice,
-  handleCalculatePrice,
+  setPrintInvoiceData,
 }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
-
-  console.log('handleCalculatePrice', handleCalculatePrice);
+  const invoiceWrapperRef = useRef(null);
 
   // const handleCalculatePrice = () => {
   //   let totalPrice = cartItems?.reduce(
@@ -57,20 +56,36 @@ const InVoiceGenerate = ({
   // };
 
   const date = new Date();
+  setPrintInvoiceData(invoiceWrapperRef.current);
 
   return (
     <Modal
       // title="Select Your Payment Method"
       visible={openInvoice}
-      onOk={() => setOpenInvoice(false)}
+      // onOk={() => setOpenInvoice(false)}
       onCancel={() => setOpenInvoice(false)}
       // footer={null}
       width={600}
+      okText="Print"
+      onOk={() => {
+        window.print();
+      }}
     >
-      <div id="munir" className="inVoice_wrapper">
+      <div ref={invoiceWrapperRef} className="inVoice_wrapper">
         <div className="inVoice_print_area">
           <div className="in_voice_logo">
             {/* <img src={InVoiceLogo} alt="" /> */}
+          </div>
+
+          <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
+            Dhaka Restaurant
+          </h1>
+
+          <div className="in_voice_info flex content_between">
+            <p style={{ fontWeight: '700' }}>
+              Date: {`${moment(date).format('LL')}`}
+            </p>
+            <p>TIN OR VAT NUM.: {settings?.vattinno}</p>
           </div>
 
           <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
@@ -103,7 +118,7 @@ const InVoiceGenerate = ({
             <p>content</p>
             <p>25$</p>
             </div>
-            
+
             <div className="in_voice_info flex content_between">
             <p>content</p>
             <p>25$</p>
