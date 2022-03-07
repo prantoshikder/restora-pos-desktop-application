@@ -135,7 +135,6 @@ const Cart = ({ settings }) => {
   const handleCalculation = () => {};
 
   const handleSubmitOrder = (data) => {
-    console.log('141: data', cartItems);
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
     if (cartItems?.length === 0) {
@@ -145,6 +144,7 @@ const Cart = ({ settings }) => {
         setConfirmBtn(data);
         setConfirmOrder(true);
       } else if (data === 'placeOrder') {
+        setCartItems([]);
         setConfirmBtn(data);
         setConfirmOrder(true);
       }
