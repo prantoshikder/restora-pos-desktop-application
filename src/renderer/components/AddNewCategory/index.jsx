@@ -120,7 +120,7 @@ const AddNewCategory = ({ state }) => {
   const handleChangeEndDate = (date, stringDate) => {
     setOfferEndDate(stringDate);
   };
-
+  console.log('state', state);
   const handleSubmit = () => {
     const newCategory = {};
 
@@ -146,6 +146,8 @@ const AddNewCategory = ({ state }) => {
         name: categoryImage.file.name,
         path: categoryImage.file.path,
       });
+    } else {
+      newCategory.category_image = state?.category_image;
     }
 
     if (categoryIcon?.file) {
@@ -153,6 +155,8 @@ const AddNewCategory = ({ state }) => {
         name: categoryIcon.file.name,
         path: categoryIcon.file.path,
       });
+    } else {
+      newCategory.category_icon = state?.category_icon;
     }
 
     // Insert & update through the same event & channel

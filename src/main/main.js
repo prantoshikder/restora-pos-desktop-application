@@ -59,12 +59,13 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('favicon.png'),
     webPreferences: {
       webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false,
       enableRemoteModule: true,
+      nativeWindowOpen: true,
     },
   });
 
@@ -388,12 +389,17 @@ function setImagePath(
 ipcMain.on('insertCategoryData', (event, args) => {
   let cat_img, cat_icon;
 
-  if (args.category_image) {
-    cat_img = JSON.parse(args.category_image);
-  }
+  try {
+    if (args.category_image) {
+      cat_img = JSON.parse(args.category_image);
+    }
 
-  if (args.category_icon) {
-    cat_icon = JSON.parse(args.category_icon);
+    if (args.category_icon) {
+      cat_icon = JSON.parse(args.category_icon);
+    }
+  } catch (error) {
+    cat_img = args.category_image;
+    cat_icon = args.category_icon;
   }
 
   // Set categories images and icons path
@@ -435,7 +441,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
                 cat_image_folder_name,
                 cat_img.name
               )
-            : cat_img?.name,
+            : cat_img,
 
           cat_icon?.name
             ? path.join(
@@ -444,7 +450,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
                 cat_icon_folder_name,
                 cat_icon.name
               )
-            : cat_icon?.name,
+            : cat_icon,
 
           category_is_active,
           offer_start_date,
@@ -677,8 +683,13 @@ Insert and update foods to DB
 ==================================================================*/
 ipcMain.on('add_new_foods', (event, args) => {
   let product_img;
-  if (args?.food_image) {
-    product_img = JSON.parse(args.food_image);
+
+  try {
+    if (args?.food_image) {
+      product_img = JSON.parse(args.food_image);
+    }
+  } catch (error) {
+    product_img = args.food_image;
   }
 
   // Set food images and icons path
@@ -729,8 +740,7 @@ ipcMain.on('add_new_foods', (event, args) => {
                 foods_images_folder_name,
                 product_img.name
               )
-            : 'null',
-          // product_img?.name,
+            : product_img,
           component,
           description,
           notes,

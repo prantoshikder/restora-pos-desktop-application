@@ -203,7 +203,10 @@ const MenuTypeList = () => {
 
     if (updateMenuType?.id) {
       newMenuType.id = updateMenuType?.id;
+      // newMenuType.id = updateMenuType?.id;
     }
+
+    console.log('newMenuType', newMenuType);
 
     // Insert Data
     window.context_bridge_menu_type.send(
