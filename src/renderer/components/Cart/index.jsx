@@ -144,6 +144,7 @@ const Cart = ({ settings }) => {
 
   const handleSubmitOrder = (data) => {
     console.log("onGoingOrderData", state);
+    window.update_order_info_ongoing.send('update_order_info_ongoing', state)
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
     if (cartItems?.length === 0) {
