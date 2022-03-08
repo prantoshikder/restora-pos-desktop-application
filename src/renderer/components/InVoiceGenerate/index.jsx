@@ -11,6 +11,7 @@ const InVoiceGenerate = ({
   setOpenModal,
   openInvoice,
   setOpenInvoice,
+  orderData,
   // setPrintInvoiceData,
 }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -77,27 +78,33 @@ const InVoiceGenerate = ({
             {/* <img src={InVoiceLogo} alt="" /> */}
           </div>
 
-          <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
+          <h1
+            style={{ textAlign: 'center', fontWeight: '700', marginBottom: 0 }}
+          >
             {settings.storename}
           </h1>
+          <p style={{ textAlign: 'center' }}>{settings?.address}</p>
 
-          <div className="in_voice_info flex content_between">
+          <div
+            className="in_voice_info flex content_between"
+            style={{ marginTop: '0.8rem' }}
+          >
             <p style={{ fontWeight: '700' }}>
               Date: {`${moment(date).format('LL')}`}
             </p>
-            <p>TIN OR VAT NUM.: {settings?.vattinno}</p>
+            {settings?.vattinno && <p>TIN OR VAT NUM.: {settings?.vattinno}</p>}
           </div>
 
-          <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
+          {/* <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
             Dhaka Restaurant
-          </h1>
+          </h1> */}
 
-          <div className="in_voice_info flex content_between">
+          {/* <div className="in_voice_info flex content_between">
             <p style={{ fontWeight: '700' }}>
               Date: {`${moment(date).format('LL')}`}
             </p>
             <p>TIN OR VAT NUM.: {settings?.vattinno}</p>
-          </div>
+          </div> */}
 
           <div style={{ border: '1px dashed #918c8c' }}></div>
 
@@ -107,12 +114,23 @@ const InVoiceGenerate = ({
               <h4 style={{ fontWeight: '700' }}>Total</h4>
             </div>
 
-            {cartItems?.map((item, index) => (
-              <div key={index} className="in_voice_info flex content_between">
-                <p>{item.product_name}</p>
-                <p style={{ fontWeight: '700' }}>{item.total_price}</p>
-              </div>
-            ))}
+            {console.log('orderData', orderData)}
+
+            {cartItems.length > 0 &&
+              cartItems?.map((item, index) => (
+                <div key={index} className="in_voice_info flex content_between">
+                  <p>{item.product_name}</p>
+                  <p style={{ fontWeight: '700' }}>{item.total_price}</p>
+                </div>
+              ))}
+
+            {cartItems.length > 0 &&
+              cartItems?.map((item, index) => (
+                <div key={index} className="in_voice_info flex content_between">
+                  <p>{item.product_name}</p>
+                  <p style={{ fontWeight: '700' }}>{item.total_price}</p>
+                </div>
+              ))}
 
             {/* <div className="in_voice_info flex content_between">
             <p>content</p>
