@@ -1,7 +1,7 @@
 import {
   FileAddOutlined,
   PlusCircleOutlined,
-  ShoppingCartOutlined
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { faCalculator, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ import {
   Row,
   Select,
   Space,
-  TimePicker
+  TimePicker,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -135,15 +135,14 @@ const Cart = ({ settings }) => {
     });
   };
 
-  const [openCalculator, setOpenCalculator] = useState(false)
+  const [openCalculator, setOpenCalculator] = useState(false);
 
   const handleCalculation = () => {
-    setOpenCalculator(true)
+    setOpenCalculator(true);
   };
 
-
   const handleSubmitOrder = (data) => {
-    console.log("onGoingOrderData", state);
+    console.log('onGoingOrderData', state);
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
     if (cartItems?.length === 0) {
@@ -225,15 +224,15 @@ const Cart = ({ settings }) => {
 
   const handleCalculatePrice = () => {
     // if no property exist in the settings, initialize them
-    if(!settings.servicecharge) {
+    if (!settings.servicecharge) {
       settings.servicecharge = 0;
     }
 
-    if(!settings.vat) {
+    if (!settings.vat) {
       settings.vat = 0;
     }
 
-    if(!settings.discountrate) {
+    if (!settings.discountrate) {
       settings.discountrate = 0;
     }
 
@@ -242,7 +241,6 @@ const Cart = ({ settings }) => {
       0
     );
 
-
     let discount = 0,
       totalVatBasedOnPrice = 0,
       serviceCharge = 0;
@@ -250,7 +248,7 @@ const Cart = ({ settings }) => {
     // calculate if it has discount type & amount
     if (settings.discount_type === 1) {
       discount = parseFloat(settings?.discountrate?.toFixed(2));
-    } else if(settings.discount_type === 2) {
+    } else if (settings.discount_type === 2) {
       discount = parseFloat(
         (totalPrice * settings?.discountrate?.toFixed(2)) / 100
       );
@@ -266,17 +264,17 @@ const Cart = ({ settings }) => {
     // calculate if service_chargeType and service charge is available
     if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
       // Fixed amount
-      serviceCharge = parseFloat(
-        settings?.servicecharge?.toFixed(2)
-      );
+      serviceCharge = parseFloat(settings?.servicecharge?.toFixed(2));
     } else {
-      serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
+      serviceCharge = parseFloat(
+        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
+      );
     }
 
-
-    return parseFloat(((totalPrice + totalVatBasedOnPrice + serviceCharge) - discount) .toFixed(2) );
+    return parseFloat(
+      (totalPrice + totalVatBasedOnPrice + serviceCharge - discount).toFixed(2)
+    );
   };
-
 
   return (
     <div className="cart_wrapper">
@@ -523,14 +521,18 @@ const Cart = ({ settings }) => {
               </Col>
               <Col span={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
-                {settings?.service_chargeType === 'amount' && settings.currency}{settings?.servicecharge}{settings?.service_chargeType !== 'amount' && "(%)"}
+                {settings?.service_chargeType === 'amount' && settings.currency}
+                {settings?.servicecharge}
+                {settings?.service_chargeType !== 'amount' && '(%)'}
               </Col>
 
               {/* Discount type 2 = percent & Discount type 1 = amount */}
               {settings?.discount_type && (
                 <Col span={6}>
                   <b>Discount: </b>
-                  {settings?.discount_type === 1 && settings.currency}{settings?.discountrate}{settings?.discount_type === 2 && "(%)"}
+                  {settings?.discount_type === 1 && settings.currency}
+                  {settings?.discountrate}
+                  {settings?.discount_type === 2 && '(%)'}
                 </Col>
               )}
             </Row>
@@ -544,7 +546,6 @@ const Cart = ({ settings }) => {
             </table> */}
           </div>
 
-
           <div className="grand_total">
             <div>
               <span>Grand Total</span>
@@ -552,7 +553,10 @@ const Cart = ({ settings }) => {
 
             <div>
               {cartItems?.length !== 0 ? (
-                <span>{settings.currency}{handleCalculatePrice()}</span>
+                <span>
+                  {settings.currency}
+                  {handleCalculatePrice()}
+                </span>
               ) : (
                 <span>{settings.currency}0.00</span>
               )}
@@ -708,7 +712,6 @@ const Cart = ({ settings }) => {
       >
         <Calculator />
       </Modal>
-
     </div>
   );
 };

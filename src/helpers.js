@@ -86,3 +86,31 @@ export const getWords = (string) => {
 
   return newString;
 };
+
+export class CalculatePrice {
+  constructor(settings, arrayData) {
+    this.settings = settings;
+    this.arrayData = arrayData;
+
+    // initialize default value to avoid error
+    this.settings.discount = 0;
+    this.settings.totalVatBasedOnPrice = 0;
+    this.settings.serviceCharge = 0;
+    this.settings.vat = 0;
+  }
+
+  getVat() {
+    if (this.settings?.vat) {
+      totalVatBasedOnPrice = parseFloat(
+        ((this.getTotalPrice * this.settings.vat) / 100).toFixed(2)
+      );
+    }
+  }
+
+  getTotalPrice() {
+    this.arrayData.reduce(
+      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
+      0
+    );
+  }
+}
