@@ -57,7 +57,7 @@ class CalculatorDisplay extends React.Component {
     if (match) formattedValue += /[1-9]/.test(match[0]) ? match[1] : match[0];
 
     return (
-      <div {...props} className="calculator-display">
+      <div {...props} className="calculator_display">
         <AutoScalingText>{formattedValue}</AutoScalingText>
       </div>
     );
@@ -235,12 +235,12 @@ class Calculator extends React.Component {
     const clearText = clearDisplay ? 'C' : 'AC';
 
     return (
-      <div className="calculator-wrapper">
+      <div className="calculator_wrapper">
         <div className="calculator">
           <CalculatorDisplay value={displayValue} />
-          <div className="calculator-keypad">
-            <div className="input-keys">
-              <div className="function-keys">
+          <div className="calculator_keypad">
+            <div className="input_keys">
+              <div className="function_keys">
                 <CalculatorKey
                   className="key-clear"
                   onPress={() =>
