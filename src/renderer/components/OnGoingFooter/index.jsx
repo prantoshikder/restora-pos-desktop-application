@@ -43,7 +43,7 @@ const OnGoingFooter = ({
     console.log('onGoingOrderData', orderData);
     const data = JSON.parse(orderData?.order_info);
     setCartItems(data);
-    redirect('/', { state: orderData });
+    redirect('/', { state: { ...orderData, order_info: data } });
   };
 
   return (

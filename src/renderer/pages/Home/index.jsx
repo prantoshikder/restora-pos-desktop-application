@@ -1,6 +1,7 @@
 import { Col, ConfigProvider, Row } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
@@ -10,6 +11,8 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
+  const { state } = useLocation();
+  console.log('state', state);
   // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
@@ -129,7 +132,7 @@ const Home = ({ settings }) => {
                   <Cart
                     settings={settings}
                     setCartItems={setCartItems}
-                    cartItems={cartItems}
+                    cartItems={cartItems || state.order_info}
                   />
                 </Col>
               </Row>
