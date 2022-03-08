@@ -220,14 +220,28 @@ const Cart = ({ settings }) => {
   };
 
   const handleCalculatePrice = () => {
+    // if no property exist in the settings, initialize them
+    if(!settings.servicecharge) {
+      settings.servicecharge = 0;
+    }
+
+    if(!settings.vat) {
+      settings.vat = 0;
+    }
+
+    if(!settings.discountrate) {
+      settings.discountrate = 0;
+    }
+
     let totalPrice = cartItems?.reduce(
       (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
       0
     );
 
+
     let discount = 0,
       totalVatBasedOnPrice = 0,
-      serviceCharge = 0,
+      serviceCharge = 0;
 
     // calculate if it has discount type & amount
     if (settings.discount_type === 1) {
@@ -255,8 +269,10 @@ const Cart = ({ settings }) => {
       serviceCharge = parseFloat(((totalPrice * settings?.servicecharge) / 100).toFixed(2));
     }
 
+
     return parseFloat(((totalPrice + totalVatBasedOnPrice + serviceCharge) - discount) .toFixed(2) );
   };
+
 
   return (
     <div className="cart_wrapper">
