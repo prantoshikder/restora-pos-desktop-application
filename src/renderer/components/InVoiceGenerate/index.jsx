@@ -78,7 +78,7 @@ const InVoiceGenerate = ({
           </div>
 
           <h1 style={{ textAlign: 'center', fontWeight: '700' }}>
-            Dhaka Restaurant
+            {settings.storename}
           </h1>
 
           <div className="in_voice_info flex content_between">
