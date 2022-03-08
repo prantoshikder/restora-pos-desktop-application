@@ -59,12 +59,13 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('favicon.png'),
     webPreferences: {
       webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false,
       enableRemoteModule: true,
+      nativeWindowOpen: true,
     },
   });
 
@@ -388,12 +389,17 @@ function setImagePath(
 ipcMain.on('insertCategoryData', (event, args) => {
   let cat_img, cat_icon;
 
-  if (args.category_image) {
-    cat_img = JSON.parse(args.category_image);
-  }
+  try {
+    if (args.category_image) {
+      cat_img = JSON.parse(args.category_image);
+    }
 
-  if (args.category_icon) {
-    cat_icon = JSON.parse(args.category_icon);
+    if (args.category_icon) {
+      cat_icon = JSON.parse(args.category_icon);
+    }
+  } catch (error) {
+    cat_img = args.category_image;
+    cat_icon = args.category_icon;
   }
 
   // Set categories images and icons path
@@ -435,7 +441,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
                 cat_image_folder_name,
                 cat_img.name
               )
-            : cat_img?.name,
+            : cat_img,
 
           cat_icon?.name
             ? path.join(
@@ -444,7 +450,7 @@ ipcMain.on('insertCategoryData', (event, args) => {
                 cat_icon_folder_name,
                 cat_icon.name
               )
-            : cat_icon?.name,
+            : cat_icon,
 
           category_is_active,
           offer_start_date,
@@ -677,8 +683,13 @@ Insert and update foods to DB
 ==================================================================*/
 ipcMain.on('add_new_foods', (event, args) => {
   let product_img;
-  if (args?.food_image) {
-    product_img = JSON.parse(args.food_image);
+
+  try {
+    if (args?.food_image) {
+      product_img = JSON.parse(args.food_image);
+    }
+  } catch (error) {
+    product_img = args.food_image;
   }
 
   // Set food images and icons path
@@ -729,8 +740,7 @@ ipcMain.on('add_new_foods', (event, args) => {
                 foods_images_folder_name,
                 product_img.name
               )
-            : 'null',
-          // product_img?.name,
+            : product_img,
           component,
           description,
           notes,
@@ -1157,6 +1167,29 @@ deleteListItem(
 ipcMain.on('context_bridge_menu_type', (event, args) => {
   let { id, menu_type, menu_icon, is_active } = args;
 
+  let menu_type_icon;
+
+  try {
+    if (args.menu_icon) {
+      menu_type_icon = JSON.parse(args.menu_icon);
+    }
+  } catch (error) {
+    menu_type_icon = args.menu_icon;
+  }
+
+  // Set categories images and icons path
+  let menu_icon_folder_name = 'menu_icons';
+
+  setImagePath(
+    menu_icon_folder_name, // Menu images folder name
+    "", // Menu icons folder name
+    menu_type_icon?.path, // Menu image path
+    menu_type_icon?.name, // Menu image name
+    "", // Menu icon path
+    "" // Menu icon name
+  );
+
+
   // Execute if the event has menu type ID. It is used to update a specific item
   if (args.id !== undefined) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -1165,7 +1198,18 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
       db.run(
         `INSERT OR REPLACE INTO menu_type (id, menu_type, menu_icon, is_active)
         VALUES (?, ?, ?, ?)`,
-        [id, menu_type, menu_icon, is_active],
+        [
+          id,
+          menu_type,
+          menu_type_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
+            : menu_type_icon,
+          is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -1193,7 +1237,17 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
       ).run(
         `INSERT OR REPLACE INTO menu_type (menu_type, menu_icon, is_active)
           VALUES (?, ?, ?)`,
-        [menu_type, menu_icon, is_active],
+        [
+          menu_type,
+          menu_type_icon?.name
+            ? path.join(
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
+            : menu_type_icon,
+          is_active],
         (err) => {
           err
             ? mainWindow.webContents.send(

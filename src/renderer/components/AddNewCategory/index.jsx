@@ -120,7 +120,7 @@ const AddNewCategory = ({ state }) => {
   const handleChangeEndDate = (date, stringDate) => {
     setOfferEndDate(stringDate);
   };
-
+  console.log('state', state);
   const handleSubmit = () => {
     const newCategory = {};
 

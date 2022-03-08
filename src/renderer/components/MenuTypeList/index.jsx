@@ -10,6 +10,7 @@ import {
   Button,
   Col,
   Form,
+  Image,
   Input,
   message,
   Modal,
@@ -21,6 +22,7 @@ import {
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import { useEffect, useState } from 'react';
+import defaultImage from '../../../../assets/default.jpg';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -28,11 +30,6 @@ const { confirm } = Modal;
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      'selectedRows: ',
-      selectedRows
-    );
   },
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
@@ -55,16 +52,13 @@ const MenuTypeList = () => {
   const [menuTypes, setMenuTypes] = useState();
   const [menuTypesList, setMenuTypesList] = useState(null);
   const [reRender, setReRender] = useState(false);
+  const [menuTypeIcon, setMenuTypeIcon] = useState(null)
 
   useEffect(() => {
     setMenuTypes([
       {
         name: 'menu_type',
         value: updateMenuType?.menu_type,
-      },
-      {
-        name: 'menu_icon',
-        // value: updateMenuType?.menu_type,
       },
       {
         name: 'is_active',
@@ -76,8 +70,6 @@ const MenuTypeList = () => {
       'get_menu_type_lists_response',
       window.get_menu_type_lists
     ).then((res) => {
-      console.log('menuTypes', res);
-
       const foodAvailableList =
         Array.isArray(res) &&
         res?.map((element) => {
@@ -97,21 +89,34 @@ const MenuTypeList = () => {
     if (Array.isArray(e)) {
       return e;
     }
-    return e;
+    return e && e.fileList;
   };
 
+  const fileList = [];
+
+
   const columns = [
-    {
-      title: 'Menu Type',
-      dataIndex: 'menu_type',
-      key: 'menu_type',
-      width: '30%',
-    },
     {
       title: 'Icon',
       dataIndex: 'menu_icon',
       key: 'menu_icon',
       width: '55%',
+      render: (text, record) => (
+        <Image
+          src={`file://${record.menu_icon}`}
+          width={50}
+          height={50}
+          className="category_image"
+          fallback={defaultImage}
+          preview={false}
+        />
+      ),
+    },
+    {
+      title: 'Menu Type',
+      dataIndex: 'menu_type',
+      key: 'menu_type',
+      width: '30%',
     },
     {
       title: 'Status',
@@ -204,6 +209,16 @@ const MenuTypeList = () => {
     if (updateMenuType?.id) {
       newMenuType.id = updateMenuType?.id;
     }
+
+    if (menuTypeIcon) {
+      newMenuType.menu_icon = JSON.stringify({
+        name: menuTypeIcon.name,
+        path: menuTypeIcon.path,
+      });
+    } else {
+      newMenuType.menu_icon = updateMenuType?.menu_icon;
+    }
+
 
     // Insert Data
     window.context_bridge_menu_type.send(
@@ -321,23 +336,54 @@ const MenuTypeList = () => {
                 <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
+{/* {(menuTypeIcon || updateMenuType?.menu_icon) ? <Col lg={17}> : <Col lg={17}>} */}
               <Form.Item
                 label="Icon"
                 name="menu_icon"
+                valuePropName="menu_icon"
                 getValueFromEvent={normFile}
                 tooltip={{
-                  title: 'Use only .jpg,.jpeg,.gif and .png Images & Image',
+                  title: 'Use only .jpg, .jpeg, .gif and .png image',
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <PictureOutlined />
-                  </p>
-                  <p className="ant-upload-hint">
-                    Click or drag file to this area to upload
-                  </p>
-                </Upload.Dragger>
+                <Row gutter={20}>
+
+                <Col lg={17}>
+                    <Upload.Dragger name="files"
+                      customRequest={(imageObj) => {
+                        setMenuTypeIcon(imageObj.file);
+                      }}
+                      accept=".jpg, .png, .jpeg, .gif"
+                      showUploadList={false}>
+                        <p className="ant-upload-drag-icon">
+                          <PictureOutlined />
+                        </p>
+                        <p className="ant-upload-hint">
+                          Click or drag file to this area to upload
+                        </p>
+                    </Upload.Dragger>
+                  </Col>
+
+                    <Col lg={7}>
+                      <h3>Preview</h3>
+                      {menuTypeIcon ? (
+                        <Image
+                          width={125}
+                          src={URL.createObjectURL(menuTypeIcon)}
+                          preview={false}
+                        />
+                      ) : (
+                        updateMenuType?.menu_icon && (
+                          <Image
+                            width={125}
+                            src={`file://${updateMenuType?.menu_icon}`}
+                            preview={false}
+                          />
+                        )
+                      )}
+                    </Col>
+                </Row>
               </Form.Item>
 
               <Form.Item name="is_active" label="Status">
