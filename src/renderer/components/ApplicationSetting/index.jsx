@@ -144,8 +144,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       .catch((err) => console.log('Getting menu types error', err));
   }, []);
 
-  console.log('currencyLists', currencyLists);
-
   const handleFavicon = (e) => {
     console.log('hanlde file', e);
     // if (Array.isArray(e)) {
@@ -436,7 +434,10 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                 <Form.Item label="Currency" name="currency">
                   <Select placeholder="Select Currency" size="large" allowClear>
                     {currencyLists?.map((currencyItem) => (
-                      <Option key={currencyItem?.id} value={currencyItem?.id}>
+                      <Option
+                        key={currencyItem?.id}
+                        value={currencyItem?.currency_icon}
+                      >
                         {currencyItem?.currency_name}{' '}
                       </Option>
                     ))}

@@ -63,15 +63,17 @@ const Search = ({ foodLists }) => {
         onFocus={expandContainer}
         value={searchValue}
         suffix={
-          isExpanded === true && (
-            <CloseOutlined
-              onClick={() => {
-                setIsExpanded(false);
-                closeModal();
-              }}
-              // className="site-form-item-icon"
-            />
-          )
+          <>
+            {isExpanded === true && (
+              <CloseOutlined
+                onClick={() => {
+                  setIsExpanded(false);
+                  closeModal();
+                }}
+                // className="site-form-item-icon"
+              />
+            )}
+          </>
         }
         onChange={(e) => {
           handleSearchProducts();
