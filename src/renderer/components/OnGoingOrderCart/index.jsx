@@ -1,12 +1,16 @@
 import { Col } from 'antd';
 import './OnGoingOrderCart.style.scss';
 
-const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
+const OnGoingOrderCart = ({
+  orderCard,
+  setOrderComplete,
+  selectedItem,
+  setActiveInactiveBtn,
+}) => {
   const handleCartItem = (foodData) => {
-    console.log('foodData', foodData);
-
     selectedItem(foodData);
     setOrderComplete(foodData);
+    setActiveInactiveBtn(foodData);
   };
 
   return (
@@ -20,11 +24,7 @@ const OnGoingOrderCart = ({ orderCard, setOrderComplete, selectedItem }) => {
           }}
         >
           <li>Order Number: {orderCard.order_id}</li>
-          {orderCard.is_active === 0 ? (
-            <li>Status: Pending</li>
-          ) : (
-            <li>Status: Completed</li>
-          )}
+          {orderCard.is_active === 1 && <li>Status: Pending</li>}
         </div>
       </div>
     </Col>

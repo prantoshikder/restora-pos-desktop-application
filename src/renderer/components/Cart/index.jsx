@@ -19,6 +19,7 @@ import {
   TimePicker
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Calculator from '../Calculator/index.jsx';
 import PremiumVersion from '../partials/PremiumVersion/index';
 import { getDataFromDatabase } from './../../../helpers';
@@ -33,6 +34,7 @@ const { TextArea } = Input;
 const Cart = ({ settings }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
+  const { state } = useLocation();
   const [addCustomerName] = Form.useForm();
 
   const [openModal, setOpenModal] = useState(false);
@@ -139,7 +141,9 @@ const Cart = ({ settings }) => {
     setOpenCalculator(true)
   };
 
+
   const handleSubmitOrder = (data) => {
+    console.log("onGoingOrderData", state);
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
     if (cartItems?.length === 0) {
@@ -678,7 +682,7 @@ const Cart = ({ settings }) => {
       />
 
       <Modal
-        // title="Add Customer"
+        // title=""
         visible={openCalculator}
         onOk={() => setOpenCalculator(false)}
         onCancel={() => setOpenCalculator(false)}
