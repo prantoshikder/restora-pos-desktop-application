@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 const Search = ({ foodLists }) => {
   const [searchResults, setSearchResults] = useState([]);
-  const [isExpanded, setExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [isExpanded, setExpanded] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const searchResultRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -63,16 +63,6 @@ const Search = ({ foodLists }) => {
 
   const handleAddToCartItem = (foodCartItem) => {
     console.log('foodCartItem', foodCartItem);
-
-    // if (foodCartItem?.variants?.length > 1) {
-    //   setExpanded(false);
-    //   closeModal();
-    //   setCartItems(foodCartItem);
-    // } else {
-    //   setExpanded(false);
-    //   closeModal();
-    //   setCartItems(foodCartItem);
-    // }
   };
 
   return (
@@ -104,61 +94,51 @@ const Search = ({ foodLists }) => {
 
       {isExpanded && (
         <div className="search_result_wrapper" ref={searchResultRef}>
-          {/* <div>
-            <CloseOutlined
-              onClick={() => {
-                setExpanded(false);
-                closeModal();
-              }}
-              style={{ float: 'right' }}
-            />
-          </div> */}
-
           <div className="">
-            {isLoading && (
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ textAlign: 'center' }}>Loading...</p>
-
-                {/* <Spin tip="Loading..." size="large" /> */}
-              </div>
-            )}
-
             {!isLoading && isEmpty && (
               <div>
                 <p style={{ textAlign: 'center' }}>Start typing to search</p>
               </div>
             )}
 
-            {searchResults?.length > 0 && (
+            {isLoading ? (
+              <div>
+                <p style={{ textAlign: 'center' }}>Product Not Found</p>
+              </div>
+            ) : (
               <>
-                {searchResults?.map((item) => (
-                  <div
-                    key={item?.id}
-                    className="flex content_between item_center"
-                    style={{
-                      marginTop: '10px',
-                      cursor: 'pointer',
-                      backgroundColor: '#f4f4f4',
-                      padding: '0.5rem 2rem',
-                    }}
-                    onClick={() => handleAddToCartItem(item)}
-                  >
-                    <p>{item?.product_name}</p>
+                {searchResults?.length > 0 && (
+                  <>
+                    {searchResults?.map((item) => (
+                      <div
+                        key={item?.id}
+                        className="flex content_between item_center"
+                        style={{
+                          marginTop: '10px',
+                          cursor: 'pointer',
+                          backgroundColor: '#f4f4f4',
+                          padding: '0.5rem 2rem',
+                        }}
+                        onClick={() => handleAddToCartItem(item)}
+                      >
+                        <p>{item?.product_name}</p>
 
-                    <img
-                      src={item?.product_image}
-                      height="50px"
-                      width="50px"
-                      style={{
-                        float: 'right',
-                        width: '50px',
-                        height: '50px',
-                        objectFit: 'cover',
-                      }}
-                      alt=""
-                    />
-                  </div>
-                ))}
+                        <img
+                          src={item?.product_image}
+                          height="50px"
+                          width="50px"
+                          style={{
+                            float: 'right',
+                            width: '50px',
+                            height: '50px',
+                            objectFit: 'cover',
+                          }}
+                          alt=""
+                        />
+                      </div>
+                    ))}
+                  </>
+                )}
               </>
             )}
           </div>
