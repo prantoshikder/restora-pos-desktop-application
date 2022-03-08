@@ -897,12 +897,13 @@ ipcMain.on('get_all_order_info', (event, args) => {
       `CREATE TABLE IF NOT EXISTS orders(
       "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "order_info" varchar(255),
+      "creation_date" DATETIME,
       "is_active" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT OR REPLACE INTO orders (order_info)
-      VALUES (?)`,
-      [JSON.stringify(args)]
+      `INSERT OR REPLACE INTO orders (order_info, creation_date)
+      VALUES (?, ?)`,
+      [JSON.stringify(args), Date.now()]
     );
   });
   db.close();
