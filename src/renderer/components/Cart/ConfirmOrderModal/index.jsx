@@ -76,7 +76,10 @@ const ConfirmOrderModal = (props) => {
               </div>
 
               <h1>Order Placed Successfully</h1>
-              <Text>Do you Want to Print Invoice???</Text>
+              <Text>
+                Do you want to print{' '}
+                {confirmBtn === 'quickOrder' ? 'invoice' : 'token'} ?
+              </Text>
 
               <div className="flex content_center group_button">
                 <Button
