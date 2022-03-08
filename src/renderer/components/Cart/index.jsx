@@ -547,7 +547,7 @@ const Cart = ({ settings }) => {
           <div className="cartBtn_wrapper">
             <Button
               onClick={handleCalculation}
-              className="calculator cartGroup_btn"
+              className="calculator cartGroup_btn flex content_center"
               size="large"
             >
               <FontAwesomeIcon icon={faCalculator} />
@@ -687,6 +687,7 @@ const Cart = ({ settings }) => {
         onOk={() => setOpenCalculator(false)}
         onCancel={() => setOpenCalculator(false)}
         footer={null}
+        closable={false}
         width={0}
       > 
         <Calculator />
