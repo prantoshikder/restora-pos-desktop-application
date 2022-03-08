@@ -1,12 +1,33 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const Search = ({ foodLists }) => {
   const [searchResults, setSearchResults] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const searchResultRef = useRef(null);
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [searchResultRef]);
+
+  function handleOutsideClick(e) {
+    if (searchInputRef.current.input.contains(e.target)) {
+      setExpanded(true);
+    } else if (
+      searchResultRef.current &&
+      !searchResultRef.current.contains(e.target)
+    ) {
+      setExpanded(false);
+    }
+  }
 
   // Search Food Items
   const handleSearchProducts = () => {
@@ -37,18 +58,18 @@ const Search = ({ foodLists }) => {
   const isEmpty = !searchResults || searchResults.length === 0;
 
   const expandContainer = () => {
-    setIsExpanded(true);
+    setExpanded(true);
   };
 
   const handleAddToCartItem = (foodCartItem) => {
     console.log('foodCartItem', foodCartItem);
 
     // if (foodCartItem?.variants?.length > 1) {
-    //   setIsExpanded(false);
+    //   setExpanded(false);
     //   closeModal();
     //   setCartItems(foodCartItem);
     // } else {
-    //   setIsExpanded(false);
+    //   setExpanded(false);
     //   closeModal();
     //   setCartItems(foodCartItem);
     // }
@@ -58,20 +79,22 @@ const Search = ({ foodLists }) => {
     <>
       <Input
         type="text"
-        placeholder="Search"
+        placeholder="Search by food name"
         size="large"
+        ref={searchInputRef}
         onFocus={expandContainer}
         value={searchValue}
         suffix={
-          isExpanded === true && (
-            <CloseOutlined
-              onClick={() => {
-                setIsExpanded(false);
-                closeModal();
-              }}
-              // className="site-form-item-icon"
-            />
-          )
+          <>
+            {isExpanded === true && (
+              <CloseOutlined
+                onClick={() => {
+                  setExpanded(false);
+                  closeModal();
+                }}
+              />
+            )}
+          </>
         }
         onChange={(e) => {
           handleSearchProducts();
@@ -80,11 +103,11 @@ const Search = ({ foodLists }) => {
       />
 
       {isExpanded && (
-        <div className="searchResultWrapper">
+        <div className="search_result_wrapper" ref={searchResultRef}>
           {/* <div>
             <CloseOutlined
               onClick={() => {
-                setIsExpanded(false);
+                setExpanded(false);
                 closeModal();
               }}
               style={{ float: 'right' }}
