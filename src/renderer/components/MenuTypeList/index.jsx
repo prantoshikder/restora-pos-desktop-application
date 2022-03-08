@@ -336,7 +336,6 @@ const MenuTypeList = () => {
                 <Input placeholder="Menu Type" size="large" />
               </Form.Item>
 
-{/* {(menuTypeIcon || updateMenuType?.menu_icon) ? <Col lg={17}> : <Col lg={17}>} */}
               <Form.Item
                 label="Icon"
                 name="menu_icon"
