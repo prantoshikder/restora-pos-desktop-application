@@ -23,6 +23,7 @@ import ApplicationSettings from './pages/settings/ApplicationSettings';
 
 export default function App() {
   window.get_settings.send('get_settings', { status: true });
+  window.get_settings.send('get_currency_lists', { status: true });
 
   const [cartItems, setCartItems] = useState([]);
   const [reRenderOnSettings, setReRenderOnSettings] = useState(false);
@@ -30,12 +31,18 @@ export default function App() {
     appStatus: 'free',
     site_align: 'ltr',
     theme: 'light',
+    currencySign: '$',
   });
 
   useEffect(() => {
     getDataFromDatabase('get_settings_response', window.get_settings).then(
       (result) => {
-        console.log('settings app.js', result[0]);
+        setSettings({ ...settings, ...result[0] });
+      }
+    );
+    
+    getDataFromDatabase('get_settings_response', window.get_settings).then(
+      (result) => {
         setSettings({ ...settings, ...result[0] });
       }
     );
