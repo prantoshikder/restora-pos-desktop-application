@@ -60,19 +60,15 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
     setAddCustomer([
       {
         name: ['customer_name'],
-        // value: ,
       },
       {
         name: ['customer_email'],
-        // value: ,
       },
       {
         name: ['customer_phone'],
-        // value: ,
       },
       {
         name: ['customer_address'],
-        // value: ,
       },
     ]);
   }, [reRender]);
@@ -142,8 +138,6 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
   const handleSubmitOrder = (data) => {
     // console.log('onGoingOrderData', JSON.parse(state.order_info));
 
-    window.get_all_order_info.send('get_all_order_info', cartItems);
-
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -151,6 +145,7 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
         setConfirmBtn(data);
         setConfirmOrder(true);
       } else if (data === 'placeOrder') {
+        window.get_all_order_info.send('get_all_order_info', cartItems);
         setCartItems([]);
         setConfirmBtn(data);
         setConfirmOrder(true);

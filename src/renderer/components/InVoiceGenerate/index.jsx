@@ -17,8 +17,6 @@ const InVoiceGenerate = ({
   const { cartItems, setCartItems } = useContext(ContextData);
   const invoiceWrapperRef = useRef(null);
 
-  console.log('onGoingOrderData', onGoingOrderData);
-
   // const handleCalculatePrice = () => {
   //   let totalPrice = cartItems?.reduce(
   //     (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
