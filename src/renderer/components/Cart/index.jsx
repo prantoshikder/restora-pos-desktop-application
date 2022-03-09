@@ -118,6 +118,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const handleResetAll = () => {
     form.resetFields();
     setCartItems([]);
+    localStorage.clear('');
 
     message.success({
       content: 'Reset successfully',
