@@ -909,6 +909,19 @@ ipcMain.on('get_all_order_info', (event, args) => {
   db.close();
 });
 
+// Update order info after edit
+ipcMain.on('update_order_info_after_edit', (event, args) => {
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `INSERT OR REPLACE INTO orders (order_id, order_info, creation_date)
+    VALUES (?, ?, ?)`,
+      [args.order_id, JSON.stringify(args.order_info), Date.now()]
+    );
+  });
+  db.close();
+});
+
 // Get all order info
 ipcMain.on('get_all_order_info_ongoing', (event, args) => {
   let { status } = args;
