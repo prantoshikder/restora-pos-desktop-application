@@ -11,8 +11,8 @@ import { Button, Col, Row } from 'antd';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PremiumVersion from '../partials/PremiumVersion';
-import { ContextData } from './../../contextApi/index';
-import QuickOrderModal from './../Cart/QuickOrderModal/index';
+import { ContextData } from './../../contextApi';
+import QuickOrderModal from './../Cart/QuickOrderModal';
 import './OnGoingFooter.style.scss';
 
 const OnGoingFooter = ({
