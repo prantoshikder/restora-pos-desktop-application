@@ -155,6 +155,15 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.food_id === item.food_id
     );
 
+    // cartItem.product_name === foodVariantName.variant_name
+    const isVariantExist = cartItems.find(
+      (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
+    );
+
+    console.log('item', item);
+    console.log('isCartItemExist', isCartItemExist);
+    console.log('isVariantExist', isVariantExist);
+
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
     if (!isCartItemExist) {
@@ -176,15 +185,41 @@ const FoodItem = ({ item }) => {
         (cartItem) => cartItem.food_id === item.food_id
       );
 
-      const updateExistingCart = [
-        ...cartItems.slice(0, index),
-        {
-          ...isCartItemExist,
-          quantity: foodQuantity,
-          total_price: variantPrice,
-        },
-        ...cartItems.slice(index + 1),
-      ];
+      let updateExistingCart = [];
+
+      if (isVariantExist) {
+        updateExistingCart = [
+          ...cartItems.slice(0, index),
+          {
+            ...isVariantExist,
+            quantity: foodQuantity,
+            total_price: variantPrice,
+          },
+          ...cartItems.slice(index + 1),
+        ];
+
+        console.log('exist');
+      } else {
+        console.log('not exist');
+        updateExistingCart = [
+          ...cartItems,
+          {
+            ...foodVariantName,
+            foodVariant: foodVariantName.variant_name,
+            food_id: item.food_id,
+          },
+        ];
+      }
+
+      //  updateExistingCart = [
+      //   ...cartItems.slice(0, index),
+      //   {
+      //     ...isCartItemExist,
+      //     quantity: foodQuantity,
+      //     total_price: variantPrice,
+      //   },
+      //   ...cartItems.slice(index + 1),
+      // ];
 
       let newAddons = [];
       const newCartItems = updateExistingCart.map(
