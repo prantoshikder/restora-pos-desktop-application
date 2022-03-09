@@ -33,7 +33,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
-  const orderID = localStorage.getItem('order_id');
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -144,8 +143,9 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       } else if (data === 'placeOrder') {
         window.get_all_order_info.send('get_all_order_info', cartItems);
 
-        if (orderID) {
+        if (localStorage.getItem('order_id')) {
           console.log('state', { ...state, order_info: cartItems });
+          localStorage.clear('');
         }
 
         setCartItems([]);
