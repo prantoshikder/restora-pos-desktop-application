@@ -12,11 +12,10 @@ const InVoiceGenerate = ({
   openInvoice,
   setOpenInvoice,
   foodItems,
-  // setPrintInvoiceData,
 }) => {
   const invoiceWrapperRef = useRef(null);
   const calc = new CalculatePrice(settings, foodItems);
-  console.log(calc.getTotalPrice());
+  // console.log(calc.getTotalPrice());
 
   const handleCalculatePrice = () => {
     // if no property exist in the settings, initialize them

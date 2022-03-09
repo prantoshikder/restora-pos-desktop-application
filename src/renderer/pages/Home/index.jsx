@@ -12,7 +12,7 @@ import './Home.style.scss';
 
 const Home = ({ settings }) => {
   const { state } = useLocation();
-
+  console.log('state', state);
   // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
@@ -132,7 +132,7 @@ const Home = ({ settings }) => {
                   <Cart
                     settings={settings}
                     setCartItems={setCartItems}
-                    cartItems={cartItems || state.order_info}
+                    cartItems={cartItems || state?.order_info}
                   />
                 </Col>
               </Row>
