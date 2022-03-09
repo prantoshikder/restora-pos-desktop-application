@@ -99,18 +99,42 @@ export class CalculatePrice {
     this.settings.vat = 0;
   }
 
-  getVat() {
-    if (this.settings?.vat) {
-      totalVatBasedOnPrice = parseFloat(
-        ((this.getTotalPrice * this.settings.vat) / 100).toFixed(2)
+  getTotalPrice() {
+    if (Array.isArray(this.arrayData) && this.arrayData.length > 0) {
+      return this.arrayData.reduce(
+        (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
+        0
       );
     }
   }
 
-  getTotalPrice() {
-    this.arrayData.reduce(
-      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
-      0
-    );
+  getVat() {
+    if (this.settings?.vat) {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.vat) / 100).toFixed(2)
+      );
+    } else {
+      return '0.00';
+    }
+  }
+
+  getServiceCharge() {
+    if (this.settings?.service_chargeType === 'percent') {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
+      );
+    } else {
+      return this.settings?.servicecharge;
+    }
+  }
+
+  getDiscountAmount() {
+    if (this.settings?.service_chargeType === 'percent') {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
+      );
+    } else {
+      return this.settings?.servicecharge;
+    }
   }
 }

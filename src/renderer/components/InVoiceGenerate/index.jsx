@@ -15,9 +15,8 @@ const InVoiceGenerate = ({
   // setPrintInvoiceData,
 }) => {
   const invoiceWrapperRef = useRef(null);
-
   const calc = new CalculatePrice(settings, foodItems);
-  console.log('foodItems', calc.getTotalPrice());
+  console.log(calc.getTotalPrice());
 
   const handleCalculatePrice = () => {
     // if no property exist in the settings, initialize them
@@ -164,23 +163,29 @@ const InVoiceGenerate = ({
               )} */}
               <h4 style={{ fontWeight: '700' }}>
                 {settings.currency}
-                {handleCalculatePrice()}
+                {calc.getTotalPrice()}
               </h4>
             </div>
 
             <div className="in_voice_info flex content_between">
               <p>Vat({settings.vat ? settings.vat : 0}%)</p>
-              <p style={{ fontWeight: '700' }}>20$</p>
+              <p style={{ fontWeight: '700' }}>
+                {settings.currency}
+                {calc.getVat()}
+              </p>
             </div>
 
             <div className="in_voice_info flex content_between">
               <p>Service Charge</p>
-              <p style={{ fontWeight: '700' }}>20$</p>
+              <p style={{ fontWeight: '700' }}>
+                {settings.currency}
+                {calc.getServiceCharge()}
+              </p>
             </div>
 
             <div className="in_voice_info flex content_between">
               <p>Discount</p>
-              <p style={{ fontWeight: '700' }}>0$</p>
+              <p style={{ fontWeight: '700' }}>{settings.currency}0</p>
             </div>
           </div>
 
