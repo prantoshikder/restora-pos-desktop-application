@@ -142,10 +142,19 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         setConfirmBtn(data);
         setConfirmOrder(true);
       } else if (data === 'placeOrder') {
-        window.get_all_order_info.send('get_all_order_info', cartItems);
-
         if (orderID) {
+          console.log('if/');
+          window.update_order_info_after_edit.send(
+            'update_order_info_after_edit',
+            {
+              ...state,
+              order_info: cartItems,
+            }
+          );
           console.log('state', { ...state, order_info: cartItems });
+        } else {
+          console.log('else/');
+          window.get_all_order_info.send('get_all_order_info', cartItems);
         }
 
         setCartItems([]);
