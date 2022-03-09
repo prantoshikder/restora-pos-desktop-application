@@ -40,7 +40,6 @@ const QuickOrderModal = ({
     setOpenInvoice(true);
 
     if (localStorage.getItem('order_id')) {
-      console.log(localStorage.getItem('order_id'));
       setReRender((prevState) => !prevState);
     }
     // TODO: Status process

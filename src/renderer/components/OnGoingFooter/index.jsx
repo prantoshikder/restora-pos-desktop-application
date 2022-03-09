@@ -30,8 +30,6 @@ const OnGoingFooter = ({
   const [orderData, setOrderData] = useState();
 
   function orderCompleted(orderItem) {
-    console.log('orderItem', orderItem);
-
     if (Object.keys(orderItem).length === 0) {
       return true;
     }
