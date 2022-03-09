@@ -105,6 +105,8 @@ export class CalculatePrice {
         (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
         0
       );
+    } else {
+      return 0;
     }
   }
 
@@ -114,7 +116,7 @@ export class CalculatePrice {
         ((this.getTotalPrice() * this.settings.vat) / 100).toFixed(2)
       );
     } else {
-      return '0.00';
+      return 0;
     }
   }
 
@@ -129,12 +131,27 @@ export class CalculatePrice {
   }
 
   getDiscountAmount() {
-    if (this.settings?.service_chargeType === 'percent') {
-      return parseFloat(
-        ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
-      );
+    // calculate if it has discount type & amount
+    // 1 = amount (fixed), 2 = percent (%)
+    if (this.settings.discount_type && this.settings.discountrate) {
+      if (this.settings.discount_type === 1) {
+        return parseFloat(this.settings.discountrate.toFixed(2));
+      } else if (this.settings.discount_type === 2) {
+        return parseFloat(
+          (this.getTotalPrice() * this.settings.discountrate.toFixed(2)) / 100
+        );
+      }
     } else {
-      return this.settings?.servicecharge;
+      return 0;
     }
+  }
+
+  getGrandTotal() {
+    return (
+      this.getTotalPrice() +
+      this.getVat() +
+      this.getServiceCharge() -
+      this.getDiscountAmount()
+    ).toFixed(2);
   }
 }

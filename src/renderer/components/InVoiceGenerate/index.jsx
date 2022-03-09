@@ -118,14 +118,6 @@ const InVoiceGenerate = ({
               <h4 style={{ fontWeight: '700' }}>Total</h4>
             </div>
 
-            {/* {cartItems.length > 0 &&
-              cartItems?.map((item, index) => (
-                <div key={index} className="in_voice_info flex content_between">
-                  <p>{item.product_name}</p>
-                  <p style={{ fontWeight: '700' }}>{item.total_price}</p>
-                </div>
-              ))} */}
-
             {foodItems?.length > 0 &&
               foodItems?.map((item, index) => (
                 <div key={index} className="in_voice_info flex content_between">
@@ -152,14 +144,6 @@ const InVoiceGenerate = ({
           <div>
             <div className="in_voice_info flex content_between">
               <h4 style={{ fontWeight: '700' }}>Subtotal</h4>
-              {/* {foodItems?.length !== 0 ? (
-                <span>
-                  {settings.currency}
-                  {handleCalculatePrice()}
-                </span>
-              ) : (
-                <span>$0.00</span>
-              )} */}
               <h4 style={{ fontWeight: '700' }}>
                 {settings.currency}
                 {calc.getTotalPrice()}
@@ -184,7 +168,10 @@ const InVoiceGenerate = ({
 
             <div className="in_voice_info flex content_between">
               <p>Discount</p>
-              <p style={{ fontWeight: '700' }}>{settings.currency}0</p>
+              <p style={{ fontWeight: '700' }}>
+                {settings.currency}
+                {calc.getDiscountAmount()}
+              </p>
             </div>
           </div>
 
@@ -193,12 +180,18 @@ const InVoiceGenerate = ({
           <div>
             <div className="in_voice_info flex content_between">
               <h4 style={{ fontWeight: '700' }}>Grand Total</h4>
-              <h4 style={{ fontWeight: '700' }}>200$</h4>
+              <h4 style={{ fontWeight: '700' }}>
+                {settings.currency}
+                {calc.getGrandTotal()}
+              </h4>
             </div>
 
             <div className="in_voice_info flex content_between">
-              <p>Total Payment</p>
-              <p style={{ fontWeight: '700' }}>200$</p>
+              <p>Total Payable Amount</p>
+              <p style={{ fontWeight: '700' }}>
+                {settings.currency}
+                {calc.getGrandTotal()}
+              </p>
             </div>
           </div>
 
