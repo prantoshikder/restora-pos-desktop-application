@@ -29,7 +29,7 @@ import WarmingModal from './WarmingModal';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const Cart = ({ settings, cartItems, setCartItems }) => {
+const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
@@ -145,9 +145,11 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
         setConfirmOrder(true);
       } else if (data === 'placeOrder') {
         window.get_all_order_info.send('get_all_order_info', cartItems);
+
         if (orderID) {
-          console.log('cartItems', cartItems);
+          console.log('state', { ...state, order_info: cartItems });
         }
+
         setCartItems([]);
         setConfirmBtn(data);
         setConfirmOrder(true);
