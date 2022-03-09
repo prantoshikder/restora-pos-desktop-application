@@ -1065,7 +1065,7 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
 ipcMain.on('variant_lists_channel', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT variants.id,  variants.variant_name, variants.price, variants.food_id, item_foods.product_name
+    let sql = `SELECT variants.id, variants.variant_name, variants.price, variants.food_id, variants.date_inserted, item_foods.product_name
     FROM variants
     INNER JOIN item_foods ON variants.food_id=item_foods.id`;
     db.serialize(() => {
