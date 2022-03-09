@@ -20,7 +20,7 @@ const ConfirmOrderModal = (props) => {
   const [openModal, setOpenModal] = useState(false);
 
   const quickOrderModal = () => {
-    setCartItems([]);
+    // setCartItems([]);
     setConfirmOrder(false);
     setOpenModal(true);
   };
@@ -47,7 +47,7 @@ const ConfirmOrderModal = (props) => {
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
     // document.body.innerHTML = printContents;
-    // window.print();
+    window.print();
     // document.body.innerHTML = originalContents;
 
     // win.webContents.print(options, (success, failureReason) => {
@@ -56,7 +56,7 @@ const ConfirmOrderModal = (props) => {
     //   console.log('Print Initiated');
     // });
 
-    console.log('printContents', originalContents);
+    // console.log('printContents', originalContents);
   };
 
   return (
@@ -87,7 +87,10 @@ const ConfirmOrderModal = (props) => {
                   style={{
                     marginRight: '1rem',
                   }}
-                  onClick={() => setConfirmOrder(false)}
+                  onClick={() => {
+                    setCartItems([]);
+                    setConfirmOrder(false);
+                  }}
                 >
                   No
                 </Button>
@@ -111,6 +114,7 @@ const ConfirmOrderModal = (props) => {
         settings={settings}
         openModal={openModal}
         setOpenModal={setOpenModal}
+        foodItems={cartItems}
       />
     </>
   );

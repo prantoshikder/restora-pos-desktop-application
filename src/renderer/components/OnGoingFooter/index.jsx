@@ -21,6 +21,7 @@ const OnGoingFooter = ({
   openSearchInput,
   setOpenSearchInput,
   activeInactiveBtn,
+  setReRender,
 }) => {
   let redirect = useNavigate();
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -37,6 +38,7 @@ const OnGoingFooter = ({
 
     setOpenModal(true);
     setOrderData(orderItem);
+    // setReRender((prevState) => !prevState);
   }
 
   const editOnGoingOrder = (orderData) => {
@@ -140,7 +142,8 @@ const OnGoingFooter = ({
         settings={settings}
         openModal={openModal}
         setOpenModal={setOpenModal}
-        orderData={orderData}
+        foodItems={orderData}
+        setReRender={setReRender}
       />
     </>
   );

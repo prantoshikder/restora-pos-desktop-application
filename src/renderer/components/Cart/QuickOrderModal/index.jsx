@@ -1,28 +1,49 @@
 import { Button, Col, Modal, Row, Space, Typography } from 'antd';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
-import { ContextData } from './../../../contextApi';
+import { ContextData } from 'renderer/contextApi';
+import { CalculatePrice } from '../../../../helpers';
 import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
 
-const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
+const QuickOrderModal = ({
+  openModal,
+  setOpenModal,
+  settings,
+  foodItems,
+  setReRender,
+}) => {
+  const [foodData, setFoodData] = useState(null);
+
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [printInvoiceData, setPrintInvoiceData] = useState(null);
   const [onGoingOrderData, setOnGoingOrderData] = useState(null);
 
+  let calc = new CalculatePrice(settings, foodData);
+
+  useEffect(() => {
+    if (foodItems?.order_info) {
+      setFoodData(JSON.parse(foodItems.order_info));
+    } else {
+      setFoodData(foodItems);
+    }
+  }, [foodItems]);
+
   const handlePayBtn = () => {
     // Received on going order data
-    console.log('handlePayBtn orderData', JSON.parse(orderData.order_info));
-    setOnGoingOrderData(JSON.parse(orderData.order_info));
+    // console.log('handlePayBtn foodItems', JSON.parse(foodItems.order_info));
+    // setOnGoingOrderData(JSON.parse(foodItems.order_info));
 
+    // setCartItems([]);
     setOpenModal(false);
     setOpenInvoice(true);
+    setReRender((prevState) => !prevState);
     // TODO: Status process
     window.update_order_info_ongoing.send(
       'update_order_info_ongoing',
-      orderData
+      foodItems
     );
 
     window.update_order_info_ongoing.once(
@@ -33,11 +54,12 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
     );
   };
 
-  const handleCalculatePrice = () => {
-    if (orderData?.order_info === undefined) return;
+  // return <div>hi</div>;
 
-    const orderArray =
-      orderData?.order_info && JSON.parse(orderData?.order_info);
+  const handleCalculatePrice = () => {
+    if (foodData?.order_info === undefined) return;
+
+    const orderArray = foodData?.order_info && JSON.parse(foodData?.order_info);
 
     let totalPrice = orderArray?.reduce(
       (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
@@ -93,7 +115,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
         title="Select Your Payment Method"
         visible={openModal}
         onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
+        onCancel={() => {
+          setOpenModal(false);
+          setCartItems([]);
+        }}
         footer={null}
         width={1200}
       >
@@ -106,25 +131,34 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
 
               <div className="total_order_amount">
                 <Title level={4}>
-                  Your Cart:{' '}
-                  {orderData?.order_info &&
-                    JSON.parse(orderData?.order_info)?.length}{' '}
-                  items{' '}
+                  Your Cart: {Array.isArray(foodData) && foodData?.length}{' '}
+                  item(s){' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {handleCalculatePrice()?.totalPrice}
+                    {calc.getTotalPrice()}
                   </span>
                 </Title>
               </div>
 
               <div style={{ height: '330px', overflowY: 'scroll' }}>
-                {cartItems.length > 0 &&
-                  cartItems?.map((item, index) => (
+                {foodData?.length > 0 &&
+                  foodData?.map((item, index) => (
                     <div
                       className="flex content_between order_item"
                       key={index}
                     >
-                      <h3>{item?.name}</h3>
+                      <h3>
+                        {item?.product_name}
+                        <span
+                          style={{
+                            fontSize: 13,
+                            marginLeft: '0.5rem',
+                            fontWeight: 400,
+                          }}
+                        >
+                          ({item.quantity} x {item?.price})
+                        </span>
+                      </h3>
                       <h3>
                         {settings.currency}
                         {item?.price}
@@ -132,10 +166,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                     </div>
                   ))}
 
-                {orderData !== undefined &&
-                  Object.keys(orderData).length > 0 &&
-                  JSON.parse(orderData.order_info)?.length > 0 &&
-                  JSON.parse(orderData.order_info)?.map((item, index) => (
+                {/* {foodItems !== undefined &&
+                  Object.keys(foodItems).length > 0 &&
+                  JSON.parse(foodItems.order_info)?.length > 0 &&
+                  JSON.parse(foodItems.order_info)?.map((item, index) => (
                     <div
                       className="flex content_between order_item"
                       key={index}
@@ -146,7 +180,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                         {item?.price}
                       </h3>
                     </div>
-                  ))}
+                  ))} */}
               </div>
 
               <div className="total_order">
@@ -154,38 +188,35 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                   Subtotal{' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {handleCalculatePrice()?.totalPrice}
+                    {calc.getTotalPrice()}
                   </span>
                 </Title>
                 <Title level={4}>
                   Service Charge{' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {handleCalculatePrice()?.serviceCharge
-                      ? handleCalculatePrice()?.serviceCharge
-                      : '0.00'}
+                    {calc.getServiceCharge()}
                   </span>
                 </Title>
                 <Title level={4}>
                   GST @ {settings?.vat}%{' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {handleCalculatePrice()?.totalVatBasedOnPrice
-                      ? handleCalculatePrice()?.totalVatBasedOnPrice
-                      : '0.00'}
+                    {calc.getVat()}
                   </span>
                 </Title>
               </div>
 
               <div className="total_order_discount">
-                <div>
-                  <Title level={4}>
-                    Discount: {settings.currency}
-                    {handleCalculatePrice()?.discount
-                      ? handleCalculatePrice()?.discount
+                <Title level={4}>
+                  Discount:
+                  <span style={{ float: 'right' }}>
+                    {settings.currency}
+                    {calc.getDiscountAmount()
+                      ? calc.getDiscountAmount()
                       : '0.00'}
-                  </Title>
-                </div>
+                  </span>
+                </Title>
               </div>
 
               <div className="total_grand_item">
@@ -193,9 +224,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                   Grand Total:
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {handleCalculatePrice()?.grandTotal
-                      ? handleCalculatePrice()?.grandTotal
-                      : '0.00'}
+                    {calc.getGrandTotal()}
                   </span>
                 </Title>
               </div>
@@ -233,10 +262,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                   marginLeft: '1.5rem',
                 }}
               >
-                <Text>Total Payment</Text>
+                <Title level={4}>Total Payable Amount</Title>
                 <h3>
                   {settings.currency}
-                  {handleCalculatePrice()?.grandTotal}
+                  {calc.getGrandTotal()}
                 </h3>
               </div>
 
@@ -283,7 +312,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                         Payable Amount:
                       </Button>
                       <Button type="primary" onClick={handlePayBtn}>
-                        Pay Now & Print Invoice
+                        Pay Now &amp; Print Invoice
                       </Button>
                     </Space>
                   </Col>
