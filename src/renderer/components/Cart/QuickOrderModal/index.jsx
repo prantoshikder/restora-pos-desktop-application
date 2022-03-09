@@ -10,10 +10,12 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [printInvoiceData, setPrintInvoiceData] = useState(null);
+  const [onGoingOrderData, setOnGoingOrderData] = useState(null);
 
   const handlePayBtn = () => {
     // Received on going order data
     console.log('handlePayBtn orderData', JSON.parse(orderData.order_info));
+    setOnGoingOrderData(JSON.parse(orderData.order_info));
 
     setOpenModal(false);
     setOpenInvoice(true);
@@ -299,6 +301,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
         openInvoice={openInvoice}
         setOpenInvoice={setOpenInvoice}
         setPrintInvoiceData={setPrintInvoiceData}
+        onGoingOrderData={onGoingOrderData}
       />
     </>
   );
