@@ -294,6 +294,12 @@ sendDataThroughMiddlewareOn(
   'update_order_info_ongoing_response' //Response
 );
 
+// Update orders info after edit
+sendDataThroughMiddlewareOn(
+  'update_order_info_after_edit', //Event Name
+  'update_order_info_after_edit', // Channel Name
+  'update_order_info_after_edit_response' //Response
+);
 
 /*======================================================================
   FUNCTION DECLARATIONS
