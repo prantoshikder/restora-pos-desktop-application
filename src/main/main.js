@@ -945,35 +945,34 @@ ipcMain.on('get_all_order_info_ongoing', (event, args) => {
 
 // Complete order info
 ipcMain.on('update_order_info_ongoing', (event, args) => {
-  console.log("*******************************", args);
-  // let { order_id, order_info, is_active } = args;
+  let { order_id, order_info, is_active } = args;
 
-  // let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
-  // db.serialize(() => {
-  //   db.run(
-  //     `INSERT OR REPLACE INTO orders(order_id, order_info, is_active)
-  //       VALUES (?, ?, ?)`,
-  //     [
-  //       order_id,
-  //       order_info,
-  //       is_active === 1
-  //         ? (is_active = 2)
-  //         : console.log('Getting error to update data'),
-  //     ],
-  //     (err) => {
-  //       err
-  //         ? mainWindow.webContents.send(
-  //             'update_order_info_ongoing_response',
-  //             err.message
-  //           )
-  //         : mainWindow.webContents.send('update_order_info_ongoing_response', {
-  //             status: 'updated',
-  //           });
-  //     }
-  //   );
-  // });
-  // db.close();
+  db.serialize(() => {
+    db.run(
+      `INSERT OR REPLACE INTO orders(order_id, order_info, is_active)
+        VALUES (?, ?, ?)`,
+      [
+        order_id,
+        order_info,
+        is_active === 1
+          ? (is_active = 2)
+          : console.log('Getting error to update data'),
+      ],
+      (err) => {
+        err
+          ? mainWindow.webContents.send(
+              'update_order_info_ongoing_response',
+              err.message
+            )
+          : mainWindow.webContents.send('update_order_info_ongoing_response', {
+              status: 'updated',
+            });
+      }
+    );
+  });
+  db.close();
 });
 
 // Delete food

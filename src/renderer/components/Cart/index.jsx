@@ -136,8 +136,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSubmitOrder = (data) => {
-    console.log("onGoingOrderData", state);
-    window.update_order_info_ongoing.send('update_order_info_ongoing', state)
+    // console.log("onGoingOrderData", state);
+    // window.update_order_info_ongoing.send('update_order_info_ongoing', state)
     // console.log('onGoingOrderData', JSON.parse(state.order_info));
 
     if (cartItems?.length === 0) {
@@ -153,7 +153,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       } else if (data === 'placeOrder') {
 
         if (localStorage.getItem('order_id')) {
-          console.log('if/', state.order_id);
           window.update_order_info_after_edit.send(
             'update_order_info_after_edit',
             {
@@ -162,9 +161,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
             }
           );
           localStorage.removeItem('order_id');
-          // console.log('state', { ...state, order_info: cartItems });
         } else {
-          // console.log('else/');
           window.get_all_order_info.send('get_all_order_info', cartItems);
         }
 
