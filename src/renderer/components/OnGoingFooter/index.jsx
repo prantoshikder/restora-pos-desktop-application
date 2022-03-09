@@ -40,10 +40,11 @@ const OnGoingFooter = ({
   }
 
   const editOnGoingOrder = (orderData) => {
-    console.log('onGoingOrderData', orderData);
-    const data = JSON.parse(orderData?.order_info);
-    setCartItems(data);
-    redirect('/', { state: { ...orderData, order_info: data } });
+    localStorage.setItem('order_id', orderData.order_id);
+    const orderItems = JSON.parse(orderData.order_info);
+
+    setCartItems(orderItems);
+    redirect('/', { state: { ...orderData, order_info: orderItems } });
   };
 
   return (

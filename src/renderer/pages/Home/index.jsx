@@ -132,7 +132,7 @@ const Home = ({ settings }) => {
                   <Cart
                     settings={settings}
                     setCartItems={setCartItems}
-                    cartItems={cartItems || state.order_info}
+                    cartItems={cartItems || state?.order_info}
                   />
                 </Col>
               </Row>

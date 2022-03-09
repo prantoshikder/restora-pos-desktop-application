@@ -37,9 +37,7 @@ const OnGoingOrder = ({ settings }) => {
   const handleSearchOnGoingOrder = (e) => {
     setSearchValue(e.target.value);
 
-    const data = [...orderData];
-
-    const searchData = data.filter((orderItem) =>
+    const searchData = orderData.filter((orderItem) =>
       orderItem.order_id.toString().match(new RegExp(e.target.value, 'g'))
     );
 
