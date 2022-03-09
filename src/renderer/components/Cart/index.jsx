@@ -19,8 +19,8 @@ import {
   TimePicker,
 } from 'antd';
 import { useEffect, useState } from 'react';
-import Calculator from '../Calculator/index.jsx';
-import PremiumVersion from '../partials/PremiumVersion/index';
+import Calculator from '../Calculator';
+import PremiumVersion from '../partials/PremiumVersion';
 import { getDataFromDatabase } from './../../../helpers';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
