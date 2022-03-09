@@ -503,23 +503,18 @@ const Cart = ({ settings }) => {
             <Row>
               <Col span={settings?.discount_type ? 9 : 12}>
                 <b>Vat/Tax: </b>
-                {settings?.vat}%
+                {settings?.vat ? settings?.vat : 0}%
               </Col>
               <Col span={settings?.discount_type ? 9 : 12}>
-                <b>
-                  Service Charge:
-                  {settings?.service_chargeType === 'amount' && "(Fixed)"}
-                </b> {" "}
-                {settings?.servicecharge}{settings?.service_chargeType !== 'amount' && "(%)"}
+                <b>Service Charge: </b>
+                {settings?.service_chargeType === 'amount' && settings.currency}{settings?.servicecharge}{settings?.service_chargeType !== 'amount' && "(%)"}
               </Col>
 
               {/* Discount type 2 = percent & Discount type 1 = amount */}
               {settings?.discount_type && (
                 <Col span={6}>
-                  <b>
-                    Discount: {settings?.discount_type === 1 && '(Fixed)'}
-                  </b>
-                  {settings?.discountrate} {settings?.discount_type === 2 && "(%)"}
+                  <b>Discount: </b>
+                  {settings?.discount_type === 1 && settings.currency}{settings?.discountrate}{settings?.discount_type === 2 && "(%)"}
                 </Col>
               )}
             </Row>
@@ -541,9 +536,9 @@ const Cart = ({ settings }) => {
 
             <div>
               {cartItems?.length !== 0 ? (
-                <span>${handleCalculatePrice()}</span>
+                <span>{settings.currency}{handleCalculatePrice()}</span>
               ) : (
-                <span>$0.00</span>
+                <span>{settings.currency}0.00</span>
               )}
             </div>
           </div>
@@ -677,6 +672,7 @@ const Cart = ({ settings }) => {
         confirmOrder={confirmOrder}
         setConfirmOrder={setConfirmOrder}
         confirmBtn={confirmBtn}
+        settings={settings}
         printId={'printId'}
       />
 
@@ -693,7 +689,7 @@ const Cart = ({ settings }) => {
         footer={null}
         closable={false}
         width={0}
-      > 
+      >
         <Calculator />
       </Modal>
 

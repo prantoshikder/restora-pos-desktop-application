@@ -30,6 +30,7 @@ export default function App() {
     appStatus: 'free',
     site_align: 'ltr',
     theme: 'light',
+    currency: '$',
   });
 
   useEffect(() => {

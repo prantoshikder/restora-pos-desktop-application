@@ -1182,13 +1182,12 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
 
   setImagePath(
     menu_icon_folder_name, // Menu images folder name
-    "", // Menu icons folder name
+    '', // Menu icons folder name
     menu_type_icon?.path, // Menu image path
     menu_type_icon?.name, // Menu image name
-    "", // Menu icon path
-    "" // Menu icon name
+    '', // Menu icon path
+    '' // Menu icon name
   );
-
 
   // Execute if the event has menu type ID. It is used to update a specific item
   if (args.id !== undefined) {
@@ -1209,7 +1208,8 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
                 menu_type_icon.name
               )
             : menu_type_icon,
-          is_active],
+          is_active,
+        ],
         (err) => {
           err
             ? mainWindow.webContents.send(
@@ -1247,7 +1247,8 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
                 menu_type_icon.name
               )
             : menu_type_icon,
-          is_active],
+          is_active,
+        ],
         (err) => {
           err
             ? mainWindow.webContents.send(

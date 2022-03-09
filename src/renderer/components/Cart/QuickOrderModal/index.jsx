@@ -109,7 +109,8 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                     JSON.parse(orderData?.order_info)?.length}{' '}
                   items{' '}
                   <span style={{ float: 'right' }}>
-                    ${handleCalculatePrice()?.totalPrice}
+                    {settings.currency}
+                    {handleCalculatePrice()?.totalPrice}
                   </span>
                 </Title>
               </div>
@@ -122,7 +123,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                       key={index}
                     >
                       <h3>{item?.name}</h3>
-                      <h3>${item?.price}</h3>
+                      <h3>
+                        {settings.currency}
+                        {item?.price}
+                      </h3>
                     </div>
                   ))}
 
@@ -135,7 +139,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                       key={index}
                     >
                       <h3>{item?.product_name}</h3>
-                      <h3>${item?.price}</h3>
+                      <h3>
+                        {settings.currency}
+                        {item?.price}
+                      </h3>
                     </div>
                   ))}
               </div>
@@ -144,13 +151,14 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 <Title level={4}>
                   Subtotal{' '}
                   <span style={{ float: 'right' }}>
-                    ${handleCalculatePrice()?.totalPrice}
+                    {settings.currency}
+                    {handleCalculatePrice()?.totalPrice}
                   </span>
                 </Title>
                 <Title level={4}>
                   Service Charge{' '}
                   <span style={{ float: 'right' }}>
-                    $
+                    {settings.currency}
                     {handleCalculatePrice()?.serviceCharge
                       ? handleCalculatePrice()?.serviceCharge
                       : '0.00'}
@@ -159,7 +167,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 <Title level={4}>
                   GST @ {settings?.vat}%{' '}
                   <span style={{ float: 'right' }}>
-                    $
+                    {settings.currency}
                     {handleCalculatePrice()?.totalVatBasedOnPrice
                       ? handleCalculatePrice()?.totalVatBasedOnPrice
                       : '0.00'}
@@ -170,7 +178,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
               <div className="total_order_discount">
                 <div>
                   <Title level={4}>
-                    Discount: $
+                    Discount: {settings.currency}
                     {handleCalculatePrice()?.discount
                       ? handleCalculatePrice()?.discount
                       : '0.00'}
@@ -182,7 +190,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 <Title level={4}>
                   Grand Total:
                   <span style={{ float: 'right' }}>
-                    $
+                    {settings.currency}
                     {handleCalculatePrice()?.grandTotal
                       ? handleCalculatePrice()?.grandTotal
                       : '0.00'}
@@ -224,7 +232,10 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
                 }}
               >
                 <Text>Total Payment</Text>
-                <h3>${handleCalculatePrice()?.grandTotal}</h3>
+                <h3>
+                  {settings.currency}
+                  {handleCalculatePrice()?.grandTotal}
+                </h3>
               </div>
 
               <div
