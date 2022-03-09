@@ -24,7 +24,6 @@ const QuickOrderModal = ({
   let calc = new CalculatePrice(settings, foodData);
 
   useEffect(() => {
-
     if (foodItems?.order_info) {
       setFoodData(JSON.parse(foodItems.order_info));
     } else {
@@ -34,14 +33,13 @@ const QuickOrderModal = ({
 
   const handlePayBtn = () => {
     // Received on going order data
-    // console.log('handlePayBtn foodItems', JSON.parse(foodItems.order_info));
-    // setOnGoingOrderData(JSON.parse(foodItems.order_info));
+    setOnGoingOrderData(foodData);
 
     // setCartItems([]);
     setOpenModal(false);
     setOpenInvoice(true);
 
-    if(localStorage.getItem('order_id')) {
+    if (localStorage.getItem('order_id')) {
       console.log(localStorage.getItem('order_id'));
       setReRender((prevState) => !prevState);
     }
