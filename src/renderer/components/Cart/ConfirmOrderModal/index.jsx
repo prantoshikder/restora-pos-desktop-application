@@ -25,6 +25,12 @@ const ConfirmOrderModal = (props) => {
     setOpenModal(true);
   };
 
+  const handleSubmitOrder = (eventName) => {
+    if (confirmBtn === eventName) {
+      window.get_all_order_info.send('get_all_order_info', cartItems);
+    }
+  };
+
   const options = {
     silent: false,
     printBackground: true,
@@ -90,6 +96,7 @@ const ConfirmOrderModal = (props) => {
                   onClick={() => {
                     setCartItems([]);
                     setConfirmOrder(false);
+                    handleSubmitOrder('quickOrder');
                   }}
                 >
                   No
