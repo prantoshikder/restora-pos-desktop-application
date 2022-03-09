@@ -32,8 +32,8 @@ const { TextArea } = Input;
 const Cart = ({ settings, cartItems, setCartItems }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
-  // const { state } = useLocation();
   const [addCustomerName] = Form.useForm();
+  const orderID = localStorage.getItem('order_id');
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -44,8 +44,7 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
   const [customerList, setCustomerList] = useState([]);
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
-
-  // const { cartItems, setCartItems } = useContext(ContextData);
+  const [openCalculator, setOpenCalculator] = useState(false);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -60,19 +59,15 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
     setAddCustomer([
       {
         name: ['customer_name'],
-        // value: ,
       },
       {
         name: ['customer_email'],
-        // value: ,
       },
       {
         name: ['customer_phone'],
-        // value: ,
       },
       {
         name: ['customer_address'],
-        // value: ,
       },
     ]);
   }, [reRender]);
@@ -123,7 +118,7 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
 
   const handleResetAll = () => {
     form.resetFields();
-    setCartItems('');
+    setCartItems([]);
 
     message.success({
       content: 'Reset successfully',
@@ -132,8 +127,6 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
   };
-
-  const [openCalculator, setOpenCalculator] = useState(false);
 
   const handleCalculation = () => {
     setOpenCalculator(true);
@@ -144,8 +137,6 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
     window.update_order_info_ongoing.send('update_order_info_ongoing', state)
     // console.log('onGoingOrderData', JSON.parse(state.order_info));
 
-    window.get_all_order_info.send('get_all_order_info', cartItems);
-
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -153,6 +144,10 @@ const Cart = ({ settings, cartItems, setCartItems }) => {
         setConfirmBtn(data);
         setConfirmOrder(true);
       } else if (data === 'placeOrder') {
+        window.get_all_order_info.send('get_all_order_info', cartItems);
+        if (orderID) {
+          console.log('cartItems', cartItems);
+        }
         setCartItems([]);
         setConfirmBtn(data);
         setConfirmOrder(true);

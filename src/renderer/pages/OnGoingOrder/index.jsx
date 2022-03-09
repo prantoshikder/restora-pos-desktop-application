@@ -1,7 +1,8 @@
 import { Col, Input, Row } from 'antd';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
 import OnGoingOrderItems from 'renderer/components/OnGoingOrderItems';
+import { ContextData } from 'renderer/contextApi';
 import OnGoingFooter from '../../components/OnGoingFooter';
 import { getDataFromDatabase } from './../../../helpers';
 import Header from './../../components/partials/Header';
@@ -10,6 +11,8 @@ const OnGoingOrder = ({ settings }) => {
   window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
     status: true,
   });
+
+  const { cartItems, setCartItems } = useContext(ContextData);
 
   const [orderData, setOrderData] = useState([]);
   const [orderComplete, setOrderComplete] = useState({});
@@ -34,9 +37,7 @@ const OnGoingOrder = ({ settings }) => {
   const handleSearchOnGoingOrder = (e) => {
     setSearchValue(e.target.value);
 
-    const data = [...orderData];
-
-    const searchData = data.filter((orderItem) =>
+    const searchData = orderData.filter((orderItem) =>
       orderItem.order_id.toString().match(new RegExp(e.target.value, 'g'))
     );
 
@@ -91,7 +92,7 @@ const OnGoingOrder = ({ settings }) => {
         />
       </div>
 
-      <InVoiceGenerate settings={settings} />
+      <InVoiceGenerate settings={settings} foodItems={cartItems} />
 
       <OnGoingFooter
         openSearchInput={openSearchInput}
