@@ -301,7 +301,7 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
         openInvoice={openInvoice}
         setOpenInvoice={setOpenInvoice}
         setPrintInvoiceData={setPrintInvoiceData}
-        onGoingOrderData={onGoingOrderData}
+        foodItems={onGoingOrderData}
       />
     </>
   );

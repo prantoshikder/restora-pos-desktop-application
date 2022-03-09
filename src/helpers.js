@@ -86,3 +86,55 @@ export const getWords = (string) => {
 
   return newString;
 };
+
+export class CalculatePrice {
+  constructor(settings, arrayData) {
+    this.settings = settings;
+    this.arrayData = arrayData;
+
+    // initialize default value to avoid error
+    this.settings.discount = 0;
+    this.settings.totalVatBasedOnPrice = 0;
+    this.settings.serviceCharge = 0;
+    this.settings.vat = 0;
+  }
+
+  getTotalPrice() {
+    if (Array.isArray(this.arrayData) && this.arrayData.length > 0) {
+      return this.arrayData.reduce(
+        (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
+        0
+      );
+    }
+  }
+
+  getVat() {
+    if (this.settings?.vat) {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.vat) / 100).toFixed(2)
+      );
+    } else {
+      return '0.00';
+    }
+  }
+
+  getServiceCharge() {
+    if (this.settings?.service_chargeType === 'percent') {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
+      );
+    } else {
+      return this.settings?.servicecharge;
+    }
+  }
+
+  getDiscountAmount() {
+    if (this.settings?.service_chargeType === 'percent') {
+      return parseFloat(
+        ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
+      );
+    } else {
+      return this.settings?.servicecharge;
+    }
+  }
+}
