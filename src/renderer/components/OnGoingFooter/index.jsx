@@ -8,28 +8,43 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PremiumVersion from '../partials/PremiumVersion';
+import { ContextData } from './../../contextApi/index';
 import QuickOrderModal from './../Cart/QuickOrderModal/index';
 import './OnGoingFooter.style.scss';
 
-const OnGoingFooter = ({ orderComplete, settings }) => {
+const OnGoingFooter = ({
+  orderComplete,
+  settings,
+  openSearchInput,
+  setOpenSearchInput,
+  activeInactiveBtn,
+}) => {
+  let redirect = useNavigate();
+  const { cartItems, setCartItems } = useContext(ContextData);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [orderData, setOrderData] = useState();
 
   function orderCompleted(orderItem) {
+    console.log('orderItem', orderItem);
+
     if (Object.keys(orderItem).length === 0) {
       return true;
     }
 
     setOpenModal(true);
     setOrderData(orderItem);
-    // window.update_order_info_ongoing.send(
-    //   'update_order_info_ongoing',
-    //   orderItem
-    // );
   }
+
+  const editOnGoingOrder = (orderData) => {
+    console.log('onGoingOrderData', orderData);
+    const data = JSON.parse(orderData?.order_info);
+    setCartItems(data);
+    redirect('/', { state: orderData });
+  };
 
   return (
     <>
@@ -41,7 +56,7 @@ const OnGoingFooter = ({ orderComplete, settings }) => {
                 <Button
                   type="primary"
                   className="on_going_btn search_btn"
-                  onClick={() => setPremiumVersion(true)}
+                  onClick={() => setOpenSearchInput(!openSearchInput)}
                 >
                   <SearchOutlined /> Search
                 </Button>
@@ -86,13 +101,25 @@ const OnGoingFooter = ({ orderComplete, settings }) => {
                   <EditOutlined /> Kot
                 </Button>
 
-                <Button type="primary" className="on_going_btn edit_btn">
+                <Button
+                  type="primary"
+                  className={
+                    activeInactiveBtn?.is_active === 1
+                      ? 'on_going_btn edit_btn '
+                      : 'on_going_btn edit_btn premium_btn'
+                  }
+                  onClick={() => editOnGoingOrder(orderComplete)}
+                >
                   <EditOutlined /> Edit
                 </Button>
 
                 <Button
                   type="primary"
-                  className="on_going_btn complete_btn"
+                  className={
+                    activeInactiveBtn?.is_active === 1
+                      ? 'on_going_btn complete_btn '
+                      : 'on_going_btn complete_btn premium_btn'
+                  }
                   onClick={() => orderCompleted(orderComplete)}
                 >
                   <CheckCircleOutlined /> Complete

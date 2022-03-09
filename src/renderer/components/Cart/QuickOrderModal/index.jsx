@@ -12,7 +12,9 @@ const QuickOrderModal = ({ openModal, setOpenModal, settings, orderData }) => {
   const [printInvoiceData, setPrintInvoiceData] = useState(null);
 
   const handlePayBtn = () => {
-    console.log('orderData', JSON.parse(orderData.order_info));
+    // Received on going order data
+    console.log('handlePayBtn orderData', JSON.parse(orderData.order_info));
+
     setOpenModal(false);
     setOpenInvoice(true);
     // TODO: Status process
