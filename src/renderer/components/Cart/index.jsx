@@ -18,12 +18,10 @@ import {
   Space,
   TimePicker,
 } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Calculator from '../Calculator/index.jsx';
 import PremiumVersion from '../partials/PremiumVersion/index';
 import { getDataFromDatabase } from './../../../helpers';
-import { ContextData } from './../../contextApi';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
 import WarmingModal from './WarmingModal';
@@ -31,10 +29,10 @@ import WarmingModal from './WarmingModal';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const Cart = ({ settings }) => {
+const Cart = ({ settings, cartItems, setCartItems }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
-  const { state } = useLocation();
+  // const { state } = useLocation();
   const [addCustomerName] = Form.useForm();
 
   const [openModal, setOpenModal] = useState(false);
@@ -47,7 +45,7 @@ const Cart = ({ settings }) => {
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
 
-  const { cartItems, setCartItems } = useContext(ContextData);
+  // const { cartItems, setCartItems } = useContext(ContextData);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -142,7 +140,8 @@ const Cart = ({ settings }) => {
   };
 
   const handleSubmitOrder = (data) => {
-    console.log('onGoingOrderData', state);
+    // console.log('onGoingOrderData', JSON.parse(state.order_info));
+
     window.get_all_order_info.send('get_all_order_info', cartItems);
 
     if (cartItems?.length === 0) {
@@ -443,6 +442,7 @@ const Cart = ({ settings }) => {
                   </thead>
 
                   <tbody>
+                    {/* {JSON.parse(state.order_info)} */}
                     {cartItems.length &&
                       cartItems.map((item, index) => {
                         return (
