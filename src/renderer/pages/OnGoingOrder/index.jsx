@@ -102,6 +102,7 @@ const OnGoingOrder = ({ settings }) => {
         orderComplete={orderComplete}
         settings={settings}
         activeInactiveBtn={activeInactiveBtn}
+        setReRender={setReRender}
       />
     </div>
   );

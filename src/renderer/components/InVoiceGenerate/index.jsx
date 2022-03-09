@@ -75,12 +75,6 @@ const InVoiceGenerate = ({
   const date = new Date();
   // setPrintInvoiceData(invoiceWrapperRef.current);
 
-  console.log('getTotalPrice', calc.getTotalPrice());
-  console.log('calc.getVat()', calc.getVat());
-  console.log('calc.getServiceCharge()', calc.getServiceCharge());
-  console.log('calc.getDiscountAmount(),', calc.getDiscountAmount());
-  console.log('grand', calc.getGrandTotal());
-
   return (
     <Modal
       // title="Select Your Payment Method"
