@@ -136,6 +136,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSubmitOrder = (data) => {
+    console.log("onGoingOrderData", state);
+    window.update_order_info_ongoing.send('update_order_info_ongoing', state)
     // console.log('onGoingOrderData', JSON.parse(state.order_info));
 
     if (cartItems?.length === 0) {
