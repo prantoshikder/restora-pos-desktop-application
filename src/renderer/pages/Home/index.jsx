@@ -55,6 +55,7 @@ const Home = ({ settings }) => {
     ])
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
+        console.log('variants', variants);
 
         foodNames?.map((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
