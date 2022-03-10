@@ -118,7 +118,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const handleResetAll = () => {
     form.resetFields();
     setCartItems([]);
-    localStorage.clear('');
+
+    if (localStorage.getItem('order_id')) {
+      localStorage.removeItem('order_id');
+    }
 
     message.success({
       content: 'Reset successfully',
@@ -141,12 +144,16 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       if (data === 'quickOrder') {
         setConfirmBtn(data);
         setConfirmOrder(true);
+
+        if (localStorage.getItem('order_id')) {
+          localStorage.removeItem('order_id');
+        }
       } else if (data === 'placeOrder') {
         window.get_all_order_info.send('get_all_order_info', cartItems);
 
         if (localStorage.getItem('order_id')) {
           console.log('state', { ...state, order_info: cartItems });
-          localStorage.clear('');
+          localStorage.removeItem('order_id');
         }
 
         setCartItems([]);
