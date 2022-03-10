@@ -2,7 +2,7 @@ import { Button, Col, Modal, Row, Space, Typography } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import InVoiceGenerate from 'renderer/components/InVoiceGenerate';
 import { ContextData } from 'renderer/contextApi';
-import { CalculatePrice } from '../../../../helpers';
+import { CalculatePrice, getDataFromDatabase } from '../../../../helpers';
 import './QuickOrderModal.style.scss';
 
 const { Text, Title } = Typography;
@@ -14,6 +14,9 @@ const QuickOrderModal = ({
   foodItems,
   setReRender,
 }) => {
+  window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
+    status: true,
+  });
   const [foodData, setFoodData] = useState(null);
 
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -35,18 +38,24 @@ const QuickOrderModal = ({
     // Received on going order data
     setOnGoingOrderData(foodData);
 
-    // setCartItems([]);
+    getDataFromDatabase(
+      'get_all_order_info_ongoing_response',
+      window.get_all_order_info_ongoing
+    ).then((data = []) => {
+      const updateOrder = { ...data[data.length - 1] };
+
+      window.update_order_info_ongoing.send(
+        'update_order_info_ongoing',
+        updateOrder
+      );
+    });
+
     setOpenModal(false);
     setOpenInvoice(true);
 
     if (localStorage.getItem('order_id')) {
       setReRender((prevState) => !prevState);
     }
-    // TODO: Status process
-    window.update_order_info_ongoing.send(
-      'update_order_info_ongoing',
-      foodItems
-    );
 
     window.update_order_info_ongoing.once(
       'update_order_info_ongoing_response',
@@ -55,8 +64,6 @@ const QuickOrderModal = ({
       }
     );
   };
-
-  // return <div>hi</div>;
 
   const handleCalculatePrice = () => {
     if (foodData?.order_info === undefined) return;

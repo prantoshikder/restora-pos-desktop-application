@@ -23,6 +23,9 @@ const ConfirmOrderModal = (props) => {
     // setCartItems([]);
     setConfirmOrder(false);
     setOpenModal(true);
+    // if (confirmBtn === eventName) {
+    window.get_all_order_info.send('get_all_order_info', cartItems);
+    // }
   };
 
   const handleSubmitOrder = (eventName) => {
