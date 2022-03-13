@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 import { CalculatePrice } from 'helpers';
 import moment from 'moment';
 import { useRef } from 'react';
+import restoraPosLogo from '../../../../assets/retora_pos.png';
 import './InVoiceGenerate.style.scss';
 
 const InVoiceGenerate = ({
@@ -94,7 +95,7 @@ const InVoiceGenerate = ({
       <div ref={invoiceWrapperRef} className="inVoice_wrapper">
         <div className="inVoice_print_area">
           <div className="in_voice_logo">
-            {/* <img src={InVoiceLogo} alt="" /> */}
+            <img src={settings?.logo || restoraPosLogo} alt="Restora POS" />
           </div>
 
           <h1
