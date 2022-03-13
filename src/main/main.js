@@ -277,7 +277,7 @@ getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
   'setting', //Table Name
-  'title, storename, address, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, vat, currency, site_align, dateformat, timezone' //Columns
+  'title, storename, address, logo, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, vat, currency, site_align, dateformat, timezone' //Columns
 );
 
 /**
@@ -889,21 +889,26 @@ ipcMain.on('get_food_list_pos', (event, args) => {
   }
 });
 
-// Insert order info
-ipcMain.on('get_all_order_info', (event, args) => {
+// Insert order
+ipcMain.on('insert_order_info', (event, args) => {
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
       `CREATE TABLE IF NOT EXISTS orders(
       "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "order_info" varchar(255),
+      "customer_id" INT,
       "creation_date" DATETIME,
       "is_active" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT OR REPLACE INTO orders (order_info, creation_date)
-      VALUES (?, ?)`,
-      [JSON.stringify(args), Date.now()]
+      `INSERT OR REPLACE INTO orders (order_info, customer_id, creation_date)
+      VALUES (?, ?, ?)`,
+      [
+        JSON.stringify(args),
+        args?.customer_id ? args?.customer_id : 0,
+        Date.now(),
+      ]
     );
   });
   db.close();
