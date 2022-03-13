@@ -20,9 +20,9 @@ const ConfirmOrderModal = (props) => {
   const [openModal, setOpenModal] = useState(false);
 
   const quickOrderModal = () => {
-    // setCartItems([]);
     setConfirmOrder(false);
     setOpenModal(true);
+    // setCartItems([]);
     // if (confirmBtn === eventName) {
     window.get_all_order_info.send('get_all_order_info', cartItems);
     // }

@@ -83,7 +83,12 @@ const InVoiceGenerate = ({
       width={600}
       okText="Print"
       onOk={() => {
+        var printContents =
+          document.querySelector('.inVoice_wrapper').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
         window.print();
+        window.location.reload();
       }}
     >
       <div ref={invoiceWrapperRef} className="inVoice_wrapper">
