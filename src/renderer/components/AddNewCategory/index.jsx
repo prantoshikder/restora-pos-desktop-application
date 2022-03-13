@@ -120,7 +120,7 @@ const AddNewCategory = ({ state }) => {
   const handleChangeEndDate = (date, stringDate) => {
     setOfferEndDate(stringDate);
   };
-  console.log('state', state);
+
   const handleSubmit = () => {
     const newCategory = {};
 
@@ -159,6 +159,22 @@ const AddNewCategory = ({ state }) => {
       newCategory.category_icon = state?.category_icon;
     }
 
+    if (newCategory?.category_id === newCategory?.parent_id) {
+      message.warning({
+        content: 'Category ID and parent ID can not be the save.',
+        className: 'custom-class',
+        duration: 2,
+        style: {
+          marginTop: '5vh',
+          float: 'right',
+        },
+      });
+
+      return;
+    }
+
+    console.log('inside newCategory', newCategory);
+
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
 
@@ -168,7 +184,7 @@ const AddNewCategory = ({ state }) => {
         message.success({
           content: 'Category has been updated successfully',
           className: 'custom-class',
-          duration: 1,
+          duration: 2,
           style: {
             marginTop: '5vh',
             float: 'right',
@@ -182,7 +198,7 @@ const AddNewCategory = ({ state }) => {
         message.success({
           content: 'Food category added successfully',
           className: 'custom-class',
-          duration: 1,
+          duration: 2,
           style: {
             marginTop: '5vh',
             float: 'right',

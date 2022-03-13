@@ -36,6 +36,7 @@ const AllCategoryList = () => {
       .then((categories) => {
         // Declared a global state
         let allCats = [];
+        console.log('allCats', allCats);
 
         categories.map((category) => {
           // Push all the parent category into the 'allCats' state
