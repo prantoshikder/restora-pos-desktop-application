@@ -15,38 +15,37 @@ const { Text } = Typography;
 const ConfirmOrderModal = (props) => {
   const { cartItems, setCartItems } = useContext(ContextData);
 
-  const { confirmOrder, setConfirmOrder, confirmBtn, printId, settings } =
-    props;
+  const {
+    confirmOrder,
+    setConfirmOrder,
+    confirmBtn,
+    printId,
+    settings,
+    customerId,
+  } = props;
   const [openModal, setOpenModal] = useState(false);
+
+  console.log('customerId', customerId);
 
   const quickOrderModal = () => {
     setConfirmOrder(false);
     setOpenModal(true);
     // setCartItems([]);
     // if (confirmBtn === eventName) {
-    window.insert_order_info.send('insert_order_info', cartItems);
+    window.insert_order_info.send('insert_order_info', {
+      cartItems,
+      customerId,
+    });
     // }
   };
 
   const handleSubmitOrder = (eventName) => {
     if (confirmBtn === eventName) {
-      window.insert_order_info.send('insert_order_info', cartItems);
+      window.insert_order_info.send('insert_order_info', {
+        cartItems,
+        customerId,
+      });
     }
-  };
-
-  const options = {
-    silent: false,
-    printBackground: true,
-    color: false,
-    margin: {
-      marginType: 'printableArea',
-    },
-    landscape: false,
-    pagesPerSheet: 1,
-    collate: false,
-    copies: 1,
-    header: 'Header of the Page',
-    footer: 'Footer of the Page',
   };
 
   const placeOrderModal = () => {
@@ -56,7 +55,7 @@ const ConfirmOrderModal = (props) => {
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
     // document.body.innerHTML = printContents;
-    window.print();
+    // window.print();
     // document.body.innerHTML = originalContents;
 
     // win.webContents.print(options, (success, failureReason) => {

@@ -691,6 +691,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         confirmBtn={confirmBtn}
         settings={settings}
         printId={'printId'}
+        customerId={customerId}
       />
 
       <PremiumVersion

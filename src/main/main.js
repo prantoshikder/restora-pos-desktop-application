@@ -960,6 +960,7 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
+        console.log('com orders', rows);
         mainWindow.webContents.send(
           'get_todays_completed_orders_response',
           rows
