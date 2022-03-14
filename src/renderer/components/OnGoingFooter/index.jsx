@@ -7,7 +7,7 @@ import {
   ShrinkOutlined,
   SwapOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, message, Row } from 'antd';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PremiumVersion from '../partials/PremiumVersion';
@@ -40,6 +40,19 @@ const OnGoingFooter = ({
   }
 
   const editOnGoingOrder = (orderData) => {
+    if (Object.keys(orderData).length === 0) {
+      message.error({
+        content: 'Sorry! No order is selected.',
+        className: 'custom-class',
+        duration: 2,
+        style: {
+          marginTop: '15vh',
+        },
+      });
+
+      return;
+    }
+
     localStorage.setItem('order_id', orderData.order_id);
     const orderItems = JSON.parse(orderData.order_info);
 
