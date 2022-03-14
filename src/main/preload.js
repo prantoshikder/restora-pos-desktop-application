@@ -300,6 +300,13 @@ sendDataThroughMiddlewareOn(
   'update_order_info_after_edit_response' //Response
 );
 
+// Get today's completed orders
+sendDataThroughMiddlewareOn(
+  'get_todays_completed_orders', //Event Name
+  'get_todays_completed_orders', // Channel Name
+  'get_todays_completed_orders_response' //Response
+);
+
 /*======================================================================
   FUNCTION DECLARATIONS
 ========================================================================*/
