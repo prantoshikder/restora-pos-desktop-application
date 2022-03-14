@@ -1,5 +1,7 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Space, Table } from 'antd';
+import { getDataFromDatabase } from 'helpers';
+import { useEffect, useState } from 'react';
 import Header from 'renderer/components/partials/Header';
 import './TodaysOrder.style.scss';
 
@@ -18,6 +20,21 @@ const rowSelection = {
 };
 
 const TodaysOrder = ({ settings }) => {
+  window.get_todays_completed_orders.send('get_todays_completed_orders', {
+    status: true,
+  });
+
+  const [todaysOrders, setTodaysOrders] = useState([]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_todays_completed_orders_response',
+      window.get_todays_completed_orders
+    ).then((orders) => {
+      console.log('order', orders);
+    });
+  }, []);
+
   const columns = [
     {
       title: 'Invoice',
