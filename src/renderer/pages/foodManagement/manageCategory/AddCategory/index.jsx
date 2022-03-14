@@ -13,11 +13,11 @@ const AddCategory = ({ settings }) => {
       <div className="pos_system">
         <ConfigProvider direction={settings.site_align}>
           <Row>
-            <Col lg={3}>
+            <Col lg={5} xl={3} xxl={3}>
               <Sidebar />
             </Col>
 
-            <Col lg={21}>
+            <Col lg={19} xl={21} xxl={21}>
               {state?.category_id ? (
                 <Heading title="Update Category" />
               ) : (
