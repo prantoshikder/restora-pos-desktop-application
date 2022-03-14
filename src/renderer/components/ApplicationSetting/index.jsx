@@ -123,7 +123,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['powerbytxt'],
-          value: response?.powerbytxt,
+          value: '©Copyright RESTORA POS',
         },
         {
           name: ['footer_text'],
@@ -231,7 +231,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       >
         <Row gutter={20}>
           <Col lg={12} xl={13} xxl={13}>
-            <Form.Item
+            {/* <Form.Item
               label="Application Title"
               name="title"
               rules={[
@@ -242,9 +242,18 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
               ]}
             >
               <Input placeholder="Application Title" size="large" />
-            </Form.Item>
+            </Form.Item> */}
 
-            <Form.Item label="Store Name" name="storename">
+            <Form.Item
+              label="Store Name"
+              name="storename"
+              rules={[
+                {
+                  required: true,
+                  message: 'Store Name is required',
+                },
+              ]}
+            >
               <Input placeholder="Store Name" size="large" />
             </Form.Item>
 
@@ -509,16 +518,18 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             </Form.Item>
 
             <Form.Item label="Copyright Information" name="powerbytxt">
-              <Input.TextArea
-                placeholder="Copyright Information"
+              <Input
+                placeholder="©Copyright RESTORA POS"
                 size="large"
+                readOnly={true}
+                disabled
                 rows={2}
               />
             </Form.Item>
 
-            <Form.Item label="Footer Text" name="footer_text">
+            {/* <Form.Item label="Footer Text" name="footer_text">
               <Input.TextArea placeholder="Footer Text" size="large" rows={2} />
-            </Form.Item>
+            </Form.Item> */}
 
             <div className="button_group">
               <Button
