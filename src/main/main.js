@@ -894,7 +894,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
-  console.log('897: args insert', args);
+  let {cartItems, customerId } = args
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
@@ -906,12 +906,12 @@ ipcMain.on('insert_order_info', (event, args) => {
       "status" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT OR REPLACE INTO orders (order_info, customer_id, creation_date)
+      `INSERT INTO orders (order_info, customer_id, creation_date)
       VALUES (?, ?, ?)`,
       [
-        JSON.stringify(args),
-        args?.customerId ? args?.customerId : 0,
-        Date.now(),
+        JSON.stringify(cartItems),
+        customerId ? customerId : 0,
+        Date.now()
       ]
     );
   });
@@ -919,21 +919,26 @@ ipcMain.on('insert_order_info', (event, args) => {
 });
 
 // Update order info after edit
-// ipcMain.on('update_order_info_after_edit', (event, args) => {
+ipcMain.on('update_order_info_after_edit', (event, args) => {
 
-//   let {order_info, order_id} = args
-//   let order_info_to_string = JSON.stringify(order_info)
-//   console.log('923: update: ', args);
-//   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-//   db.serialize(() => {
-//     db.run(
-//       `UPDATE orders
-//        SET order_info = ${order_info_to_string}
-//        WHERE order_id = ${order_id}`,
-//     );
-//   });
-//   db.close();
-// });
+  let { order_info, order_id } = args
+  console.log('order_infoorder_info', order_info);
+  let order_info_to_string = JSON.stringify(order_info)
+
+
+  console.log('923: update: ', args);
+
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `UPDATE orders
+       SET order_info = ?
+       WHERE order_id = ?`,
+       [order_info_to_string, order_id]
+    );
+  });
+  db.close();
+});
 
 // Get all order info
 ipcMain.on('get_all_order_info_ongoing', (event, args) => {
