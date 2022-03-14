@@ -20,6 +20,7 @@ import OnGoingOrder from './pages/OnGoingOrder';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
+import TodaysOrder from './pages/TodaysOrder';
 
 export default function App() {
   window.get_settings.send('get_settings', { status: true });
@@ -41,7 +42,6 @@ export default function App() {
       }
     );
   }, [reRenderOnSettings]);
-  console.log('settings', settings?.title);
 
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
@@ -52,6 +52,10 @@ export default function App() {
           <Route
             path="/on_going_order"
             element={<OnGoingOrder settings={settings} />}
+          />
+          <Route
+            path="/todays_order"
+            element={<TodaysOrder settings={settings} />}
           />
 
           <Route
