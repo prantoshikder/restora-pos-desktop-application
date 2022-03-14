@@ -123,7 +123,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['powerbytxt'],
-          value: '©Copyright RESTORA POS',
+          value: '©Copyright Restora POS',
         },
         {
           name: ['footer_text'],
