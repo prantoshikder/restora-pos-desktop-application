@@ -14,13 +14,13 @@ const OnGoingOrderCart = ({
   };
 
   return (
-    <Col lg={4}>
+    <Col lg={6} xl={4} xxl={4}>
       <div className="on_going_menu_item">
         <div
           className="menu_info_content"
           onClick={() => handleCartItem(orderCard)}
           style={{
-            borderColor: orderCard.isSelected ? '#0088f2' : '#e0e0e0',
+            borderColor: orderCard.isSelected ? '#0088f2' : '#caf6f7',
           }}
         >
           <li>Order Number: {orderCard.order_id}</li>

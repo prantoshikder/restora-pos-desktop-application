@@ -123,7 +123,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['powerbytxt'],
-          value: response?.powerbytxt,
+          value: '©Copyright RESTORA POS',
         },
         {
           name: ['footer_text'],
@@ -230,8 +230,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         autoComplete="off"
       >
         <Row gutter={20}>
-          <Col lg={13}>
-            <Form.Item
+          <Col lg={12} xl={13} xxl={13}>
+            {/* <Form.Item
               label="Application Title"
               name="title"
               rules={[
@@ -242,9 +242,18 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
               ]}
             >
               <Input placeholder="Application Title" size="large" />
-            </Form.Item>
+            </Form.Item> */}
 
-            <Form.Item label="Store Name" name="storename">
+            <Form.Item
+              label="Store Name"
+              name="storename"
+              rules={[
+                {
+                  required: true,
+                  message: 'Store Name is required',
+                },
+              ]}
+            >
               <Input placeholder="Store Name" size="large" />
             </Form.Item>
 
@@ -262,7 +271,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
             <Form.Item label="Favicon">
               <Row gutter={20}>
-                <Col lg={16}>
+                <Col lg={13} xl={16} xxl={16}>
                   <Form.Item
                     name="favicon"
                     // valuePropName="fileList"
@@ -286,7 +295,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={11} xl={8} xxl={8}>
                   <h4>Preview</h4>
                   {favIcon ? (
                     <Image
@@ -309,7 +318,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
             <Form.Item label="Logo">
               <Row gutter={20}>
-                <Col lg={16}>
+                <Col lg={13} xl={16} xxl={16}>
                   <Form.Item
                     name="logo"
                     // valuePropName="fileList"
@@ -333,7 +342,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={11} xl={8} xxl={8}>
                   <h4>Preview</h4>
                   {appLogo ? (
                     <Image
@@ -369,7 +378,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             </Row>
           </Col>
 
-          <Col lg={11}>
+          <Col lg={12} xl={11} xxl={11}>
             <Row gutter={20}>
               <Col lg={12}>
                 <Form.Item name="discount_type" label="Discount Type">
@@ -509,16 +518,18 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             </Form.Item>
 
             <Form.Item label="Copyright Information" name="powerbytxt">
-              <Input.TextArea
-                placeholder="Copyright Information"
+              <Input
+                placeholder="©Copyright RESTORA POS"
                 size="large"
+                readOnly={true}
+                disabled
                 rows={2}
               />
             </Form.Item>
 
-            <Form.Item label="Footer Text" name="footer_text">
+            {/* <Form.Item label="Footer Text" name="footer_text">
               <Input.TextArea placeholder="Footer Text" size="large" rows={2} />
-            </Form.Item>
+            </Form.Item> */}
 
             <div className="button_group">
               <Button

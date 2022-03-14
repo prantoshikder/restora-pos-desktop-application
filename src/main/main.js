@@ -891,6 +891,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
+  console.log('args', args);
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
@@ -906,7 +907,7 @@ ipcMain.on('insert_order_info', (event, args) => {
       VALUES (?, ?, ?)`,
       [
         JSON.stringify(args),
-        args?.customer_id ? args?.customer_id : 0,
+        args?.customerId ? args?.customerId : 0,
         Date.now(),
       ]
     );
