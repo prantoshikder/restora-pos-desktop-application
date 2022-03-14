@@ -31,7 +31,16 @@ const OnGoingFooter = ({
 
   function orderCompleted(orderItem) {
     if (Object.keys(orderItem).length === 0) {
-      return true;
+      message.error({
+        content: 'Sorry! No order is selected.',
+        className: 'custom-class',
+        duration: 2,
+        style: {
+          marginTop: '15vh',
+        },
+      });
+
+      return;
     }
 
     setOpenModal(true);
