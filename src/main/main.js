@@ -903,11 +903,12 @@ ipcMain.on('insert_order_info', (event, args) => {
       "status" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT OR REPLACE INTO orders (order_info, customer_id, creation_date)
-      VALUES (?, ?, ?)`,
+      `INSERT OR REPLACE INTO orders (order_info, customer_id, grand_total, creation_date)
+      VALUES (?, ?, ?, ?)`,
       [
         JSON.stringify(args),
         args?.customerId ? args?.customerId : 0,
+        args.grandTotal,
         Date.now(),
       ]
     );
