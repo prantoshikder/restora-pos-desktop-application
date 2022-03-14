@@ -922,7 +922,7 @@ ipcMain.on('update_order_info_after_edit', (event, args) => {
     db.run(
       `INSERT OR REPLACE INTO orders (order_id, order_info, creation_date)
     VALUES (?, ?, ?)`,
-      [args.order_id, JSON.stringify(args.order_info), Date.now()]
+      [args.order_id, JSON.stringify(args.order_info), args.creation_date]
     );
   });
   db.close();
