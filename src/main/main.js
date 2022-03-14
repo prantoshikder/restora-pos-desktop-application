@@ -8,6 +8,7 @@ import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 const { mkdirSync, copyFileSync, existsSync } = require('fs');
 
+// Initialize db path
 var dbPath = app.getPath('userData');
 
 export default class AppUpdater {
@@ -61,7 +62,6 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     icon: getAssetPath('favicon.png'),
     webPreferences: {
-      webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false,
       enableRemoteModule: true,
@@ -891,7 +891,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
-  console.log('args', args);
+  let { cartItems, customerId, grandTotal } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
@@ -903,12 +903,12 @@ ipcMain.on('insert_order_info', (event, args) => {
       "status" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT OR REPLACE INTO orders (order_info, customer_id, grand_total, creation_date)
+      `INSERT INTO orders (order_info, customer_id, grand_total, creation_date)
       VALUES (?, ?, ?, ?)`,
       [
-        JSON.stringify(args),
-        args?.customerId ? args?.customerId : 0,
-        args.grandTotal,
+        JSON.stringify(cartItems),
+        customerId ? customerId : 0,
+        grandTotal,
         Date.now(),
       ]
     );
@@ -918,12 +918,19 @@ ipcMain.on('insert_order_info', (event, args) => {
 
 // Update order info after edit
 ipcMain.on('update_order_info_after_edit', (event, args) => {
+  let { order_info, order_id } = args;
+  console.log('order_infoorder_info', order_info);
+  let order_info_to_string = JSON.stringify(order_info);
+
+  console.log('923: update: ', args);
+
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
-      `INSERT OR REPLACE INTO orders (order_id, order_info, creation_date)
-    VALUES (?, ?, ?)`,
-      [args.order_id, JSON.stringify(args.order_info), args.creation_date]
+      `UPDATE orders
+       SET order_info = ?
+       WHERE order_id = ?`,
+      [order_info_to_string, order_id]
     );
   });
   db.close();
@@ -974,31 +981,15 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
 // Complete order info
 ipcMain.on('update_order_info_ongoing', (event, args) => {
-  let { order_id, order_info, is_active } = args;
+  let { order_id } = args;
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
   db.serialize(() => {
     db.run(
-      `INSERT OR REPLACE INTO orders(order_id, order_info, status)
-        VALUES (?, ?, ?)`,
-      [
-        order_id,
-        order_info,
-        is_active === 1
-          ? (is_active = 2)
-          : console.log('Getting error to update data'),
-      ],
-      (err) => {
-        err
-          ? mainWindow.webContents.send(
-              'update_order_info_ongoing_response',
-              err.message
-            )
-          : mainWindow.webContents.send('update_order_info_ongoing_response', {
-              status: 'updated',
-            });
-      }
+      `UPDATE orders
+        SET status = 2
+        WHERE order_id = ${order_id}`
     );
   });
   db.close();
