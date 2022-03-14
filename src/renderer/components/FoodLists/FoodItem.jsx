@@ -374,7 +374,7 @@ const FoodItem = ({ item }) => {
 
   return (
     <>
-      <Col lg={4}>
+      <Col lg={6} xl={4} xxl={4}>
         <div className="food_card" onClick={(e) => handleFoodItem(e, item)}>
           <div className="food_image">
             {item?.product_image ? (

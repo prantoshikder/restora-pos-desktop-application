@@ -41,6 +41,7 @@ export default function App() {
       }
     );
   }, [reRenderOnSettings]);
+  console.log('settings', settings?.title);
 
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>

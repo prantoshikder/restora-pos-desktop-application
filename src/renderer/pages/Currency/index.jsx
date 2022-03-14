@@ -11,10 +11,10 @@ const Currency = ({ settings }) => {
         <div className="main_wrapper">
           <div className="pos_system">
             <Row>
-              <Col lg={3}>
+              <Col lg={5} xl={3} xxl={3}>
                 <Sidebar />
               </Col>
-              <Col md={21}>
+              <Col lg={19} xl={21} xxl={21}>
                 <Heading title="Currency" />
 
                 <CurrencyList />

@@ -44,6 +44,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
+  const [customerId, setCustomerId] = useState(0);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -157,7 +158,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           );
           localStorage.removeItem('order_id');
         } else {
-          window.get_all_order_info.send('get_all_order_info', cartItems);
+          window.get_all_order_info.send('get_all_order_info', {
+            cartItems,
+            customerId,
+          });
         }
 
         setCartItems([]);
@@ -284,6 +288,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     );
   };
 
+  const handleSelectCustomer = (value) => {
+    setCustomerId(value);
+  };
+
   return (
     <div className="cart_wrapper">
       <Form
@@ -300,7 +308,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         <div className="form_content">
           <div className="banner_card">
             <Row gutter={30}>
-              <Col lg={11}>
+              <Col lg={10} xl={11} xxl={11}>
                 <Form.Item
                   label="Customer Name"
                   className="custom_level"
@@ -310,12 +318,12 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                     placeholder="Select a Customer Name"
                     size="large"
                     allowClear
+                    defaultValue={'Walk In'}
+                    onChange={handleSelectCustomer}
                   >
+                    <Option value="0">Walk In</Option>
                     {customerList?.map((customer) => (
-                      <Option
-                        key={customer?.id}
-                        value={customer?.customer_name}
-                      >
+                      <Option key={customer?.id} value={customer?.id}>
                         {customer?.customer_name}
                       </Option>
                     ))}
@@ -323,7 +331,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={2}>
+              <Col lg={4} xl={2} xxl={2}>
                 <Button
                   className="add_customer"
                   onClick={() => handleAddCustomer()}
@@ -332,7 +340,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Button>
               </Col>
 
-              <Col lg={11}>
+              <Col lg={10} xl={11} xxl={11}>
                 <Form.Item
                   label="Customer Type"
                   className="custom_level"
@@ -355,7 +363,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
             </Row>
 
             <Row gutter={30}>
-              <Col lg={7}>
+              <Col lg={8} xl={7} xxl={7}>
                 <Form.Item
                   label="Waiter"
                   className="custom_level"
@@ -376,7 +384,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={3}>
+              <Col lg={4} xl={3} xxl={3}>
                 <Button
                   size="large"
                   type="primary"
@@ -388,7 +396,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Button>
               </Col>
 
-              <Col lg={7}>
+              <Col lg={6} xl={7} xxl={7}>
                 <Form.Item
                   label="Table"
                   className="custom_level"
@@ -409,7 +417,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={7}>
+              <Col lg={6} xl={7} xxl={7}>
                 <Form.Item
                   label="Cooking Time"
                   className="custom_level"
@@ -451,7 +459,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                   </thead>
 
                   <tbody>
-                    {/* {JSON.parse(state.order_info)} */}
                     {cartItems.length &&
                       cartItems.map((item, index) => {
                         return (
@@ -509,26 +516,19 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                       })}
                   </tbody>
                 </table>
-
-                {/* <Table
-                  columns={columns}
-                  pagination={false}
-                  dataSource={cartItems}
-                  rowKey={(record) => record.id}
-                  className="custom_table"
-                /> */}
               </div>
             )}
           </div>
         </div>
+
         <div className="cart_footer">
           <div className="service_charge">
             <Row>
-              <Col span={settings?.discount_type ? 9 : 12}>
+              <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Vat/Tax: </b>
                 {settings?.vat ? settings?.vat : 0}%
               </Col>
-              <Col span={settings?.discount_type ? 9 : 12}>
+              <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
                 {settings?.service_chargeType === 'amount' && settings.currency}
                 {settings?.servicecharge}
@@ -537,7 +537,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
 
               {/* Discount type 2 = percent & Discount type 1 = amount */}
               {settings?.discount_type && (
-                <Col span={6}>
+                <Col lg={6}>
                   <b>Discount: </b>
                   {settings?.discount_type === 1 && settings.currency}
                   {settings?.discountrate}
@@ -545,14 +545,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Col>
               )}
             </Row>
-            {/* <table bordered="true">
-              <tbody size="small">
-                <tr>
-                  <td>Vat/Tax:</td>
-                  <td>Service Charge(%):</td>
-                </tr>
-              </tbody>
-            </table> */}
           </div>
 
           <div className="grand_total">

@@ -20,6 +20,11 @@
     padding-left: 25px;
     font-size: 1.1rem;
     border-radius: 0.3rem;
+
+    @media (max-width: 1200px) {
+      height: 38px;
+      padding: 0px 10px;
+    }
   }
 
   .new_order {

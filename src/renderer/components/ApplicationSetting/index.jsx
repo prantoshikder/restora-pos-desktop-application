@@ -230,7 +230,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         autoComplete="off"
       >
         <Row gutter={20}>
-          <Col lg={13}>
+          <Col lg={12} xl={13} xxl={13}>
             <Form.Item
               label="Application Title"
               name="title"
@@ -262,7 +262,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
             <Form.Item label="Favicon">
               <Row gutter={20}>
-                <Col lg={16}>
+                <Col lg={13} xl={16} xxl={16}>
                   <Form.Item
                     name="favicon"
                     // valuePropName="fileList"
@@ -286,7 +286,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={11} xl={8} xxl={8}>
                   <h4>Preview</h4>
                   {favIcon ? (
                     <Image
@@ -309,7 +309,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
             <Form.Item label="Logo">
               <Row gutter={20}>
-                <Col lg={16}>
+                <Col lg={13} xl={16} xxl={16}>
                   <Form.Item
                     name="logo"
                     // valuePropName="fileList"
@@ -333,7 +333,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                     </Upload.Dragger>
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col lg={11} xl={8} xxl={8}>
                   <h4>Preview</h4>
                   {appLogo ? (
                     <Image
@@ -369,7 +369,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             </Row>
           </Col>
 
-          <Col lg={11}>
+          <Col lg={12} xl={11} xxl={11}>
             <Row gutter={20}>
               <Col lg={12}>
                 <Form.Item name="discount_type" label="Discount Type">

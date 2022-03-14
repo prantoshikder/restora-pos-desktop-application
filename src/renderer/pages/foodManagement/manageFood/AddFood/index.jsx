@@ -23,11 +23,11 @@ const AddFood = ({ settings }) => {
         <div className="main_wrapper">
           <div className="pos_system">
             <Row>
-              <Col lg={3}>
+              <Col lg={5} xl={3} xxl={3}>
                 <Sidebar />
               </Col>
 
-              <Col lg={21}>
+              <Col lg={19} xl={21} xxl={21}>
                 <div className="flex content_between item_center">
                   {state?.id ? (
                     <Heading title=" Update Food Name" />
