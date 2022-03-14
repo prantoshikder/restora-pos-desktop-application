@@ -49,6 +49,7 @@ const OnGoingFooter = ({
   }
 
   const editOnGoingOrder = (orderData) => {
+    console.log(orderData);
     if (Object.keys(orderData).length === 0) {
       message.error({
         content: 'Sorry! No order is selected.',
@@ -127,7 +128,7 @@ const OnGoingFooter = ({
                 <Button
                   type="primary"
                   className={
-                    activeInactiveBtn?.is_active === 1
+                    activeInactiveBtn?.status === 1
                       ? 'on_going_btn edit_btn '
                       : 'on_going_btn edit_btn premium_btn'
                   }
@@ -139,7 +140,7 @@ const OnGoingFooter = ({
                 <Button
                   type="primary"
                   className={
-                    activeInactiveBtn?.is_active === 1
+                    activeInactiveBtn?.status === 1
                       ? 'on_going_btn complete_btn '
                       : 'on_going_btn complete_btn premium_btn'
                   }
