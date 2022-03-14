@@ -1,7 +1,7 @@
 import { Col, ConfigProvider, Row } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
@@ -31,12 +31,24 @@ const Home = ({ settings }) => {
     status: true,
   });
 
+  let navigate = useNavigate();
   const { cartItems, setCartItems } = useContext(ContextData);
   const [addonNames, setAddonNames] = useState(null);
   const [addonsList, setAddonsList] = useState(null);
   const [foodNames, setFoodNames] = useState(null);
   const [foodLists, setFoodLists] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState();
+  const [isRedirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    console.log('settings*********', settings);
+    setTimeout(() => {
+      if (settings?.storename === undefined) {
+        console.log('settings', settings);
+        setRedirect(true);
+      }
+    }, 2000);
+  }, [settings]);
 
   useEffect(() => {
     Promise.all([
@@ -89,57 +101,60 @@ const Home = ({ settings }) => {
   }, []);
 
   return (
-    <div className="main_wrapper">
-      <Header settings={settings} />
+    <>
+      {isRedirect && navigate('/application_setting')}
+      <div className="main_wrapper">
+        <Header settings={settings} />
 
-      <div className="pos_wrapper">
-        <ConfigProvider direction={settings.site_align}>
-          <Row className="pos_system">
-            <Col lg={5} xl={4} xxl={4}>
-              <PosSidebar
-                foodLists={foodLists}
-                setFoodLists={setFoodLists}
-                settings={settings}
-                selectedMenu={selectedMenu}
-                setSelectedMenu={setSelectedMenu}
-              />
-            </Col>
+        <div className="pos_wrapper">
+          <ConfigProvider direction={settings.site_align}>
+            <Row className="pos_system">
+              <Col lg={5} xl={4} xxl={4}>
+                <PosSidebar
+                  foodLists={foodLists}
+                  setFoodLists={setFoodLists}
+                  settings={settings}
+                  selectedMenu={selectedMenu}
+                  setSelectedMenu={setSelectedMenu}
+                />
+              </Col>
 
-            <Col lg={19} xl={20} xxl={20}>
-              <Row>
-                <Col lg={14} xl={14} xxl={14}>
-                  <Row className="search_food_wrapper">
-                    <Col lg={18} push={3}>
-                      <Search foodLists={foodLists} />
-                    </Col>
-                  </Row>
-
-                  <div className="foodItems_wrapper">
-                    <Row className="foodList_wrapper">
-                      <FoodLists
-                        setCartItems={setFoodLists}
-                        foodLists={foodLists}
-                        selectedMenu={selectedMenu}
-                        setSelectedMenu={setSelectedMenu}
-                      />
+              <Col lg={19} xl={20} xxl={20}>
+                <Row>
+                  <Col lg={14} xl={14} xxl={14}>
+                    <Row className="search_food_wrapper">
+                      <Col lg={18} push={3}>
+                        <Search foodLists={foodLists} />
+                      </Col>
                     </Row>
-                  </div>
-                </Col>
 
-                <Col lg={10} xl={10} xxl={10}>
-                  <Cart
-                    settings={settings}
-                    setCartItems={setCartItems}
-                    cartItems={cartItems}
-                    state={state}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </ConfigProvider>
+                    <div className="foodItems_wrapper">
+                      <Row className="foodList_wrapper">
+                        <FoodLists
+                          setCartItems={setFoodLists}
+                          foodLists={foodLists}
+                          selectedMenu={selectedMenu}
+                          setSelectedMenu={setSelectedMenu}
+                        />
+                      </Row>
+                    </div>
+                  </Col>
+
+                  <Col lg={10} xl={10} xxl={10}>
+                    <Cart
+                      settings={settings}
+                      setCartItems={setCartItems}
+                      cartItems={cartItems}
+                      state={state}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </ConfigProvider>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

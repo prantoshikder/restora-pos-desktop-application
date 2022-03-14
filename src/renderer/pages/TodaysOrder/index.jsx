@@ -1,5 +1,4 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Space, Table } from 'antd';
+import { Table } from 'antd';
 import Header from 'renderer/components/partials/Header';
 import './TodaysOrder.style.scss';
 
@@ -68,26 +67,6 @@ const TodaysOrder = ({ settings }) => {
       key: 'amount',
       align: 'center',
     },
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      width: '20%',
-      key: 'action',
-      align: 'center',
-      render: (text, record) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => handleEditOrderItem(record)}>
-            <EditOutlined />
-            Edit
-          </Button>
-
-          <Button type="danger" onClick={() => handleDeleteOrderItem(record)}>
-            <DeleteOutlined />
-            Delete
-          </Button>
-        </Space>
-      ),
-    },
   ];
 
   const data = [
@@ -112,13 +91,6 @@ const TodaysOrder = ({ settings }) => {
       invoice: 122,
     },
   ];
-
-  const handleEditOrderItem = (data) => {
-    console.log('data', data);
-  };
-  const handleDeleteOrderItem = (data) => {
-    console.log('data', data);
-  };
 
   return (
     <div className="main_wrapper">
