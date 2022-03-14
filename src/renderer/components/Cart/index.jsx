@@ -137,6 +137,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSubmitOrder = (data) => {
+    console.log('cartItems', cartItems);
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {

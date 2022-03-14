@@ -272,12 +272,11 @@ sendDataThroughMiddlewareOn(
   'get_addons_and_variant_response' //Response
 );
 
-
 // Insert order info
 sendDataThroughMiddlewareOn(
-  'get_all_order_info', //Event Name
-  'get_all_order_info', // Channel Name
-  'get_all_order_info_response' //Response
+  'insert_order_info', //Event Name
+  'insert_order_info', // Channel Name
+  'insert_order_info_response' //Response
 );
 
 // Get all orders info
