@@ -159,7 +159,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           );
           localStorage.removeItem('order_id');
         } else {
-          window.get_all_order_info.send('get_all_order_info', {
+          window.insert_order_info.send('insert_order_info', {
             cartItems,
             customerId,
           });
@@ -297,11 +297,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     <div className="cart_wrapper">
       <Form
         form={form}
-        // fields={categories}
         onFinish={handleSubmit}
-        // onFieldsChange={(_, allFields) => {
-        //   setCategories(allFields);
-        // }}
         onFinishFailed={onFinishFailed}
         layout="vertical"
         autoComplete="off"
@@ -322,7 +318,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                     defaultValue={'Walk In'}
                     onChange={handleSelectCustomer}
                   >
-                    <Option value="0">Walk In</Option>
                     {customerList?.map((customer) => (
                       <Option key={customer?.id} value={customer?.id}>
                         {customer?.customer_name}
