@@ -136,6 +136,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSubmitOrder = (data) => {
+    console.log('cartItems', cartItems);
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -157,7 +158,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           );
           localStorage.removeItem('order_id');
         } else {
-          window.get_all_order_info.send('get_all_order_info', cartItems);
+          window.insert_order_info.send('insert_order_info', cartItems);
         }
 
         setCartItems([]);
@@ -310,7 +311,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                     placeholder="Select a Customer Name"
                     size="large"
                     allowClear
+                    defaultValue={'Walk In'}
+                    defaultActiveFirstOption={true}
                   >
+                    <Option value="Walk In">Walk In</Option>
                     {customerList?.map((customer) => (
                       <Option
                         key={customer?.id}
