@@ -159,9 +159,12 @@ const AddNewCategory = ({ state }) => {
       newCategory.category_icon = state?.category_icon;
     }
 
-    if (newCategory?.category_id === newCategory?.parent_id) {
+    if (
+      newCategory?.parent_id &&
+      newCategory?.category_id === newCategory?.parent_id
+    ) {
       message.warning({
-        content: 'Category ID and parent ID can not be the save.',
+        content: 'Category name and parent category name can not be the same.',
         className: 'custom-class',
         duration: 2,
         style: {
@@ -172,8 +175,6 @@ const AddNewCategory = ({ state }) => {
 
       return;
     }
-
-    console.log('inside newCategory', newCategory);
 
     // Insert & update through the same event & channel
     window.add_category.send('insertCategoryData', newCategory);
