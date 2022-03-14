@@ -920,12 +920,13 @@ ipcMain.on('insert_order_info', (event, args) => {
 
 // Update order info after edit
 ipcMain.on('update_order_info_after_edit', (event, args) => {
+  console.log('update_order_info_after_editupdate_order_info_after_editupdate_order_info_after_editupdate_order_info_after_edit');
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
-      `INSERT OR REPLACE INTO orders (order_id, order_info, creation_date)
-    VALUES (?, ?, ?)`,
-      [args.order_id, JSON.stringify(args.order_info), Date.now()]
+      `UPDATE orders
+       SET order_info = ${JSON.stringify(args.order_info)}
+       WHERE order_id = ${args.order_id}`,
     );
   });
   db.close();
@@ -954,31 +955,15 @@ ipcMain.on('get_all_order_info_ongoing', (event, args) => {
 
 // Complete order info
 ipcMain.on('update_order_info_ongoing', (event, args) => {
-  let { order_id, order_info, is_active } = args;
+  let { order_id } = args;
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
 
   db.serialize(() => {
     db.run(
-      `INSERT OR REPLACE INTO orders(order_id, order_info, is_active)
-        VALUES (?, ?, ?)`,
-      [
-        order_id,
-        order_info,
-        is_active === 1
-          ? (is_active = 2)
-          : console.log('Getting error to update data'),
-      ],
-      (err) => {
-        err
-          ? mainWindow.webContents.send(
-            'update_order_info_ongoing_response',
-            err.message
-          )
-          : mainWindow.webContents.send('update_order_info_ongoing_response', {
-            status: 'updated',
-          });
-      }
+        `UPDATE orders
+        SET is_active = 2
+        WHERE order_id = ${order_id}`
     );
   });
   db.close();
