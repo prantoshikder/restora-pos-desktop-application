@@ -900,7 +900,7 @@ ipcMain.on('insert_order_info', (event, args) => {
       "order_info" varchar(255),
       "customer_id" INT,
       "creation_date" DATETIME,
-      "is_active" INT NOT NULL DEFAULT 1
+      "status" INT NOT NULL DEFAULT 1
   )`
     ).run(
       `INSERT OR REPLACE INTO orders (order_info, customer_id, creation_date)
@@ -922,7 +922,7 @@ ipcMain.on('update_order_info_after_edit', (event, args) => {
     db.run(
       `INSERT OR REPLACE INTO orders (order_id, order_info, creation_date)
     VALUES (?, ?, ?)`,
-      [args.order_id, JSON.stringify(args.order_info), Date.now()]
+      [args.order_id, JSON.stringify(args.order_info), args.creation_date]
     );
   });
   db.close();
@@ -935,12 +935,33 @@ ipcMain.on('get_all_order_info_ongoing', (event, args) => {
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT * FROM orders
-    where is_active = 1`;
+    where status = 1`;
 
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
         mainWindow.webContents.send(
           'get_all_order_info_ongoing_response',
+          rows
+        );
+      });
+    });
+    db.close();
+  }
+});
+
+// Get only today's completed order
+ipcMain.on('get_todays_completed_orders', (event, args) => {
+  let { status } = args;
+
+  if (status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT * FROM orders
+    where status = 2`;
+
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send(
+          'get_todays_completed_orders_response',
           rows
         );
       });
@@ -957,7 +978,7 @@ ipcMain.on('update_order_info_ongoing', (event, args) => {
 
   db.serialize(() => {
     db.run(
-      `INSERT OR REPLACE INTO orders(order_id, order_info, is_active)
+      `INSERT OR REPLACE INTO orders(order_id, order_info, status)
         VALUES (?, ?, ?)`,
       [
         order_id,
