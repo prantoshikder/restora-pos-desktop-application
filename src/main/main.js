@@ -986,7 +986,7 @@ ipcMain.on('update_order_info_ongoing', (event, args) => {
   db.serialize(() => {
     db.run(
         `UPDATE orders
-        SET starus = 2
+        SET status = 2
         WHERE order_id = ${order_id}`
     );
   });
