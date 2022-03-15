@@ -19,25 +19,41 @@ const TodaysOrder = ({ settings }) => {
     status: true,
   });
 
+  window.get_customer_names.send('get_customer_names', { status: true });
+
   const [todaysOrders, setTodaysOrders] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      setCustomerList(data);
+    });
+  }, []);
 
   useEffect(() => {
     getDataFromDatabase(
       'get_todays_completed_orders_response',
       window.get_todays_completed_orders
     ).then((orders) => {
-      setTodaysOrders(orders);
+      const customerName = orders.map((orderData) => {
+        const ordersInfo = {};
 
-      const allOrders = orders.map((ordersData) => {
-        const newOrders = {};
-
-        const orderData = JSON.parse(ordersData.order_info);
         console.log('orderData', orderData);
+        const cusData = customerList?.find(
+          (cusName) => cusName?.id === orderData?.customer_id
+        );
+
+        console.log('cusData', cusData);
       });
+
+      setTodaysOrders(orders);
 
       console.log('order', orders);
     });
-  }, []);
+  }, [customerList]);
 
   const columns = [
     {
@@ -95,7 +111,7 @@ const TodaysOrder = ({ settings }) => {
             columns={columns}
             dataSource={todaysOrders}
             pagination={false}
-            // rowKey={(record) => record?.category_id}
+            rowKey={(record) => record?.order_id}
           />
         </div>
       </div>
