@@ -26,8 +26,6 @@ const ConfirmOrderModal = (props) => {
   } = props;
   const [openModal, setOpenModal] = useState(false);
 
-  console.log('customerId', customerId);
-
   const quickOrderModal = () => {
     setConfirmOrder(false);
     setOpenModal(true);
