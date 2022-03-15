@@ -21,7 +21,7 @@ const TodaysOrder = ({ settings }) => {
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
-  const [todaysOrders, setTodaysOrders] = useState([]);
+  const [todaysOrders, setTodaysOrders] = useState(null);
   const [customerList, setCustomerList] = useState([]);
 
   useEffect(() => {
@@ -38,20 +38,26 @@ const TodaysOrder = ({ settings }) => {
       'get_todays_completed_orders_response',
       window.get_todays_completed_orders
     ).then((orders) => {
-      const customerName = orders.map((orderData) => {
-        const ordersInfo = {};
+      const dataOrder = [];
+      const ordersData = orders.map((orderData) => {
+        var ordersInfo = {};
 
-        console.log('orderData', orderData);
         const cusData = customerList?.find(
           (cusName) => cusName?.id === orderData?.customer_id
         );
 
-        console.log('cusData', cusData);
+        ordersInfo = {
+          ...orderData,
+          customerName: cusData?.customer_name
+            ? cusData?.customer_name
+            : 'Walk In',
+        };
+        dataOrder.push(ordersInfo);
       });
 
-      setTodaysOrders(orders);
-
-      console.log('order', orders);
+      if (dataOrder?.length > 0) {
+        setTodaysOrders(dataOrder);
+      }
     });
   }, [customerList]);
 
@@ -65,16 +71,16 @@ const TodaysOrder = ({ settings }) => {
     },
     {
       title: 'Customer Name',
-      dataIndex: 'customer_id',
+      dataIndex: 'customerName',
       width: '25%',
-      key: 'customer_id',
+      key: 'customerName',
       align: 'center',
     },
     {
       title: 'Customer Type',
-      dataIndex: 'customer_id',
+      dataIndex: 'customerName',
       width: '25%',
-      key: 'customer_id',
+      key: 'customerName',
       align: 'center',
     },
     {
