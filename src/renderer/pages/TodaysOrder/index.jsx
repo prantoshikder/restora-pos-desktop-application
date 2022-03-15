@@ -6,11 +6,7 @@ import './TodaysOrder.style.scss';
 
 const rowSelection = {
   onChange: (selectedRowKeys) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      'selectedRows: ',
-      selectedRows
-    );
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ');
   },
   getCheckboxProps: (record) => ({
     disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -30,6 +26,15 @@ const TodaysOrder = ({ settings }) => {
       'get_todays_completed_orders_response',
       window.get_todays_completed_orders
     ).then((orders) => {
+      setTodaysOrders(orders);
+
+      const allOrders = orders.map((ordersData) => {
+        const newOrders = {};
+
+        const orderData = JSON.parse(ordersData.order_info);
+        console.log('orderData', orderData);
+      });
+
       console.log('order', orders);
     });
   }, []);
@@ -44,68 +49,31 @@ const TodaysOrder = ({ settings }) => {
     },
     {
       title: 'Customer Name',
-      dataIndex: 'customerName',
-      width: '20%',
-      key: 'customerName',
+      dataIndex: 'customer_id',
+      width: '25%',
+      key: 'customer_id',
       align: 'center',
     },
     {
       title: 'Customer Type',
-      dataIndex: 'customerType',
-      width: '20%',
-      key: 'customerType',
-      align: 'center',
-    },
-    {
-      title: 'Waiter',
-      dataIndex: 'waiter',
-      width: '10%',
-      key: 'waiter',
-      align: 'center',
-    },
-    {
-      title: 'Table No',
-      dataIndex: 'tableNo',
-      width: '15%',
-      key: 'tableNo',
+      dataIndex: 'customer_id',
+      width: '25%',
+      key: 'customer_id',
       align: 'center',
     },
     {
       title: 'Order Date',
-      dataIndex: 'orderDate',
-      width: '15%',
-      key: 'orderDate',
+      dataIndex: 'creation_date',
+      width: '20%',
+      key: 'creation_date',
       align: 'center',
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
-      width: '15%',
+      width: '20%',
       key: 'amount',
       align: 'center',
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      customerName: 'John Brown',
-      customerType: 'walkIn',
-      waiter: 'Walk In',
-      tableNo: 2,
-      orderDate: '14-03-2022',
-      amount: 250,
-      invoice: 112,
-    },
-    {
-      key: '2',
-      customerName: 'John Smith',
-      customerType: 'walkIn',
-      waiter: 'Walk In',
-      tableNo: 1,
-      orderDate: '14-03-2022',
-      amount: 499,
-      invoice: 122,
     },
   ];
 
@@ -125,7 +93,7 @@ const TodaysOrder = ({ settings }) => {
               ...rowSelection,
             }}
             columns={columns}
-            dataSource={data}
+            dataSource={todaysOrders}
             pagination={false}
             // rowKey={(record) => record?.category_id}
           />
