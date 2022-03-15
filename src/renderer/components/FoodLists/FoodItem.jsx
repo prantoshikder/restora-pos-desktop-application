@@ -160,7 +160,7 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
     );
 
-    console.log('item', item);
+    console.log('foodVariantName', foodVariantName);
     console.log('isCartItemExist', isCartItemExist);
     console.log('isVariantExist', isVariantExist);
 
@@ -180,11 +180,14 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
     } else {
+      console.log('existing item');
+
       // find the food index from the cartItems Array
       const index = cartItems.findIndex(
         (cartItem) => cartItem.food_id === item.food_id
       );
 
+      // TODO: fixed changing variant name after adding & multiple variant.
       let updateExistingCart = [];
 
       if (isVariantExist) {
@@ -207,6 +210,7 @@ const FoodItem = ({ item }) => {
             ...foodVariantName,
             foodVariant: foodVariantName.variant_name,
             food_id: item.food_id,
+            total_price: variantPrice,
           },
         ];
       }
@@ -250,6 +254,8 @@ const FoodItem = ({ item }) => {
       // }
     }
   };
+
+  console.log('cartItems', cartItems);
 
   // Addons list if check & uncheck
   function handleAddonsCheck(e, addonItem) {

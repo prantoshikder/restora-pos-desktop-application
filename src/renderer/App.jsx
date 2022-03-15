@@ -44,8 +44,6 @@ export default function App() {
     );
   }, [reRenderOnSettings]);
 
-  console.log('settings app home', settings);
-
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
       <Router>

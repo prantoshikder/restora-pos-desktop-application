@@ -41,10 +41,10 @@ const Home = ({ settings }) => {
   const [isRedirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    console.log('settings*********', settings);
+    // console.log('settings*********', settings);
     setTimeout(() => {
       if (settings?.storename === undefined) {
-        console.log('settings', settings);
+        // console.log('settings', settings);
         setRedirect(true);
       }
     }, 2000);
