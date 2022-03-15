@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
+import moment from 'moment';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
@@ -970,10 +971,20 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
-        console.log('com orders', rows);
+        const todaysOrders = rows.map((order) => {
+          return {
+            creation_date: moment(order.creation_date).format('ll'),
+            order_id: order.order_id,
+            customer_id: order.customer_id,
+            grand_total: order.grand_total,
+            invoice_id: order.invoice_id,
+            status: order.status,
+          };
+        });
+
         mainWindow.webContents.send(
           'get_todays_completed_orders_response',
-          rows
+          todaysOrders
         );
       });
     });
