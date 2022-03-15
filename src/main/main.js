@@ -891,7 +891,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
-  let { cartItems, customerId, grandTotal } = args;
+  let { cartItems, customerId, grandTotal, invoiceId } = args;
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
@@ -900,15 +900,18 @@ ipcMain.on('insert_order_info', (event, args) => {
       "order_info" varchar(255),
       "customer_id" INT,
       "creation_date" DATETIME,
+      "grand_total" REAL,
+      "invoice_id" INT,
       "status" INT NOT NULL DEFAULT 1
   )`
     ).run(
-      `INSERT INTO orders (order_info, customer_id, grand_total, creation_date)
-      VALUES (?, ?, ?, ?)`,
+      `INSERT INTO orders (order_info, customer_id, grand_total, invoice_id, creation_date)
+      VALUES (?, ?, ?, ?, ?)`,
       [
         JSON.stringify(cartItems),
         customerId ? customerId : 0,
         grandTotal,
+        invoiceId,
         Date.now(),
       ]
     );
@@ -963,8 +966,7 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
   if (status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT * FROM orders
-    where status = 2`;
+    let sql = `SELECT * FROM orders where status = 2`;
 
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {

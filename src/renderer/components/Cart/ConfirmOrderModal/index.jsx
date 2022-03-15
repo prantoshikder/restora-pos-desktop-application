@@ -22,6 +22,7 @@ const ConfirmOrderModal = (props) => {
     printId,
     settings,
     customerId,
+    invoiceId,
   } = props;
   const [openModal, setOpenModal] = useState(false);
 
@@ -35,6 +36,7 @@ const ConfirmOrderModal = (props) => {
     window.insert_order_info.send('insert_order_info', {
       cartItems,
       customerId,
+      invoiceId,
     });
     // }
   };

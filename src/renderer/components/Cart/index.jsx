@@ -46,6 +46,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
   const [customerId, setCustomerId] = useState(0);
+  const [invoiceId, setInvoiceId] = useState(9856);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -162,6 +163,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           window.insert_order_info.send('insert_order_info', {
             cartItems,
             grandTotal: calcPrice.getGrandTotal(),
+            invoiceId,
             customerId,
           });
         }
@@ -693,6 +695,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         settings={settings}
         printId={'printId'}
         customerId={customerId}
+        invoiceId={invoiceId}
       />
 
       <PremiumVersion
