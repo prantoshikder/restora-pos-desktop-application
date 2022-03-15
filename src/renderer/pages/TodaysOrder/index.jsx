@@ -51,6 +51,7 @@ const TodaysOrder = ({ settings }) => {
           customerName: cusData?.customer_name
             ? cusData?.customer_name
             : 'Walk In',
+          grand_total: `${settings.currency} ${orderData?.grand_total}`,
         };
         dataOrder.push(ordersInfo);
       });
@@ -64,9 +65,9 @@ const TodaysOrder = ({ settings }) => {
   const columns = [
     {
       title: 'Invoice',
-      dataIndex: 'invoice',
+      dataIndex: 'invoice_id',
       width: '10%',
-      key: 'invoice',
+      key: 'invoice_id',
       align: 'center',
     },
     {
@@ -92,9 +93,9 @@ const TodaysOrder = ({ settings }) => {
     },
     {
       title: 'Amount',
-      dataIndex: 'amount',
+      dataIndex: 'grand_total',
       width: '20%',
-      key: 'amount',
+      key: 'grand_total',
       align: 'center',
     },
   ];
