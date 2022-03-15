@@ -123,7 +123,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['powerbytxt'],
-          value: '©Copyright Restora POS',
+          value: '© Copyright Restora POS',
         },
         {
           name: ['footer_text'],
@@ -185,6 +185,14 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         path: appLogo.path,
       });
     }
+    console.log('settingsValue top', settingsValue.discount_type);
+
+    settingsValue.discount_type =
+      settingsValue.discount_type === 'Amount'
+        ? 1
+        : settingsValue.discount_type === 'Percent'
+        ? 2
+        : 2;
 
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);

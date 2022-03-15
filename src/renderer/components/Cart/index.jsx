@@ -21,7 +21,7 @@ import {
 import { useEffect, useState } from 'react';
 import Calculator from '../Calculator';
 import PremiumVersion from '../partials/PremiumVersion';
-import { getDataFromDatabase } from './../../../helpers';
+import { CalculatePrice, getDataFromDatabase } from './../../../helpers';
 import './cart.styles.scss';
 import ConfirmOrderModal from './ConfirmOrderModal';
 import WarmingModal from './WarmingModal';
@@ -33,6 +33,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
+  const calcPrice = new CalculatePrice(settings, cartItems);
 
   const [openModal, setOpenModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
@@ -45,6 +46,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
   const [customerId, setCustomerId] = useState(0);
+  const [invoiceId, setInvoiceId] = useState(9856);
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -137,7 +139,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSubmitOrder = (data) => {
-    console.log('cartItems', cartItems);
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
@@ -161,6 +162,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         } else {
           window.insert_order_info.send('insert_order_info', {
             cartItems,
+            grandTotal: calcPrice.getGrandTotal(),
+            invoiceId,
             customerId,
           });
         }
@@ -692,6 +695,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         settings={settings}
         printId={'printId'}
         customerId={customerId}
+        invoiceId={invoiceId}
       />
 
       <PremiumVersion
