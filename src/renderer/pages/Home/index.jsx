@@ -102,7 +102,7 @@ const Home = ({ settings }) => {
 
   return (
     <>
-      {isRedirect && navigate('/application_setting')}
+      {/* {isRedirect && navigate('/application_setting')} */}
       <div className="main_wrapper">
         <Header settings={settings} />
 
