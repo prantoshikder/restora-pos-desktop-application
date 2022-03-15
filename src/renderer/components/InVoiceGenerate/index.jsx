@@ -2,8 +2,9 @@
 import { Modal } from 'antd';
 import { CalculatePrice } from 'helpers';
 import moment from 'moment';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import restoraPosLogo from '../../../../assets/retora_pos.png';
+import { getDataFromDatabase } from './../../../helpers';
 import './InVoiceGenerate.style.scss';
 
 const InVoiceGenerate = ({
@@ -16,6 +17,26 @@ const InVoiceGenerate = ({
 }) => {
   const invoiceWrapperRef = useRef(null);
   const calc = new CalculatePrice(settings, foodItems);
+  const [customerList, setCustomerList] = useState('');
+
+  window.get_customer_names.send('get_customer_names', { status: true });
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      const filterCustomerId = data.find(
+        (customersId) => customersId?.id === foodItems?.customerId
+      );
+
+      if (filterCustomerId) {
+        setCustomerList(filterCustomerId.customer_name);
+      } else {
+        setCustomerList('Walk In');
+      }
+    });
+  }, [foodItems]);
 
   const handleCalculatePrice = () => {
     // if no property exist in the settings, initialize them
@@ -132,16 +153,6 @@ const InVoiceGenerate = ({
                   <p style={{ fontWeight: '700' }}>{item.total_price}</p>
                 </div>
               ))}
-
-            {/* <div className="in_voice_info flex content_between">
-            <p>content</p>
-            <p>25$</p>
-            </div>
-
-            <div className="in_voice_info flex content_between">
-            <p>content</p>
-            <p>25$</p>
-          </div> */}
           </div>
 
           <div style={{ border: '1px dashed #918c8c' }}></div>
@@ -202,10 +213,10 @@ const InVoiceGenerate = ({
 
           <br />
 
-          {/* <div className="in_voice_info flex content_between">
-          <p>Billing To: Walkin</p>
-          <p>Bill By: Jone Doe</p>
-        </div> */}
+          <div className="in_voice_info flex content_between">
+            <p>Billing To: {customerList}</p>
+            {/* <p>Bill By: Jone Doe</p> */}
+          </div>
 
           <h2 style={{ textAlign: 'center', fontWeight: '700' }}>
             Thank you very mush
