@@ -14,6 +14,7 @@ const { Text } = Typography;
 
 const ConfirmOrderModal = (props) => {
   const { cartItems, setCartItems } = useContext(ContextData);
+  const [openModal, setOpenModal] = useState(false);
 
   const {
     confirmOrder,
@@ -24,7 +25,6 @@ const ConfirmOrderModal = (props) => {
     customerId,
     invoiceId,
   } = props;
-  const [openModal, setOpenModal] = useState(false);
 
   const quickOrderModal = () => {
     setConfirmOrder(false);

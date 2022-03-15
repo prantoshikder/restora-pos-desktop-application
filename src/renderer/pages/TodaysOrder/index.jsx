@@ -19,46 +19,69 @@ const TodaysOrder = ({ settings }) => {
     status: true,
   });
 
-  const [todaysOrders, setTodaysOrders] = useState([]);
+  window.get_customer_names.send('get_customer_names', { status: true });
+
+  const [todaysOrders, setTodaysOrders] = useState(null);
+  const [customerList, setCustomerList] = useState([]);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      setCustomerList(data);
+    });
+  }, []);
 
   useEffect(() => {
     getDataFromDatabase(
       'get_todays_completed_orders_response',
       window.get_todays_completed_orders
     ).then((orders) => {
-      setTodaysOrders(orders);
+      const dataOrder = [];
+      const ordersData = orders.map((orderData) => {
+        var ordersInfo = {};
 
-      const allOrders = orders.map((ordersData) => {
-        const newOrders = {};
+        const cusData = customerList?.find(
+          (cusName) => cusName?.id === orderData?.customer_id
+        );
 
-        const orderData = JSON.parse(ordersData.order_info);
-        console.log('orderData', orderData);
+        ordersInfo = {
+          ...orderData,
+          customerName: cusData?.customer_name
+            ? cusData?.customer_name
+            : 'Walk In',
+          grand_total: `${settings.currency} ${orderData?.grand_total}`,
+        };
+        dataOrder.push(ordersInfo);
       });
 
-      console.log('order', orders);
+      if (dataOrder?.length > 0) {
+        setTodaysOrders(dataOrder);
+      }
     });
-  }, []);
+  }, [customerList]);
 
   const columns = [
     {
       title: 'Invoice',
-      dataIndex: 'invoice',
+      dataIndex: 'invoice_id',
       width: '10%',
-      key: 'invoice',
+      key: 'invoice_id',
       align: 'center',
     },
     {
       title: 'Customer Name',
-      dataIndex: 'customer_id',
+      dataIndex: 'customerName',
       width: '25%',
-      key: 'customer_id',
+      key: 'customerName',
       align: 'center',
     },
     {
       title: 'Customer Type',
-      dataIndex: 'customer_id',
+      dataIndex: 'customerName',
       width: '25%',
-      key: 'customer_id',
+      key: 'customerName',
       align: 'center',
     },
     {
@@ -70,9 +93,9 @@ const TodaysOrder = ({ settings }) => {
     },
     {
       title: 'Amount',
-      dataIndex: 'amount',
+      dataIndex: 'grand_total',
       width: '20%',
-      key: 'amount',
+      key: 'grand_total',
       align: 'center',
     },
   ];
@@ -95,7 +118,7 @@ const TodaysOrder = ({ settings }) => {
             columns={columns}
             dataSource={todaysOrders}
             pagination={false}
-            // rowKey={(record) => record?.category_id}
+            rowKey={(record) => record?.order_id}
           />
         </div>
       </div>
