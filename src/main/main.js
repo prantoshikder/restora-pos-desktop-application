@@ -926,8 +926,6 @@ ipcMain.on('update_order_info_after_edit', (event, args) => {
   console.log('order_infoorder_info', order_info);
   let order_info_to_string = JSON.stringify(order_info);
 
-  console.log('923: update: ', args);
-
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
