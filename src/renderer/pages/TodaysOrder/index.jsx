@@ -4,16 +4,6 @@ import { useEffect, useState } from 'react';
 import Header from 'renderer/components/partials/Header';
 import './TodaysOrder.style.scss';
 
-const rowSelection = {
-  onChange: (selectedRowKeys) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ');
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === 'Disabled User', // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-
 const TodaysOrder = ({ settings }) => {
   window.get_todays_completed_orders.send('get_todays_completed_orders', {
     status: true,
@@ -112,12 +102,9 @@ const TodaysOrder = ({ settings }) => {
           }}
         >
           <Table
-            rowSelection={{
-              ...rowSelection,
-            }}
             columns={columns}
             dataSource={todaysOrders}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record?.order_id}
           />
         </div>

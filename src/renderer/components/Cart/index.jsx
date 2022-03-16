@@ -525,7 +525,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
             <Row>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Vat/Tax: </b>
-                {settings?.vat ? settings?.vat : 0}%
+                {settings?.vat}%
               </Col>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
