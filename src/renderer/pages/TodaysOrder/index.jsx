@@ -29,7 +29,7 @@ const TodaysOrder = ({ settings }) => {
       window.get_todays_completed_orders
     ).then((orders) => {
       const dataOrder = [];
-      const ordersData = orders.map((orderData) => {
+      const ordersData = orders.map((orderData, index) => {
         var ordersInfo = {};
 
         const cusData = customerList?.find(
@@ -38,6 +38,7 @@ const TodaysOrder = ({ settings }) => {
 
         ordersInfo = {
           ...orderData,
+          sl: index + 1,
           customerName: cusData?.customer_name
             ? cusData?.customer_name
             : 'Walk In',
@@ -53,6 +54,13 @@ const TodaysOrder = ({ settings }) => {
   }, [customerList]);
 
   const columns = [
+    {
+      title: 'SL',
+      dataIndex: 'sl',
+      width: '5%',
+      key: 'sl',
+      align: 'left',
+    },
     {
       title: 'Invoice',
       dataIndex: 'invoice_id',
@@ -104,7 +112,7 @@ const TodaysOrder = ({ settings }) => {
           <Table
             columns={columns}
             dataSource={todaysOrders}
-            pagination={true}
+            pagination={false}
             rowKey={(record) => record?.order_id}
           />
         </div>
