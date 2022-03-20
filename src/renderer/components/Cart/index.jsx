@@ -711,7 +711,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         closable={false}
         width={0}
       >
-        <Calculator />
+        <Calculator setOpenCalculator={setOpenCalculator} />
       </Modal>
     </div>
   );
