@@ -11,7 +11,6 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
-  console.log('settings ***************', settings);
   const { state } = useLocation();
   // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
@@ -98,8 +97,6 @@ const Home = ({ settings }) => {
       })
       .catch((err) => console.log(err));
   }, []);
-
-  console.log('settings 555555555555555555', settings);
 
   return (
     <>
