@@ -2,14 +2,13 @@ import {
   Button,
   DatePicker,
   Form,
-  Input,
   Select,
   Space,
   Table,
   Typography,
 } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './AllSalesReport.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -17,6 +16,28 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllSalesReport = () => {
+  const [allSalesReports, setAllSalesReports] = useState(null);
+  const [reRender, setReRender] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+
+  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
+    status: true,
+  });
+
+  useEffect(() => {
+    console.log('data');
+    window.get_all_order_for_sales_report.once(
+      'get_all_order_for_sales_report_response',
+      (args = []) => {
+        // if (Array.isArray(args)) {
+        console.log('args0', args);
+        setAllSalesReports(args);
+        // }
+      }
+    );
+  }, []);
+
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
   };
@@ -25,17 +46,15 @@ const AllSalesReport = () => {
     console.log('value', value);
   };
 
-  const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
+  const handleFromDate = (value, dateString) => {
+    // console.log('dateString', dateString);
+    setStartDate(dateString);
   };
 
-  const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
+  const handleEndDate = (value, dateString) => {
+    // console.log('dateString', dateString);
+    setEndDate(dateString);
   };
-
-  const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
     {
@@ -99,68 +118,10 @@ const AllSalesReport = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      saleDate: '01-Jan, 2022',
-      invoiceNo: '0111',
-      customerName: 'David',
-      paymentMethod: 'Card Payment',
-      totalOrder: '15',
-      vatOrTax: '30',
-      serviceCharge: '30',
-      discount: '20',
-      totalAmount: '$70',
-    },
-    {
-      key: 2,
-      saleDate: '02-Jan, 2022',
-      invoiceNo: '0112',
-      customerName: 'Smith',
-      paymentMethod: 'Food Panda',
-      totalOrder: '35',
-      vatOrTax: '20',
-      serviceCharge: '20',
-      discount: '5',
-      totalAmount: '$35',
-    },
-    {
-      key: 3,
-      saleDate: '03-Jan, 2022',
-      invoiceNo: '0113',
-      customerName: 'Walker',
-      paymentMethod: 'Cash Payment',
-      totalOrder: '25',
-      vatOrTax: '10',
-      serviceCharge: '25',
-      discount: '15',
-      totalAmount: '$55',
-    },
-    {
-      key: 4,
-      saleDate: '04-Jan, 2022',
-      invoiceNo: '0114',
-      customerName: 'Rush',
-      paymentMethod: 'Food Panda',
-      totalOrder: '50',
-      vatOrTax: '15',
-      serviceCharge: '15',
-      discount: '15',
-      totalAmount: '$60',
-    },
-    {
-      key: 5,
-      saleDate: '05-Jan, 2022',
-      invoiceNo: '0115',
-      customerName: 'Welkin',
-      paymentMethod: 'Card Payment',
-      totalOrder: '75',
-      vatOrTax: '10',
-      serviceCharge: '25',
-      discount: '10',
-      totalAmount: '$50',
-    },
-  ];
+  const handleSearchData = () => {
+    console.log('startDate', startDate);
+    console.log('endDate', endDate);
+  };
 
   return (
     <>
@@ -175,28 +136,26 @@ const AllSalesReport = () => {
         }}
       >
         <div>
-          <Space direction="vertical" size={12}>
-            <div className="offer_date_select">
-              <Form.Item label="From">
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="From"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferStart}
-                />
-              </Form.Item>
+          <Space size={12}>
+            <Form.Item label="From">
+              <DatePicker
+                format="DD-MM-YYYY"
+                placeholder="From"
+                disabledDate={disabledDate}
+                // value={}
+                onChange={handleFromDate}
+              />
+            </Form.Item>
 
-              <Form.Item label="To" style={{ marginLeft: '1rem' }}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="To"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferEnd}
-                />
-              </Form.Item>
-            </div>
+            <Form.Item label="To" style={{ marginLeft: '1rem' }}>
+              <DatePicker
+                format="DD-MM-YYYY"
+                placeholder="To"
+                disabledDate={disabledDate}
+                // value={}
+                onChange={handleEndDate}
+              />
+            </Form.Item>
           </Space>
         </div>
 
@@ -208,19 +167,27 @@ const AllSalesReport = () => {
             allowClear
           >
             <Option value="cardPayment">Card Payment</Option>
-            <Option value="twoCheckout">Two Checkout</Option>
+            {/* <Option value="twoCheckout">Two Checkout</Option>
             <Option value="foodPanda">Food Panda</Option>
-            <Option value="cashPayment">Cash Payment</Option>
+            <Option value="cashPayment">Cash Payment</Option> */}
           </Select>
         </div>
 
-        <div style={{ marginLeft: '1rem' }}>
+        {/* <div style={{ marginLeft: '1rem' }}>
           <Input placeholder="Invoice No" />
-        </div>
+        </div> */}
 
         <div className="group_btn">
-          <Button className="search_btn">Search</Button>
-          <Button className="print_btn">Print</Button>
+          <Button
+            type="primary"
+            className="search_btn"
+            onClick={handleSearchData}
+          >
+            Search
+          </Button>
+          <Button type="primary" className="print_btn">
+            Print
+          </Button>
         </div>
       </div>
 
@@ -250,7 +217,7 @@ const AllSalesReport = () => {
           <Table
             columns={columns}
             bordered
-            dataSource={data}
+            dataSource={allSalesReports}
             pagination={false}
             rowKey={(record) => record.key}
           />
