@@ -17,6 +17,9 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllSalesReport = () => {
+  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {'status':true})
+
+
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
   };
@@ -99,68 +102,11 @@ const AllSalesReport = () => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      saleDate: '01-Jan, 2022',
-      invoiceNo: '0111',
-      customerName: 'David',
-      paymentMethod: 'Card Payment',
-      totalOrder: '15',
-      vatOrTax: '30',
-      serviceCharge: '30',
-      discount: '20',
-      totalAmount: '$70',
-    },
-    {
-      key: 2,
-      saleDate: '02-Jan, 2022',
-      invoiceNo: '0112',
-      customerName: 'Smith',
-      paymentMethod: 'Food Panda',
-      totalOrder: '35',
-      vatOrTax: '20',
-      serviceCharge: '20',
-      discount: '5',
-      totalAmount: '$35',
-    },
-    {
-      key: 3,
-      saleDate: '03-Jan, 2022',
-      invoiceNo: '0113',
-      customerName: 'Walker',
-      paymentMethod: 'Cash Payment',
-      totalOrder: '25',
-      vatOrTax: '10',
-      serviceCharge: '25',
-      discount: '15',
-      totalAmount: '$55',
-    },
-    {
-      key: 4,
-      saleDate: '04-Jan, 2022',
-      invoiceNo: '0114',
-      customerName: 'Rush',
-      paymentMethod: 'Food Panda',
-      totalOrder: '50',
-      vatOrTax: '15',
-      serviceCharge: '15',
-      discount: '15',
-      totalAmount: '$60',
-    },
-    {
-      key: 5,
-      saleDate: '05-Jan, 2022',
-      invoiceNo: '0115',
-      customerName: 'Welkin',
-      paymentMethod: 'Card Payment',
-      totalOrder: '75',
-      vatOrTax: '10',
-      serviceCharge: '25',
-      discount: '10',
-      totalAmount: '$50',
-    },
-  ];
+  window.get_all_order_for_sales_report.once('get_all_order_for_sales_report_response', (args) => {
+    window.data = args
+    console.log('+++++++++++',window.data);
+  })
+
 
   return (
     <>
@@ -250,7 +196,7 @@ const AllSalesReport = () => {
           <Table
             columns={columns}
             bordered
-            dataSource={data}
+            dataSource={window.data}
             pagination={false}
             rowKey={(record) => record.key}
           />

@@ -1027,6 +1027,35 @@ ipcMain.on('update_order_info_ongoing', (event, args) => {
   db.close();
 });
 
+// Get sales report
+ipcMain.on('get_all_order_for_sales_report', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT * FROM orders ORDER BY creation_date DESC`;
+    db.all(sql, [], (err, rows) => {
+      const allOrders = rows.map((order, index) => {
+        return {
+          key: index,
+          saleDate: moment(order.creation_date).format('ll'),
+          invoiceNo: order.invoice_id,
+          customerName: order.customer_id,
+          paymentMethod: 'Cash Payment',
+          totalOrder: 0,
+          vatOrTax: 0,
+          serviceCharge: 0,
+          discount: 0,
+          totalAmount: order.grand_total
+        };
+      });
+      mainWindow.webContents.send(
+        'get_all_order_for_sales_report_response',
+        allOrders
+      );
+    })
+
+  }
+})
+
 // Delete food
 deleteListItem(
   'delete_foods', //channel name

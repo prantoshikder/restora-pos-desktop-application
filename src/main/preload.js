@@ -307,6 +307,13 @@ sendDataThroughMiddlewareOn(
   'get_todays_completed_orders_response' //Response
 );
 
+// Get sales report
+sendDataThroughMiddlewareOn(
+  'get_all_order_for_sales_report',
+  'get_all_order_for_sales_report',
+  'get_all_order_for_sales_report_response'
+)
+
 /*======================================================================
   FUNCTION DECLARATIONS
 ========================================================================*/
