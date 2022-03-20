@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import Heading from 'renderer/components/Heading';
 import AddNewCategory from './../../../../components/AddNewCategory';
 import Sidebar from './../../../../components/partials/Sidebar';
-import './AddCategory.style.scss';
 
 const AddCategory = ({ settings }) => {
   const { state } = useLocation();

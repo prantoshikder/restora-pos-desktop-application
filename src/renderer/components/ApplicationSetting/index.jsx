@@ -36,6 +36,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       'get_app_settings_response',
       window.get_app_settings
     ).then((data) => {
+      console.log('setting data', data);
       const response = data[0];
       setAppSettingsData(response);
 
@@ -133,6 +134,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
     });
   }, []);
 
+  console.log('appSettingsData', appSettingsData);
+
   useEffect(() => {
     getDataFromDatabase(
       'get_currency_lists_response',
@@ -177,6 +180,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         name: favIcon.name,
         path: favIcon.path,
       });
+    } else {
+      settingsValue.favicon = appSettingsData?.favicon;
     }
 
     if (appLogo) {
@@ -184,6 +189,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         name: appLogo.name,
         path: appLogo.path,
       });
+    } else {
+      settingsValue.logo = appSettingsData?.logo;
     }
 
     settingsValue.discount_type =
@@ -192,6 +199,8 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         : settingsValue.discount_type === 'Percent'
         ? 2
         : 2;
+
+    console.log('settingsValue', settingsValue);
 
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);

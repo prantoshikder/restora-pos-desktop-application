@@ -2,14 +2,14 @@ import {
   Button,
   DatePicker,
   Form,
-  Input,
   Select,
   Space,
   Table,
   Typography,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import moment from 'moment';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './AllSalesReport.style.scss';
 
 const { RangePicker } = DatePicker;
@@ -17,8 +17,23 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllSalesReport = () => {
-  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {'status':true})
+  const [allSalesReports, setAllSalesReports] = useState(null);
+  const [reRender, setReRender] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
+  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
+    status: true,
+  });
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_all_order_for_sales_report_response',
+      window.get_all_order_for_sales_report
+    ).then((res) => {
+      setAllSalesReports(res);
+    });
+  }, []);
 
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
@@ -28,17 +43,15 @@ const AllSalesReport = () => {
     console.log('value', value);
   };
 
-  const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
+  const handleFromDate = (value, dateString) => {
+    // console.log('dateString', dateString);
+    setStartDate(dateString);
   };
 
-  const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
-    console.log('dateString', dateString);
+  const handleEndDate = (value, dateString) => {
+    // console.log('dateString', dateString);
+    setEndDate(dateString);
   };
-
-  const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
     {
@@ -102,11 +115,10 @@ const AllSalesReport = () => {
     },
   ];
 
-  window.get_all_order_for_sales_report.once('get_all_order_for_sales_report_response', (args) => {
-    window.data = args
-    console.log('+++++++++++',window.data);
-  })
-
+  const handleSearchData = () => {
+    console.log('startDate', startDate);
+    console.log('endDate', endDate);
+  };
 
   return (
     <>
@@ -121,28 +133,26 @@ const AllSalesReport = () => {
         }}
       >
         <div>
-          <Space direction="vertical" size={12}>
-            <div className="offer_date_select">
-              <Form.Item label="From">
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="From"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferStart}
-                />
-              </Form.Item>
+          <Space size={12}>
+            <Form.Item label="From">
+              <DatePicker
+                format="DD-MM-YYYY"
+                placeholder="From"
+                disabledDate={disabledDate}
+                // value={}
+                onChange={handleFromDate}
+              />
+            </Form.Item>
 
-              <Form.Item label="To" style={{ marginLeft: '1rem' }}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="To"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferEnd}
-                />
-              </Form.Item>
-            </div>
+            <Form.Item label="To" style={{ marginLeft: '1rem' }}>
+              <DatePicker
+                format="DD-MM-YYYY"
+                placeholder="To"
+                disabledDate={disabledDate}
+                // value={}
+                onChange={handleEndDate}
+              />
+            </Form.Item>
           </Space>
         </div>
 
@@ -154,19 +164,27 @@ const AllSalesReport = () => {
             allowClear
           >
             <Option value="cardPayment">Card Payment</Option>
-            <Option value="twoCheckout">Two Checkout</Option>
+            {/* <Option value="twoCheckout">Two Checkout</Option>
             <Option value="foodPanda">Food Panda</Option>
-            <Option value="cashPayment">Cash Payment</Option>
+            <Option value="cashPayment">Cash Payment</Option> */}
           </Select>
         </div>
 
-        <div style={{ marginLeft: '1rem' }}>
+        {/* <div style={{ marginLeft: '1rem' }}>
           <Input placeholder="Invoice No" />
-        </div>
+        </div> */}
 
         <div className="group_btn">
-          <Button className="search_btn">Search</Button>
-          <Button className="print_btn">Print</Button>
+          <Button
+            type="primary"
+            className="search_btn"
+            onClick={handleSearchData}
+          >
+            Search
+          </Button>
+          <Button type="primary" className="print_btn">
+            Print
+          </Button>
         </div>
       </div>
 
@@ -196,7 +214,7 @@ const AllSalesReport = () => {
           <Table
             columns={columns}
             bordered
-            dataSource={window.data}
+            dataSource={allSalesReports}
             pagination={false}
             rowKey={(record) => record.key}
           />
