@@ -278,7 +278,7 @@ getListItems(
   'get_settings', //Channel Name
   'get_settings_response', //Channel response
   'setting', //Table Name
-  'title, storename, address, logo, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, vat, currency, site_align, dateformat, timezone' //Columns
+  'title, storename, address, logo, opentime, closetime, vat, vattinno, discount_type, discountrate, servicecharge, service_chargeType, currency, site_align, dateformat, timezone' //Columns
 );
 
 /**

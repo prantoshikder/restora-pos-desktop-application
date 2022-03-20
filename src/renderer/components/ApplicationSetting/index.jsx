@@ -185,7 +185,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         path: appLogo.path,
       });
     }
-    console.log('settingsValue top', settingsValue.discount_type);
 
     settingsValue.discount_type =
       settingsValue.discount_type === 'Amount'
