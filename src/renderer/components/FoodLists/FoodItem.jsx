@@ -40,6 +40,8 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.food_id === item.food_id
     );
 
+    console.log('asdfasd', item?.variants[0]);
+
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
@@ -160,7 +162,7 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
     );
 
-    console.log('item', item);
+    console.log('foodVariantName', foodVariantName);
     console.log('isCartItemExist', isCartItemExist);
     console.log('isVariantExist', isVariantExist);
 
@@ -180,11 +182,14 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
     } else {
+      console.log('existing item');
+
       // find the food index from the cartItems Array
       const index = cartItems.findIndex(
         (cartItem) => cartItem.food_id === item.food_id
       );
 
+      // TODO: fixed changing variant name after adding & multiple variant.
       let updateExistingCart = [];
 
       if (isVariantExist) {
@@ -207,34 +212,36 @@ const FoodItem = ({ item }) => {
             ...foodVariantName,
             foodVariant: foodVariantName.variant_name,
             food_id: item.food_id,
+            total_price: variantPrice,
           },
         ];
       }
 
-      //  updateExistingCart = [
-      //   ...cartItems.slice(0, index),
-      //   {
-      //     ...isCartItemExist,
-      //     quantity: foodQuantity,
-      //     total_price: variantPrice,
-      //   },
-      //   ...cartItems.slice(index + 1),
-      // ];
+      console.log('foodVariantName', foodVariantName);
+      console.log('updateExistingCart', updateExistingCart);
 
       let newAddons = [];
-      const newCartItems = updateExistingCart.map(
-        (cartItem, index, cartArray) => {
-          const isExistAddon = checkedAddons.find(
-            (addonItem) => addonItem.food_id === cartItem.food_id
-          );
-
-          if (isExistAddon && isExistAddon.food_id === cartItem.food_id) {
-            updateExistingCart.splice(index, 1);
-          } else {
-            newAddons.push(cartItem);
-          }
-        }
+      const foodItemIndex = cartItems.findIndex(
+        (cartItem) => cartItem.food_id === item.food_id
       );
+
+      const newCartItems = updateExistingCart.map((cartItem, index) => {
+        const isExistAddon = checkedAddons.find(
+          (addonItem) => addonItem.food_id === cartItem.food_id
+        );
+
+        // isExistAddon.food_id !== foodVariantName.date_inserted
+
+        if (isExistAddon && isExistAddon.food_id === cartItem.food_id) {
+          if (isExistAddon.food_id === foodVariantName.date_inserted) {
+            // updateExistingCart.splice(index, 1);
+          }
+        } else {
+          newAddons.push(cartItem);
+        }
+      });
+
+      console.log('newAddons', newAddons);
 
       setCartItems([...newAddons, ...checkedAddons]);
 

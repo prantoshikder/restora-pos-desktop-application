@@ -704,7 +704,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       />
 
       <Modal
-        // title=""
         visible={openCalculator}
         onOk={() => setOpenCalculator(false)}
         onCancel={() => setOpenCalculator(false)}
