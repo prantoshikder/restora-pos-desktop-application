@@ -1,4 +1,4 @@
-import { faCog, faCube, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faCog, faCube, faHome } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from 'antd';
 import { useState } from 'react';
@@ -112,7 +112,7 @@ export const Sidebar = () => {
           </Menu.Item>
         </SubMenu>
 
-        {/* <SubMenu
+        <SubMenu
           key="report"
           title="Report"
           icon={<FontAwesomeIcon icon={faChartLine} />}
@@ -124,7 +124,7 @@ export const Sidebar = () => {
           <Menu.Item key="itemsSalesReport">
             <Link to="/items_sales_report">Items Sales Report</Link>
           </Menu.Item>
-        </SubMenu> */}
+        </SubMenu>
       </Menu>
     </div>
   );
