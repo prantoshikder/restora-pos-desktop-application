@@ -1133,6 +1133,7 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
   }
 });
 
+
 // get all variant list from DB
 ipcMain.on('variant_lists_channel', (event, args) => {
   if (args.status) {
