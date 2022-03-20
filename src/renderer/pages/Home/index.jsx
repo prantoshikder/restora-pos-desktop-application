@@ -41,14 +41,6 @@ const Home = ({ settings }) => {
   const [isRedirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   if (settings?.storename === undefined) {
-    //     setRedirect(true);
-    //   }
-    // }, 2000);
-  }, [settings]);
-
-  useEffect(() => {
     Promise.all([
       getDataFromDatabase(
         'get_food_list_pos_response',
