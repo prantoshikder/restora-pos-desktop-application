@@ -1,3 +1,4 @@
+import { PoweroffOutlined } from '@ant-design/icons';
 import React from 'react';
 import PointTarget from 'react-point';
 import './calculator.scss';
@@ -251,9 +252,9 @@ class Calculator extends React.Component {
                 </CalculatorKey>
                 <CalculatorKey
                   className="key-sign"
-                  onPress={() => this.toggleSign()}
+                  onPress={() => this.props.setOpenCalculator(false)}
                 >
-                  ±
+                  <PoweroffOutlined />
                 </CalculatorKey>
                 <CalculatorKey
                   className="key-percent"
@@ -262,7 +263,7 @@ class Calculator extends React.Component {
                   %
                 </CalculatorKey>
               </div>
-              <div className="digit-keys">
+              <div className="digit_keys">
                 <CalculatorKey
                   className="key-0"
                   onPress={() => this.inputDigit(0)}
@@ -274,6 +275,12 @@ class Calculator extends React.Component {
                   onPress={() => this.inputDot()}
                 >
                   ●
+                </CalculatorKey>
+                <CalculatorKey
+                  className="key-divide"
+                  onPress={() => this.performOperation('/')}
+                >
+                  /
                 </CalculatorKey>
                 <CalculatorKey
                   className="key-1"
@@ -331,13 +338,14 @@ class Calculator extends React.Component {
                 </CalculatorKey>
               </div>
             </div>
-            <div className="operator-keys">
-              <CalculatorKey
+
+            <div className="operator_keys">
+              {/* <CalculatorKey
                 className="key-divide"
                 onPress={() => this.performOperation('/')}
               >
                 ÷
-              </CalculatorKey>
+              </CalculatorKey> */}
               <CalculatorKey
                 className="key-multiply"
                 onPress={() => this.performOperation('*')}
