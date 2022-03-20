@@ -130,22 +130,18 @@ ipcMain.on('insert_settings', (event, args) => {
   let appFavicon = null,
     appLogo = null;
 
-  try {
-    console.log('appFavicon try', appFavicon);
-    if (args.favicon) {
-      appFavicon = JSON.parse(args.favicon);
-    }
-    if (args.logo) {
-      appLogo = JSON.parse(args.logo);
-    }
-  } catch (error) {
-    console.log('appFavicon catch', appFavicon);
+  if (args.newFavicon) {
+    appFavicon = JSON.parse(args.favicon);
+  } else {
     appFavicon = args.favicon;
+  }
+
+  if (args.newLogo) {
+    appLogo = JSON.parse(args.logo);
+  } else {
     appLogo = args.logo;
   }
 
-  console.log('appFavicon', appFavicon);
-  console.log('args', args);
   // Set setting images and icons path
   let settings_favicon_folder_name = 'settings_favicon';
   let settings_logo_folder_name = 'settings_logo';
@@ -1044,17 +1040,16 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
           vatOrTax: 0,
           serviceCharge: 0,
           discount: 0,
-          totalAmount: order.grand_total
+          totalAmount: order.grand_total,
         };
       });
       mainWindow.webContents.send(
         'get_all_order_for_sales_report_response',
         allOrders
       );
-    })
-
+    });
   }
-})
+});
 
 // Delete food
 deleteListItem(

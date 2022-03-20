@@ -45,6 +45,14 @@ export default function App() {
     );
   }, [reRenderOnSettings]);
 
+  useEffect(() => {
+    setReRenderOnSettings(true);
+
+    if (settings?.storename) {
+      console.log();
+    }
+  }, [settings]);
+
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
       <Router>
