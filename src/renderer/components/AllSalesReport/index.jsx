@@ -7,6 +7,7 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import './AllSalesReport.style.scss';
@@ -26,16 +27,12 @@ const AllSalesReport = () => {
   });
 
   useEffect(() => {
-    console.log('data');
-    window.get_all_order_for_sales_report.once(
+    getDataFromDatabase(
       'get_all_order_for_sales_report_response',
-      (args = []) => {
-        // if (Array.isArray(args)) {
-        console.log('args0', args);
-        setAllSalesReports(args);
-        // }
-      }
-    );
+      window.get_all_order_for_sales_report
+    ).then((res) => {
+      setAllSalesReports(res);
+    });
   }, []);
 
   const disabledDate = (current) => {
