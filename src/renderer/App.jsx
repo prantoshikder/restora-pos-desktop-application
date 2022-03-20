@@ -20,6 +20,7 @@ import OnGoingOrder from './pages/OnGoingOrder';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
+import Statistics from './pages/Statistics';
 import TodaysOrder from './pages/TodaysOrder';
 
 export default function App() {
@@ -111,6 +112,10 @@ export default function App() {
           <Route
             path="/items_sales_report"
             element={<ItemSalesReport settings={settings} />}
+          />
+          <Route
+            path="/statistics"
+            element={<Statistics settings={settings} />}
           />
         </Routes>
       </Router>
