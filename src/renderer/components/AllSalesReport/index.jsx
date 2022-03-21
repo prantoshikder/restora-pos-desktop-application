@@ -16,9 +16,8 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const AllSalesReport = () => {
+const AllSalesReport = ({ settings }) => {
   const [allSalesReports, setAllSalesReports] = useState(null);
-  const [reRender, setReRender] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [isFormSubmitted, setFormSubmitted] = useState(false);
@@ -208,9 +207,9 @@ const AllSalesReport = () => {
           >
             Search
           </Button>
-          <Button type="primary" className="print_btn">
+          {/* <Button type="primary" className="print_btn">
             Print
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -225,8 +224,14 @@ const AllSalesReport = () => {
         }}
       >
         <div className="search_content">
-          <Title level={3}>Dhaka Restaurant</Title>
-          <Text>98 Green Road, Farmgate, Dhaka-1215.</Text>
+          <Title level={3}>
+            {settings?.storename ? settings?.storename : 'Respora POS'}
+          </Title>
+          <Text>
+            {settings?.address
+              ? settings?.address
+              : 'B-25, Mannan Plaza, 4th Floor Khilkhet, Dhaka-1229, Bangladesh'}
+          </Text>
           <br />
           <Text>Print Date: 09/01/2022 10:46:30</Text>
         </div>
