@@ -20,6 +20,7 @@ const AllSalesReport = ({ settings }) => {
   const [allSalesReports, setAllSalesReports] = useState(null);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const [isFormSubmitted, setFormSubmitted] = useState(false);
 
   window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
     status: true,
@@ -30,9 +31,32 @@ const AllSalesReport = ({ settings }) => {
       'get_all_order_for_sales_report_response',
       window.get_all_order_for_sales_report
     ).then((res) => {
-      setAllSalesReports(res);
+      if (startDate && endDate) {
+        let filteredData = res.filter((t) => {
+          let d = new Date(t.saleDate);
+          let milliseconds = d.getTime();
+
+          let d2 = new Date(startDate);
+          let startDateToMiliSec = d2.getTime();
+
+          let d3 = new Date(endDate);
+          let endDateToMiliSec = d3.getTime();
+
+          let filteringData;
+          if (
+            startDateToMiliSec <= milliseconds &&
+            endDateToMiliSec >= milliseconds
+          ) {
+            filteringData = t;
+          }
+          return filteringData;
+        });
+        setAllSalesReports(filteredData);
+      } else {
+        setAllSalesReports(res);
+      }
     });
-  }, []);
+  }, [isFormSubmitted]);
 
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
@@ -115,8 +139,7 @@ const AllSalesReport = ({ settings }) => {
   ];
 
   const handleSearchData = () => {
-    console.log('startDate', startDate);
-    console.log('endDate', endDate);
+    setFormSubmitted((isFormSubmitted) => !isFormSubmitted);
   };
 
   return (
