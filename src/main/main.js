@@ -67,6 +67,8 @@ const createWindow = async () => {
       webSecurity: false,
       enableRemoteModule: true,
       nativeWindowOpen: true,
+      nodeIntegration:true
+
     },
   });
 
@@ -1033,16 +1035,17 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
     ORDER BY creation_date DESC`;
     db.all(sql, [], (err, rows) => {
       const allOrders = rows.map((order, index) => {
+        let temp = JSON.parse(order.order_info);
         return {
           key: index,
           saleDate: moment(order.creation_date).format('ll'),
           invoiceNo: order.invoice_id,
           customerName: order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
-          totalOrder: 0,
-          vatOrTax: 0,
-          serviceCharge: 0,
-          discount: 0,
+          totalOrder: temp.map((t) => t?.quantity ? t.quantity : 0),
+          vatOrTax: temp.map((t) => t?.vat ? t.vat : 0),
+          serviceCharge: temp.map((t) => t?.serviceCharge ? t.serviceCharge : 0),
+          discount: temp.map((t) => t?.discount ? t.discount : 0),
           totalAmount: order.grand_total,
         };
       });
@@ -1091,7 +1094,7 @@ ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
 
     db.close()
   }
-  
+
 })
 
 // Delete food

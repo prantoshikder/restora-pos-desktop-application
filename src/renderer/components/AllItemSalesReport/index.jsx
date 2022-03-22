@@ -10,6 +10,7 @@ import {
 import moment from 'moment';
 import React, { useState } from 'react';
 
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -67,6 +68,7 @@ const AllItemSalesReport = () => {
       align: 'right',
     },
   ];
+
 
   window.get_order_info_for_item_sales_report.once('get_order_info_for_item_sales_report_response', (args) => {
     window.data = args.map((arg) => {
