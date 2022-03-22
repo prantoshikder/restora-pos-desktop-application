@@ -1,31 +1,69 @@
 import { Col, Row } from 'antd';
-import { ArcElement, Chart } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { Chart, registerables } from 'chart.js';
+import { Bar, Line } from 'react-chartjs-2';
 import '../Statistics.style.scss';
 
 const StatisticsRatio = () => {
-  Chart.register(ArcElement);
+  Chart.register(...registerables);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Monthly Sales Amount and Order',
+      },
+    },
+  };
 
   const data = {
-    labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+    labels: ['Red', 'Orange', 'Yellow', 'Blue'],
     datasets: [
       {
-        label: 'My First dataset',
-        backgroundColor: ['Red', 'Orange', 'Yellow', 'Blue'],
-        borderColor: 'white',
-        data: [20, 40, 15, 25],
+        label: 'Sale Amount',
+        backgroundColor: ['Red'],
+        borderColor: 'red',
+        data: [0, 15, 25, 45],
+      },
+      {
+        label: 'Order Amount',
+        backgroundColor: ['blue'],
+        borderColor: 'blue',
+        data: [10, 35, 20, 10],
       },
     ],
   };
 
+  const option = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Online Vs Offline Order & Sales',
+      },
+    },
+  };
+
   const data2 = {
-    labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+    labels: ['Blue', 'Yellow', 'Pink', 'Purple', 'Red'],
     datasets: [
       {
-        label: 'My First dataset',
-        backgroundColor: ['Blue', 'yellow', 'pink', 'purple'],
-        borderColor: 'white',
-        data: [10, 30, 25, 35],
+        label: 'Online',
+        backgroundColor: 'green',
+        borderColor: 'red',
+        data: [10, 45, 25, 55, 30],
+      },
+      {
+        label: 'Offline',
+        backgroundColor: 'red',
+        borderColor: 'red',
+        data: [5, 15, 18, 35, 20],
       },
     ],
   };
@@ -34,15 +72,15 @@ const StatisticsRatio = () => {
     <div className="statistics_area">
       <h1>Statistics</h1>
       <Row>
-        <Col lg={8} push={2}>
+        <Col lg={12}>
           <div style={{ padding: '1rem' }}>
-            <Pie data={data} />
+            <Line options={options} data={data} />
           </div>
         </Col>
 
-        <Col lg={8} push={6}>
+        <Col lg={12}>
           <div style={{ padding: '1rem' }}>
-            <Pie data={data2} />
+            <Bar options={option} data={data2} />
           </div>
         </Col>
 

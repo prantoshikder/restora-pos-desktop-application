@@ -135,20 +135,16 @@ const AllSalesReport = ({ settings }) => {
           <Space size={12}>
             <Form.Item label="From">
               <DatePicker
-                format="DD-MM-YYYY"
+                format="YYYY-MM-DD"
                 placeholder="From"
-                disabledDate={disabledDate}
-                // value={}
                 onChange={handleFromDate}
               />
             </Form.Item>
 
             <Form.Item label="To" style={{ marginLeft: '1rem' }}>
               <DatePicker
-                format="DD-MM-YYYY"
+                format="YYYY-MM-DD"
                 placeholder="To"
-                disabledDate={disabledDate}
-                // value={}
                 onChange={handleEndDate}
               />
             </Form.Item>
@@ -158,7 +154,6 @@ const AllSalesReport = ({ settings }) => {
         <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
-            // value={}
             onChange={handleChangeStatus}
             allowClear
           >
@@ -207,7 +202,7 @@ const AllSalesReport = ({ settings }) => {
               : 'B-25, Mannan Plaza, 4th Floor Khilkhet, Dhaka-1229, Bangladesh'}
           </Text>
           <br />
-          <Text>Print Date: 09/01/2022 10:46:30</Text>
+          {/* <Text>Print Date: 09/01/2022 10:46:30</Text> */}
         </div>
 
         <div
