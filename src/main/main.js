@@ -1051,8 +1051,48 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         allOrders
       );
     });
+    db.close()
   }
 });
+
+// Get item sales report
+ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
+
+  if (args.status) {
+
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT orders.order_info FROM orders`;
+    db.all(sql, [], (err, rows) => {
+
+      let newData = new Array();
+
+      rows.forEach((data) => {
+        let temp = JSON.parse(data.order_info);
+        temp.map((t) => newData.push(t));
+      });
+
+      const unique = newData;
+
+      const group = {};
+
+      unique.forEach((e) => {
+        const o = (group[e.id] = group[e.id] || { ...e, quantity: 0 });
+        o.quantity += e.quantity;
+      });
+
+      const res = Object.values(group);
+
+      mainWindow.webContents.send(
+        'get_order_info_for_item_sales_report_response',
+        res
+      );
+
+    });
+
+    db.close()
+  }
+  
+})
 
 // Delete food
 deleteListItem(
