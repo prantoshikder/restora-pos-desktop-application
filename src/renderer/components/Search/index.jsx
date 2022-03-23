@@ -1,6 +1,8 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { ContextData } from 'renderer/contextApi';
+import AddFoodsModal from '../AddFoodsModal';
 
 const Search = ({ foodLists }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -9,6 +11,8 @@ const Search = ({ foodLists }) => {
   const [isLoading, setLoading] = useState(false);
   const searchResultRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -61,8 +65,77 @@ const Search = ({ foodLists }) => {
     setExpanded(true);
   };
 
-  const handleAddToCartItem = (foodCartItem) => {
-    console.log('foodCartItem', foodCartItem);
+  const [addonsAdd, setAddonsAdd] = useState(null);
+  const { cartItems, setCartItems } = useContext(ContextData);
+  const [variantPrice, setVariantPrice] = useState(0);
+  const [variantFixedPrice, setVariantFixedPrice] = useState(0);
+  const [foodVariantName, setFoodVariantName] = useState('Regular');
+
+  const handleAddToCartItem = (e, item) => {
+    console.log('foodCartItem', item);
+
+    const isCartItemExist = cartItems.find(
+      (cartItem) => cartItem.food_id === item.food_id
+    );
+
+    console.log('asdfasd', item?.variants[0]);
+
+    if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
+      setVariantPrice(item.variants[0].price);
+      setVariantFixedPrice(item.variants[0].price);
+      setAddonsAdd(item);
+      setOpenModal(true);
+      setFoodVariantName(item?.variants[0]);
+    } else if (Array.isArray(item?.addons) && item?.addons?.length > 0) {
+      setVariantPrice(item.variants[0].price);
+      setVariantFixedPrice(item.variants[0].price);
+      setAddonsAdd(item);
+      setOpenModal(true);
+      setFoodVariantName(item?.variants[0]);
+    } else {
+      if (!isCartItemExist) {
+        const cartItem = {
+          id: item.variants[0].date_inserted,
+          food_id: item.food_id,
+          isSelected: true,
+          product_name: item.variants[0].product_name,
+          foodVariant: item.variants[0].variant_name,
+          price: item.variants[0].price,
+          total_price: item.variants[0].price,
+          quantity: item.variants[0].quantity,
+        };
+
+        e.currentTarget.style.borderColor = '#297600';
+        setCartItems([...cartItems, cartItem]);
+      } else {
+        const index = cartItems.findIndex(
+          (cartItem) => cartItem.food_id === item.food_id
+        );
+
+        isCartItemExist.quantity += 1;
+        isCartItemExist.total_price =
+          isCartItemExist.quantity * isCartItemExist.price;
+
+        const newCartItems = [
+          ...cartItems.slice(0, index),
+          isCartItemExist,
+          ...cartItems.slice(index + 1),
+        ];
+
+        setCartItems([...newCartItems]);
+
+        if (item.id) {
+          message.info({
+            content: `${isCartItemExist.product_name} has already been added. That's why we just increased the amount & price.`,
+            duration: 1,
+            style: {
+              marginTop: '5vh',
+              float: 'right',
+            },
+          });
+        }
+      }
+    }
   };
 
   return (
@@ -119,7 +192,7 @@ const Search = ({ foodLists }) => {
                           backgroundColor: '#f4f4f4',
                           padding: '0.5rem 2rem',
                         }}
-                        onClick={() => handleAddToCartItem(item)}
+                        onClick={(e) => handleAddToCartItem(e, item)}
                       >
                         <p>{item?.product_name}</p>
 
@@ -144,6 +217,21 @@ const Search = ({ foodLists }) => {
           </div>
         </div>
       )}
+
+      <AddFoodsModal
+        addonsAdd={addonsAdd}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        variantPrice={variantPrice}
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+        foodVariantName={foodVariantName}
+        setFoodVariantName={setFoodVariantName}
+        variantFixedPrice={variantFixedPrice}
+        setVariantFixedPrice={setVariantFixedPrice}
+        closeModal={closeModal}
+        setVariantPrice={setVariantPrice}
+      />
     </>
   );
 };

@@ -4,6 +4,7 @@ import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SystemMenu from './components/partials/SystemMenu';
 import { ContextData } from './contextApi';
 import Currency from './pages/Currency';
+import DashBoard from './pages/DashBoard';
 import AddAddons from './pages/foodManagement/manageAddons/AddAddons';
 import AddonsAssignList from './pages/foodManagement/manageAddons/AddonsAssignList';
 import AddonsList from './pages/foodManagement/manageAddons/AddonsList';
@@ -20,7 +21,6 @@ import OnGoingOrder from './pages/OnGoingOrder';
 import ItemSalesReport from './pages/report/ItemSalesReport';
 import SalesReport from './pages/report/SalesReport';
 import ApplicationSettings from './pages/settings/ApplicationSettings';
-import Statistics from './pages/Statistics';
 import TodaysOrder from './pages/TodaysOrder';
 
 export default function App() {
@@ -58,6 +58,7 @@ export default function App() {
       <Router>
         <SystemMenu settings={settings} />
         <Routes>
+          {/* POS System */}
           <Route path="/" element={<Home settings={settings} />} />
           <Route
             path="/on_going_order"
@@ -68,6 +69,13 @@ export default function App() {
             element={<TodaysOrder settings={settings} />}
           />
 
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={<DashBoard settings={settings} />}
+          />
+
+          {/* Food Management */}
           <Route
             path="/add_category"
             element={<AddCategory settings={settings} />}
@@ -102,6 +110,8 @@ export default function App() {
             path="/addons_assign_list"
             element={<AddonsAssignList settings={settings} />}
           />
+
+          {/* Application Settings */}
           <Route
             path="/application_setting"
             element={
@@ -113,6 +123,8 @@ export default function App() {
           />
           <Route path="/currency" element={<Currency settings={settings} />} />
           <Route path="/language" element={<Language settings={settings} />} />
+
+          {/* Sales Report */}
           <Route
             path="/sales_report"
             element={<SalesReport settings={settings} />}
@@ -120,10 +132,6 @@ export default function App() {
           <Route
             path="/items_sales_report"
             element={<ItemSalesReport settings={settings} />}
-          />
-          <Route
-            path="/statistics"
-            element={<Statistics settings={settings} />}
           />
         </Routes>
       </Router>

@@ -1,7 +1,6 @@
 import { Col, Row } from 'antd';
 import { Chart, registerables } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
-import '../Statistics.style.scss';
 
 const StatisticsRatio = () => {
   Chart.register(...registerables);
@@ -20,19 +19,19 @@ const StatisticsRatio = () => {
   };
 
   const data = {
-    labels: ['Red', 'Orange', 'Yellow', 'Blue'],
+    labels: ['Red', 'Orange', 'Yellow', 'Blue', 'Purple'],
     datasets: [
       {
         label: 'Sale Amount',
         backgroundColor: ['Red'],
         borderColor: 'red',
-        data: [0, 15, 25, 45],
+        data: [0, 12, 38, 20, 38],
       },
       {
         label: 'Order Amount',
         backgroundColor: ['blue'],
         borderColor: 'blue',
-        data: [10, 35, 20, 10],
+        data: [5, 20, 25, 32, 48],
       },
     ],
   };
@@ -56,7 +55,7 @@ const StatisticsRatio = () => {
       {
         label: 'Online',
         backgroundColor: 'green',
-        borderColor: 'red',
+        borderColor: 'green',
         data: [10, 45, 25, 55, 30],
       },
       {

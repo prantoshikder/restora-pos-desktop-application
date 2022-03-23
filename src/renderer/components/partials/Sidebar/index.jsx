@@ -41,8 +41,8 @@ export const Sidebar = () => {
         openKeys={openKeys}
         onOpenChange={onOpenChange}
       >
-        <Menu.Item key="home" icon={<FontAwesomeIcon icon={faHome} />}>
-          <Link to="/">Home</Link>
+        <Menu.Item key="dash_board" icon={<FontAwesomeIcon icon={faHome} />}>
+          <Link to="/dashboard">Dashboard</Link>
         </Menu.Item>
 
         <SubMenu
@@ -128,10 +128,6 @@ export const Sidebar = () => {
 
           <Menu.Item key="itemsSalesReport">
             <Link to="/items_sales_report">Items Sales Report</Link>
-          </Menu.Item>
-
-          <Menu.Item key="statistics">
-            <Link to="/statistics">Statistics</Link>
           </Menu.Item>
         </SubMenu>
       </Menu>

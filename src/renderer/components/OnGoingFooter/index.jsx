@@ -45,7 +45,6 @@ const OnGoingFooter = ({
 
     setOpenModal(true);
     setOrderData(orderItem);
-    // setReRender((prevState) => !prevState);
   }
 
   const editOnGoingOrder = (orderData) => {
@@ -70,6 +69,11 @@ const OnGoingFooter = ({
     redirect('/', { state: { ...orderData, order_info: orderItems } });
   };
 
+  const handleSearchBtn = () => {
+    window.scrollTo(0, 0);
+    setOpenSearchInput(!openSearchInput);
+  };
+
   return (
     <>
       <div className="on_going_footer">
@@ -80,7 +84,7 @@ const OnGoingFooter = ({
                 <Button
                   type="primary"
                   className="on_going_btn search_btn"
-                  onClick={() => setOpenSearchInput(!openSearchInput)}
+                  onClick={handleSearchBtn}
                 >
                   <SearchOutlined /> Search
                 </Button>

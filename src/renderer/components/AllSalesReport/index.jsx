@@ -239,7 +239,7 @@ const AllSalesReport = ({ settings }) => {
             bordered
             dataSource={allSalesReports}
             pagination={false}
-            rowKey={(record) => record.key}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>
