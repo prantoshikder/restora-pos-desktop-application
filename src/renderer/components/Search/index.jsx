@@ -5,14 +5,20 @@ import { ContextData } from 'renderer/contextApi';
 import AddFoodsModal from '../AddFoodsModal';
 
 const Search = ({ foodLists }) => {
+  const searchResultRef = useRef(null);
+  const searchInputRef = useRef(null);
+
+  const { cartItems, setCartItems } = useContext(ContextData);
   const [searchResults, setSearchResults] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [isExpanded, setExpanded] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const searchResultRef = useRef(null);
-  const searchInputRef = useRef(null);
 
+  const [addonsAdd, setAddonsAdd] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [variantPrice, setVariantPrice] = useState(0);
+  const [variantFixedPrice, setVariantFixedPrice] = useState(0);
+  const [foodVariantName, setFoodVariantName] = useState('Regular');
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -64,12 +70,6 @@ const Search = ({ foodLists }) => {
   const expandContainer = () => {
     setExpanded(true);
   };
-
-  const [addonsAdd, setAddonsAdd] = useState(null);
-  const { cartItems, setCartItems } = useContext(ContextData);
-  const [variantPrice, setVariantPrice] = useState(0);
-  const [variantFixedPrice, setVariantFixedPrice] = useState(0);
-  const [foodVariantName, setFoodVariantName] = useState('Regular');
 
   const handleAddToCartItem = (e, item) => {
     console.log('foodCartItem', item);

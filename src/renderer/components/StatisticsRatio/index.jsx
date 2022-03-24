@@ -29,8 +29,8 @@ const StatisticsRatio = () => {
       },
       {
         label: 'Order Amount',
-        backgroundColor: ['blue'],
-        borderColor: 'blue',
+        backgroundColor: ['green'],
+        borderColor: 'green',
         data: [5, 20, 25, 32, 48],
       },
     ],

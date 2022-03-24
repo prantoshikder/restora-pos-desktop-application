@@ -213,9 +213,9 @@ const AddFoodsModal = ({
       (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
     );
 
-    console.log('foodVariantName', foodVariantName);
-    console.log('isCartItemExist', isCartItemExist);
-    console.log('isVariantExist', isVariantExist);
+    // console.log('foodVariantName', foodVariantName);
+    // console.log('isCartItemExist', isCartItemExist);
+    // console.log('isVariantExist', isVariantExist);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
@@ -234,7 +234,7 @@ const AddFoodsModal = ({
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
       closeModal();
     } else {
-      console.log('existing item');
+      // console.log('existing item');
 
       // find the food index from the cartItems Array
       const index = cartItems.findIndex(
@@ -255,9 +255,9 @@ const AddFoodsModal = ({
           ...cartItems.slice(index + 1),
         ];
 
-        console.log('exist');
+        // console.log('exist');
       } else {
-        console.log('not exist');
+        // console.log('not exist');
         updateExistingCart = [
           ...cartItems,
           {
@@ -269,8 +269,8 @@ const AddFoodsModal = ({
         ];
       }
 
-      console.log('foodVariantName', foodVariantName);
-      console.log('updateExistingCart', updateExistingCart);
+      // console.log('foodVariantName', foodVariantName);
+      // console.log('updateExistingCart', updateExistingCart);
 
       let newAddons = [];
       const foodItemIndex = cartItems.findIndex(
@@ -293,7 +293,7 @@ const AddFoodsModal = ({
         }
       });
 
-      console.log('newAddons', newAddons);
+      // console.log('newAddons', newAddons);
 
       setCartItems([...newAddons, ...checkedAddons]);
 

@@ -13,7 +13,7 @@ const AddAddons = ({ settings }) => {
         <ConfigProvider direction={settings.site_align}>
           <Row>
             <Col lg={5} xl={3} xxl={3}>
-              <Sidebar />
+              <Sidebar settings={settings} />
             </Col>
 
             <Col lg={19} xl={21} xxl={21}>

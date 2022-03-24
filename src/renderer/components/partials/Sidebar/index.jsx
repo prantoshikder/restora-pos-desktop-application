@@ -13,7 +13,7 @@ import './Sidebar.style.scss';
 const { SubMenu } = Menu;
 const rootSubmenuKeys = ['food_management'];
 
-export const Sidebar = () => {
+export const Sidebar = ({ settings }) => {
   const [openKeys, setOpenKeys] = useState(['food_management']);
 
   const onOpenChange = (keys) => {
@@ -30,7 +30,11 @@ export const Sidebar = () => {
   const onClick = (e) => {};
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={{ background: '#001529' }}>
+      <div key="logo" className="sidebar_log">
+        <img src={settings?.logo} alt="" />
+      </div>
+
       <Menu
         theme="dark"
         style={{

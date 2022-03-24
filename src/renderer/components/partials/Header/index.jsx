@@ -54,7 +54,10 @@ const Header = ({ settings, dashboard }) => {
     <>
       <ConfigProvider direction={settings.site_align}>
         <Row>
-          <div className="pos_header">
+          <div
+            className="pos_header"
+            style={{ background: dashboard ? '#02203c' : '#fff' }}
+          >
             <div>
               {!dashboard && (
                 <Button type="primary" size="large" className="pos_btn">
