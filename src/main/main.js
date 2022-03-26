@@ -8,6 +8,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 const { mkdirSync, copyFileSync, existsSync } = require('fs');
+const translate = require('translate-google')
+
 
 // Initialize db path
 var dbPath = app.getPath('userData');
@@ -67,6 +69,8 @@ const createWindow = async () => {
       webSecurity: false,
       enableRemoteModule: true,
       nativeWindowOpen: true,
+      nodeIntegration: true
+
     },
   });
 
@@ -1033,6 +1037,7 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
     ORDER BY creation_date DESC`;
     db.all(sql, [], (err, rows) => {
       const allOrders = rows.map((order, index) => {
+        let temp = JSON.parse(order.order_info);
         return {
           id: index,
           saleDate: moment(order.creation_date).format('ll'),
@@ -1040,10 +1045,10 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
           customerName:
             order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
-          totalOrder: 0,
-          vatOrTax: 0,
-          serviceCharge: 0,
-          discount: 0,
+          totalOrder: temp.map((t) => t?.quantity ? t.quantity : 0),
+          vatOrTax: temp.map((t) => t?.vat ? t.vat : 0),
+          serviceCharge: temp.map((t) => t?.serviceCharge ? t.serviceCharge : 0),
+          discount: temp.map((t) => t?.discount ? t.discount : 0),
           totalAmount: order.grand_total,
         };
       });
@@ -1052,8 +1057,48 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         allOrders
       );
     });
+    db.close()
   }
 });
+
+// Get item sales report
+ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
+
+  if (args.status) {
+
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT orders.order_info FROM orders`;
+    db.all(sql, [], (err, rows) => {
+
+      let newData = new Array();
+
+      rows.forEach((data) => {
+        let temp = JSON.parse(data.order_info);
+        temp.map((t) => newData.push(t));
+      });
+
+      const unique = newData;
+
+      const group = {};
+
+      unique.forEach((e) => {
+        const o = (group[e.id] = group[e.id] || { ...e, quantity: 0 });
+        o.quantity += e.quantity;
+      });
+
+      const res = Object.values(group);
+
+      mainWindow.webContents.send(
+        'get_order_info_for_item_sales_report_response',
+        res
+      );
+
+    });
+
+    db.close()
+  }
+
+})
 
 // Delete food
 deleteListItem(
@@ -1620,7 +1665,6 @@ ipcMain.on('get_addons_and_variant', (event, args) => {
   });
   db.close();
   setTimeout(() => {
-    console.log('###################', food_addon_variants);
     mainWindow.webContents.send(
       'get_addons_and_variant_response',
       food_addon_variants
@@ -1635,6 +1679,33 @@ getListItems(
   'customer_info',
   'id, customer_name'
 );
+
+// Language table created
+(() => {
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS language (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'key_words' varchar(255)
+      )`
+    )
+  });
+  db.close();
+})()
+
+ipcMain.on('get_language', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT language.* FROM language`
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('get_language_response', rows)
+      });
+    });
+    db.close()
+  }
+})
 
 /*==================================================================
   FUNCTIONS DEFINITIONS
@@ -1768,3 +1839,41 @@ app
     });
   })
   .catch(console.log);
+
+
+//-------------------- print function -----------------
+
+// List of all options at -
+// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
+// const printOptions = {
+//   silent: false,
+//   printBackground: true,
+//   color: true,
+//   margin: {
+//     marginType: 'printableArea',
+//   },
+//   landscape: false,
+//   pagesPerSheet: 1,
+//   collate: false,
+//   copies: 1,
+//   header: 'Page header',
+//   footer: 'Page footer',
+// };
+
+
+ipcMain.on('print_invoice', (event, args) => {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",args);
+
+  // const options = {
+  //   silent: true,
+  //   deviceName: 'My-Printer',
+  //   pageRanges: [{
+  //     from: 0,
+  //     to: 1
+  //   }]
+  // }
+  // mainWindow.webContents.print(options, (success, errorType) => {
+  //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
+  // })
+
+});

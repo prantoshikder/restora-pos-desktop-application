@@ -15,6 +15,13 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllItemSalesReport = ({ settings }) => {
+  window.get_order_info_for_item_sales_report.send(
+    'get_order_info_for_item_sales_report',
+    {
+      status: true,
+    }
+  );
+
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
   };
@@ -63,43 +70,20 @@ const AllItemSalesReport = ({ settings }) => {
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      itemsName: 'Pizza',
-      variantName: 'chicken',
-      quantity: '3',
-      totalAmount: '$800',
-    },
-    {
-      key: 2,
-      itemsName: 'Dosa',
-      variantName: 'regular',
-      quantity: '2',
-      totalAmount: '$500',
-    },
-    {
-      key: 3,
-      itemsName: 'Chicken Lolly Pop(8 pc)',
-      variantName: 'regular',
-      quantity: '1',
-      totalAmount: '$400',
-    },
-    {
-      key: 4,
-      itemsName: 'BOMA Burger',
-      variantName: 'burger',
-      quantity: '3',
-      totalAmount: '$700',
-    },
-    {
-      key: 5,
-      itemsName: 'Chicken Fry',
-      variantName: 'chicken',
-      quantity: '2',
-      totalAmount: '$800',
-    },
-  ];
+  window.get_order_info_for_item_sales_report.once(
+    'get_order_info_for_item_sales_report_response',
+    (args) => {
+      window.data = args.map((arg) => {
+        return {
+          key: arg.id,
+          itemsName: arg.product_name,
+          variantName: arg.foodVariant,
+          quantity: arg.quantity,
+          totalAmount: arg.total_price,
+        };
+      });
+    }
+  );
 
   return (
     <>
@@ -184,7 +168,7 @@ const AllItemSalesReport = ({ settings }) => {
           <Table
             columns={columns}
             bordered
-            dataSource={data}
+            dataSource={window.data}
             pagination={false}
             rowKey={(record) => record.key}
           />

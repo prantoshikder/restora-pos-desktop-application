@@ -49,8 +49,10 @@ const AllSalesReport = ({ settings }) => {
           ) {
             filteringData = t;
           }
+
           return filteringData;
         });
+
         setAllSalesReports(filteredData);
       } else {
         setAllSalesReports(res);
