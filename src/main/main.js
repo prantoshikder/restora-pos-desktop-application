@@ -8,6 +8,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 const { mkdirSync, copyFileSync, existsSync } = require('fs');
+const translate = require('translate-google')
+
 
 // Initialize db path
 var dbPath = app.getPath('userData');
@@ -67,7 +69,7 @@ const createWindow = async () => {
       webSecurity: false,
       enableRemoteModule: true,
       nativeWindowOpen: true,
-      nodeIntegration:true
+      nodeIntegration: true
 
     },
   });
@@ -1663,7 +1665,6 @@ ipcMain.on('get_addons_and_variant', (event, args) => {
   });
   db.close();
   setTimeout(() => {
-    console.log('###################', food_addon_variants);
     mainWindow.webContents.send(
       'get_addons_and_variant_response',
       food_addon_variants
@@ -1678,6 +1679,33 @@ getListItems(
   'customer_info',
   'id, customer_name'
 );
+
+// Language table created
+(() => {
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  db.serialize(() => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS language (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'key_words' varchar(255)
+      )`
+    )
+  });
+  db.close();
+})()
+
+ipcMain.on('get_language', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT language.* FROM language`
+    db.serialize(() => {
+      db.all(sql, [], (err, rows) => {
+        mainWindow.webContents.send('get_language_response', rows)
+      });
+    });
+    db.close()
+  }
+})
 
 /*==================================================================
   FUNCTIONS DEFINITIONS
@@ -1810,3 +1838,41 @@ app
     });
   })
   .catch(console.log);
+
+
+//-------------------- print function -----------------
+
+// List of all options at -
+// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
+// const printOptions = {
+//   silent: false,
+//   printBackground: true,
+//   color: true,
+//   margin: {
+//     marginType: 'printableArea',
+//   },
+//   landscape: false,
+//   pagesPerSheet: 1,
+//   collate: false,
+//   copies: 1,
+//   header: 'Page header',
+//   footer: 'Page footer',
+// };
+
+
+ipcMain.on('print_invoice', (event, args) => {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",args);
+
+  // const options = {
+  //   silent: true,
+  //   deviceName: 'My-Printer',
+  //   pageRanges: [{
+  //     from: 0,
+  //     to: 1
+  //   }]
+  // }
+  // mainWindow.webContents.print(options, (success, errorType) => {
+  //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
+  // })
+
+});
