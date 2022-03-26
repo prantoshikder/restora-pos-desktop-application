@@ -8,8 +8,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 const { mkdirSync, copyFileSync, existsSync } = require('fs');
-const translate = require('translate-google')
-
 
 // Initialize db path
 var dbPath = app.getPath('userData');
@@ -69,8 +67,7 @@ const createWindow = async () => {
       webSecurity: false,
       enableRemoteModule: true,
       nativeWindowOpen: true,
-      nodeIntegration: true
-
+      nodeIntegration: true,
     },
   });
 
@@ -1045,10 +1042,12 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
           customerName:
             order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
-          totalOrder: temp.map((t) => t?.quantity ? t.quantity : 0),
-          vatOrTax: temp.map((t) => t?.vat ? t.vat : 0),
-          serviceCharge: temp.map((t) => t?.serviceCharge ? t.serviceCharge : 0),
-          discount: temp.map((t) => t?.discount ? t.discount : 0),
+          totalOrder: temp.map((t) => (t?.quantity ? t.quantity : 0)),
+          vatOrTax: temp.map((t) => (t?.vat ? t.vat : 0)),
+          serviceCharge: temp.map((t) =>
+            t?.serviceCharge ? t.serviceCharge : 0
+          ),
+          discount: temp.map((t) => (t?.discount ? t.discount : 0)),
           totalAmount: order.grand_total,
         };
       });
@@ -1057,19 +1056,16 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         allOrders
       );
     });
-    db.close()
+    db.close();
   }
 });
 
 // Get item sales report
 ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
-
   if (args.status) {
-
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT orders.order_info FROM orders`;
     db.all(sql, [], (err, rows) => {
-
       let newData = new Array();
 
       rows.forEach((data) => {
@@ -1092,13 +1088,11 @@ ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
         'get_order_info_for_item_sales_report_response',
         res
       );
-
     });
 
-    db.close()
+    db.close();
   }
-
-})
+});
 
 // Delete food
 deleteListItem(
@@ -1689,23 +1683,23 @@ getListItems(
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'key_words' varchar(255)
       )`
-    )
+    );
   });
   db.close();
-})()
+})();
 
 ipcMain.on('get_language', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT language.* FROM language`
+    let sql = `SELECT language.* FROM language`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
-        mainWindow.webContents.send('get_language_response', rows)
+        mainWindow.webContents.send('get_language_response', rows);
       });
     });
-    db.close()
+    db.close();
   }
-})
+});
 
 /*==================================================================
   FUNCTIONS DEFINITIONS
@@ -1840,7 +1834,6 @@ app
   })
   .catch(console.log);
 
-
 //-------------------- print function -----------------
 
 // List of all options at -
@@ -1860,9 +1853,8 @@ app
 //   footer: 'Page footer',
 // };
 
-
 ipcMain.on('print_invoice', (event, args) => {
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",args);
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', args);
 
   // const options = {
   //   silent: true,
@@ -1875,5 +1867,4 @@ ipcMain.on('print_invoice', (event, args) => {
   // mainWindow.webContents.print(options, (success, errorType) => {
   //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
   // })
-
 });
