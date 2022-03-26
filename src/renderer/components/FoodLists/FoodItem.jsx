@@ -40,8 +40,6 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.food_id === item.food_id
     );
 
-    console.log('asdfasd', item?.variants[0]);
-
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
@@ -424,7 +422,7 @@ const FoodItem = ({ item }) => {
       </Col>
 
       <Modal
-        title="  "
+        title="Add food variant or addons"
         visible={openModal}
         onOk={() => setOpenModal(false)}
         onCancel={() => setOpenModal(false)}
