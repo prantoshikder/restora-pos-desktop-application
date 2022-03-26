@@ -29,14 +29,13 @@ const ConfirmOrderModal = (props) => {
   const quickOrderModal = () => {
     setConfirmOrder(false);
     setOpenModal(true);
-    // setCartItems([]);
-    // if (confirmBtn === eventName) {
     window.insert_order_info.send('insert_order_info', {
       cartItems,
       customerId,
       invoiceId,
     });
-    // }
+
+    // setCartItems([]);
   };
 
   const handleSubmitOrder = (eventName) => {
@@ -50,21 +49,8 @@ const ConfirmOrderModal = (props) => {
 
   const placeOrderModal = () => {
     setConfirmOrder(false);
-    // let win = BrowserWindow.getFocusedWindow();
-
     const printContents = document.getElementById(printId).innerHTML;
     const originalContents = document.body.innerHTML;
-    // document.body.innerHTML = printContents;
-    // window.print();
-    // document.body.innerHTML = originalContents;
-
-    // win.webContents.print(options, (success, failureReason) => {
-    //   if (!success) console.log(failureReason);
-
-    //   console.log('Print Initiated');
-    // });
-
-    // console.log('printContents', originalContents);
   };
 
   return (

@@ -9,7 +9,7 @@ import './Header.style.scss';
 // const { SubMenu } = Menu;
 // const { Option } = Select;
 
-const Header = ({ settings }) => {
+const Header = ({ settings, dashboard }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
   // const [form] = Form.useForm();
   // const [openModal, setOpenModal] = useState(false);
@@ -54,16 +54,21 @@ const Header = ({ settings }) => {
     <>
       <ConfigProvider direction={settings.site_align}>
         <Row>
-          <div className="pos_header">
+          <div
+            className="pos_header"
+            style={{ background: dashboard ? '#02203c' : '#fff' }}
+          >
             <div>
-              <Button type="primary" size="large" className="pos_btn">
-                <Link to="/">
-                  <HomeOutlined />
-                </Link>
-              </Button>
+              {!dashboard && (
+                <Button type="primary" size="large" className="pos_btn">
+                  <Link to="/dashboard">
+                    <HomeOutlined />
+                  </Link>
+                </Button>
+              )}
 
               <Button type="primary" size="large" className="pos_btn new_order">
-                <Link to="/">New Order</Link>
+                <Link to="/">{dashboard ? 'POS' : 'New Order'}</Link>
               </Button>
 
               <Button
@@ -74,32 +79,36 @@ const Header = ({ settings }) => {
                 <Link to="/on_going_order">On Going Order</Link>
               </Button>
 
-              <Button
-                type="primary"
-                size="large"
-                className="pos_btn kitchen_status premium_btn"
-                onClick={() => setPremiumVersion(true)}
-              >
-                Kitchen Status
-              </Button>
+              {!dashboard && (
+                <>
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="pos_btn kitchen_status premium_btn"
+                    onClick={() => setPremiumVersion(true)}
+                  >
+                    Kitchen Status
+                  </Button>
 
-              <Button
-                type="primary"
-                size="large"
-                className="pos_btn qr_order premium_btn"
-                onClick={() => setPremiumVersion(true)}
-              >
-                QR Order
-              </Button>
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="pos_btn qr_order premium_btn"
+                    onClick={() => setPremiumVersion(true)}
+                  >
+                    QR Order
+                  </Button>
 
-              <Button
-                type="primary"
-                size="large"
-                className="pos_btn online_order premium_btn"
-                onClick={() => setPremiumVersion(true)}
-              >
-                Online Order
-              </Button>
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="pos_btn online_order premium_btn"
+                    onClick={() => setPremiumVersion(true)}
+                  >
+                    Online Order
+                  </Button>
+                </>
+              )}
 
               <Button
                 type="primary"

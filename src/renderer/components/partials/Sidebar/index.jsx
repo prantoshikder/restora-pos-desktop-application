@@ -13,7 +13,7 @@ import './Sidebar.style.scss';
 const { SubMenu } = Menu;
 const rootSubmenuKeys = ['food_management'];
 
-export const Sidebar = () => {
+export const Sidebar = ({ settings }) => {
   const [openKeys, setOpenKeys] = useState(['food_management']);
 
   const onOpenChange = (keys) => {
@@ -30,19 +30,23 @@ export const Sidebar = () => {
   const onClick = (e) => {};
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={{ background: '#001529' }}>
+      <div key="logo" className="sidebar_log">
+        <img src={settings?.logo} alt="Restora POS" />
+      </div>
+
       <Menu
         theme="dark"
         style={{
           height: '100%',
         }}
-        onClick={onClick}
+        // onClick={onClick}
         mode="inline"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
       >
-        <Menu.Item key="home" icon={<FontAwesomeIcon icon={faHome} />}>
-          <Link to="/">Home</Link>
+        <Menu.Item key="dash_board" icon={<FontAwesomeIcon icon={faHome} />}>
+          <Link to="/dashboard">Dashboard</Link>
         </Menu.Item>
 
         <SubMenu
@@ -128,10 +132,6 @@ export const Sidebar = () => {
 
           <Menu.Item key="itemsSalesReport">
             <Link to="/items_sales_report">Items Sales Report</Link>
-          </Menu.Item>
-
-          <Menu.Item key="statistics">
-            <Link to="/statistics">Statistics</Link>
           </Menu.Item>
         </SubMenu>
       </Menu>

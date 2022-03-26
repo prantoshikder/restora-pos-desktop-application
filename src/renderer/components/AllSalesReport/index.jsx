@@ -27,15 +27,12 @@ const AllSalesReport = ({ settings }) => {
   });
 
   useEffect(() => {
-
     getDataFromDatabase(
       'get_all_order_for_sales_report_response',
       window.get_all_order_for_sales_report
     ).then((res) => {
       if (startDate && endDate) {
-
         let filteredData = res.filter((t) => {
-
           let d = new Date(t.saleDate);
           let milliseconds = d.getTime();
 
@@ -45,25 +42,22 @@ const AllSalesReport = ({ settings }) => {
           let d3 = new Date(endDate);
           let endDateToMiliSec = d3.getTime();
 
-          let filteringData
-          if (startDateToMiliSec <= milliseconds && endDateToMiliSec >= milliseconds) {
-            filteringData = t
+          let filteringData;
+          if (
+            startDateToMiliSec <= milliseconds &&
+            endDateToMiliSec >= milliseconds
+          ) {
+            filteringData = t;
           }
-          return filteringData
 
-        })
+          return filteringData;
+        });
 
         setAllSalesReports(filteredData);
-
-      }
-      else {
-
+      } else {
         setAllSalesReports(res);
-
       }
-
     });
-
   }, [isFormSubmitted]);
 
   const disabledDate = (current) => {
@@ -147,7 +141,7 @@ const AllSalesReport = ({ settings }) => {
   ];
 
   const handleSearchData = () => {
-    setFormSubmitted(isFormSubmitted => !isFormSubmitted)
+    setFormSubmitted((isFormSubmitted) => !isFormSubmitted);
   };
 
   return (
@@ -168,8 +162,6 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="From"
-                // disabledDate={disabledDate}
-                // value={}
                 onChange={handleFromDate}
               />
             </Form.Item>
@@ -178,8 +170,6 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="To"
-                // disabledDate={disabledDate}
-                // value={}
                 onChange={handleEndDate}
               />
             </Form.Item>
@@ -189,7 +179,6 @@ const AllSalesReport = ({ settings }) => {
         <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
-            // value={}
             onChange={handleChangeStatus}
             allowClear
           >
@@ -238,7 +227,7 @@ const AllSalesReport = ({ settings }) => {
               : 'B-25, Mannan Plaza, 4th Floor Khilkhet, Dhaka-1229, Bangladesh'}
           </Text>
           <br />
-          <Text>Print Date: 09/01/2022 10:46:30</Text>
+          {/* <Text>Print Date: 09/01/2022 10:46:30</Text> */}
         </div>
 
         <div
@@ -252,7 +241,7 @@ const AllSalesReport = ({ settings }) => {
             bordered
             dataSource={allSalesReports}
             pagination={false}
-            rowKey={(record) => record.key}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>
