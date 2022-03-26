@@ -2,135 +2,23 @@
   "foods": [
     {
       "id": 1,
-      "product_name": "Chicken Fry",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 255,
-          "quantity": 1 
-        },
-        {
-          "variant_name": "Family", 
-          "price": 555,
-          "quantity": 1 
-        },
-        {
-          "variant_name": "Large", 
-          "price": 999,
-          "quantity": 1 
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/fried_chicken-1024x536.png",
-      "addons" : [
-        {
-          "id": 1,
-          "add_on_name": "Drinks",
-          "quantity": 1,
-          "addons_price": 35 
-        },
-        {
-          "id": 2,
-          "add_on_name": "Sprite",
-          "quantity": 1,
-          "addons_price": 25 
-        }
-      ]
+      "name": "Today Order",
+      "amount" : 250
     },
     {
       "id": 2,
-      "product_name": "Indian",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 155,
-          "quantity": 1
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/CIB_1-1068x601.jpg",
-      "addons" : []
+      "name": "Total Customer",
+      "amount" : 159
     },
     {
       "id": 3,
-      "product_name": "Prawn & Fish Dishes",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 55,
-          "quantity": 1
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/prawn-malaikari-19.jpg",
-      "addons" : [
-        {
-          "id": 1,
-          "add_on_name": "Drinks",
-          "quantity": 1,
-          "addons_price": 35 
-        },
-        {
-          "id": 2,
-          "add_on_name": "Sprite",
-          "quantity": 1,
-          "addons_price": 25 
-        }
-      ]
+      "name": "Total Delivered",
+      "amount" : 59
     },
     {
       "id": 4,
-      "product_name": "Chicken Kebab",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 255,
-          "quantity": 1
-        },
-        {
-          "variant_name": "Family", 
-          "price": 555,
-          "quantity": 1
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
-    },
-    {
-      "id": 5,
-      "product_name": "Chicken Kebab",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 255,
-          "quantity": 1
-        },
-        {
-          "variant_name": "Family", 
-          "price": 555,
-          "quantity": 1
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
-    },
-    {
-      "id": 6,
-      "product_name": "Chicken Kebab",
-      "variant": [
-        {
-          "variant_name": "Regular", 
-          "price": 255,
-          "quantity": 1
-        },
-        {
-          "variant_name": "Family", 
-          "price": 555,
-          "quantity": 1
-        }
-      ],
-      "quantity": 1,
-      "product_image": "https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/Chicken-Kebab-600x600.jpg"
+      "name": "Today Sale",
+      "amount" : 599
     }
   ]
 }

@@ -24,7 +24,7 @@ const AddFood = ({ settings }) => {
           <div className="pos_system">
             <Row>
               <Col lg={5} xl={3} xxl={3}>
-                <Sidebar />
+                <Sidebar settings={settings} />
               </Col>
 
               <Col lg={19} xl={21} xxl={21}>

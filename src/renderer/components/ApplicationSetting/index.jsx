@@ -146,17 +146,9 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
   const handleFavicon = (e) => {
     console.log('hanlde file', e);
-    // if (Array.isArray(e)) {
-    //   return e;
-    // }
-    // return e && e.fileList;
   };
   const normFile = (e) => {
     console.log('hanlde file norm', e);
-    // if (Array.isArray(e)) {
-    //   return e;
-    // }
-    // return e && e.fileList;
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -164,8 +156,6 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
   };
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
-
     const settingsValue = {};
 
     for (const data of defaultData) {

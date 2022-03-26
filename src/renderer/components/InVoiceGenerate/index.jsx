@@ -99,11 +99,8 @@ const InVoiceGenerate = ({
 
   return (
     <Modal
-      // title="Select Your Payment Method"
       visible={openInvoice}
-      // onOk={() => setOpenInvoice(false)}
       onCancel={() => setOpenInvoice(false)}
-      // footer={null}
       width={600}
       okText="Print"
       onOk={() => {
@@ -125,7 +122,7 @@ const InVoiceGenerate = ({
           <h1
             style={{ textAlign: 'center', fontWeight: '700', marginBottom: 0 }}
           >
-            {settings.storename}
+            {settings.storename ? settings.storename : 'Restora POS'}
           </h1>
           <p style={{ textAlign: 'center' }}>{settings?.address}</p>
 

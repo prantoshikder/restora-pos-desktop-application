@@ -34,7 +34,7 @@ const PosSidebar = ({ settings, foodLists, setFoodLists, setSelectedMenu }) => {
           onClick={() => setSelectedMenu()}
           type="primary"
           style={{
-            textAlign: settings.site_align === 'rtl' ? 'right' : 'left',
+            textAlign: settings?.site_align === 'rtl' ? 'right' : 'left',
           }}
         >
           All

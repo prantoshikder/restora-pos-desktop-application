@@ -8,18 +8,19 @@ import {
   Typography,
 } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
-
+import { useState } from 'react';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const AllItemSalesReport = () => {
-
-  window.get_order_info_for_item_sales_report.send('get_order_info_for_item_sales_report', {
-    status: true,
-  });
+const AllItemSalesReport = ({ settings }) => {
+  window.get_order_info_for_item_sales_report.send(
+    'get_order_info_for_item_sales_report',
+    {
+      status: true,
+    }
+  );
 
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
@@ -69,18 +70,20 @@ const AllItemSalesReport = () => {
     },
   ];
 
-
-  window.get_order_info_for_item_sales_report.once('get_order_info_for_item_sales_report_response', (args) => {
-    window.data = args.map((arg) => {
-      return {
-        key: arg.id,
-        itemsName: arg.product_name,
-        variantName: arg.foodVariant,
-        quantity: arg.quantity,
-        totalAmount: arg.total_price
-      }
-    })
-  })
+  window.get_order_info_for_item_sales_report.once(
+    'get_order_info_for_item_sales_report_response',
+    (args) => {
+      window.data = args.map((arg) => {
+        return {
+          key: arg.id,
+          itemsName: arg.product_name,
+          variantName: arg.foodVariant,
+          quantity: arg.quantity,
+          totalAmount: arg.total_price,
+        };
+      });
+    }
+  );
 
   return (
     <>
@@ -95,35 +98,28 @@ const AllItemSalesReport = () => {
         }}
       >
         <div>
-          <Space direction="vertical" size={12}>
-            <div className="offer_date_select">
-              <Form.Item label="From">
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="From"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferStart}
-                />
-              </Form.Item>
+          <Space size={12}>
+            <Form.Item label="From">
+              <DatePicker
+                format="YYYY-MM-DD"
+                placeholder="From"
+                onChange={handleOfferStart}
+              />
+            </Form.Item>
 
-              <Form.Item label="To" style={{ marginLeft: '1rem' }}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="To"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferEnd}
-                />
-              </Form.Item>
-            </div>
+            <Form.Item label="To" style={{ marginLeft: '1rem' }}>
+              <DatePicker
+                format="YYYY-MM-DD"
+                placeholder="To"
+                onChange={handleOfferEnd}
+              />
+            </Form.Item>
           </Space>
         </div>
 
         <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
-            // value={}
             onChange={handleChangeStatus}
             allowClear
           >
@@ -136,7 +132,7 @@ const AllItemSalesReport = () => {
 
         <div className="group_btn">
           <Button className="search_btn">Search</Button>
-          <Button className="print_btn">Print</Button>
+          {/* <Button className="print_btn">Print</Button> */}
         </div>
       </div>
 
@@ -151,10 +147,16 @@ const AllItemSalesReport = () => {
         }}
       >
         <div className="search_content">
-          <Title level={3}>Dhaka Restaurant</Title>
-          <Text>98 Green Road, Farmgate, Dhaka-1215.</Text>
+          <Title level={3}>
+            {settings?.storename ? settings?.storename : 'Restora POS'}
+          </Title>
+          <Text>
+            {settings?.address
+              ? settings?.address
+              : 'B-25, Mannan Plaza, 4th Floor Khilkhet, Dhaka-1229, Bangladesh'}
+          </Text>
           <br />
-          <Text>Print Date: 10/01/2022 10:46:30</Text>
+          {/* <Text>Print Date: 10/01/2022 10:46:30</Text> */}
         </div>
 
         <div
