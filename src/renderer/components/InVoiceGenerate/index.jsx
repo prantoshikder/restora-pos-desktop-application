@@ -19,6 +19,8 @@ const InVoiceGenerate = ({
   const calc = new CalculatePrice(settings, foodItems);
   const [customerList, setCustomerList] = useState('');
 
+  window.print_invoice.send('print_invoice', { status: true });
+
   window.get_customer_names.send('get_customer_names', { status: true });
 
   useEffect(() => {
@@ -105,12 +107,13 @@ const InVoiceGenerate = ({
       width={600}
       okText="Print"
       onOk={() => {
-        var printContents =
-          document.querySelector('.inVoice_wrapper').innerHTML;
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        window.location.reload();
+        // var printContents =
+        //   document.querySelector('.inVoice_wrapper').innerHTML;
+        // var originalContents = document.body.innerHTML;
+        // document.body.innerHTML = printContents;
+        // window.print();
+        // window.location.reload();
+        
       }}
     >
       <div ref={invoiceWrapperRef} className="inVoice_wrapper">

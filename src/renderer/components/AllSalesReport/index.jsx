@@ -52,13 +52,18 @@ const AllSalesReport = ({ settings }) => {
           return filteringData
 
         })
+
         setAllSalesReports(filteredData);
+
       }
       else {
+
         setAllSalesReports(res);
+
       }
 
     });
+
   }, [isFormSubmitted]);
 
   const disabledDate = (current) => {

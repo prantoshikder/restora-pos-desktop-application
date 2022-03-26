@@ -260,7 +260,8 @@
     "react-router-dom": "^6.2.1",
     "react-to-print": "^2.14.4",
     "regenerator-runtime": "^0.13.9",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "translate-google": "^1.5.0"
   },
   "browser": {
     "fs": false,
