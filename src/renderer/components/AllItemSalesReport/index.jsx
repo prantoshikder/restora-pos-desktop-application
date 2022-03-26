@@ -1,14 +1,7 @@
-import {
-  Button,
-  DatePicker,
-  Form,
-  Select,
-  Space,
-  Table,
-  Typography,
-} from 'antd';
+import { DatePicker, Select, Table, Typography } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getDataFromDatabase } from './../../../helpers';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -22,6 +15,17 @@ const AllItemSalesReport = ({ settings }) => {
     }
   );
 
+  const [itemSalesReports, setItemSalesReports] = useState(null);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_order_info_for_item_sales_report_response',
+      window.get_order_info_for_item_sales_report
+    ).then((args = []) => {
+      setItemSalesReports(args);
+    });
+  }, []);
+
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
   };
@@ -31,28 +35,24 @@ const AllItemSalesReport = ({ settings }) => {
   };
 
   const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
     console.log('dateString', dateString);
   };
 
   const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
     console.log('dateString', dateString);
   };
-
-  const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
     {
       title: 'Items Name',
-      dataIndex: 'itemsName',
-      key: 'itemsName',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '30%',
     },
     {
       title: 'Variant Name',
-      dataIndex: 'variantName',
-      key: 'variantName',
+      dataIndex: 'foodVariant',
+      key: 'foodVariant',
       width: '15%',
     },
     {
@@ -63,31 +63,16 @@ const AllItemSalesReport = ({ settings }) => {
     },
     {
       title: 'Total Amount',
-      dataIndex: 'totalAmount',
-      key: 'totalAmount',
+      dataIndex: 'total_price',
+      key: 'total_price',
       width: '12%',
       align: 'right',
     },
   ];
 
-  window.get_order_info_for_item_sales_report.once(
-    'get_order_info_for_item_sales_report_response',
-    (args) => {
-      window.data = args.map((arg) => {
-        return {
-          key: arg.id,
-          itemsName: arg.product_name,
-          variantName: arg.foodVariant,
-          quantity: arg.quantity,
-          totalAmount: arg.total_price,
-        };
-      });
-    }
-  );
-
   return (
     <>
-      <div
+      {/* <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
@@ -132,9 +117,8 @@ const AllItemSalesReport = ({ settings }) => {
 
         <div className="group_btn">
           <Button className="search_btn">Search</Button>
-          {/* <Button className="print_btn">Print</Button> */}
         </div>
-      </div>
+      </div> */}
 
       <div
         style={{
@@ -168,9 +152,9 @@ const AllItemSalesReport = ({ settings }) => {
           <Table
             columns={columns}
             bordered
-            dataSource={window.data}
+            dataSource={itemSalesReports}
             pagination={false}
-            rowKey={(record) => record.key}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>

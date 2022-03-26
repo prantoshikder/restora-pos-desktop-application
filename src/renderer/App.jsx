@@ -26,8 +26,6 @@ import TodaysOrder from './pages/TodaysOrder';
 export default function App() {
   window.get_settings.send('get_settings', { status: true });
 
-
-
   const [cartItems, setCartItems] = useState([]);
   const [reRenderOnSettings, setReRenderOnSettings] = useState(false);
   const [settings, setSettings] = useState({
@@ -131,7 +129,9 @@ export default function App() {
           {/* Sales Report */}
           <Route
             path="/sales_report"
-            element={<SalesReport languageData={languageData} settings={settings} />}
+            element={
+              <SalesReport languageData={languageData} settings={settings} />
+            }
           />
           <Route
             path="/items_sales_report"
