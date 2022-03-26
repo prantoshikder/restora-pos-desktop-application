@@ -17,7 +17,7 @@ const DashBoard = ({ settings }) => {
 
             <Col lg={19} xl={21} xxl={21}>
               <Header dashboard settings={settings} />
-              <Heading title="DashBoard" />
+              <Heading title="Dashboard" />
 
               <div style={{ margin: '0rem 1.5rem' }}>
                 <CountHistory />
