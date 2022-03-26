@@ -42,13 +42,13 @@ const CategoryItem = ({
       >
         <div style={{ width: '30px', marginRight: '5px' }}>
           {category?.category_icon ? (
-            <img src={category?.category_icon} alt="" />
+            <img src={category?.category_icon} alt="Restora POS" />
           ) : (
             <img
               src="https://i.postimg.cc/bvzKkjn3/image.png"
               width="20px"
               height="20px"
-              alt=""
+              alt="Restora POS"
             />
           )}
         </div>

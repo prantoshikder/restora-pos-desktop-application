@@ -19,19 +19,32 @@ const StatisticsRatio = () => {
   };
 
   const data = {
-    labels: ['Red', 'Orange', 'Yellow', 'Blue', 'Purple'],
+    labels: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ],
     datasets: [
       {
         label: 'Sale Amount',
         backgroundColor: ['Red'],
         borderColor: 'red',
-        data: [0, 12, 38, 20, 38],
+        data: [0, 4, 8, 10, 16, 12, 25, 39, 34, 38, 45, 58],
       },
       {
         label: 'Order Amount',
         backgroundColor: ['green'],
         borderColor: 'green',
-        data: [5, 20, 25, 32, 48],
+        data: [2, 8, 15, 21, 30, 20, 29, 34, 25, 40, 42, 50],
       },
     ],
   };
@@ -50,7 +63,20 @@ const StatisticsRatio = () => {
   };
 
   const data2 = {
-    labels: ['Blue', 'Yellow', 'Pink', 'Purple', 'Red'],
+    labels: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ],
     datasets: [
       {
         label: 'Online',

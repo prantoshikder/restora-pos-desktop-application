@@ -32,7 +32,7 @@ export const Sidebar = ({ settings }) => {
   return (
     <div className="sidebar" style={{ background: '#001529' }}>
       <div key="logo" className="sidebar_log">
-        <img src={settings?.logo} alt="" />
+        <img src={settings?.logo} alt="Restora POS" />
       </div>
 
       <Menu
@@ -40,7 +40,7 @@ export const Sidebar = ({ settings }) => {
         style={{
           height: '100%',
         }}
-        onClick={onClick}
+        // onClick={onClick}
         mode="inline"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
