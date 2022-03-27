@@ -321,12 +321,6 @@ sendDataThroughMiddlewareOn(
   'get_order_info_for_item_sales_report_response'
 )
 
-// Get language
-sendDataThroughMiddlewareOn(
-  'print_invoice',
-  'print_invoice',
-  'print_invoice_response'
-)
 
 /*======================================================================
   FUNCTION DECLARATIONS
