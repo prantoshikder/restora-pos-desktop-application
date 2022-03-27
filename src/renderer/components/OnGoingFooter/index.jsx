@@ -22,6 +22,8 @@ const OnGoingFooter = ({
   setOpenSearchInput,
   activeInactiveBtn,
   setReRender,
+  ongoingOrders,
+  setOngoingOrders,
 }) => {
   let redirect = useNavigate();
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -48,7 +50,6 @@ const OnGoingFooter = ({
   }
 
   const editOnGoingOrder = (orderData) => {
-    console.log(orderData);
     if (Object.keys(orderData).length === 0) {
       message.error({
         content: 'Sorry! No order is selected.',
@@ -169,6 +170,8 @@ const OnGoingFooter = ({
         setOpenModal={setOpenModal}
         foodItems={orderData}
         setReRender={setReRender}
+        ongoingOrders={ongoingOrders}
+        setOngoingOrders={setOngoingOrders}
       />
     </>
   );
