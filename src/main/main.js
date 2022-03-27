@@ -1814,6 +1814,26 @@ function getListItems(channelName, response, table, query = '*', condition) {
   });
 }
 
+// Get order data to create token
+ipcMain.on('get_data_to_create_token', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all(
+        `SELECT * FROM orders ORDER BY order_id DESC LIMIT 1`,
+        [],
+        (err, rows) => {
+          mainWindow.webContents.send(
+            'get_data_to_create_token_response',
+            rows[0]
+          );
+        }
+      );
+    });
+    db.close();
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -1833,38 +1853,3 @@ app
     });
   })
   .catch(console.log);
-
-//-------------------- print function -----------------
-
-// List of all options at -
-// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
-// const printOptions = {
-//   silent: false,
-//   printBackground: true,
-//   color: true,
-//   margin: {
-//     marginType: 'printableArea',
-//   },
-//   landscape: false,
-//   pagesPerSheet: 1,
-//   collate: false,
-//   copies: 1,
-//   header: 'Page header',
-//   footer: 'Page footer',
-// };
-
-ipcMain.on('print_invoice', (event, args) => {
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', args);
-
-  // const options = {
-  //   silent: true,
-  //   deviceName: 'My-Printer',
-  //   pageRanges: [{
-  //     from: 0,
-  //     to: 1
-  //   }]
-  // }
-  // mainWindow.webContents.print(options, (success, errorType) => {
-  //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
-  // })
-});

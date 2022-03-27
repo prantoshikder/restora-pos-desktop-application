@@ -90,8 +90,6 @@ const Home = ({ settings }) => {
       .catch((err) => console.log(err));
   }, []);
 
-  console.log('Home done');
-
   return (
     <>
       {/* {isRedirect && navigate('/application_setting')} */}

@@ -217,6 +217,7 @@
       height: 2rem;
     }
   }
+
   .place_order_btn,
   .place_order_btn:hover,
   .place_order_btn:focus {
@@ -224,6 +225,20 @@
     border-color: #318d01;
     height: 3.2rem;
     margin-right: 0;
+
+    @media (max-width: 1200px) {
+      height: 2rem;
+    }
+  }
+
+  .update_order_btn,
+  .update_order_btn:hover,
+  .update_order_btn:focus {
+    background-color: #37a000;
+    border-color: #318d01;
+    height: 3.2rem;
+    margin-right: 0;
+    margin-left: auto;
 
     @media (max-width: 1200px) {
       height: 2rem;
