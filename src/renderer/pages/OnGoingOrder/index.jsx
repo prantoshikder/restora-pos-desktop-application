@@ -18,7 +18,7 @@ const OnGoingOrder = ({ settings }) => {
   const [orderComplete, setOrderComplete] = useState({});
   const [searchValue, setSearchValue] = useState('');
   const [reRender, setReRender] = useState(false);
-  const [orderData, setOrderData] = useState([]);
+  const [ongoingOrders, setOngoingOrders] = useState([]);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -26,7 +26,7 @@ const OnGoingOrder = ({ settings }) => {
       window.get_all_order_info_ongoing
     ).then((data) => {
       if (Array.isArray(data) && data?.length > 0) {
-        setOrderData(data);
+        setOngoingOrders(data);
       }
     });
   }, [reRender]);
@@ -34,12 +34,12 @@ const OnGoingOrder = ({ settings }) => {
   const handleSearchOnGoingOrder = (e) => {
     setSearchValue(e.target.value);
 
-    const searchData = orderData.filter((orderItem) =>
+    const searchData = ongoingOrders.filter((orderItem) =>
       orderItem.order_id.toString().match(new RegExp(e.target.value, 'g'))
     );
 
     if (searchData?.length > 0 && e.target.value.length > 0) {
-      setOrderData(searchData);
+      setOngoingOrders(searchData);
     } else {
       setReRender((prevState) => !prevState);
     }
@@ -73,8 +73,8 @@ const OnGoingOrder = ({ settings }) => {
 
         <OnGoingOrderItems
           setActiveInactiveBtn={setActiveInactiveBtn}
-          orderData={orderData}
-          setOrderData={setOrderData}
+          ongoingOrders={ongoingOrders}
+          setOngoingOrders={setOngoingOrders}
           setOrderComplete={setOrderComplete}
         />
       </div>
@@ -88,6 +88,8 @@ const OnGoingOrder = ({ settings }) => {
         settings={settings}
         activeInactiveBtn={activeInactiveBtn}
         setReRender={setReRender}
+        ongoingOrders={ongoingOrders}
+        setOngoingOrders={setOngoingOrders}
       />
     </div>
   );

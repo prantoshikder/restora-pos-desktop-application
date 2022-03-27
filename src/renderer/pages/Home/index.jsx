@@ -57,7 +57,7 @@ const Home = ({ settings }) => {
     ])
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
-        foodNames?.map((food, index) => {
+        foodNames?.forEach((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
           const newVariants = variants.filter(
@@ -66,10 +66,10 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
-            food_id: food.date_inserted,
             category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
+            date_inserted: food.date_inserted,
             quantity: 1,
             variants: [...newVariants],
             addons: [...newAddons],

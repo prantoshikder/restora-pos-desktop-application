@@ -13,6 +13,8 @@ const QuickOrderModal = ({
   settings,
   foodItems,
   setReRender,
+  ongoingOrders,
+  setOngoingOrders,
 }) => {
   window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
     status: true,
@@ -37,32 +39,43 @@ const QuickOrderModal = ({
   const handlePayBtn = () => {
     // Received on going order data
     setOnGoingOrderData(foodData);
+    console.log('foodData', foodData);
 
     getDataFromDatabase(
       'get_all_order_info_ongoing_response',
       window.get_all_order_info_ongoing
     ).then((data = []) => {
-      const updateOrder = { ...data[data.length - 1] };
+      console.log('ongoingOrders', ongoingOrders);
+      console.log('foodItems', foodItems);
+      setOpenModal(false);
+      setOpenInvoice(true);
 
       window.update_order_info_ongoing.send(
         'update_order_info_ongoing',
-        updateOrder
+        foodItems
       );
+
+      // Set the item to remove it from the array
+      const index = ongoingOrders.findIndex(
+        (item) => item.order_id === foodItems.order_id
+      );
+      const updateOngoingOrders = ongoingOrders.splice(index, 1);
+      console.log('ongoingOrders', ongoingOrders);
+      console.log('index', index);
+      setOngoingOrders(ongoingOrders);
+      setReRender((prevState) => !prevState);
+
+      // if (localStorage.getItem('order_id')) {
+      //   setReRender((prevState) => !prevState);
+      // }
     });
 
-    setOpenModal(false);
-    setOpenInvoice(true);
-
-    if (localStorage.getItem('order_id')) {
-      setReRender((prevState) => !prevState);
-    }
-
-    window.update_order_info_ongoing.once(
-      'update_order_info_ongoing_response',
-      (args) => {
-        console.log('))))))))))))))))))))))))))))))))))))))', args);
-      }
-    );
+    // window.update_order_info_ongoing.once(
+    //   'update_order_info_ongoing_response',
+    //   (args) => {
+    //     console.log('))))))))))))))))))))))))))))))))))))))', args);
+    //   }
+    // );
   };
 
   const handleCalculatePrice = () => {
