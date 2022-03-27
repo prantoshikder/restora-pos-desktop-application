@@ -1056,7 +1056,7 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
             order_id: order.order_id,
             customer_id: order.customer_id,
             grand_total: order.grand_total,
-            invoice_id: order.invoice_id,
+            invoice_id: order.order_id,
             status: order.status,
           };
         });
@@ -1100,7 +1100,7 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         return {
           id: index,
           saleDate: moment(order.creation_date).format('ll'),
-          invoiceNo: order.token_no,
+          invoiceNo: order.order_id,
           customerName:
             order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
