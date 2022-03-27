@@ -79,10 +79,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
 
-  const [cartData, setCartData] = useState({
-    cartItems,
-  });
-
   const selectTime = (time, timeString) => {
     console.log('Cooking time', timeString);
   };
