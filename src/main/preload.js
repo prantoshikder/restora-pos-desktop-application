@@ -312,15 +312,21 @@ sendDataThroughMiddlewareOn(
   'get_all_order_for_sales_report',
   'get_all_order_for_sales_report',
   'get_all_order_for_sales_report_response'
-)
+);
 
 // Get item sales report
 sendDataThroughMiddlewareOn(
   'get_order_info_for_item_sales_report',
   'get_order_info_for_item_sales_report',
   'get_order_info_for_item_sales_report_response'
-)
+);
 
+// Get data for token
+sendDataThroughMiddlewareOn(
+  'get_data_to_create_token',
+  'get_data_to_create_token',
+  'get_data_to_create_token_response'
+);
 
 /*======================================================================
   FUNCTION DECLARATIONS
