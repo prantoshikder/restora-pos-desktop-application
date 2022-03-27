@@ -76,13 +76,6 @@ const TodaysOrder = ({ settings }) => {
       align: 'center',
     },
     {
-      title: 'Customer Type',
-      dataIndex: 'customerName',
-      width: '25%',
-      key: 'customerName',
-      align: 'center',
-    },
-    {
       title: 'Order Date',
       dataIndex: 'creation_date',
       width: '20%',

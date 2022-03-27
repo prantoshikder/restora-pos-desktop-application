@@ -14,11 +14,11 @@ const InVoiceGenerate = ({
   openInvoice,
   setOpenInvoice,
   foodItems,
+  foodData,
 }) => {
   const invoiceWrapperRef = useRef(null);
   const calc = new CalculatePrice(settings, foodItems);
   const [customerList, setCustomerList] = useState('');
-
 
   window.get_customer_names.send('get_customer_names', { status: true });
 
@@ -94,135 +94,344 @@ const InVoiceGenerate = ({
   };
 
   const date = new Date();
-  // setPrintInvoiceData(invoiceWrapperRef.current);
+
+  const printInvoice = (printableArea) => {
+    var printContents = document.getElementById(printableArea).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    window.location.reload();
+  };
 
   return (
     <Modal
       visible={openInvoice}
       onCancel={() => setOpenInvoice(false)}
-      width={600}
+      width={450}
       okText="Print"
-      onOk={() => {
-        // var printContents =
-        //   document.querySelector('.inVoice_wrapper').innerHTML;
-        // var originalContents = document.body.innerHTML;
-        // document.body.innerHTML = printContents;
-        // window.print();
-        // window.location.reload();
-
-      }}
+      onOk={() => printInvoice('printableArea')}
     >
-      <div ref={invoiceWrapperRef} className="inVoice_wrapper">
+      <div
+        // ref={invoiceWrapperRef}
+        className="inVoice_wrapper"
+        id="printableArea"
+        style={{
+          padding: '0px 20px',
+          // width: '500px',
+          //   background: '#f1f1f1',
+          //   margin: '15px auto',
+          margin: 0,
+          // marginTop: '-50px',
+        }}
+      >
         <div className="inVoice_print_area">
-          <div className="in_voice_logo">
-            <img src={settings?.logo || restoraPosLogo} alt="Restora POS" />
+          <div
+            className="in_voice_logo"
+            style={{ textAlign: 'center', padding: '5px 0px' }}
+          >
+            <img
+              src={settings?.logo || restoraPosLogo}
+              width="100px"
+              height="50px"
+              alt="Restora POS"
+              style={{ width: '170px', height: '50px', objectFit: 'cover' }}
+            />
           </div>
 
-          <h1
-            style={{ textAlign: 'center', fontWeight: '700', marginBottom: 0 }}
+          <h2
+            style={{
+              textAlign: 'center',
+              fontWeight: '700',
+              color: '#000',
+              marginBottom: 0,
+            }}
           >
             {settings.storename ? settings.storename : 'Restora POS'}
-          </h1>
-          <p style={{ textAlign: 'center' }}>{settings?.address}</p>
-
-          <div
-            className="in_voice_info flex content_between"
-            style={{ marginTop: '0.8rem' }}
+          </h2>
+          <p
+            style={{
+              textAlign: 'center',
+              marginBottom: 0,
+              color: '#000',
+              fontSize: '12px',
+            }}
           >
-            <p style={{ fontWeight: '700' }}>
-              Date: {`${moment(date).format('LL')}`}
-            </p>
-            {settings?.vattinno && <p>TIN OR VAT NUM.: {settings?.vattinno}</p>}
+            {settings?.address}
+          </p>
+
+          <div className="in_voice_info " style={{ marginTop: '0.2rem' }}>
+            {foodData?.order_id && (
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Receipt No:{' '}
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#000',
+                    fontSize: '12px',
+                  }}
+                >
+                  {foodData?.order_id}
+                </span>
+              </h4>
+            )}
+            <h4
+              style={{
+                fontWeight: '700',
+                marginBottom: 0,
+                color: '#000',
+                fontSize: '12px',
+              }}
+            >
+              Date:{' '}
+              <span
+                style={{
+                  fontWeight: 'normal',
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >{`${moment(date).format('LL')}`}</span>
+            </h4>
+            {settings?.vattinno && (
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Tin Or Vat No:{' '}
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#000',
+                    fontSize: '12px',
+                  }}
+                >
+                  {settings?.vattinno}
+                </span>
+              </h4>
+            )}
           </div>
 
-          <div style={{ border: '1px dashed #918c8c' }}></div>
+          <div style={{ border: '1px dashed #000' }}></div>
 
           <div>
             <div className="in_voice_info flex content_between">
-              <h4 style={{ fontWeight: '700' }}>Item</h4>
-              <h4 style={{ fontWeight: '700' }}>Total</h4>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Item
+              </h4>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Total
+              </h4>
             </div>
 
             {foodItems?.length > 0 &&
               foodItems?.map((item, index) => (
                 <div key={index} className="in_voice_info flex content_between">
-                  <p>
+                  <p
+                    style={{ marginBottom: 0, color: '#000', fontSize: '12px' }}
+                  >
                     {item.product_name} {item.quantity} x {item.price}
                   </p>
-                  <p style={{ fontWeight: '700' }}>{item.total_price}</p>
+                  <p
+                    style={{
+                      fontWeight: '700',
+                      marginBottom: 0,
+                      color: '#000',
+                      fontSize: '12px',
+                    }}
+                  >
+                    {item.total_price}
+                  </p>
                 </div>
               ))}
           </div>
 
-          <div style={{ border: '1px dashed #918c8c' }}></div>
+          <div style={{ border: '1px dashed #000' }}></div>
 
           <div>
             <div className="in_voice_info flex content_between">
-              <h4 style={{ fontWeight: '700' }}>Subtotal</h4>
-              <h4 style={{ fontWeight: '700' }}>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Subtotal
+              </h4>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
                 {settings.currency}
                 {calc.getTotalPrice()}
               </h4>
             </div>
 
             <div className="in_voice_info flex content_between">
-              <p>Vat({settings.vat ? settings.vat : 0}%)</p>
-              <p style={{ fontWeight: '700' }}>
+              <p style={{ marginBottom: 0, color: '#000', fontSize: '12px' }}>
+                Vat({settings.vat ? settings.vat : 0}%)
+              </p>
+              <p
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
                 {settings.currency}
                 {calc.getVat()}
               </p>
             </div>
 
             <div className="in_voice_info flex content_between">
-              <p>Service Charge</p>
-              <p style={{ fontWeight: '700' }}>
+              <p style={{ marginBottom: 0, color: '#000', fontSize: '12px' }}>
+                Service Charge
+              </p>
+              <p
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
                 {settings.currency}
                 {calc.getServiceCharge()}
               </p>
             </div>
 
             <div className="in_voice_info flex content_between">
-              <p>Discount</p>
-              <p style={{ fontWeight: '700' }}>
+              <p style={{ marginBottom: 0, color: '#000', fontSize: '12px' }}>
+                Discount
+              </p>
+              <p
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
                 {settings.currency}
                 {calc.getDiscountAmount()}
               </p>
             </div>
           </div>
 
-          <div style={{ border: '1px dashed #918c8c' }}></div>
+          <div style={{ border: '1px dashed #000' }}></div>
 
           <div>
             <div className="in_voice_info flex content_between">
-              <h4 style={{ fontWeight: '700' }}>Grand Total</h4>
-              <h4 style={{ fontWeight: '700' }}>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Total
+              </h4>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
                 {settings.currency}
                 {calc.getGrandTotal()}
               </h4>
             </div>
 
-            <div className="in_voice_info flex content_between">
-              <p>Total Payable Amount</p>
-              <p style={{ fontWeight: '700' }}>
+            {/* <div className="in_voice_info flex content_between">
+              <p style={{ marginBottom: 0, color: '#000' }}>
+                Total Payable Amount
+              </p>
+              <p style={{ fontWeight: '700', marginBottom: 0, color: '#000' }}>
                 {settings.currency}
                 {calc.getGrandTotal()}
               </p>
-            </div>
+            </div> */}
           </div>
 
-          <br />
-
-          <div className="in_voice_info flex content_between">
-            <p>Billing To: {customerList}</p>
+          <div className="in_voice_info flex content_center">
+            <p
+              style={{
+                marginBottom: 0,
+                color: '#000',
+                marginTop: '0.5rem',
+                fontSize: '12px',
+              }}
+            >
+              Billing To: {customerList}
+            </p>
             {/* <p>Bill By: Jone Doe</p> */}
           </div>
 
-          <h2 style={{ textAlign: 'center', fontWeight: '700' }}>
+          <h3
+            style={{
+              textAlign: 'center',
+              fontWeight: '700',
+              marginBottom: 0,
+              color: '#000',
+              fontSize: '14px',
+            }}
+          >
             Thank you very mush
-          </h2>
-          <div style={{ border: '1px solid #dbd4d4' }}></div>
-          <p style={{ textAlign: 'center' }}>Powered By: RESTORAPOS,</p>
-          <p style={{ textAlign: 'center' }}>https://restorapos.com/</p>
+          </h3>
+          <div style={{ border: '1px solid #000' }}></div>
+          <p
+            style={{
+              textAlign: 'center',
+              marginBottom: 0,
+              color: '#000',
+              fontSize: '12px',
+            }}
+          >
+            Powered By: RESTORAPOS,
+          </p>
+          <p
+            style={{
+              textAlign: 'center',
+              marginBottom: 0,
+              color: '#000',
+              fontSize: '12px',
+            }}
+          >
+            https://restorapos.com/
+          </p>
         </div>
       </div>
     </Modal>

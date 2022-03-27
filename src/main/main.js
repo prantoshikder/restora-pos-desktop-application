@@ -902,34 +902,34 @@ const getData = () => {
   return new Promise((resolve, reject) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
-      db.all('SELECT token_no, creation_date FROM orders ORDER BY order_id DESC LIMIT 1', [], (err, rows) => {
-        if (err)
-          reject(err)
-        resolve(rows)
-      })
-    })
-    db.close()
-  })
-}
+      db.all(
+        'SELECT token_no, creation_date FROM orders ORDER BY order_id DESC LIMIT 1',
+        [],
+        (err, rows) => {
+          if (err) reject(err);
+          resolve(rows);
+        }
+      );
+    });
+    db.close();
+  });
+};
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
-
   let { cartItems, customerId, grandTotal, invoiceId } = args;
 
   getData()
-    .then(results => {
-
-      let date = new Date(results[0].creation_date)
+    .then((results) => {
+      let date = new Date(results[0].creation_date);
       let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
       let existingDateFormat = date.toLocaleDateString('en', options);
 
-      let todaysDateTimeMilisec = Date.now()
-      let todaysDate = new Date(todaysDateTimeMilisec)
+      let todaysDateTimeMilisec = Date.now();
+      let todaysDate = new Date(todaysDateTimeMilisec);
       let todaysDateFormat = todaysDate.toLocaleDateString('en', options);
 
-
-      console.log({ existingDateFormat, todaysDateFormat })
+      console.log({ existingDateFormat, todaysDateFormat });
 
       let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
       db.serialize(() => {
@@ -950,15 +950,18 @@ ipcMain.on('insert_order_info', (event, args) => {
             JSON.stringify(cartItems),
             customerId ? customerId : 1,
             grandTotal,
-            (results[0]) ? (todaysDateFormat === existingDateFormat) ? (results[0].token_no + 1) : 1 : 1,
+            results[0]
+              ? todaysDateFormat === existingDateFormat
+                ? results[0].token_no + 1
+                : 1
+              : 1,
             Date.now(),
           ]
         );
       });
       db.close();
-
     })
-    .catch(err => {
+    .catch((err) => {
       let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
       db.serialize(() => {
         db.run(
@@ -984,8 +987,7 @@ ipcMain.on('insert_order_info', (event, args) => {
         );
       });
       db.close();
-    })
-
+    });
 });
 
 // Update order info after edit
@@ -1750,7 +1752,6 @@ getListItems(
   db.close();
 })();
 
-
 ipcMain.on('get_language', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -1876,6 +1877,29 @@ function getListItems(channelName, response, table, query = '*', condition) {
     db.close();
   });
 }
+
+// Get order data to create token
+ipcMain.on('get_data_to_create_token', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all(
+        `SELECT * FROM orders ORDER BY order_id DESC LIMIT 1`,
+        [],
+        (err, rows) => {
+          console.log('rows', rows);
+          if (rows) {
+            mainWindow.webContents.send(
+              'get_data_to_create_token_response',
+              rows[0]
+            );
+          }
+        }
+      );
+    });
+    db.close();
+  }
+});
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
