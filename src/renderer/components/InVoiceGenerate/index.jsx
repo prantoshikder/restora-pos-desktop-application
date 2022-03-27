@@ -19,8 +19,6 @@ const InVoiceGenerate = ({
   const calc = new CalculatePrice(settings, foodItems);
   const [customerList, setCustomerList] = useState('');
 
-  window.print_invoice.send('print_invoice', { status: true });
-
   window.get_customer_names.send('get_customer_names', { status: true });
 
   useEffect(() => {
