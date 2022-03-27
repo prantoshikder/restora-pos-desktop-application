@@ -43,6 +43,7 @@ export default function App() {
       (result) => {
         // console.log('result app', result[0]);
         setSettings({ ...settings, ...result[0] });
+        console.log('rr', result);
       }
     );
   }, [reRenderOnSettings]);
