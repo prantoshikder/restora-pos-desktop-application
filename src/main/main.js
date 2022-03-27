@@ -928,9 +928,6 @@ ipcMain.on('insert_order_info', (event, args) => {
       let todaysDate = new Date(todaysDateTimeMilisec)
       let todaysDateFormat = todaysDate.toLocaleDateString('en', options);
 
-
-      console.log({ existingDateFormat, todaysDateFormat })
-
       let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
       db.serialize(() => {
         db.run(
@@ -1100,7 +1097,7 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         return {
           id: index,
           saleDate: moment(order.creation_date).format('ll'),
-          invoiceNo: order.invoice_id,
+          invoiceNo: order.token_no,
           customerName:
             order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
@@ -1895,4 +1892,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
+  .catch((err)=>console.log(err));
