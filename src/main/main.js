@@ -1916,6 +1916,29 @@ function getListItems(channelName, response, table, query = '*', condition) {
   });
 }
 
+// Get order data to create token
+ipcMain.on('get_data_to_create_token', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all(
+        `SELECT * FROM orders ORDER BY order_id DESC LIMIT 1`,
+        [],
+        (err, rows) => {
+          console.log('rows', rows);
+          if (rows) {
+            mainWindow.webContents.send(
+              'get_data_to_create_token_response',
+              rows[0]
+            );
+          }
+        }
+      );
+    });
+    db.close();
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed

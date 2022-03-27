@@ -29,7 +29,7 @@ const OnGoingFooter = ({
   const { cartItems, setCartItems } = useContext(ContextData);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [orderData, setOrderData] = useState();
+  const [orderData, setOrderData] = useState({});
 
   function orderCompleted(orderItem) {
     if (Object.keys(orderItem).length === 0) {

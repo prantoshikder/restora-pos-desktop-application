@@ -353,6 +353,7 @@ const QuickOrderModal = ({
         setOpenInvoice={setOpenInvoice}
         setPrintInvoiceData={setPrintInvoiceData}
         foodItems={onGoingOrderData}
+        foodData={foodItems}
       />
     </>
   );

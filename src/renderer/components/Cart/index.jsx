@@ -30,6 +30,8 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const Cart = ({ settings, cartItems, setCartItems, state }) => {
+  window.get_customer_names.send('get_customer_names', { status: true });
+
   const format = 'HH:mm';
   const [form] = Form.useForm();
   const [addCustomerName] = Form.useForm();
@@ -47,8 +49,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [openCalculator, setOpenCalculator] = useState(false);
   const [customerId, setCustomerId] = useState(0);
   const [invoiceId, setInvoiceId] = useState(9856);
-
-  window.get_customer_names.send('get_customer_names', { status: true });
+  const [cartData, setCartData] = useState({ cartItems });
 
   useEffect(() => {
     getDataFromDatabase(
@@ -87,19 +88,21 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleDeleteItem = (item) => {
-    message.success({
-      content: 'Successfully Delete Item',
-      className: 'custom-class',
-      duration: 1,
-      style: { marginTop: '5vh', float: 'right' },
-    });
-
-    setCartItems(
-      cartItems.filter(
-        (cartItem) => cartItem.date_inserted !== item.date_inserted
-      )
+    // CartItems is array
+    const updateCart = cartItems.filter(
+      (cartItem) => cartItem.date_inserted !== item.date_inserted
     );
-    return;
+
+    setCartItems(updateCart);
+
+    if (updateCart) {
+      message.success({
+        content: 'Successfully deleted the item.',
+        className: 'custom-class',
+        duration: 1,
+        style: { marginTop: '5vh', float: 'right' },
+      });
+    }
   };
 
   const handleResetAll = () => {
@@ -133,32 +136,37 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         if (localStorage.getItem('order_id')) {
           localStorage.removeItem('order_id');
         }
-
-        // setCartItems([]);
       } else if (data === 'placeOrder') {
-        if (localStorage.getItem('order_id')) {
-          window.update_order_info_after_edit.send(
-            'update_order_info_after_edit',
-            {
-              ...state,
-              order_info: cartItems,
-            }
-          );
-          localStorage.removeItem('order_id');
-        } else {
-          window.insert_order_info.send('insert_order_info', {
-            cartItems,
-            grandTotal: calcPrice.getGrandTotal(),
-            invoiceId,
-            customerId,
-          });
-        }
+        window.insert_order_info.send('insert_order_info', {
+          cartItems,
+          grandTotal: calcPrice.getGrandTotal(),
+          invoiceId,
+          customerId,
+        });
 
-        setCartItems([]);
         setConfirmBtn(data);
         setConfirmOrder(true);
       }
     }
+  };
+
+  const handleUpdateOrder = () => {
+    if (localStorage.getItem('order_id')) {
+      window.update_order_info_after_edit.send('update_order_info_after_edit', {
+        ...state,
+        order_info: cartItems,
+      });
+      localStorage.removeItem('order_id');
+    }
+
+    message.success({
+      content: 'Successfully Updated Order',
+      className: 'custom-class',
+      duration: 1,
+      style: { marginTop: '5vh', float: 'right' },
+    });
+
+    setCartItems([]);
   };
 
   const handleAddCustomer = () => {
@@ -530,37 +538,49 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           </div>
 
           <div className="cartBtn_wrapper">
-            <Button
-              onClick={handleCalculation}
-              className="calculator cartGroup_btn flex content_center"
-              size="large"
-            >
-              <FontAwesomeIcon icon={faCalculator} />
-            </Button>
+            {state?.order_id ? (
+              <Button
+                onClick={handleUpdateOrder}
+                type="primary"
+                className="update_order_btn cartGroup_btn"
+              >
+                Update Order
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handleCalculation}
+                  className="calculator cartGroup_btn flex content_center"
+                  size="large"
+                >
+                  <FontAwesomeIcon icon={faCalculator} />
+                </Button>
 
-            <Button
-              size="large"
-              className="delete_selected_item cartGroup_btn"
-              onClick={handleResetAll}
-            >
-              Cancel
-            </Button>
+                <Button
+                  size="large"
+                  className="delete_selected_item cartGroup_btn"
+                  onClick={handleResetAll}
+                >
+                  Cancel
+                </Button>
 
-            <Button
-              size="large"
-              className="quick_order_btn cartGroup_btn"
-              onClick={() => handleSubmitOrder('quickOrder')}
-            >
-              Quick Order
-            </Button>
+                <Button
+                  size="large"
+                  className="quick_order_btn cartGroup_btn"
+                  onClick={() => handleSubmitOrder('quickOrder')}
+                >
+                  Quick Order
+                </Button>
 
-            <Button
-              size="large"
-              className="place_order_btn cartGroup_btn"
-              onClick={() => handleSubmitOrder('placeOrder')}
-            >
-              Place Order
-            </Button>
+                <Button
+                  size="large"
+                  className="place_order_btn cartGroup_btn"
+                  onClick={() => handleSubmitOrder('placeOrder')}
+                >
+                  Place Order
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Form>

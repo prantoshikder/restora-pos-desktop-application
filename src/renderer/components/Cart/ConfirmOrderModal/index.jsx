@@ -1,20 +1,22 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Typography } from 'antd';
+import { getDataFromDatabase } from 'helpers';
 import { useContext, useState } from 'react';
 import { ContextData } from '../../../contextApi';
 import '../cart.styles.scss';
 import QuickOrderModal from '../QuickOrderModal';
-
-// const { BrowserWindow } = require('electron').remote;
-
-// const electron = require('electron');
-// const BrowserWindow = electron.remote.BrowserWindow;
+import TokenModal from './../../TokenModal/index';
 
 const { Text } = Typography;
 
 const ConfirmOrderModal = (props) => {
+  window.get_data_to_create_token.send('get_data_to_create_token', {
+    status: true,
+  });
+
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openModal, setOpenModal] = useState(false);
+  const [openTokenModal, setTokenModal] = useState(false);
 
   const {
     confirmOrder,
@@ -40,28 +42,28 @@ const ConfirmOrderModal = (props) => {
     if (confirmBtn === eventName) {
       window.insert_order_info.send('insert_order_info', {
         cartItems,
+        invoiceId,
         customerId,
       });
     }
   };
 
+  const [orderData, setOrderData] = useState({});
+
   const placeOrderModal = () => {
     setConfirmOrder(false);
-    // let win = BrowserWindow.getFocusedWindow();
+    if (cartItems.length > 0) {
+      getDataFromDatabase(
+        'get_data_to_create_token_response',
+        window.get_data_to_create_token
+      ).then((args) => {
+        const cartData = JSON.parse(args.order_info);
+        setOrderData({ ...args, order_info: cartData });
+        setTokenModal(true);
+      });
+    }
 
-    const printContents = document.getElementById(printId).innerHTML;
-    const originalContents = document.body.innerHTML;
-    // document.body.innerHTML = printContents;
-    // window.print();
-    // document.body.innerHTML = originalContents;
-
-    // win.webContents.print(options, (success, failureReason) => {
-    //   if (!success) console.log(failureReason);
-
-    //   console.log('Print Initiated');
-    // });
-
-    // console.log('printContents', originalContents);
+    setCartItems([]);
   };
 
   return (
@@ -121,6 +123,13 @@ const ConfirmOrderModal = (props) => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         foodItems={cartItems}
+      />
+
+      <TokenModal
+        openModal={openTokenModal}
+        setOpenModal={setTokenModal}
+        cartItems={cartItems}
+        orderData={orderData}
       />
     </>
   );
