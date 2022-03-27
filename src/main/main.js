@@ -1870,39 +1870,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
-
-//-------------------- print function -----------------
-
-// List of all options at -
-// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
-// const printOptions = {
-//   silent: false,
-//   printBackground: true,
-//   color: true,
-//   margin: {
-//     marginType: 'printableArea',
-//   },
-//   landscape: false,
-//   pagesPerSheet: 1,
-//   collate: false,
-//   copies: 1,
-//   header: 'Page header',
-//   footer: 'Page footer',
-// };
-
-ipcMain.on('print_invoice', (event, args) => {
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', args);
-
-  // const options = {
-  //   silent: true,
-  //   deviceName: 'My-Printer',
-  //   pageRanges: [{
-  //     from: 0,
-  //     to: 1
-  //   }]
-  // }
-  // mainWindow.webContents.print(options, (success, errorType) => {
-  //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
-  // })
-});
+  .catch((err) => console.log(err));

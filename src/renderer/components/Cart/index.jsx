@@ -110,9 +110,11 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
+    console.log('item', item);
+    console.log('cartItems', cartItems);
     setCartItems(
       cartItems.filter(
-        (cartItem) => cartItem.product_name !== item.product_name
+        (cartItem) => cartItem.date_inserted !== item.date_inserted
       )
     );
     return;
