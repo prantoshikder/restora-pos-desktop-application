@@ -37,7 +37,7 @@ const FoodItem = ({ item }) => {
   // Onclick opens a modal
   const handleFoodItem = (e, item) => {
     const isCartItemExist = cartItems.find(
-      (cartItem) => cartItem.food_id === item.food_id
+      (cartItem) => cartItem.id === item.id
     );
 
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
@@ -55,9 +55,9 @@ const FoodItem = ({ item }) => {
     } else {
       if (!isCartItemExist) {
         const cartItem = {
-          id: item.variants[0].id,
+          id: item.id,
           isSelected: true,
-          product_name: item.variants[0].product_name,
+          product_name: item.product_name,
           foodVariant: item.variants[0].variant_name,
           price: item.variants[0].price,
           total_price: item.variants[0].price,
@@ -69,16 +69,16 @@ const FoodItem = ({ item }) => {
         setCartItems([...cartItems, cartItem]);
       } else {
         const index = cartItems.findIndex(
-          (cartItem) => cartItem.food_id === item.food_id
+          (cartItem) => cartItem.id === item.id
         );
-
-        isCartItemExist.quantity += 1;
-        isCartItemExist.total_price =
-          isCartItemExist.quantity * isCartItemExist.price;
 
         const newCartItems = [
           ...cartItems.slice(0, index),
-          isCartItemExist,
+          {
+            ...isCartItemExist,
+            quantity: (isCartItemExist.quantity += 1),
+            total_price: isCartItemExist.quantity * isCartItemExist.price,
+          },
           ...cartItems.slice(index + 1),
         ];
 
