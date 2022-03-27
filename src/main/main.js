@@ -899,34 +899,96 @@ ipcMain.on('get_food_list_pos', (event, args) => {
   }
 });
 
+// Invoice id genaretor
+const getData = () => {
+  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+  return new Promise((resolve, reject) => {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    db.serialize(() => {
+      db.all('SELECT token_no, creation_date FROM orders ORDER BY order_id DESC LIMIT 1', [], (err, rows) => {
+        if (err)
+          reject(err)
+        resolve(rows)
+      })
+    })
+    db.close()
+  })
+}
+
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
+
   let { cartItems, customerId, grandTotal, invoiceId } = args;
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS orders(
-      "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-      "order_info" varchar(255),
-      "customer_id" INT,
-      "creation_date" DATETIME,
-      "grand_total" REAL,
-      "invoice_id" INT,
-      "status" INT NOT NULL DEFAULT 1
-  )`
-    ).run(
-      `INSERT INTO orders (order_info, customer_id, grand_total, invoice_id, creation_date)
-      VALUES (?, ?, ?, ?, ?)`,
-      [
-        JSON.stringify(cartItems),
-        customerId ? customerId : 0,
-        grandTotal,
-        invoiceId,
-        Date.now(),
-      ]
-    );
-  });
-  db.close();
+
+  getData()
+    .then(results => {
+
+      let date = new Date(results[0].creation_date)
+      let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+      let existingDateFormat = date.toLocaleDateString('en', options);
+
+      let todaysDateTimeMilisec = Date.now()
+      let todaysDate = new Date(todaysDateTimeMilisec)
+      let todaysDateFormat = todaysDate.toLocaleDateString('en', options);
+
+
+      console.log({ existingDateFormat, todaysDateFormat })
+
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+      db.serialize(() => {
+        db.run(
+          `CREATE TABLE IF NOT EXISTS orders(
+        "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+        "order_info" varchar(255),
+        "customer_id" INT,
+        "creation_date" DATETIME,
+        "grand_total" REAL,
+        "token_no" INT,
+        "status" INT NOT NULL DEFAULT 1
+    )`
+        ).run(
+          `INSERT INTO orders (order_info, customer_id, grand_total, token_no, creation_date)
+        VALUES (?, ?, ?, ?, ?)`,
+          [
+            JSON.stringify(cartItems),
+            customerId ? customerId : 1,
+            grandTotal,
+            (results[0]) ? (todaysDateFormat === existingDateFormat) ? (results[0].token_no + 1) : 1 : 1,
+            Date.now(),
+          ]
+        );
+      });
+      db.close();
+
+    })
+    .catch(err => {
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+      db.serialize(() => {
+        db.run(
+          `CREATE TABLE IF NOT EXISTS orders(
+        "order_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+        "order_info" varchar(255),
+        "customer_id" INT,
+        "creation_date" DATETIME,
+        "grand_total" REAL,
+        "token_no" INT,
+        "status" INT NOT NULL DEFAULT 1
+    )`
+        ).run(
+          `INSERT INTO orders (order_info, customer_id, grand_total, token_no, creation_date)
+        VALUES (?, ?, ?, ?, ?)`,
+          [
+            JSON.stringify(cartItems),
+            customerId ? customerId : 1,
+            grandTotal,
+            1,
+            Date.now(),
+          ]
+        );
+      });
+      db.close();
+    })
+
 });
 
 // Update order info after edit
@@ -1694,6 +1756,7 @@ getListItems(
   db.close();
 })()
 
+
 ipcMain.on('get_language', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
@@ -1838,41 +1901,3 @@ app
     });
   })
   .catch(console.log);
-
-
-//-------------------- print function -----------------
-
-// List of all options at -
-// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
-// const printOptions = {
-//   silent: false,
-//   printBackground: true,
-//   color: true,
-//   margin: {
-//     marginType: 'printableArea',
-//   },
-//   landscape: false,
-//   pagesPerSheet: 1,
-//   collate: false,
-//   copies: 1,
-//   header: 'Page header',
-//   footer: 'Page footer',
-// };
-
-
-ipcMain.on('print_invoice', (event, args) => {
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",args);
-
-  // const options = {
-  //   silent: true,
-  //   deviceName: 'My-Printer',
-  //   pageRanges: [{
-  //     from: 0,
-  //     to: 1
-  //   }]
-  // }
-  // mainWindow.webContents.print(options, (success, errorType) => {
-  //   if (!success) console.log("errorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorTypeerrorType",errorType)
-  // })
-
-});
