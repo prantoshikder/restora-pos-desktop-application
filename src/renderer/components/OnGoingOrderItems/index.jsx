@@ -2,18 +2,18 @@ import { Row } from 'antd';
 import OnGoingOrderCart from './../OnGoingOrderCart';
 
 const OnGoingOrderItems = ({
-  orderData,
-  setOrderData,
+  ongoingOrders,
+  setOngoingOrders,
   setOrderComplete,
   setActiveInactiveBtn,
 }) => {
   function selectedItem(foodData) {
-    const deselectAllCards = orderData.map((item) => ({
+    const deselectAllCards = ongoingOrders.map((item) => ({
       ...item,
       isSelected: false,
     }));
 
-    const index = orderData.findIndex(
+    const index = ongoingOrders.findIndex(
       (item) => item.order_id === foodData.order_id
     );
 
@@ -23,12 +23,14 @@ const OnGoingOrderItems = ({
       ...deselectAllCards.slice(index + 1),
     ];
 
-    setOrderData(newCards);
+    setOngoingOrders(newCards);
   }
+
+  console.log('ongoingOrders  ongoing itmes', ongoingOrders);
 
   return (
     <Row gutter={[20, 20]} style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {orderData?.map((orderCard) => (
+      {ongoingOrders?.map((orderCard) => (
         <OnGoingOrderCart
           setActiveInactiveBtn={setActiveInactiveBtn}
           key={orderCard?.order_id}
