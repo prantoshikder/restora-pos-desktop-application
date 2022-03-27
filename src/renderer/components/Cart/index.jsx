@@ -82,22 +82,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     cartItems,
   });
 
-  const increaseQuantity = (cartData) => {
-    const index = cartItems.indexOf(cartData);
-    const newQuantity = (cartData.quantity += 1);
-
-    setQuantityValue(newQuantity);
-  };
-
-  const decreaseQuantity = (cartData) => {
-    const index = cartItems.indexOf(cartData);
-
-    if (cartData.quantity === 1) return;
-
-    const newQuantity = (cartData.quantity -= 1);
-    setQuantityValue(newQuantity);
-  };
-
   const selectTime = (time, timeString) => {
     console.log('Cooking time', timeString);
   };
@@ -110,8 +94,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    console.log('item', item);
-    console.log('cartItems', cartItems);
     setCartItems(
       cartItems.filter(
         (cartItem) => cartItem.date_inserted !== item.date_inserted
@@ -231,9 +213,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleFoodQuantity = (quantity, item) => {
-    const index = cartItems.findIndex(
-      (cartItem) => cartItem.food_id === item.food_id
-    );
+    const index = cartItems.findIndex((cartItem) => cartItem.id === item.id);
 
     setCartItems([
       ...cartItems.slice(0, index),
@@ -485,25 +465,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                                 max={100}
                                 onChange={(e) => handleFoodQuantity(e, item)}
                                 className="quantity_value"
-                                // controls={false}
                               />
-
-                              {/* <div className="quantity_increase_decrease">
-                                <span
-                                  onClick={() =>
-                                    increaseQuantity(item.quantity)
-                                  }
-                                >
-                                  <UpOutlined />
-                                </span>
-                                <span
-                                  onClick={() =>
-                                    decreaseQuantity(item.quantity)
-                                  }
-                                >
-                                  <DownOutlined />
-                                </span>
-                              </div> */}
                             </th>
                             <th>{item.total_price}</th>
                             <th>

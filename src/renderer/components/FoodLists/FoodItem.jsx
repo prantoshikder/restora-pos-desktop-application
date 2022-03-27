@@ -29,7 +29,6 @@ const FoodItem = ({ item }) => {
   const [addonsQuantity, setAddonsQuantity] = useState(1);
   const [addonsPrice, setAddonsPrice] = useState(0);
 
-  // TODO: variant add
   const [variantForCartItem, setVariantForCartItem] = useState([]);
 
   const { cartItems, setCartItems } = useContext(ContextData);
@@ -185,7 +184,6 @@ const FoodItem = ({ item }) => {
   };
 
   const handleMultipleItemAdd = (e, item) => {
-    console.log('item', item);
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.id === item.id
     );
@@ -193,10 +191,6 @@ const FoodItem = ({ item }) => {
     const isVariantExist = cartItems.find(
       (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
     );
-
-    console.log('foodVariantName', foodVariantName);
-    console.log('isVariantExist', isVariantExist);
-    console.log('addonForCartItem', addonForCartItem);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
@@ -214,7 +208,6 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
     } else {
-      // TODO: fixed changing variant name after adding & multiple variant.
       let updateExistingCart = [];
 
       if (isVariantExist) {

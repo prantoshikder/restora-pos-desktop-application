@@ -19,7 +19,6 @@ const InVoiceGenerate = ({
   const calc = new CalculatePrice(settings, foodItems);
   const [customerList, setCustomerList] = useState('');
 
-
   window.get_customer_names.send('get_customer_names', { status: true });
 
   useEffect(() => {
@@ -109,7 +108,6 @@ const InVoiceGenerate = ({
         // document.body.innerHTML = printContents;
         // window.print();
         // window.location.reload();
-
       }}
     >
       <div ref={invoiceWrapperRef} className="inVoice_wrapper">
