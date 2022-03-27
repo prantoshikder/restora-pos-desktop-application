@@ -138,6 +138,9 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           grandTotal: calcPrice.getGrandTotal(),
           invoiceId,
           customerId,
+          discount: calcPrice.getDiscountAmount(),
+          serviceCharge: calcPrice.getServiceCharge(),
+          vat: calcPrice.getVat(),
         });
 
         setConfirmBtn(data);
