@@ -1,25 +1,30 @@
-import {
-  Button,
-  DatePicker,
-  Form,
-  Select,
-  Space,
-  Table,
-  Typography,
-} from 'antd';
+import { DatePicker, Select, Table, Typography } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { getDataFromDatabase } from './../../../helpers';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const AllItemSalesReport = () => {
+const AllItemSalesReport = ({ settings }) => {
+  window.get_order_info_for_item_sales_report.send(
+    'get_order_info_for_item_sales_report',
+    {
+      status: true,
+    }
+  );
 
-  window.get_order_info_for_item_sales_report.send('get_order_info_for_item_sales_report', {
-    status: true,
-  });
+  const [itemSalesReports, setItemSalesReports] = useState(null);
+
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_order_info_for_item_sales_report_response',
+      window.get_order_info_for_item_sales_report
+    ).then((args = []) => {
+      setItemSalesReports(args);
+    });
+  }, []);
 
   const disabledDate = (current) => {
     return current && current < moment().endOf('day');
@@ -30,28 +35,24 @@ const AllItemSalesReport = () => {
   };
 
   const handleOfferStart = (value, dateString) => {
-    console.log('value', value);
     console.log('dateString', dateString);
   };
 
   const handleOfferEnd = (value, dateString) => {
-    console.log('value', value);
     console.log('dateString', dateString);
   };
-
-  const [checkStrictly, setCheckStrictly] = useState(false);
 
   const columns = [
     {
       title: 'Items Name',
-      dataIndex: 'itemsName',
-      key: 'itemsName',
+      dataIndex: 'product_name',
+      key: 'product_name',
       width: '30%',
     },
     {
       title: 'Variant Name',
-      dataIndex: 'variantName',
-      key: 'variantName',
+      dataIndex: 'foodVariant',
+      key: 'foodVariant',
       width: '15%',
     },
     {
@@ -62,29 +63,16 @@ const AllItemSalesReport = () => {
     },
     {
       title: 'Total Amount',
-      dataIndex: 'totalAmount',
-      key: 'totalAmount',
+      dataIndex: 'total_price',
+      key: 'total_price',
       width: '12%',
       align: 'right',
     },
   ];
 
-
-  window.get_order_info_for_item_sales_report.once('get_order_info_for_item_sales_report_response', (args) => {
-    window.data = args.map((arg) => {
-      return {
-        key: arg.id,
-        itemsName: arg.product_name,
-        variantName: arg.foodVariant,
-        quantity: arg.quantity,
-        totalAmount: arg.total_price
-      }
-    })
-  })
-
   return (
     <>
-      <div
+      {/* <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
@@ -95,35 +83,28 @@ const AllItemSalesReport = () => {
         }}
       >
         <div>
-          <Space direction="vertical" size={12}>
-            <div className="offer_date_select">
-              <Form.Item label="From">
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="From"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferStart}
-                />
-              </Form.Item>
+          <Space size={12}>
+            <Form.Item label="From">
+              <DatePicker
+                format="YYYY-MM-DD"
+                placeholder="From"
+                onChange={handleOfferStart}
+              />
+            </Form.Item>
 
-              <Form.Item label="To" style={{ marginLeft: '1rem' }}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  placeholder="To"
-                  disabledDate={disabledDate}
-                  // value={}
-                  onChange={handleOfferEnd}
-                />
-              </Form.Item>
-            </div>
+            <Form.Item label="To" style={{ marginLeft: '1rem' }}>
+              <DatePicker
+                format="YYYY-MM-DD"
+                placeholder="To"
+                onChange={handleOfferEnd}
+              />
+            </Form.Item>
           </Space>
         </div>
 
         <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
-            // value={}
             onChange={handleChangeStatus}
             allowClear
           >
@@ -136,9 +117,8 @@ const AllItemSalesReport = () => {
 
         <div className="group_btn">
           <Button className="search_btn">Search</Button>
-          <Button className="print_btn">Print</Button>
         </div>
-      </div>
+      </div> */}
 
       <div
         style={{
@@ -151,10 +131,16 @@ const AllItemSalesReport = () => {
         }}
       >
         <div className="search_content">
-          <Title level={3}>Dhaka Restaurant</Title>
-          <Text>98 Green Road, Farmgate, Dhaka-1215.</Text>
+          <Title level={3}>
+            {settings?.storename ? settings?.storename : 'Restora POS'}
+          </Title>
+          <Text>
+            {settings?.address
+              ? settings?.address
+              : 'B-25, Mannan Plaza, 4th Floor Khilkhet, Dhaka-1229, Bangladesh'}
+          </Text>
           <br />
-          <Text>Print Date: 10/01/2022 10:46:30</Text>
+          {/* <Text>Print Date: 10/01/2022 10:46:30</Text> */}
         </div>
 
         <div
@@ -166,9 +152,9 @@ const AllItemSalesReport = () => {
           <Table
             columns={columns}
             bordered
-            dataSource={window.data}
+            dataSource={itemSalesReports}
             pagination={false}
-            rowKey={(record) => record.key}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>

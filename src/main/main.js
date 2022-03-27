@@ -8,8 +8,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const sqlite3 = require('sqlite3').verbose();
 const { mkdirSync, copyFileSync, existsSync } = require('fs');
-const translate = require('translate-google')
-
 
 // Initialize db path
 var dbPath = app.getPath('userData');
@@ -69,8 +67,7 @@ const createWindow = async () => {
       webSecurity: false,
       enableRemoteModule: true,
       nativeWindowOpen: true,
-      nodeIntegration: true
-
+      nodeIntegration: true,
     },
   });
 
@@ -228,19 +225,19 @@ ipcMain.on('insert_settings', (event, args) => {
           phone,
           appFavicon?.name
             ? path?.join(
-              app.getPath('userData'),
-              'assets',
-              settings_favicon_folder_name,
-              appFavicon.name
-            )
+                app.getPath('userData'),
+                'assets',
+                settings_favicon_folder_name,
+                appFavicon.name
+              )
             : appFavicon,
           appLogo?.name
             ? path?.join(
-              app.getPath('userData'),
-              'assets',
-              settings_logo_folder_name,
-              appLogo.name
-            )
+                app.getPath('userData'),
+                'assets',
+                settings_logo_folder_name,
+                appLogo.name
+              )
             : appLogo,
           opentime,
           closetime,
@@ -262,12 +259,12 @@ ipcMain.on('insert_settings', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'insert_settings_response',
-              err.message
-            )
+                'insert_settings_response',
+                err.message
+              )
             : mainWindow.webContents.send('insert_settings_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
   });
@@ -397,18 +394,18 @@ function setImagePath(
 
 // Insert and Update Category data
 ipcMain.on('insertCategoryData', (event, args) => {
-  let cat_img, cat_icon;
+  let cat_img = null,
+    cat_icon = null;
 
-  try {
-    if (args.category_image) {
-      cat_img = JSON.parse(args.category_image);
-    }
-
-    if (args.category_icon) {
-      cat_icon = JSON.parse(args.category_icon);
-    }
-  } catch (error) {
+  if (args.new_category_image) {
+    cat_img = JSON.parse(args.category_image);
+  } else {
     cat_img = args.category_image;
+  }
+
+  if (args.new_category_icon) {
+    cat_icon = JSON.parse(args.category_icon);
+  } else {
     cat_icon = args.category_icon;
   }
 
@@ -446,20 +443,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
           parent_id,
           cat_img?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              cat_image_folder_name,
-              cat_img.name
-            )
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
             : cat_img,
 
           cat_icon?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              cat_icon_folder_name,
-              cat_icon.name
-            )
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
             : cat_icon,
 
           category_is_active,
@@ -470,12 +467,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -509,20 +506,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
           parent_id,
           cat_img?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              cat_image_folder_name,
-              cat_img.name
-            )
+                app.getPath('userData'),
+                'assets',
+                cat_image_folder_name,
+                cat_img.name
+              )
             : cat_img?.name,
 
           cat_icon?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              cat_icon_folder_name,
-              cat_icon.name
-            )
+                app.getPath('userData'),
+                'assets',
+                cat_icon_folder_name,
+                cat_icon.name
+              )
             : cat_icon?.name,
           category_is_active,
           offer_start_date,
@@ -532,12 +529,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'after_insert_get_response',
-              err.message
-            )
+                'after_insert_get_response',
+                err.message
+              )
             : mainWindow.webContents.send('after_insert_get_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -603,11 +600,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-          status: err,
-        })
+            status: err,
+          })
         : mainWindow.webContents.send('delete_category_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
 
@@ -628,8 +625,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -654,8 +651,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -681,8 +678,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-          status: true,
-        });
+            status: true,
+          });
     });
   });
   db.close();
@@ -745,11 +742,11 @@ ipcMain.on('add_new_foods', (event, args) => {
           food_name,
           product_img?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              foods_images_folder_name,
-              product_img.name
-            )
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
             : product_img,
           component,
           description,
@@ -771,8 +768,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -823,11 +820,11 @@ ipcMain.on('add_new_foods', (event, args) => {
           food_name,
           product_img?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              foods_images_folder_name,
-              product_img.name
-            )
+                app.getPath('userData'),
+                'assets',
+                foods_images_folder_name,
+                product_img.name
+              )
             : product_img?.name,
 
           component,
@@ -850,8 +847,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -1101,15 +1098,18 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
       const allOrders = rows.map((order, index) => {
         let temp = JSON.parse(order.order_info);
         return {
-          key: index,
+          id: index,
           saleDate: moment(order.creation_date).format('ll'),
           invoiceNo: order.invoice_id,
-          customerName: order.customer_id == 0 ? 'Walk In' : order.customer_name,
+          customerName:
+            order.customer_id == 0 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
-          totalOrder: temp.map((t) => t?.quantity ? t.quantity : 0),
-          vatOrTax: temp.map((t) => t?.vat ? t.vat : 0),
-          serviceCharge: temp.map((t) => t?.serviceCharge ? t.serviceCharge : 0),
-          discount: temp.map((t) => t?.discount ? t.discount : 0),
+          totalOrder: temp.map((t) => (t?.quantity ? t.quantity : 0)),
+          vatOrTax: temp.map((t) => (t?.vat ? t.vat : 0)),
+          serviceCharge: temp.map((t) =>
+            t?.serviceCharge ? t.serviceCharge : 0
+          ),
+          discount: temp.map((t) => (t?.discount ? t.discount : 0)),
           totalAmount: order.grand_total,
         };
       });
@@ -1118,19 +1118,16 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
         allOrders
       );
     });
-    db.close()
+    db.close();
   }
 });
 
 // Get item sales report
 ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
-
   if (args.status) {
-
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT orders.order_info FROM orders`;
     db.all(sql, [], (err, rows) => {
-
       let newData = new Array();
 
       rows.forEach((data) => {
@@ -1153,13 +1150,11 @@ ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
         'get_order_info_for_item_sales_report_response',
         res
       );
-
     });
 
-    db.close()
+    db.close();
   }
-
-})
+});
 
 // Delete food
 deleteListItem(
@@ -1206,12 +1201,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -1234,19 +1229,18 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'add_new_foods_variant_response',
-              err.message
-            )
+                'add_new_foods_variant_response',
+                err.message
+              )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
     db.close();
   }
 });
-
 
 // get all variant list from DB
 ipcMain.on('variant_lists_channel', (event, args) => {
@@ -1290,15 +1284,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -1321,15 +1315,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              err.message
-            )
+                'context_bridge_food_available_time_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_food_available_time_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_food_available_time_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -1404,23 +1398,23 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
           menu_type,
           menu_type_icon?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              menu_icon_folder_name,
-              menu_type_icon.name
-            )
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
             : menu_type_icon,
           is_active,
         ],
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -1443,23 +1437,23 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
           menu_type,
           menu_type_icon?.name
             ? path.join(
-              app.getPath('userData'),
-              'assets',
-              menu_icon_folder_name,
-              menu_type_icon.name
-            )
+                app.getPath('userData'),
+                'assets',
+                menu_icon_folder_name,
+                menu_type_icon.name
+              )
             : menu_type_icon,
           is_active,
         ],
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_type_response',
-              err.message
-            )
+                'context_bridge_menu_type_response',
+                err.message
+              )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -1509,15 +1503,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'updated',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'updated',
+                }
+              );
         }
       );
     });
@@ -1541,15 +1535,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              err.message
-            )
+                'context_bridge_menu_addons_response',
+                err.message
+              )
             : mainWindow.webContents.send(
-              'context_bridge_menu_addons_response',
-              {
-                status: 'inserted',
-              }
-            );
+                'context_bridge_menu_addons_response',
+                {
+                  status: 'inserted',
+                }
+              );
         }
       );
     });
@@ -1655,12 +1649,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'insert_customer_info_response',
-              err.message
-            )
+                'insert_customer_info_response',
+                err.message
+              )
             : mainWindow.webContents.send('insert_customer_info_response', {
-              status: 'updated',
-            });
+                status: 'updated',
+              });
         }
       );
     });
@@ -1684,12 +1678,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-              'insert_customer_info_response',
-              err.message
-            )
+                'insert_customer_info_response',
+                err.message
+              )
             : mainWindow.webContents.send('insert_customer_info_response', {
-              status: 'inserted',
-            });
+                status: 'inserted',
+              });
         }
       );
     });
@@ -1751,24 +1745,24 @@ getListItems(
         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
         'key_words' varchar(255)
       )`
-    )
+    );
   });
   db.close();
-})()
+})();
 
 
 ipcMain.on('get_language', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
-    let sql = `SELECT language.* FROM language`
+    let sql = `SELECT language.* FROM language`;
     db.serialize(() => {
       db.all(sql, [], (err, rows) => {
-        mainWindow.webContents.send('get_language_response', rows)
+        mainWindow.webContents.send('get_language_response', rows);
       });
     });
-    db.close()
+    db.close();
   }
-})
+});
 
 /*==================================================================
   FUNCTIONS DEFINITIONS
@@ -1798,8 +1792,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                status: 'updated',
-              });
+                  status: 'updated',
+                });
           }
         );
       });
@@ -1825,8 +1819,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                status: 'inserted',
-              });
+                  status: 'inserted',
+                });
           }
         );
       });
@@ -1851,11 +1845,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-            status: err,
-          })
+              status: err,
+            })
           : mainWindow.webContents.send(eventResponse, {
-            status: true,
-          });
+              status: true,
+            });
       });
     });
     db.close();
@@ -1867,8 +1861,9 @@ function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let { status } = args;
-    let sql = `SELECT ${query} FROM ${table} ${condition && 'WHERE is_active = 1'
-      }`;
+    let sql = `SELECT ${query} FROM ${table} ${
+      condition && 'WHERE is_active = 1'
+    }`;
 
     if (status) {
       db.serialize(() => {

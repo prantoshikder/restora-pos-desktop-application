@@ -149,6 +149,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         if (localStorage.getItem('order_id')) {
           localStorage.removeItem('order_id');
         }
+
+        // setCartItems([]);
       } else if (data === 'placeOrder') {
         if (localStorage.getItem('order_id')) {
           window.update_order_info_after_edit.send(
@@ -435,7 +437,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           </div>
         </div>
 
-        <div id="printId" className="select_product_item">
+        <div className="select_product_item">
           <div className="product_item_table">
             {cartItems?.length === 0 ? (
               <div className="empty_cart">

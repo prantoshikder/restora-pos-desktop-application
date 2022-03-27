@@ -146,8 +146,10 @@ const AddNewCategory = ({ state }) => {
         name: categoryImage.file.name,
         path: categoryImage.file.path,
       });
+      newCategory.new_category_image = true;
     } else {
       newCategory.category_image = state?.category_image;
+      newCategory.new_category_image = false;
     }
 
     if (categoryIcon?.file) {
@@ -155,8 +157,10 @@ const AddNewCategory = ({ state }) => {
         name: categoryIcon.file.name,
         path: categoryIcon.file.path,
       });
+      newCategory.new_category_icon = true;
     } else {
       newCategory.category_icon = state?.category_icon;
+      newCategory.new_category_icon = false;
     }
 
     if (
