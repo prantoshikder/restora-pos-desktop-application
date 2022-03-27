@@ -55,8 +55,6 @@ export default function App() {
     }
   }, [settings]);
 
-  console.log('settings', settings);
-
   return (
     <ContextData.Provider value={{ cartItems, setCartItems }}>
       <Router>

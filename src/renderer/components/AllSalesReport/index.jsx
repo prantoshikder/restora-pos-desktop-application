@@ -18,8 +18,8 @@ const { Title, Text } = Typography;
 
 const AllSalesReport = ({ settings }) => {
   const [allSalesReports, setAllSalesReports] = useState(null);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [isFormSubmitted, setFormSubmitted] = useState(false);
 
   window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
@@ -69,12 +69,10 @@ const AllSalesReport = ({ settings }) => {
   };
 
   const handleFromDate = (value, dateString) => {
-    // console.log('dateString', dateString);
     setStartDate(dateString);
   };
 
   const handleEndDate = (value, dateString) => {
-    // console.log('dateString', dateString);
     setEndDate(dateString);
   };
 
