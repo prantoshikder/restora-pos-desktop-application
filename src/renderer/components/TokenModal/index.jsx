@@ -1,4 +1,5 @@
 import { Modal } from 'antd';
+import { checkTokenLength } from 'helpers';
 import moment from 'moment';
 
 const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
@@ -11,6 +12,9 @@ const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
     window.print();
     window.location.reload();
   };
+
+  const tokenNo = orderData?.token_no?.toString().length;
+  const orderNo = orderData?.order_id?.toString().length;
 
   return (
     <Modal
@@ -29,7 +33,7 @@ const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
             marginBottom: 0,
           }}
         >
-          Token No: {orderData.token_no}
+          Token No: {checkTokenLength(tokenNo, orderData?.token_no)}
         </h2>
 
         <div className="flex content_between">
@@ -54,7 +58,7 @@ const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
         </div>
 
         {orderData?.order_info?.map((item) => (
-          <div key={item.food_id} className="flex content_between">
+          <div key={item.id} className="flex content_between">
             <div className="flex content_between">
               <p
                 style={{
@@ -77,7 +81,9 @@ const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
         ))}
 
         <div style={{ textAlign: 'center' }}>
-          <h3 style={{ color: '#000' }}>Order No: {orderData.order_id}</h3>
+          <h3 style={{ color: '#000' }}>
+            Order No: {checkTokenLength(orderNo, orderData?.order_id)}
+          </h3>
           <div style={{ border: '1px solid #000' }}></div>
           <p style={{ fontSize: '12px', color: '#000' }}>
             Date: {`${moment(date).format('LL')}`}
