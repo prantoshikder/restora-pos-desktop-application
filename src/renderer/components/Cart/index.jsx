@@ -47,8 +47,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
-  const [customerId, setCustomerId] = useState(0);
-  const [invoiceId, setInvoiceId] = useState(9856);
+  const [customerId, setCustomerId] = useState(1);
+  const [invoiceId, setInvoiceId] = useState(null);
   const [cartData, setCartData] = useState({ cartItems });
 
   useEffect(() => {
