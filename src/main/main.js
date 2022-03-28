@@ -919,6 +919,8 @@ const getData = () => {
 ipcMain.on('insert_order_info', (event, args) => {
   let { cartItems, customerId, grandTotal, invoiceId, discount, serviceCharge, vat } = args;
 
+  console.log('insert order args', args);
+
   getData()
     .then((results) => {
       let date = new Date(results[0].creation_date);

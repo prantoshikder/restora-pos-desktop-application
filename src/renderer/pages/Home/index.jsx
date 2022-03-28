@@ -17,6 +17,8 @@ const Home = ({ settings }) => {
     status: true,
   });
 
+  console.log('settings fff', settings);
+
   // Get all food variant lists as an array
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
 

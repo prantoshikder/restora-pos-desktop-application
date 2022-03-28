@@ -32,8 +32,10 @@ export default function App() {
     appStatus: 'free',
     site_align: 'ltr',
     theme: 'light',
-    currency: '$',
     powerbytxt: '© Copyright Restora POS',
+    discount: 0,
+    serviceCharge: 0,
+    vat: 0,
   });
 
   const [languageData, setLanguageData] = useState(null);
@@ -42,7 +44,13 @@ export default function App() {
     getDataFromDatabase('get_settings_response', window.get_settings).then(
       (result) => {
         // console.log('result app', result[0]);
-        setSettings({ ...settings, ...result[0] });
+        const settingsData = result[0];
+        setSettings({
+          ...settings,
+          ...settingsData,
+          currency: settingsData.currency ? settingsData.currency : '$',
+        });
+        console.log('rr', result);
       }
     );
   }, [reRenderOnSettings]);

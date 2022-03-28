@@ -229,60 +229,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     ]);
   };
 
-  const handleCalculatePrice = () => {
-    // if no property exist in the settings, initialize them
-    if (!settings.servicecharge) {
-      settings.servicecharge = 0;
-    }
-
-    if (!settings.vat) {
-      settings.vat = 0;
-    }
-
-    if (!settings.discountrate) {
-      settings.discountrate = 0;
-    }
-
-    let totalPrice = cartItems?.reduce(
-      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
-      0
-    );
-
-    let discount = 0,
-      totalVatBasedOnPrice = 0,
-      serviceCharge = 0;
-
-    // calculate if it has discount type & amount
-    if (settings.discount_type === 1) {
-      discount = parseFloat(settings?.discountrate?.toFixed(2));
-    } else if (settings.discount_type === 2) {
-      discount = parseFloat(
-        (totalPrice * settings?.discountrate?.toFixed(2)) / 100
-      );
-    }
-
-    // calculate if it has vat amount in percentage
-    if (settings?.vat) {
-      totalVatBasedOnPrice = parseFloat(
-        ((totalPrice * settings?.vat) / 100).toFixed(2)
-      );
-    }
-
-    // calculate if service_chargeType and service charge is available
-    if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
-      // Fixed amount
-      serviceCharge = parseFloat(settings?.servicecharge?.toFixed(2));
-    } else {
-      serviceCharge = parseFloat(
-        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
-      );
-    }
-
-    return parseFloat(
-      (totalPrice + totalVatBasedOnPrice + serviceCharge - discount).toFixed(2)
-    );
-  };
-
   const handleSelectCustomer = (value) => {
     setCustomerId(value);
   };
@@ -528,7 +474,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               {cartItems?.length !== 0 ? (
                 <span>
                   {settings.currency}
-                  {handleCalculatePrice()}
+                  {calcPrice.getGrandTotal()}
                 </span>
               ) : (
                 <span>{settings.currency}0.00</span>
