@@ -240,7 +240,8 @@ const AllSalesReport = ({ settings }) => {
             bordered
             dataSource={allSalesReports}
             pagination={false}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.key}
+            scroll={{ x: 1500 }}
           />
         </div>
       </div>
