@@ -33,11 +33,11 @@ const SystemMenu = ({ settings }) => {
             title="Manage Order"
             popupOffset={[0, 0]}
           >
-            <Menu.Item key="submenu_manage_order:1">
-              <Link to="/todays_order">Todays Order</Link>
-            </Menu.Item>
             <Menu.Item key="submenu_manage_order:2">
               <Link to="/">POS System</Link>
+            </Menu.Item>
+            <Menu.Item key="submenu_manage_order:1">
+              <Link to="/todays_order">Todays Order</Link>
             </Menu.Item>
           </SubMenu>
 

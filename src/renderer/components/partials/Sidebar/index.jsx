@@ -31,9 +31,11 @@ export const Sidebar = ({ settings }) => {
 
   return (
     <div className="sidebar" style={{ background: '#001529' }}>
-      <div key="logo" className="sidebar_log">
-        <img src={settings?.logo} alt="Restora POS" />
-      </div>
+      {settings?.logo && (
+        <div key="logo" className="sidebar_log">
+          <img src={settings?.logo} alt="Restora POS" />
+        </div>
+      )}
 
       <Menu
         theme="dark"

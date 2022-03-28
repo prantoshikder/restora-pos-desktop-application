@@ -245,7 +245,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         <div className="form_content">
           <div className="banner_card">
             <Row gutter={30}>
-              <Col lg={10} xl={11} xxl={11}>
+              <Col lg={window.innerWidth < 1315 ? 20 : 10} xl={11} xxl={11}>
                 <Form.Item
                   label="Customer Name"
                   className="custom_level"
@@ -267,7 +267,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={4} xl={2} xxl={2}>
+              <Col lg={window.innerWidth < 1315 ? 4 : 4} xl={2} xxl={2}>
                 <Button
                   className="add_customer"
                   onClick={() => handleAddCustomer()}
@@ -276,99 +276,103 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 </Button>
               </Col>
 
-              <Col lg={10} xl={11} xxl={11}>
-                <Form.Item
-                  label="Customer Type"
-                  className="custom_level"
-                  name="customer_type"
-                  onClick={() => setPremiumVersion(true)}
-                >
-                  <Select
-                    placeholder="Select a Customer Type"
-                    size="large"
-                    allowClear
-                    disabled
+              {window.innerWidth > 1315 && (
+                <Col lg={10} xl={11} xxl={11}>
+                  <Form.Item
+                    label="Customer Type"
+                    className="custom_level"
+                    name="customer_type"
+                    onClick={() => setPremiumVersion(true)}
                   >
-                    <Option value="walkIn">Walk In</Option>
-                    <Option value="onlineCustomer">Online Customer</Option>
-                    <Option value="thirdParty">Third Party</Option>
-                    <Option value="takeWay">Take Way</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
+                    <Select
+                      placeholder="Select a Customer Type"
+                      size="large"
+                      allowClear
+                      disabled
+                    >
+                      <Option value="walkIn">Walk In</Option>
+                      <Option value="onlineCustomer">Online Customer</Option>
+                      <Option value="thirdParty">Third Party</Option>
+                      <Option value="takeWay">Take Way</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
             </Row>
 
-            <Row gutter={30}>
-              <Col lg={8} xl={7} xxl={7}>
-                <Form.Item
-                  label="Waiter"
-                  className="custom_level"
-                  name="waiter"
-                  onClick={() => setPremiumVersion(true)}
-                >
-                  <Select
-                    placeholder="Select Waiter"
-                    size="large"
-                    allowClear
-                    disabled
+            {window.innerWidth > 1315 && (
+              <Row gutter={30}>
+                <Col lg={8} xl={7} xxl={7}>
+                  <Form.Item
+                    label="Waiter"
+                    className="custom_level"
+                    name="waiter"
+                    onClick={() => setPremiumVersion(true)}
                   >
-                    <Option value="kabir">Kabir</Option>
-                    <Option value="junayed">Junayed</Option>
-                    <Option value="devid">Devid</Option>
-                    <Option value="smith">Smith</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
+                    <Select
+                      placeholder="Select Waiter"
+                      size="large"
+                      allowClear
+                      disabled
+                    >
+                      <Option value="kabir">Kabir</Option>
+                      <Option value="junayed">Junayed</Option>
+                      <Option value="devid">Devid</Option>
+                      <Option value="smith">Smith</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
 
-              <Col lg={4} xl={3} xxl={3}>
-                <Button
-                  size="large"
-                  type="primary"
-                  className="add_customer"
-                  disabled
-                  onClick={() => setPremiumVersion(true)}
-                >
-                  Person
-                </Button>
-              </Col>
-
-              <Col lg={6} xl={7} xxl={7}>
-                <Form.Item
-                  label="Table"
-                  className="custom_level"
-                  name="table_no"
-                  onClick={() => setPremiumVersion(true)}
-                >
-                  <Select
-                    placeholder="Select Table No"
+                <Col lg={4} xl={3} xxl={3}>
+                  <Button
                     size="large"
-                    allowClear
+                    type="primary"
+                    className="add_customer"
                     disabled
+                    onClick={() => setPremiumVersion(true)}
                   >
-                    <Option value="1">1</Option>
-                    <Option value="2">2</Option>
-                    <Option value="3">3</Option>
-                    <Option value="4">4</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
+                    Person
+                  </Button>
+                </Col>
 
-              <Col lg={6} xl={7} xxl={7}>
-                <Form.Item
-                  label="Cooking Time"
-                  className="custom_level"
-                  name="cookingTime"
-                  onClick={() => setPremiumVersion(true)}
-                >
-                  <TimePicker
-                    size="large"
-                    onChange={selectTime}
-                    format={format}
-                    disabled
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+                <Col lg={6} xl={7} xxl={7}>
+                  <Form.Item
+                    label="Table"
+                    className="custom_level"
+                    name="table_no"
+                    onClick={() => setPremiumVersion(true)}
+                  >
+                    <Select
+                      placeholder="Select Table No"
+                      size="large"
+                      allowClear
+                      disabled
+                    >
+                      <Option value="1">1</Option>
+                      <Option value="2">2</Option>
+                      <Option value="3">3</Option>
+                      <Option value="4">4</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col lg={6} xl={7} xxl={7}>
+                  <Form.Item
+                    label="Cooking Time"
+                    className="custom_level"
+                    name="cookingTime"
+                    onClick={() => setPremiumVersion(true)}
+                  >
+                    <TimePicker
+                      size="large"
+                      onChange={selectTime}
+                      format={format}
+                      disabled
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            )}
           </div>
         </div>
 
