@@ -175,14 +175,13 @@ const QuickOrderModal = ({
               <div className="total_grand_item">
                 <Title level={4}>
                   Grand Total:
-                  <span style={{ float: 'right' }}>
-                    {settings.currency}
-                    {calc.getGrandTotal()}
+                  <span style={{ float: 'right' }}>{settings.currency} {calc.getGrandTotal()}
                   </span>
                 </Title>
               </div>
             </div>
           </Col>
+          
 
           <Col lg={16}>
             <div className="order_calculation">
