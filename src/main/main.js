@@ -1885,7 +1885,6 @@ ipcMain.on('get_data_to_create_token', (event, args) => {
         `SELECT * FROM orders ORDER BY order_id DESC LIMIT 1`,
         [],
         (err, rows) => {
-          console.log('rows', rows);
           if (rows) {
             mainWindow.webContents.send(
               'get_data_to_create_token_response',
@@ -1917,4 +1916,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch((err)=>console.log(err));
+  .catch((err) => console.log(err));

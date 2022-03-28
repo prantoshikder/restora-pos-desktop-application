@@ -23,12 +23,9 @@ const SystemMenu = ({ settings }) => {
             <Menu.Item key="foods">
               <Link to="/add_category">Foods</Link>
             </Menu.Item>
-            <Menu.Item key="food_addons">Food Addons</Menu.Item>
-            <Menu.Item key="food_category">
-              <Link to="/food-management">Food Management</Link>
+            <Menu.Item key="food_addons">
+              <Link to="/add_addons">Food Addons</Link>
             </Menu.Item>
-            <Menu.Item key="tables">Tables</Menu.Item>
-            <Menu.Item key="customer_type">Customer Type</Menu.Item>
           </SubMenu>
 
           <SubMenu
@@ -36,27 +33,25 @@ const SystemMenu = ({ settings }) => {
             title="Manage Order"
             popupOffset={[0, 0]}
           >
-            <Menu.Item key="submenu_manage_order:1">Order</Menu.Item>
+            <Menu.Item key="submenu_manage_order:1">
+              <Link to="/todays_order">Todays Order</Link>
+            </Menu.Item>
             <Menu.Item key="submenu_manage_order:2">
               <Link to="/">POS System</Link>
             </Menu.Item>
           </SubMenu>
+
           <SubMenu key="submenu_settings" title="Settings" popupOffset={[0, 0]}>
             <Menu.Item key="submenu_settings:1">
               <Link to="/application_setting">Application Settings</Link>
             </Menu.Item>
-            <Menu.Item key="submenu_settings:2">Synchronization</Menu.Item>
+            {/* <Menu.Item key="submenu_settings:2">Synchronization</Menu.Item> */}
           </SubMenu>
           <SubMenu key="submenu_help" title="Help" popupOffset={[0, 0]}>
-            <Menu.Item
-              key="submenu_help:1"
-              onClick={() =>
-                getExternalLink('https://www.bdtask.com/contact.php')
-              }
-            >
-              Contact
+            <Menu.Item key="submenu_help:1">
+              <Link to="/contact">Contact</Link>
             </Menu.Item>
-            <Menu.Item key="submenu_help:2">About</Menu.Item>
+            {/* <Menu.Item key="submenu_help:2">About</Menu.Item> */}
           </SubMenu>
         </Menu>
       </Header>
