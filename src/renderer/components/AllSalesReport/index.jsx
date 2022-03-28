@@ -178,6 +178,7 @@ const AllSalesReport = ({ settings }) => {
           <Select
             placeholder="Select an Option"
             onChange={handleChangeStatus}
+            defaultValue={'cardPayment'}
             allowClear
           >
             <Option value="cardPayment">Card Payment</Option>

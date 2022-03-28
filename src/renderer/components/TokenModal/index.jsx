@@ -29,7 +29,7 @@ const TokenModal = ({ openModal, setOpenModal, cartItems, orderData }) => {
             marginBottom: 0,
           }}
         >
-          Token No: {orderData.invoice_id}
+          Token No: {orderData.token_no}
         </h2>
 
         <div className="flex content_between">

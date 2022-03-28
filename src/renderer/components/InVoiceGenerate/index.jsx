@@ -14,6 +14,7 @@ const InVoiceGenerate = ({
   openInvoice,
   setOpenInvoice,
   foodItems,
+  foodData,
 }) => {
   const invoiceWrapperRef = useRef(null);
   const calc = new CalculatePrice(settings, foodItems);
@@ -106,7 +107,7 @@ const InVoiceGenerate = ({
     <Modal
       visible={openInvoice}
       onCancel={() => setOpenInvoice(false)}
-      width={600}
+      width={450}
       okText="Print"
       onOk={() => printInvoice('printableArea')}
     >
@@ -158,11 +159,29 @@ const InVoiceGenerate = ({
             {settings?.address}
           </p>
 
-          <div
-            className="in_voice_info flex content_between"
-            style={{ marginTop: '0.2rem' }}
-          >
-            <p
+          <div className="in_voice_info " style={{ marginTop: '0.2rem' }}>
+            {foodData?.order_id && (
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Receipt No:{' '}
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#000',
+                    fontSize: '12px',
+                  }}
+                >
+                  {foodData?.order_id}
+                </span>
+              </h4>
+            )}
+            <h4
               style={{
                 fontWeight: '700',
                 marginBottom: 0,
@@ -170,12 +189,35 @@ const InVoiceGenerate = ({
                 fontSize: '12px',
               }}
             >
-              Date: {`${moment(date).format('LL')}`}
-            </p>
+              Date:{' '}
+              <span
+                style={{
+                  fontWeight: 'normal',
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >{`${moment(date).format('LL')}`}</span>
+            </h4>
             {settings?.vattinno && (
-              <p style={{ marginBottom: 0, color: '#000', fontSize: '12px' }}>
-                TIN OR VAT NUM.: {settings?.vattinno}
-              </p>
+              <h4
+                style={{
+                  fontWeight: '700',
+                  marginBottom: 0,
+                  color: '#000',
+                  fontSize: '12px',
+                }}
+              >
+                Tin Or Vat No:{' '}
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#000',
+                    fontSize: '12px',
+                  }}
+                >
+                  {settings?.vattinno}
+                </span>
+              </h4>
             )}
           </div>
 
