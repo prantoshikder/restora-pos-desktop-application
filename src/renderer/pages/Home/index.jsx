@@ -91,60 +91,57 @@ const Home = ({ settings }) => {
   }, []);
 
   return (
-    <>
-      {/* {isRedirect && navigate('/application_setting')} */}
-      <div className="main_wrapper">
-        <Header settings={settings} />
+    <div className="main_wrapper">
+      <Header settings={settings} />
 
-        <div className="pos_wrapper">
-          <ConfigProvider direction={settings.site_align}>
-            <Row className="pos_system">
-              <Col lg={5} xl={4} xxl={4}>
-                <PosSidebar
-                  foodLists={foodLists}
-                  setFoodLists={setFoodLists}
-                  settings={settings}
-                  selectedMenu={selectedMenu}
-                  setSelectedMenu={setSelectedMenu}
-                />
-              </Col>
+      <div className="pos_wrapper">
+        <ConfigProvider direction={settings.site_align}>
+          <Row className="pos_system">
+            <Col md={5} lg={5} xl={4} xxl={4}>
+              <PosSidebar
+                foodLists={foodLists}
+                setFoodLists={setFoodLists}
+                settings={settings}
+                selectedMenu={selectedMenu}
+                setSelectedMenu={setSelectedMenu}
+              />
+            </Col>
 
-              <Col lg={19} xl={20} xxl={20}>
-                <Row>
-                  <Col lg={14} xl={14} xxl={14}>
-                    <Row className="search_food_wrapper">
-                      <Col lg={18} push={3}>
-                        <Search foodLists={foodLists} />
-                      </Col>
+            <Col md={19} lg={19} xl={20} xxl={20}>
+              <Row>
+                <Col md={14} lg={14} xl={14} xxl={14}>
+                  <Row className="search_food_wrapper">
+                    <Col lg={18} push={3}>
+                      <Search foodLists={foodLists} />
+                    </Col>
+                  </Row>
+
+                  <div className="foodItems_wrapper">
+                    <Row className="foodList_wrapper">
+                      <FoodLists
+                        setCartItems={setFoodLists}
+                        foodLists={foodLists}
+                        selectedMenu={selectedMenu}
+                        setSelectedMenu={setSelectedMenu}
+                      />
                     </Row>
+                  </div>
+                </Col>
 
-                    <div className="foodItems_wrapper">
-                      <Row className="foodList_wrapper">
-                        <FoodLists
-                          setCartItems={setFoodLists}
-                          foodLists={foodLists}
-                          selectedMenu={selectedMenu}
-                          setSelectedMenu={setSelectedMenu}
-                        />
-                      </Row>
-                    </div>
-                  </Col>
-
-                  <Col lg={10} xl={10} xxl={10}>
-                    <Cart
-                      settings={settings}
-                      setCartItems={setCartItems}
-                      cartItems={cartItems}
-                      state={state}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </ConfigProvider>
-        </div>
+                <Col md={10} lg={10} xl={10} xxl={10}>
+                  <Cart
+                    settings={settings}
+                    setCartItems={setCartItems}
+                    cartItems={cartItems}
+                    state={state}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </ConfigProvider>
       </div>
-    </>
+    </div>
   );
 };
 
