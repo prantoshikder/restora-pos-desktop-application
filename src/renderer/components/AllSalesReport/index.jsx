@@ -181,7 +181,7 @@ const AllSalesReport = ({ settings }) => {
             defaultValue={'cardPayment'}
             allowClear
           >
-            <Option value="cardPayment">Card Payment</Option>
+            <Option value="cardPayment">Cash Payment</Option>
             {/* <Option value="twoCheckout">Two Checkout</Option>
             <Option value="foodPanda">Food Panda</Option>
             <Option value="cashPayment">Cash Payment</Option> */}

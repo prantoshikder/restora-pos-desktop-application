@@ -4,7 +4,6 @@ import {
   Col,
   Image,
   InputNumber,
-  message,
   Modal,
   Row,
   Space,
@@ -19,7 +18,7 @@ const { Title } = Typography;
 const FoodItem = ({ item }) => {
   const [openModal, setOpenModal] = useState(false);
   const [addonsAdd, setAddonsAdd] = useState(null);
-  const [foodQuantity, setFoodQuantity] = useState(1);
+  const [foodQuantity, setFoodQuantity] = useState(null);
   const [variantPrice, setVariantPrice] = useState(0);
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
   const [foodVariantName, setFoodVariantName] = useState('');
@@ -39,18 +38,45 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.id === item.id
     );
 
+    console.log('foodQuantity', foodQuantity);
+
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
-      setFoodVariantName(item?.variants[0]);
+      console.log('item new', item?.variants[0]);
+
+      if (foodQuantity) {
+        setFoodQuantity((prevState) => prevState);
+        console.log('foodQuantity if', foodQuantity);
+      } else {
+        console.log('foodQuantity else', foodQuantity);
+        setFoodQuantity(item?.variants[0]?.quantity);
+      }
+
+      if (foodVariantName) {
+        setFoodVariantName((prevState) => ({ ...prevState }));
+      } else {
+        setFoodVariantName(item?.variants[0]);
+      }
     } else if (Array.isArray(item?.addons) && item?.addons?.length > 0) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
-      setFoodVariantName(item?.variants[0]);
+
+      // if (foodQuantity) {
+      //   setFoodQuantity((prevState) => prevState);
+      // } else {
+      //   setFoodQuantity(item?.variants[0]?.quantity);
+      // }
+
+      if (foodVariantName) {
+        setFoodVariantName((prevState) => ({ ...prevState }));
+      } else {
+        setFoodVariantName(item?.variants[0]);
+      }
     } else {
       if (!isCartItemExist) {
         const cartItem = {
@@ -60,7 +86,7 @@ const FoodItem = ({ item }) => {
           foodVariant: item.variants[0].variant_name,
           price: item.variants[0].price,
           total_price: item.variants[0].price,
-          quantity: item.variants[0].quantity,
+          quantity: foodQuantity,
           date_inserted: item.variants[0].date_inserted,
         };
 
@@ -83,16 +109,16 @@ const FoodItem = ({ item }) => {
 
         setCartItems([...newCartItems]);
 
-        if (item.id) {
-          message.info({
-            content: `${isCartItemExist.product_name} has already been added. That's why we just increased the amount & price.`,
-            duration: 1,
-            style: {
-              marginTop: '5vh',
-              float: 'right',
-            },
-          });
-        }
+        // if (item.id) {
+        //   message.info({
+        //     content: `${isCartItemExist.product_name} has already been added. That's why we just increased the amount & price.`,
+        //     duration: 1,
+        //     style: {
+        //       marginTop: '5vh',
+        //       float: 'right',
+        //     },
+        //   });
+        // }
       }
     }
   };
@@ -123,7 +149,6 @@ const FoodItem = ({ item }) => {
       setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
       setOpenModal(false);
     } else {
-      // TODO: fixed changing variant name after adding & multiple variant.
       let updateExistingCart = [];
 
       if (isVariantExist) {
@@ -146,6 +171,7 @@ const FoodItem = ({ item }) => {
           {
             ...foodVariantName,
             foodVariant: foodVariantName.variant_name,
+            quantity: foodQuantity,
             total_price: variantPrice,
           },
         ];
@@ -170,16 +196,14 @@ const FoodItem = ({ item }) => {
       setCartItems([...newAddons, ...checkedAddons]);
       setOpenModal(false);
 
-      if (item.id) {
-        message.info({
-          content: `${foodVariantName.variant_name} variant has already been added, we just increased the amount.`,
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-      }
+      // message.info({
+      //   content: `${foodVariantName.variant_name} variant has already been added, we just increased the amount.`,
+      //   duration: 1,
+      //   style: {
+      //     marginTop: '5vh',
+      //     float: 'right',
+      //   },
+      // });
     }
   };
 
@@ -231,6 +255,7 @@ const FoodItem = ({ item }) => {
             ...foodVariantName,
             foodVariant: foodVariantName.variant_name,
             food_id: item.food_id,
+            quantity: foodQuantity,
             total_price: variantPrice,
           },
         ];
@@ -254,16 +279,14 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...newAddons, ...checkedAddons]);
 
-      // if (item.id) {
-      message.info({
-        content: `${foodVariantName.variant_name} variant has already been added we just increased the amount`,
-        duration: 1,
-        style: {
-          marginTop: '5vh',
-          float: 'right',
-        },
-      });
-      // }
+      // message.info({
+      //   content: `${foodVariantName.variant_name} variant has already been added we just increased the amount`,
+      //   duration: 1,
+      //   style: {
+      //     marginTop: '5vh',
+      //     float: 'right',
+      //   },
+      // });
     }
   };
 

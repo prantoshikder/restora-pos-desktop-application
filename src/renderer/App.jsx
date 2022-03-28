@@ -51,7 +51,6 @@ export default function App() {
           ...settingsData,
           currency: settingsData.currency ? settingsData.currency : '$',
         });
-        console.log('rr', result);
       }
     );
   }, [reRenderOnSettings]);
