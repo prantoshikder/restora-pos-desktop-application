@@ -6,6 +6,7 @@ import { Sidebar } from 'renderer/components/partials/Sidebar';
 import StatisticsRatio from '../../components/StatisticsRatio';
 
 const DashBoard = ({ settings }) => {
+  window.get_dashboard_data.send('get_dashboard_data', { 'status': true })
   return (
     <div className="main_wrapper">
       <div className="pos_system">

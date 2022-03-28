@@ -61,6 +61,8 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    minWidth: 992,
+    minHeight: 600,
     icon: getAssetPath('favicon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -920,8 +922,7 @@ ipcMain.on('get_food_list_pos', (event, args) => {
 });
 
 // Invoice id genaretor
-const getData = () => {
-  let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+const tokenGenaretor = () => {
   return new Promise((resolve, reject) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     db.serialize(() => {
@@ -952,7 +953,7 @@ ipcMain.on('insert_order_info', (event, args) => {
 
   console.log('insert order args', args);
 
-  getData()
+  tokenGenaretor()
     .then((results) => {
       let date = new Date(results[0].creation_date);
       let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -1078,16 +1079,16 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
   if (status) {
     // Get current datetime
-    var datetime = Date.now();
-    var date = new Date(datetime);
-    var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    let datetime = Date.now();
+    let date = new Date(datetime);
+    let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
     // Get current date from datetime
-    var result = date.toLocaleDateString('en', options);
+    let result = date.toLocaleDateString('en', options);
 
     // Convert current date to milliseconds
-    var d = new Date(result);
-    var milliseconds = d.getTime();
+    let d = new Date(result);
+    let milliseconds = d.getTime();
 
     let sql = `SELECT * FROM orders where status = 2 AND creation_date > ?`;
     let creation_date = milliseconds.toString();
@@ -1113,6 +1114,7 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
     });
     db.close();
   }
+
 });
 
 // Complete order info
@@ -1142,6 +1144,10 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
     db.all(sql, [], (err, rows) => {
       const allOrders = rows.map((order, index) => {
         let temp = JSON.parse(order.order_info);
+        let amount = 0
+        temp.map((t) => {
+          return amount = t.total_price + amount
+        })
         return {
           key: index,
           saleDate: moment(order.creation_date).format('ll'),
@@ -1149,13 +1155,11 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
           customerName:
             order.customer_id == 1 ? 'Walk In' : order.customer_name,
           paymentMethod: 'Cash Payment',
-          totalOrder: temp.map((t) => (t?.quantity ? t.quantity : 0)),
-          vatOrTax: temp.map((t) => (t?.vat ? t.vat : 0)),
-          serviceCharge: temp.map((t) =>
-            t?.serviceCharge ? t.serviceCharge : 0
-          ),
-          discount: temp.map((t) => (t?.discount ? t.discount : 0)),
-          totalAmount: order.grand_total,
+          totalAmount: amount,
+          vatOrTax: order.vat,
+          serviceCharge: order.serviceCharge,
+          discount: order.discount,
+          grandTotal: order.grand_total,
         };
       });
       mainWindow.webContents.send(
@@ -1200,6 +1204,39 @@ ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
     db.close();
   }
 });
+
+// Get dashboard report
+ipcMain.on('get_dashboard_data', (event, args) => {
+  if (args.status) {
+    let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+    let sql = `SELECT creation_date FROM orders`;
+    let sql2 = `SELECT creation_date FROM orders WHERE status = 2`
+    let promise1 = new Promise((resolve, reject) => {
+      db.all(sql, [], (err, rows) => {
+        let orderCount = rows.map((row) => moment(row.creation_date).format('MMM'))
+        const ordersCounts = {};
+        orderCount.forEach((x) => { ordersCounts[x] = (ordersCounts[x] || 0) + 1; });
+        resolve(ordersCounts)
+      })
+    })
+    let promise2 = new Promise((resolve, reject) => {
+      db.all(sql2, [], (err, rows) => {
+        let salesCount = rows.map((row) => moment(row.creation_date).format('MMM'))
+        const salesCounts = {}
+        salesCount.forEach((x) => { salesCounts[x] = (salesCounts[x] || 0) + 1; });
+        resolve(salesCounts)
+      })
+    })
+    ////////////////////////////////////////
+    Promise.all([promise1, promise2]).then(values => {
+      console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',values);
+      mainWindow.webContents.send('get_dashboard_data_response', values)
+    }, reason => {
+      console.log(reason)
+    });
+
+  }
+})
 
 // Delete food
 deleteListItem(

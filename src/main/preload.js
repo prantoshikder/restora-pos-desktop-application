@@ -328,6 +328,13 @@ sendDataThroughMiddlewareOn(
   'get_data_to_create_token_response'
 );
 
+// Get data for dashboard
+sendDataThroughMiddlewareOn(
+  'get_dashboard_data',
+  'get_dashboard_data',
+  'get_dashboard_data_response'
+);
+
 /*======================================================================
   FUNCTION DECLARATIONS
 ========================================================================*/

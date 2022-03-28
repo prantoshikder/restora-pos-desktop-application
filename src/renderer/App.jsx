@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SystemMenu from './components/partials/SystemMenu';
 import { ContextData } from './contextApi';
+import Contact from './pages/Contact';
 import Currency from './pages/Currency';
 import DashBoard from './pages/DashBoard';
 import AddAddons from './pages/foodManagement/manageAddons/AddAddons';
@@ -140,6 +141,7 @@ export default function App() {
             path="/items_sales_report"
             element={<ItemSalesReport settings={settings} />}
           />
+          <Route path="/contact" element={<Contact settings={settings} />} />
         </Routes>
       </Router>
     </ContextData.Provider>

@@ -23,6 +23,7 @@ const AllItemSalesReport = ({ settings }) => {
       window.get_order_info_for_item_sales_report
     ).then((args = []) => {
       setItemSalesReports(args);
+      console.log('%%%%%%%%%%%%%%%%', args);
     });
   }, []);
 
@@ -62,9 +63,9 @@ const AllItemSalesReport = ({ settings }) => {
       width: '12%',
     },
     {
-      title: 'Total Amount',
-      dataIndex: 'total_price',
-      key: 'total_price',
+      title: 'Unit Price',
+      dataIndex: 'price',
+      key: 'price',
       width: '12%',
       align: 'right',
     },

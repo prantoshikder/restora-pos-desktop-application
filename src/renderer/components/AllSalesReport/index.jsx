@@ -102,9 +102,9 @@ const AllSalesReport = ({ settings }) => {
       width: '12%',
     },
     {
-      title: 'Total Order',
-      dataIndex: 'totalOrder',
-      key: 'totalOrder',
+      title: 'Total Amount',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
       width: '10%',
       align: 'right',
     },
@@ -130,9 +130,9 @@ const AllSalesReport = ({ settings }) => {
       align: 'right',
     },
     {
-      title: 'Total Amount',
-      dataIndex: 'totalAmount',
-      key: 'totalAmount',
+      title: 'Grand Total',
+      dataIndex: 'grandTotal',
+      key: 'grandTotal',
       width: '10%',
       align: 'right',
     },
@@ -240,7 +240,8 @@ const AllSalesReport = ({ settings }) => {
             bordered
             dataSource={allSalesReports}
             pagination={false}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.key}
+            scroll={{ x: 1500 }}
           />
         </div>
       </div>
