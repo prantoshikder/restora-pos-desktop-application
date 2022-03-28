@@ -481,7 +481,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                   {calcPrice.getGrandTotal()}
                 </span>
               ) : (
-                <span>{settings.currency}0.00</span>
+                <span>{settings.currency} 0.00</span>
               )}
             </div>
           </div>
