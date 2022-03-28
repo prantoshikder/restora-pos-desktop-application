@@ -13,6 +13,8 @@ const QuickOrderModal = ({
   settings,
   foodItems,
   setReRender,
+  ongoingOrders,
+  setOngoingOrders,
 }) => {
   window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
     status: true,
@@ -37,85 +39,43 @@ const QuickOrderModal = ({
   const handlePayBtn = () => {
     // Received on going order data
     setOnGoingOrderData(foodData);
+    console.log('foodData', foodData);
 
     getDataFromDatabase(
       'get_all_order_info_ongoing_response',
       window.get_all_order_info_ongoing
     ).then((data = []) => {
-      const updateOrder = { ...data[data.length - 1] };
+      console.log('ongoingOrders', ongoingOrders);
+      console.log('foodItems', foodItems);
+      setOpenModal(false);
+      setOpenInvoice(true);
 
       window.update_order_info_ongoing.send(
         'update_order_info_ongoing',
-        updateOrder
+        foodItems
       );
+
+      // Set the item to remove it from the array
+      const index = ongoingOrders.findIndex(
+        (item) => item.order_id === foodItems.order_id
+      );
+      const updateOngoingOrders = ongoingOrders.splice(index, 1);
+      console.log('ongoingOrders', ongoingOrders);
+      console.log('index', index);
+      setOngoingOrders(ongoingOrders);
+      setReRender((prevState) => !prevState);
+
+      // if (localStorage.getItem('order_id')) {
+      //   setReRender((prevState) => !prevState);
+      // }
     });
 
-    setOpenModal(false);
-    setOpenInvoice(true);
-
-    if (localStorage.getItem('order_id')) {
-      setReRender((prevState) => !prevState);
-    }
-
-    window.update_order_info_ongoing.once(
-      'update_order_info_ongoing_response',
-      (args) => {
-        console.log('))))))))))))))))))))))))))))))))))))))', args);
-      }
-    );
-  };
-
-  const handleCalculatePrice = () => {
-    if (foodData?.order_info === undefined) return;
-
-    const orderArray = foodData?.order_info && JSON.parse(foodData?.order_info);
-
-    let totalPrice = orderArray?.reduce(
-      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
-      0
-    );
-
-    let discount = 0,
-      totalVatBasedOnPrice = 0,
-      serviceCharge = 0;
-
-    // calculate if it has discount type & amount
-    if (settings.discount_type === 1) {
-      discount = parseFloat(settings?.discountrate?.toFixed(2));
-    } else if (settings.discount_type === 2) {
-      discount = parseFloat(
-        (totalPrice * settings?.discountrate?.toFixed(2)) / 100
-      );
-    }
-
-    // calculate if it has vat amount in percentage
-    if (settings?.vat) {
-      totalVatBasedOnPrice = parseFloat(
-        ((totalPrice * settings?.vat) / 100).toFixed(2)
-      );
-    }
-
-    // calculate if service_chargeType and service charge is available
-    if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
-      // Fixed amount
-      serviceCharge = parseFloat(settings?.servicecharge?.toFixed(2));
-    } else {
-      serviceCharge = parseFloat(
-        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
-      );
-    }
-
-    const grandTotal = parseFloat(
-      (totalPrice + totalVatBasedOnPrice + serviceCharge - discount).toFixed(2)
-    );
-
-    return {
-      totalPrice,
-      serviceCharge,
-      totalVatBasedOnPrice,
-      discount,
-      grandTotal,
-    };
+    // window.update_order_info_ongoing.once(
+    //   'update_order_info_ongoing_response',
+    //   (args) => {
+    //     console.log('))))))))))))))))))))))))))))))))))))))', args);
+    //   }
+    // );
   };
 
   return (
@@ -174,22 +134,6 @@ const QuickOrderModal = ({
                       </h3>
                     </div>
                   ))}
-
-                {/* {foodItems !== undefined &&
-                  Object.keys(foodItems).length > 0 &&
-                  JSON.parse(foodItems.order_info)?.length > 0 &&
-                  JSON.parse(foodItems.order_info)?.map((item, index) => (
-                    <div
-                      className="flex content_between order_item"
-                      key={index}
-                    >
-                      <h3>{item?.product_name}</h3>
-                      <h3>
-                        {settings.currency}
-                        {item?.price}
-                      </h3>
-                    </div>
-                  ))} */}
               </div>
 
               <div className="total_order">

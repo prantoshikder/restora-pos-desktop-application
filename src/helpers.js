@@ -92,11 +92,7 @@ export class CalculatePrice {
     this.settings = settings;
     this.arrayData = arrayData;
 
-    // initialize default value to avoid error
-    this.settings.discount = 0;
     this.settings.totalVatBasedOnPrice = 0;
-    this.settings.serviceCharge = 0;
-    this.settings.vat = 0;
   }
 
   getTotalPrice() {

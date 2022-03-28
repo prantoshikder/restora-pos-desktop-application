@@ -47,8 +47,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
-  const [customerId, setCustomerId] = useState(0);
-  const [invoiceId, setInvoiceId] = useState(9856);
+  const [customerId, setCustomerId] = useState(1);
+  const [invoiceId, setInvoiceId] = useState(null);
   const [cartData, setCartData] = useState({ cartItems });
 
   useEffect(() => {
@@ -79,22 +79,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
 
-  const increaseQuantity = (cartData) => {
-    const index = cartItems.indexOf(cartData);
-    const newQuantity = (cartData.quantity += 1);
-
-    setQuantityValue(newQuantity);
-  };
-
-  const decreaseQuantity = (cartData) => {
-    const index = cartItems.indexOf(cartData);
-
-    if (cartData.quantity === 1) return;
-
-    const newQuantity = (cartData.quantity -= 1);
-    setQuantityValue(newQuantity);
-  };
-
   const selectTime = (time, timeString) => {
     console.log('Cooking time', timeString);
   };
@@ -102,7 +86,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const handleDeleteItem = (item) => {
     // CartItems is array
     const updateCart = cartItems.filter(
-      (cartItem) => cartItem.product_name !== item.product_name
+      (cartItem) => cartItem.date_inserted !== item.date_inserted
     );
 
     setCartItems(updateCart);
@@ -154,6 +138,9 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           grandTotal: calcPrice.getGrandTotal(),
           invoiceId,
           customerId,
+          discount: calcPrice.getDiscountAmount(),
+          serviceCharge: calcPrice.getServiceCharge(),
+          vat: calcPrice.getVat(),
         });
 
         setConfirmBtn(data);
@@ -233,69 +220,13 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleFoodQuantity = (quantity, item) => {
-    const index = cartItems.findIndex(
-      (cartItem) => cartItem.food_id === item.food_id
-    );
+    const index = cartItems.findIndex((cartItem) => cartItem.id === item.id);
 
     setCartItems([
       ...cartItems.slice(0, index),
       { ...item, quantity, total_price: quantity * item.price },
       ...cartItems.slice(index + 1),
     ]);
-  };
-
-  const handleCalculatePrice = () => {
-    // if no property exist in the settings, initialize them
-    if (!settings.servicecharge) {
-      settings.servicecharge = 0;
-    }
-
-    if (!settings.vat) {
-      settings.vat = 0;
-    }
-
-    if (!settings.discountrate) {
-      settings.discountrate = 0;
-    }
-
-    let totalPrice = cartItems?.reduce(
-      (prevPrice, currentPrice) => prevPrice + currentPrice.total_price,
-      0
-    );
-
-    let discount = 0,
-      totalVatBasedOnPrice = 0,
-      serviceCharge = 0;
-
-    // calculate if it has discount type & amount
-    if (settings.discount_type === 1) {
-      discount = parseFloat(settings?.discountrate?.toFixed(2));
-    } else if (settings.discount_type === 2) {
-      discount = parseFloat(
-        (totalPrice * settings?.discountrate?.toFixed(2)) / 100
-      );
-    }
-
-    // calculate if it has vat amount in percentage
-    if (settings?.vat) {
-      totalVatBasedOnPrice = parseFloat(
-        ((totalPrice * settings?.vat) / 100).toFixed(2)
-      );
-    }
-
-    // calculate if service_chargeType and service charge is available
-    if (settings?.service_chargeType === 'amount' && settings.servicecharge) {
-      // Fixed amount
-      serviceCharge = parseFloat(settings?.servicecharge?.toFixed(2));
-    } else {
-      serviceCharge = parseFloat(
-        ((totalPrice * settings?.servicecharge) / 100).toFixed(2)
-      );
-    }
-
-    return parseFloat(
-      (totalPrice + totalVatBasedOnPrice + serviceCharge - discount).toFixed(2)
-    );
   };
 
   const handleSelectCustomer = (value) => {
@@ -487,25 +418,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                                 max={100}
                                 onChange={(e) => handleFoodQuantity(e, item)}
                                 className="quantity_value"
-                                // controls={false}
                               />
-
-                              {/* <div className="quantity_increase_decrease">
-                                <span
-                                  onClick={() =>
-                                    increaseQuantity(item.quantity)
-                                  }
-                                >
-                                  <UpOutlined />
-                                </span>
-                                <span
-                                  onClick={() =>
-                                    decreaseQuantity(item.quantity)
-                                  }
-                                >
-                                  <DownOutlined />
-                                </span>
-                              </div> */}
                             </th>
                             <th>{item.total_price}</th>
                             <th>
@@ -561,7 +474,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               {cartItems?.length !== 0 ? (
                 <span>
                   {settings.currency}
-                  {handleCalculatePrice()}
+                  {calcPrice.getGrandTotal()}
                 </span>
               ) : (
                 <span>{settings.currency}0.00</span>

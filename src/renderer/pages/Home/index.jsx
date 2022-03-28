@@ -17,6 +17,8 @@ const Home = ({ settings }) => {
     status: true,
   });
 
+  console.log('settings fff', settings);
+
   // Get all food variant lists as an array
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
 
@@ -57,7 +59,7 @@ const Home = ({ settings }) => {
     ])
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
-        foodNames?.map((food, index) => {
+        foodNames?.forEach((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
           const newVariants = variants.filter(
@@ -66,10 +68,10 @@ const Home = ({ settings }) => {
 
           newFoods.push({
             id: food.id,
-            food_id: food.date_inserted,
             category_id: food.category_id,
             product_name: food.product_name,
             product_image: food.product_image,
+            date_inserted: food.date_inserted,
             quantity: 1,
             variants: [...newVariants],
             addons: [...newAddons],
