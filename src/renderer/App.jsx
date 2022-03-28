@@ -43,12 +43,12 @@ export default function App() {
   useEffect(() => {
     getDataFromDatabase('get_settings_response', window.get_settings).then(
       (result) => {
-        // console.log('result app', result[0]);
-        const settingsData = result[0];
+        console.log('result', result);
+
         setSettings({
           ...settings,
-          ...settingsData,
-          currency: settingsData.currency ? settingsData.currency : '$',
+          ...result,
+          currency: result.currency ? result.currency : '$',
         });
       }
     );
@@ -56,10 +56,6 @@ export default function App() {
 
   useEffect(() => {
     setReRenderOnSettings(true);
-
-    if (settings?.storename) {
-      console.log();
-    }
   }, [settings]);
 
   return (

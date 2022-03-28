@@ -90,9 +90,29 @@ const Home = ({ settings }) => {
       .catch((err) => console.log(err));
   }, []);
 
+  const loadAfterDomLoaded = (e) => {
+    console.log('Loaded');
+    setTimeout(() => {
+      if (settings && settings?.isAppSetupDone) {
+        console.log('if home');
+        setRedirect(false);
+      } else {
+        console.log('else home');
+        setRedirect(true);
+      }
+    }, 500);
+  };
+
+  useEffect(() => {
+    window.addEventListener('DOMContentLoaded', loadAfterDomLoaded);
+
+    return () =>
+      window.removeEventListener('DOMContentLoaded', loadAfterDomLoaded);
+  }, []);
+
   return (
     <>
-      {/* {isRedirect && navigate('/application_setting')} */}
+      {isRedirect && navigate('/application_setting')}
       <div className="main_wrapper">
         <Header settings={settings} />
 
