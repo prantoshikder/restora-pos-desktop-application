@@ -110,6 +110,8 @@ const Home = ({ settings }) => {
       window.removeEventListener('DOMContentLoaded', loadAfterDomLoaded);
   }, []);
 
+  console.log('Hi');
+
   return (
     <>
       {isRedirect && navigate('/application_setting')}
