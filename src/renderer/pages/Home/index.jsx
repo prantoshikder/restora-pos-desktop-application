@@ -91,14 +91,14 @@ const Home = ({ settings }) => {
   }, []);
 
   const loadAfterDomLoaded = (e) => {
-    console.log('Loaded');
+    // console.log('Loaded');
     setTimeout(() => {
       if (settings && settings?.isAppSetupDone) {
-        console.log('if home');
-        setRedirect(false);
+        // console.log('if home');
+        // setRedirect(false);
       } else {
-        console.log('else home');
-        setRedirect(true);
+        // console.log('else home');
+        // setRedirect(true);
       }
     }, 500);
   };

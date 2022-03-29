@@ -137,7 +137,7 @@ const FoodItem = ({ item }) => {
         foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         total_price: variantPrice,
-        quantity: foodQuantity,
+        quantity: foodQuantity ? foodQuantity : item.quantity,
         date_inserted: item.date_inserted,
       };
 
@@ -203,6 +203,8 @@ const FoodItem = ({ item }) => {
   };
 
   const handleMultipleItemAdd = (e, item) => {
+    console.log('item', item);
+    console.log('foodQuantity', foodQuantity);
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.id === item.id
     );
@@ -221,7 +223,7 @@ const FoodItem = ({ item }) => {
         foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         total_price: variantPrice,
-        quantity: foodQuantity,
+        quantity: foodQuantity ? foodQuantity : item.quantity,
         date_inserted: item.date_inserted,
       };
 
