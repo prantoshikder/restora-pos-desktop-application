@@ -156,7 +156,7 @@ const FoodItem = ({ item }) => {
           ...cartItems.slice(0, variantIndex),
           {
             ...isVariantExist,
-            quantity: foodQuantity,
+            quantity: foodQuantity ? foodQuantity : item.quantity,
             total_price: variantPrice,
           },
           ...cartItems.slice(variantIndex + 1),
@@ -239,7 +239,7 @@ const FoodItem = ({ item }) => {
           ...cartItems.slice(0, variantIndex),
           {
             ...isVariantExist,
-            quantity: foodQuantity,
+            quantity: foodQuantity ? foodQuantity : item.quantity,
             total_price: variantPrice,
           },
           ...cartItems.slice(variantIndex + 1),
