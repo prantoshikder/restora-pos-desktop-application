@@ -1,6 +1,7 @@
 import { DownOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Image } from 'antd';
 import { useState } from 'react';
+import categoryIcon from '../../../../assets/fallback-category-icon.png'
 
 const CategoryItem = ({
   category,
@@ -42,13 +43,14 @@ const CategoryItem = ({
       >
         <div style={{ width: '30px', marginRight: '5px' }}>
           {category?.category_icon ? (
-            <img src={category?.category_icon} alt="Restora POS" />
+            <Image src={`file://${category?.category_icon}`} fallback={categoryIcon} preview={false} />
           ) : (
-            <img
-              src="https://i.postimg.cc/bvzKkjn3/image.png"
-              width="20px"
-              height="20px"
-              alt="Restora POS"
+            <Image
+              src={categoryIcon}
+              fallback={`https://i.postimg.cc/bvzKkjn3/image.png`}
+              width={20}
+              height={20}
+              preview={false}
             />
           )}
         </div>
