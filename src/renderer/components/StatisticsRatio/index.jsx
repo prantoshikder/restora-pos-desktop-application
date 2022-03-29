@@ -2,10 +2,7 @@ import { Col, Row } from 'antd';
 import { Chart, registerables } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
 
-const StatisticsRatio = () => {
-  window.get_dashboard_data.once('get_dashboard_data_response', (args) => {
-    window.allData = args
-  })
+const StatisticsRatio = ({ statisticsData }) => {
 
   Chart.register(...registerables);
 
@@ -67,19 +64,19 @@ const StatisticsRatio = () => {
   };
 
   const data2 = {
-    labels: Object.keys(window.allData[0]),
+    labels: (statisticsData) ? Object.keys(statisticsData[0]) : '',
     datasets: [
       {
         label: 'Order',
         backgroundColor: 'green',
         borderColor: 'green',
-        data: Object.values(window.allData[0]),
+        data: (statisticsData) ? Object.values(statisticsData[0]) : 0
       },
       {
         label: 'Sales',
         backgroundColor: '#92CD00',
         borderColor: 'red',
-        data: Object.values(window.allData[1]),
+        data: (statisticsData) ? Object.values(statisticsData[1]) : 0,
       },
     ],
   };
