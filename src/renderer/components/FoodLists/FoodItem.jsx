@@ -10,6 +10,7 @@ import {
   Typography,
 } from 'antd';
 import { useContext, useState } from 'react';
+import foodItemFallback from '../../../../assets/fallback-food-item.jpg';
 import { ContextData } from './../../contextApi';
 import './food.item.styles.scss';
 
@@ -418,9 +419,7 @@ const FoodItem = ({ item }) => {
                 src={item.product_image}
                 alt={item.product_name}
                 preview={false}
-                fallback={
-                  'https://restorapos.com/newrpos/application/modules/itemmanage/assets/images/small/0a00c70bfef9545def90b28b58b79675.jpg'
-                }
+                fallback={foodItemFallback}
               />
             ) : (
               <div style={{ backgroundColor: '#ddd', height: '90px' }}>
@@ -437,10 +436,6 @@ const FoodItem = ({ item }) => {
                 >
                   {item.product_name}
                 </Title>
-                {/* <p style={{ marginBottom: '0', padding: '2rem 0.5rem' }}>
-                  {item.product_name}
-                </p> */}
-                {/* <img variant="top" src={foodPlaceholder} /> */}
               </div>
             )}
           </div>

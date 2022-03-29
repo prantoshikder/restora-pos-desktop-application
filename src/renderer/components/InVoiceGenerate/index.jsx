@@ -1,5 +1,5 @@
 // import InVoiceLogo from '../../../../assets/retora_pos.png';
-import { Modal } from 'antd';
+import { Image, Modal } from 'antd';
 import { CalculatePrice } from 'helpers';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
@@ -70,12 +70,12 @@ const InVoiceGenerate = ({
             className="in_voice_logo"
             style={{ textAlign: 'center', padding: '5px 0px' }}
           >
-            <img
-              src={settings?.logo || restoraPosLogo}
-              width="100px"
-              height="50px"
-              alt="Restora POS"
-              style={{ width: '170px', height: '50px', objectFit: 'cover' }}
+            <Image
+              src={`${
+                settings?.logo ? `file://${settings?.logo}` : restoraPosLogo
+              }`}
+              width={150}
+              preview={false}
             />
           </div>
 
@@ -361,7 +361,7 @@ const InVoiceGenerate = ({
               fontSize: '12px',
             }}
           >
-            Powered By: RESTORAPOS,
+            Powered By: Restora POS,
           </p>
           <p
             style={{

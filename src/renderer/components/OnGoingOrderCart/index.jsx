@@ -28,29 +28,6 @@ const OnGoingOrderCart = ({
         </div>
       </div>
     </Col>
-
-    // <Col lg={6}>
-    //   <div className="on_going_menu_item">
-    //     <Row>
-    //       <Col lg={10}>
-    //         <div className="table_img">
-    //           <img src={TableImage} alt="" />
-    //           <div className="table_info">
-    //             <h1>foodItem</h1>
-    //           </div>
-    //         </div>
-    //       </Col>
-    //       <Col lg={14}>
-    //         <div className="info_menu_content">
-    //           <li>Waiter:</li>
-    //           <li>Order Number:</li>
-    //           <li>Running Time:</li>
-    //           <li>Type:</li>
-    //         </div>
-    //       </Col>
-    //     </Row>
-    //   </div>
-    // </Col>
   );
 };
 

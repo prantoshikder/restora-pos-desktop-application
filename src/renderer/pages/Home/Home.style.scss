@@ -15,6 +15,25 @@
     align-items: 'center';
     justify-content: 'center';
     width: '100%';
+
+    .search_item_wrapper {
+      margin-top: 10px;
+      cursor: pointer;
+      background-color: #f4f4f4;
+      padding: 0.5rem 1rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      img {
+        object-fit: cover;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
   }
 
   .search_result_wrapper {
@@ -22,13 +41,12 @@
     overflow-y: auto;
     width: 100%;
     background-color: #f8f8f8;
-    padding: 2rem 0rem;
+    padding: 1.5rem 0rem;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     position: absolute;
     border: 1px solid #ddd;
-    top: 59;
+    top: 40px;
     left: 0;
     z-index: 1;
-    opacity: 99;
   }
 }
