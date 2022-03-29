@@ -12,12 +12,9 @@ const ApplicationSettings = ({ settings, setReRenderOnSettings }) => {
 
   useEffect(() => {
     if (settings.isAppSetupDone) {
-      setRedirect(true);
-      console.log('page settings', settings);
+      // setRedirect(true);
     }
   }, [isRedirect]);
-
-  console.log('page settings', settings);
 
   return (
     <>

@@ -203,8 +203,6 @@ const FoodItem = ({ item }) => {
   };
 
   const handleMultipleItemAdd = (e, item) => {
-    console.log('item', item);
-    console.log('foodQuantity', foodQuantity);
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.id === item.id
     );
