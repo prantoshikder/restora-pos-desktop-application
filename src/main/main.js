@@ -1202,12 +1202,29 @@ ipcMain.on('get_dashboard_data', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT creation_date FROM orders`;
     let sql2 = `SELECT creation_date FROM orders WHERE status = 2`;
+    let lifeTimeOrderQ = `SELECT COUNT(*) FROM orders`;
+    let totalCustomerQ = `SELECT COUNT(*) FROM customer_info`;
+    let totalSalesQ = `SELECT COUNT(*) FROM orders where status = 2`;
+
     let promise1 = new Promise((resolve, reject) => {
       db.all(sql, [], (err, rows) => {
         let orderCount = rows.map((row) =>
-          moment(row.creation_date).format('MMM')
+          moment(row.creation_date).format('MMMM')
         );
-        const ordersCounts = {};
+        const ordersCounts = {
+          January: 0,
+          February: 0,
+          March: 0,
+          April: 0,
+          May: 0,
+          June: 0,
+          July: 0,
+          August: 0,
+          September: 0,
+          October: 0,
+          November: 0,
+          December: 0,
+        };
         orderCount.forEach((x) => {
           ordersCounts[x] = (ordersCounts[x] || 0) + 1;
         });
@@ -1217,19 +1234,49 @@ ipcMain.on('get_dashboard_data', (event, args) => {
     let promise2 = new Promise((resolve, reject) => {
       db.all(sql2, [], (err, rows) => {
         let salesCount = rows.map((row) =>
-          moment(row.creation_date).format('MMM')
+          moment(row.creation_date).format('MMMM')
         );
-        const salesCounts = {};
+        const salesCounts = {
+          January: 0,
+          February: 0,
+          March: 0,
+          April: 0,
+          May: 0,
+          June: 0,
+          July: 0,
+          August: 0,
+          September: 0,
+          October: 0,
+          November: 0,
+          December: 0,
+        };
         salesCount.forEach((x) => {
           salesCounts[x] = (salesCounts[x] || 0) + 1;
         });
         resolve(salesCounts);
       });
     });
-    ////////////////////////////////////////
-    Promise.all([promise1, promise2]).then(
+
+    let promise3 = new Promise((resolve, reject) => {
+      db.all(lifeTimeOrderQ, [], (err, rows) => {
+        resolve(rows[0]['COUNT(*)']);
+      });
+    });
+
+    let promise4 = new Promise((resolve, reject) => {
+      db.all(totalSalesQ, [], (err, rows) => {
+        resolve(rows[0]['COUNT(*)']);
+      });
+    });
+
+    let promise5 = new Promise((resolve, reject) => {
+      db.all(totalCustomerQ, [], (err, rows) => {
+        resolve(rows[0]['COUNT(*)']);
+      });
+    });
+
+    Promise.all([promise1, promise2, promise3, promise4, promise5]).then(
       (values) => {
-        console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&', values);
         mainWindow.webContents.send('get_dashboard_data_response', values);
       },
       (reason) => {
@@ -1241,9 +1288,9 @@ ipcMain.on('get_dashboard_data', (event, args) => {
 
 // Delete food
 deleteListItem(
-  'delete_foods', //channel name
-  'delete_foods_response', //response event,
-  'item_foods' //table name
+  'delete_foods', // channel name
+  'delete_foods_response', // response event,
+  'item_foods' // table name
 );
 
 // Get only food lists as an Array for (Food Availability)
