@@ -8,17 +8,17 @@ const CountHistory = ({ totalCount }) => {
       {
         "id": 1,
         "name": "Lifetime Orders",
-        "amount": totalCount[0]
+        "amount": totalCount? totalCount[0] : 0
       },
       {
         "id": 2,
         "name": "Tatal Sales",
-        "amount": totalCount[1]
+        "amount": totalCount? totalCount[1] : 0
       },
       {
         "id": 3,
         "name": "Total Customers",
-        "amount": totalCount[2]
+        "amount": totalCount? totalCount[2] : 0
       }
     ]
   }

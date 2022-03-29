@@ -8,17 +8,17 @@ const StatisticsRatio = ({ statisticsData }) => {
 
   Chart.register(...registerables);
 
-  const [statisticsData, setStatisticsData] = useState(null);
+  // const [statisticsData, setStatisticsData] = useState(null);
 
-  useEffect(() => {
-    getDataFromDatabase(
-      'get_dashboard_data_response',
-      window.get_dashboard_data
-    ).then((args = []) => {
-      console.log('args', args);
-      setStatisticsData(args);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getDataFromDatabase(
+  //     'get_dashboard_data_response',
+  //     window.get_dashboard_data
+  //   ).then((args = []) => {
+  //     console.log('args', args);
+  //     setStatisticsData(args);
+  //   });
+  // }, []);
 
   // const months = [
   //   'Jan',
