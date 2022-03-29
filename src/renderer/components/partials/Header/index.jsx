@@ -118,16 +118,6 @@ const Header = ({ settings, dashboard }) => {
                 <Link to="/todays_order">Today Order</Link>
               </Button>
             </div>
-
-            {/* <div className="right_panel_wrapper">
-              <div
-                onClick={() => setOpenModal(true)}
-                title="Cash Register"
-                className="image_icon"
-              >
-                <img src={cashRegisterIcon} alt="Cash Register" />
-              </div>
-            </div> */}
           </div>
         </Row>
 

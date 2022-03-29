@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
+import { Image, Input } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ContextData } from 'renderer/contextApi';
 import AddFoodsModal from '../AddFoodsModal';
@@ -167,54 +167,40 @@ const Search = ({ foodLists }) => {
 
       {isExpanded && (
         <div className="search_result_wrapper" ref={searchResultRef}>
-          <div className="">
-            {!isLoading && isEmpty && (
-              <div>
-                <p style={{ textAlign: 'center' }}>Start typing to search</p>
-              </div>
-            )}
+          {!isLoading && isEmpty && (
+            <div>
+              <p style={{ textAlign: 'center' }}>Start typing to search</p>
+            </div>
+          )}
 
-            {isLoading ? (
-              <div>
-                <p style={{ textAlign: 'center' }}>Product Not Found</p>
-              </div>
-            ) : (
-              <>
-                {searchResults?.length > 0 && (
-                  <>
-                    {searchResults?.map((item) => (
-                      <div
-                        key={item?.id}
-                        className="flex content_between item_center"
-                        style={{
-                          marginTop: '10px',
-                          cursor: 'pointer',
-                          backgroundColor: '#f4f4f4',
-                          padding: '0.5rem 2rem',
-                        }}
-                        onClick={(e) => handleAddToCartItem(e, item)}
-                      >
-                        <p>{item?.product_name}</p>
+          {isLoading ? (
+            <div>
+              <p style={{ textAlign: 'center' }}>Product Not Found</p>
+            </div>
+          ) : (
+            <>
+              {searchResults?.length > 0 && (
+                <>
+                  {searchResults?.map((item) => (
+                    <div
+                      key={item?.id}
+                      className="search_item_wrapper flex content_between item_center"
+                      onClick={(e) => handleAddToCartItem(e, item)}
+                    >
+                      <p>{item?.product_name}</p>
 
-                        <img
-                          src={item?.product_image}
-                          height="50px"
-                          width="50px"
-                          style={{
-                            float: 'right',
-                            width: '50px',
-                            height: '50px',
-                            objectFit: 'cover',
-                          }}
-                          alt=""
-                        />
-                      </div>
-                    ))}
-                  </>
-                )}
-              </>
-            )}
-          </div>
+                      <Image
+                        src={`${item?.product_image}`}
+                        height={50}
+                        width={50}
+                        preview={false}
+                      />
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          )}
         </div>
       )}
 
