@@ -124,7 +124,7 @@ export class CalculatePrice {
         ((this.getTotalPrice() * this.settings.vat) / 100).toFixed(2)
       );
     } else {
-      return 0;
+      return this.settings.vat ? this.settings.vat : 0;
     }
   }
 
@@ -134,7 +134,7 @@ export class CalculatePrice {
         ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
       );
     } else {
-      return this.settings?.servicecharge;
+      return this.settings?.serviceCharge;
     }
   }
 

@@ -941,17 +941,8 @@ const tokenGenaretor = () => {
 
 // Insert order
 ipcMain.on('insert_order_info', (event, args) => {
-  let {
-    cartItems,
-    customerId,
-    grandTotal,
-    invoiceId,
-    discount,
-    serviceCharge,
-    vat,
-  } = args;
-
-  console.log('insert order args', args);
+  let { cartItems, customerId, grandTotal, discount, serviceCharge, vat } =
+    args;
 
   tokenGenaretor()
     .then((results) => {
@@ -1000,6 +991,7 @@ ipcMain.on('insert_order_info', (event, args) => {
       db.close();
     })
     .catch((err) => {
+      console.log('err', err);
       let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
       db.serialize(() => {
         db.run(
@@ -1114,7 +1106,6 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
     });
     db.close();
   }
-
 });
 
 // Complete order info
@@ -1144,10 +1135,10 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
     db.all(sql, [], (err, rows) => {
       const allOrders = rows.map((order, index) => {
         let temp = JSON.parse(order.order_info);
-        let amount = 0
+        let amount = 0;
         temp.map((t) => {
-          return amount = t.total_price + amount
-        })
+          return (amount = t.total_price + amount);
+        });
         return {
           key: index,
           saleDate: moment(order.creation_date).format('ll'),
@@ -1210,33 +1201,43 @@ ipcMain.on('get_dashboard_data', (event, args) => {
   if (args.status) {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT creation_date FROM orders`;
-    let sql2 = `SELECT creation_date FROM orders WHERE status = 2`
+    let sql2 = `SELECT creation_date FROM orders WHERE status = 2`;
     let promise1 = new Promise((resolve, reject) => {
       db.all(sql, [], (err, rows) => {
-        let orderCount = rows.map((row) => moment(row.creation_date).format('MMM'))
+        let orderCount = rows.map((row) =>
+          moment(row.creation_date).format('MMM')
+        );
         const ordersCounts = {};
-        orderCount.forEach((x) => { ordersCounts[x] = (ordersCounts[x] || 0) + 1; });
-        resolve(ordersCounts)
-      })
-    })
+        orderCount.forEach((x) => {
+          ordersCounts[x] = (ordersCounts[x] || 0) + 1;
+        });
+        resolve(ordersCounts);
+      });
+    });
     let promise2 = new Promise((resolve, reject) => {
       db.all(sql2, [], (err, rows) => {
-        let salesCount = rows.map((row) => moment(row.creation_date).format('MMM'))
-        const salesCounts = {}
-        salesCount.forEach((x) => { salesCounts[x] = (salesCounts[x] || 0) + 1; });
-        resolve(salesCounts)
-      })
-    })
-    ////////////////////////////////////////
-    Promise.all([promise1, promise2]).then(values => {
-      console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',values);
-      mainWindow.webContents.send('get_dashboard_data_response', values)
-    }, reason => {
-      console.log(reason)
+        let salesCount = rows.map((row) =>
+          moment(row.creation_date).format('MMM')
+        );
+        const salesCounts = {};
+        salesCount.forEach((x) => {
+          salesCounts[x] = (salesCounts[x] || 0) + 1;
+        });
+        resolve(salesCounts);
+      });
     });
-
+    ////////////////////////////////////////
+    Promise.all([promise1, promise2]).then(
+      (values) => {
+        console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&', values);
+        mainWindow.webContents.send('get_dashboard_data_response', values);
+      },
+      (reason) => {
+        console.log(reason);
+      }
+    );
   }
-})
+});
 
 // Delete food
 deleteListItem(
