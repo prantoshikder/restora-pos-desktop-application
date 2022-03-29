@@ -34,8 +34,8 @@ export default function App() {
     site_align: 'ltr',
     theme: 'light',
     powerbytxt: '© Copyright Restora POS',
-    discount: 0,
-    serviceCharge: 0,
+    discountrate: 0,
+    servicecharge: 0,
     vat: 0,
   });
 

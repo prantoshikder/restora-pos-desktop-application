@@ -457,12 +457,12 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
             <Row>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Vat/Tax: </b>
-                {settings?.vat}%
+                {settings?.vat ? settings?.vat : 0}%
               </Col>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
                 {settings?.service_chargeType === 'amount' && settings.currency}
-                {settings?.servicecharge}
+                {settings?.servicecharge ? settings?.servicecharge : 0}
                 {settings?.service_chargeType !== 'amount' && '(%)'}
               </Col>
 
@@ -471,7 +471,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 <Col lg={6}>
                   <b>Discount: </b>
                   {settings?.discount_type === 1 && settings.currency}
-                  {settings?.discountrate}
+                  {settings?.discountrate ? settings?.discountrate : 0}
                   {settings?.discount_type === 2 && '(%)'}
                 </Col>
               )}
