@@ -5,7 +5,7 @@ import {
   faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Menu } from 'antd';
+import { Image, Menu } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PremiumVersion from '../PremiumVersion';
@@ -27,7 +27,6 @@ export const Sidebar = ({ settings }) => {
     }
   };
 
-  console.log('openKeys', openKeys);
 
   const onClick = (e) => {};
 
@@ -35,8 +34,8 @@ export const Sidebar = ({ settings }) => {
     <>
       <div className="sidebar" style={{ background: '#001529' }}>
         {settings?.logo && (
-          <div key="logo" className="sidebar_log">
-            <img src={settings?.logo} alt="Restora POS" />
+          <div className="sidebar_logo">
+            <Image src={`file://${settings?.logo}`} preview={false} />
           </div>
         )}
 
