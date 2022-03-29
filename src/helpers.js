@@ -87,6 +87,18 @@ export const getWords = (string) => {
   return newString;
 };
 
+// Check token length
+export const checkTokenLength = (tokenLength, number) => {
+  const tokenNo =
+    tokenLength === 1
+      ? `000${number}`
+      : tokenLength === 2
+      ? `00${number}`
+      : number;
+
+  return tokenNo;
+};
+
 export class CalculatePrice {
   constructor(settings, arrayData) {
     this.settings = settings;

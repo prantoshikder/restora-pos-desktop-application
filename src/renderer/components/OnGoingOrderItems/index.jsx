@@ -30,15 +30,17 @@ const OnGoingOrderItems = ({
 
   return (
     <Row gutter={[20, 20]} style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {ongoingOrders?.map((orderCard) => (
-        <OnGoingOrderCart
-          setActiveInactiveBtn={setActiveInactiveBtn}
-          key={orderCard?.order_id}
-          selectedItem={selectedItem}
-          orderCard={orderCard}
-          setOrderComplete={setOrderComplete}
-        />
-      ))}
+      {ongoingOrders.length > 0
+        ? ongoingOrders?.map((orderCard) => (
+            <OnGoingOrderCart
+              setActiveInactiveBtn={setActiveInactiveBtn}
+              key={orderCard?.order_id}
+              selectedItem={selectedItem}
+              orderCard={orderCard}
+              setOrderComplete={setOrderComplete}
+            />
+          ))
+        : 'Sorry'}
     </Row>
   );
 };

@@ -38,20 +38,15 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.id === item.id
     );
 
-    console.log('foodQuantity', foodQuantity);
-
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
       setAddonsAdd(item);
       setOpenModal(true);
-      console.log('item new', item?.variants[0]);
 
       if (foodQuantity) {
         setFoodQuantity((prevState) => prevState);
-        console.log('foodQuantity if', foodQuantity);
       } else {
-        console.log('foodQuantity else', foodQuantity);
         setFoodQuantity(item?.variants[0]?.quantity);
       }
 
@@ -86,7 +81,7 @@ const FoodItem = ({ item }) => {
           foodVariant: item.variants[0].variant_name,
           price: item.variants[0].price,
           total_price: item.variants[0].price,
-          quantity: foodQuantity,
+          quantity: item.variants[0].quantity,
           date_inserted: item.variants[0].date_inserted,
         };
 
