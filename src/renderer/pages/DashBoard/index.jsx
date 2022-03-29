@@ -1,4 +1,6 @@
 import { Col, ConfigProvider, Row } from 'antd';
+import { getDataFromDatabase } from 'helpers';
+import { useEffect, useState } from 'react';
 import CountHistory from 'renderer/components/CountHistory';
 import Heading from 'renderer/components/Heading';
 import Header from 'renderer/components/partials/Header';
@@ -7,6 +9,18 @@ import StatisticsRatio from '../../components/StatisticsRatio';
 
 const DashBoard = ({ settings }) => {
   window.get_dashboard_data.send('get_dashboard_data', { 'status': true })
+
+  const [statisticsData, setStatisticsData] = useState(null)
+  const [totalCount, setTotalCount] = useState(null)
+
+  useEffect(() => {
+    getDataFromDatabase('get_dashboard_data_response', window.get_dashboard_data).then((args) => {
+      setStatisticsData(args.slice(0, 2))
+      setTotalCount(args.slice(2, 5))
+    })
+  }, [])
+
+
   return (
     <div className="main_wrapper">
       <div className="pos_system">
@@ -21,9 +35,9 @@ const DashBoard = ({ settings }) => {
               <Heading title="Dashboard" />
 
               <div style={{ margin: '0rem 1.5rem' }}>
-                <CountHistory />
+                <CountHistory totalCount={totalCount} />
 
-                <StatisticsRatio />
+                <StatisticsRatio statisticsData={statisticsData} />
               </div>
             </Col>
           </Row>

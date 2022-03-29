@@ -4,20 +4,21 @@ import { getDataFromDatabase } from 'helpers';
 import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 
-const StatisticsRatio = () => {
+const StatisticsRatio = ({ statisticsData }) => {
+
   Chart.register(...registerables);
 
-  const [statisticsData, setStatisticsData] = useState(null);
+  // const [statisticsData, setStatisticsData] = useState(null);
 
-  useEffect(() => {
-    getDataFromDatabase(
-      'get_dashboard_data_response',
-      window.get_dashboard_data
-    ).then((args = []) => {
-      console.log('args', args);
-      setStatisticsData(args);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getDataFromDatabase(
+  //     'get_dashboard_data_response',
+  //     window.get_dashboard_data
+  //   ).then((args = []) => {
+  //     console.log('args', args);
+  //     setStatisticsData(args);
+  //   });
+  // }, []);
 
   // const months = [
   //   'Jan',
@@ -55,34 +56,19 @@ const StatisticsRatio = () => {
   };
 
   const data2 = {
-    labels: statisticsData ? Object.keys(statisticsData[0]) : '',
-    // labels: [
-    //   'Jan',
-    //   'Feb',
-    //   'Mar',
-    //   'Apr',
-    //   'May',
-    //   'Jun',
-    //   'Jul',
-    //   'Aug',
-    //   'Sep',
-    //   'Oct',
-    //   'Nov',
-    //   'Dec',
-    // ],
-    // labels: uniqueChars,
+    labels: (statisticsData) ? Object.keys(statisticsData[0]) : '',
     datasets: [
       {
         label: 'Order',
         backgroundColor: 'green',
         borderColor: 'green',
-        data: statisticsData ? Object.values(statisticsData[0]) : 0,
+        data: (statisticsData) ? Object.values(statisticsData[0]) : 0
       },
       {
         label: 'Sales',
         backgroundColor: '#92CD00',
         borderColor: 'red',
-        data: statisticsData ? Object.values(statisticsData[1]) : 0,
+        data: (statisticsData) ? Object.values(statisticsData[1]) : 0,
       },
     ],
   };
