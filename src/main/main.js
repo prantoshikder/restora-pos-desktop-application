@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import moment from 'moment';
-import path from 'path';
+import path, { resolve } from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -1212,7 +1212,9 @@ ipcMain.on('get_dashboard_data', (event, args) => {
     let sql2 = `SELECT creation_date FROM orders WHERE status = 2`;
     let lifeTimeOrderQ = `SELECT COUNT(*) FROM orders`;
     let totalCustomerQ = `SELECT COUNT(*) FROM customer_info`;
-    let totalSalesQ = `SELECT COUNT(*) FROM orders where status = 2`;
+    // let totalSalesQ = `SELECT COUNT(*) FROM orders where status = 2`;
+    let todaysSalesQ = `SELECT COUNT(*) FROM orders where status = 2 and creation_date > ?`;
+    let todaysOrderQ = `SELECT COUNT(*) FROM orders where creation_date > ?`;
 
     let promise1 = new Promise((resolve, reject) => {
       db.all(sql, [], (err, rows) => {
@@ -1279,11 +1281,26 @@ ipcMain.on('get_dashboard_data', (event, args) => {
     });
 
     let promise4 = new Promise((resolve, reject) => {
-      db.all(totalSalesQ, [], (err, rows) => {
+      // Get current datetime
+      let datetime = Date.now();
+      let date = new Date(datetime);
+      let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
+      // Get current date from datetime
+      let result = date.toLocaleDateString('en', options);
+
+      // Convert current date to milliseconds
+      let d = new Date(result);
+      let milliseconds = d.getTime();
+
+      let creation_date = milliseconds.toString();
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+      db.all(todaysSalesQ, [creation_date], (err, rows) => {
         if (rows && rows.length > 0) {
-          resolve(rows[0]['COUNT(*)']);
+          resolve(rows[0]['COUNT(*)'])
         }
       });
+      db.close();
     });
 
     let promise5 = new Promise((resolve, reject) => {
@@ -1294,7 +1311,31 @@ ipcMain.on('get_dashboard_data', (event, args) => {
       });
     });
 
-    Promise.all([promise1, promise2, promise3, promise4, promise5]).then(
+    let promise6 = new Promise((resolve, reject) => {
+      // Get current datetime
+      let datetime = Date.now();
+      let date = new Date(datetime);
+      let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+
+      // Get current date from datetime
+      let result = date.toLocaleDateString('en', options);
+
+      // Convert current date to milliseconds
+      let d = new Date(result);
+      let milliseconds = d.getTime();
+
+      let creation_date = milliseconds.toString();
+      let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
+
+      db.all(todaysOrderQ, [creation_date], (err, rows) => {
+        if (rows && rows.length > 0) {
+          resolve(rows[0]['COUNT(*)'])
+        }
+      });
+      db.close();
+    })
+
+    Promise.all([promise1, promise2, promise3, promise4, promise5, promise6]).then(
       (values) => {
         mainWindow.webContents.send('get_dashboard_data_response', values);
       },

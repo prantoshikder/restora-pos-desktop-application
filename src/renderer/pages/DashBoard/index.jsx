@@ -16,7 +16,7 @@ const DashBoard = ({ settings }) => {
   useEffect(() => {
     getDataFromDatabase('get_dashboard_data_response', window.get_dashboard_data).then((args) => {
       setStatisticsData(args.slice(0, 2))
-      setTotalCount(args.slice(2, 5))
+      setTotalCount(args.slice(2, 6))
     })
   }, [])
 
