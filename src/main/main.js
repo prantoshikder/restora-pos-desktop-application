@@ -61,7 +61,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    minWidth: 992,
+    minWidth: 1024,
     minHeight: 600,
     icon: getAssetPath('favicon.png'),
     webPreferences: {
@@ -227,19 +227,19 @@ ipcMain.on('insert_settings', (event, args) => {
           phone,
           appFavicon?.name
             ? path?.join(
-                app.getPath('userData'),
-                'assets',
-                settings_favicon_folder_name,
-                appFavicon.name
-              )
+              app.getPath('userData'),
+              'assets',
+              settings_favicon_folder_name,
+              appFavicon.name
+            )
             : appFavicon,
           appLogo?.name
             ? path?.join(
-                app.getPath('userData'),
-                'assets',
-                settings_logo_folder_name,
-                appLogo.name
-              )
+              app.getPath('userData'),
+              'assets',
+              settings_logo_folder_name,
+              appLogo.name
+            )
             : appLogo,
           opentime,
           closetime,
@@ -261,12 +261,12 @@ ipcMain.on('insert_settings', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_settings_response',
-                err.message
-              )
+              'insert_settings_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_settings_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
   });
@@ -468,20 +468,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
           parent_id,
           cat_img?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                cat_image_folder_name,
-                cat_img.name
-              )
+              app.getPath('userData'),
+              'assets',
+              cat_image_folder_name,
+              cat_img.name
+            )
             : cat_img,
 
           cat_icon?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                cat_icon_folder_name,
-                cat_icon.name
-              )
+              app.getPath('userData'),
+              'assets',
+              cat_icon_folder_name,
+              cat_icon.name
+            )
             : cat_icon,
 
           category_is_active,
@@ -492,12 +492,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -531,20 +531,20 @@ ipcMain.on('insertCategoryData', (event, args) => {
           parent_id,
           cat_img?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                cat_image_folder_name,
-                cat_img.name
-              )
+              app.getPath('userData'),
+              'assets',
+              cat_image_folder_name,
+              cat_img.name
+            )
             : cat_img?.name,
 
           cat_icon?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                cat_icon_folder_name,
-                cat_icon.name
-              )
+              app.getPath('userData'),
+              'assets',
+              cat_icon_folder_name,
+              cat_icon.name
+            )
             : cat_icon?.name,
           category_is_active,
           offer_start_date,
@@ -554,12 +554,12 @@ ipcMain.on('insertCategoryData', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'after_insert_get_response',
-                err.message
-              )
+              'after_insert_get_response',
+              err.message
+            )
             : mainWindow.webContents.send('after_insert_get_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -625,11 +625,11 @@ ipcMain.on('delete_category', (event, args) => {
     db.run(`DELETE FROM add_item_category WHERE category_id = ?`, id, (err) => {
       err
         ? mainWindow.webContents.send('delete_category_response', {
-            status: err,
-          })
+          status: err,
+        })
         : mainWindow.webContents.send('delete_category_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
 
@@ -650,8 +650,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -676,8 +676,8 @@ ipcMain.on('add_addons', (event, args) => {
           err
             ? mainWindow.webContents.send('add_addons_response', err.message)
             : mainWindow.webContents.send('add_addons_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -703,8 +703,8 @@ ipcMain.on('delete_addons', (event, args) => {
       err
         ? mainWindow.webContents.send('delete_addons_response', { status: err })
         : mainWindow.webContents.send('delete_addons_response', {
-            status: true,
-          });
+          status: true,
+        });
     });
   });
   db.close();
@@ -767,11 +767,11 @@ ipcMain.on('add_new_foods', (event, args) => {
           food_name,
           product_img?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                foods_images_folder_name,
-                product_img.name
-              )
+              app.getPath('userData'),
+              'assets',
+              foods_images_folder_name,
+              product_img.name
+            )
             : product_img,
           component,
           description,
@@ -793,8 +793,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -845,11 +845,11 @@ ipcMain.on('add_new_foods', (event, args) => {
           food_name,
           product_img?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                foods_images_folder_name,
-                product_img.name
-              )
+              app.getPath('userData'),
+              'assets',
+              foods_images_folder_name,
+              product_img.name
+            )
             : product_img?.name,
 
           component,
@@ -872,8 +872,8 @@ ipcMain.on('add_new_foods', (event, args) => {
           err
             ? mainWindow.webContents.send('add_new_foods_response', err.message)
             : mainWindow.webContents.send('add_new_foods_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1088,20 +1088,22 @@ ipcMain.on('get_todays_completed_orders', (event, args) => {
 
     db.serialize(() => {
       db.all(sql, [creation_date], (err, rows) => {
-        const todaysOrders = rows.map((order) => {
-          return {
-            creation_date: moment(order.creation_date).format('ll'),
-            order_id: order.order_id,
-            customer_id: order.customer_id,
-            grand_total: order.grand_total,
-            invoice_id: order.order_id,
-            status: order.status,
-          };
-        });
-        mainWindow.webContents.send(
-          'get_todays_completed_orders_response',
-          todaysOrders
-        );
+        if (rows && rows.length > 0) {
+          const todaysOrders = rows.map((order) => {
+            return {
+              creation_date: moment(order.creation_date).format('ll'),
+              order_id: order.order_id,
+              customer_id: order.customer_id,
+              grand_total: order.grand_total,
+              invoice_id: order.order_id,
+              status: order.status,
+            };
+          });
+          mainWindow.webContents.send(
+            'get_todays_completed_orders_response',
+            todaysOrders
+          );
+        }
       });
     });
     db.close();
@@ -1133,30 +1135,33 @@ ipcMain.on('get_all_order_for_sales_report', (event, args) => {
     INNER JOIN customer_info ON orders.customer_id = customer_info.id
     ORDER BY creation_date DESC`;
     db.all(sql, [], (err, rows) => {
-      const allOrders = rows.map((order, index) => {
-        let temp = JSON.parse(order.order_info);
-        let amount = 0;
-        temp.map((t) => {
-          return (amount = t.total_price + amount);
+      if (rows && rows.length > 0) {
+        const allOrders = rows.map((order, index) => {
+          let temp = JSON.parse(order.order_info);
+          let amount = 0;
+          temp.map((t) => {
+            return (amount = t.total_price + amount);
+          });
+          return {
+            key: index,
+            saleDate: moment(order.creation_date).format('ll'),
+            invoiceNo: order.order_id,
+            customerName:
+              order.customer_id == 1 ? 'Walk In' : order.customer_name,
+            paymentMethod: 'Cash Payment',
+            totalAmount: amount,
+            vatOrTax: order.vat,
+            serviceCharge: order.serviceCharge,
+            discount: order.discount,
+            grandTotal: order.grand_total,
+          };
         });
-        return {
-          key: index,
-          saleDate: moment(order.creation_date).format('ll'),
-          invoiceNo: order.order_id,
-          customerName:
-            order.customer_id == 1 ? 'Walk In' : order.customer_name,
-          paymentMethod: 'Cash Payment',
-          totalAmount: amount,
-          vatOrTax: order.vat,
-          serviceCharge: order.serviceCharge,
-          discount: order.discount,
-          grandTotal: order.grand_total,
-        };
-      });
-      mainWindow.webContents.send(
-        'get_all_order_for_sales_report_response',
-        allOrders
-      );
+        mainWindow.webContents.send(
+          'get_all_order_for_sales_report_response',
+          allOrders
+        );
+      }
+
     });
     db.close();
   }
@@ -1168,28 +1173,31 @@ ipcMain.on('get_order_info_for_item_sales_report', (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let sql = `SELECT orders.order_info FROM orders`;
     db.all(sql, [], (err, rows) => {
-      let newData = new Array();
+      if (rows && rows.length) {
+        let newData = new Array();
 
-      rows.forEach((data) => {
-        let temp = JSON.parse(data.order_info);
-        temp.map((t) => newData.push(t));
-      });
+        rows.forEach((data) => {
+          let temp = JSON.parse(data.order_info);
+          temp.map((t) => newData.push(t));
+        });
 
-      const unique = newData;
+        const unique = newData;
 
-      const group = {};
+        const group = {};
 
-      unique.forEach((e) => {
-        const o = (group[e.id] = group[e.id] || { ...e, quantity: 0 });
-        o.quantity += e.quantity;
-      });
+        unique.forEach((e) => {
+          const o = (group[e.id] = group[e.id] || { ...e, quantity: 0 });
+          o.quantity += e.quantity;
+        });
 
-      const res = Object.values(group);
+        const res = Object.values(group);
 
-      mainWindow.webContents.send(
-        'get_order_info_for_item_sales_report_response',
-        res
-      );
+        mainWindow.webContents.send(
+          'get_order_info_for_item_sales_report_response',
+          res
+        );
+      }
+
     });
 
     db.close();
@@ -1208,70 +1216,81 @@ ipcMain.on('get_dashboard_data', (event, args) => {
 
     let promise1 = new Promise((resolve, reject) => {
       db.all(sql, [], (err, rows) => {
-        let orderCount = rows.map((row) =>
-          moment(row.creation_date).format('MMMM')
-        );
-        const ordersCounts = {
-          January: 0,
-          February: 0,
-          March: 0,
-          April: 0,
-          May: 0,
-          June: 0,
-          July: 0,
-          August: 0,
-          September: 0,
-          October: 0,
-          November: 0,
-          December: 0,
-        };
-        orderCount.forEach((x) => {
-          ordersCounts[x] = (ordersCounts[x] || 0) + 1;
-        });
-        resolve(ordersCounts);
+        if (rows && rows.length > 0) {
+          let orderCount = rows.map((row) =>
+            moment(row.creation_date).format('MMMM')
+          );
+          const ordersCounts = {
+            January: 0,
+            February: 0,
+            March: 0,
+            April: 0,
+            May: 0,
+            June: 0,
+            July: 0,
+            August: 0,
+            September: 0,
+            October: 0,
+            November: 0,
+            December: 0,
+          };
+          orderCount?.forEach((x) => {
+            ordersCounts[x] = (ordersCounts[x] || 0) + 1;
+          });
+          resolve(ordersCounts);
+        }
+
       });
     });
     let promise2 = new Promise((resolve, reject) => {
       db.all(sql2, [], (err, rows) => {
-        let salesCount = rows.map((row) =>
-          moment(row.creation_date).format('MMMM')
-        );
-        const salesCounts = {
-          January: 0,
-          February: 0,
-          March: 0,
-          April: 0,
-          May: 0,
-          June: 0,
-          July: 0,
-          August: 0,
-          September: 0,
-          October: 0,
-          November: 0,
-          December: 0,
-        };
-        salesCount.forEach((x) => {
-          salesCounts[x] = (salesCounts[x] || 0) + 1;
-        });
-        resolve(salesCounts);
+        if (rows && rows.length > 0) {
+          let salesCount = rows.map((row) =>
+            moment(row.creation_date).format('MMMM')
+          );
+          const salesCounts = {
+            January: 0,
+            February: 0,
+            March: 0,
+            April: 0,
+            May: 0,
+            June: 0,
+            July: 0,
+            August: 0,
+            September: 0,
+            October: 0,
+            November: 0,
+            December: 0,
+          };
+          salesCount?.forEach((x) => {
+            salesCounts[x] = (salesCounts[x] || 0) + 1;
+          });
+          resolve(salesCounts);
+        }
       });
     });
 
     let promise3 = new Promise((resolve, reject) => {
       db.all(lifeTimeOrderQ, [], (err, rows) => {
-        resolve(rows[0]['COUNT(*)']);
+        if (rows && rows.length > 0) {
+          resolve(rows[0]['COUNT(*)']);
+        }
       });
     });
 
     let promise4 = new Promise((resolve, reject) => {
       db.all(totalSalesQ, [], (err, rows) => {
-        resolve(rows[0]['COUNT(*)']);
+        if (rows && rows.length > 0) {
+          resolve(rows[0]['COUNT(*)']);
+        }
       });
     });
 
     let promise5 = new Promise((resolve, reject) => {
       db.all(totalCustomerQ, [], (err, rows) => {
-        resolve(rows[0]['COUNT(*)']);
+        if (rows && rows.length > 0) {
+          resolve(rows[0]['COUNT(*)']);
+        }
       });
     });
 
@@ -1280,7 +1299,7 @@ ipcMain.on('get_dashboard_data', (event, args) => {
         mainWindow.webContents.send('get_dashboard_data_response', values);
       },
       (reason) => {
-        console.log(reason);
+        mainWindow.webContents.send('get_dashboard_data_response', reason);
       }
     );
   }
@@ -1331,12 +1350,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'add_new_foods_variant_response',
-                err.message
-              )
+              'add_new_foods_variant_response',
+              err.message
+            )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -1359,12 +1378,12 @@ ipcMain.on('add_new_foods_variant', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'add_new_foods_variant_response',
-                err.message
-              )
+              'add_new_foods_variant_response',
+              err.message
+            )
             : mainWindow.webContents.send('add_new_foods_variant_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1414,15 +1433,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                err.message
-              )
+              'context_bridge_food_available_time_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                {
-                  status: 'updated',
-                }
-              );
+              'context_bridge_food_available_time_response',
+              {
+                status: 'updated',
+              }
+            );
         }
       );
     });
@@ -1445,15 +1464,15 @@ ipcMain.on('context_bridge_food_available_time', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                err.message
-              )
+              'context_bridge_food_available_time_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_food_available_time_response',
-                {
-                  status: 'inserted',
-                }
-              );
+              'context_bridge_food_available_time_response',
+              {
+                status: 'inserted',
+              }
+            );
         }
       );
     });
@@ -1528,23 +1547,23 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
           menu_type,
           menu_type_icon?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                menu_icon_folder_name,
-                menu_type_icon.name
-              )
+              app.getPath('userData'),
+              'assets',
+              menu_icon_folder_name,
+              menu_type_icon.name
+            )
             : menu_type_icon,
           is_active,
         ],
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_type_response',
-                err.message
-              )
+              'context_bridge_menu_type_response',
+              err.message
+            )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -1567,23 +1586,23 @@ ipcMain.on('context_bridge_menu_type', (event, args) => {
           menu_type,
           menu_type_icon?.name
             ? path.join(
-                app.getPath('userData'),
-                'assets',
-                menu_icon_folder_name,
-                menu_type_icon.name
-              )
+              app.getPath('userData'),
+              'assets',
+              menu_icon_folder_name,
+              menu_type_icon.name
+            )
             : menu_type_icon,
           is_active,
         ],
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_type_response',
-                err.message
-              )
+              'context_bridge_menu_type_response',
+              err.message
+            )
             : mainWindow.webContents.send('context_bridge_menu_type_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1633,15 +1652,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                err.message
-              )
+              'context_bridge_menu_addons_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                {
-                  status: 'updated',
-                }
-              );
+              'context_bridge_menu_addons_response',
+              {
+                status: 'updated',
+              }
+            );
         }
       );
     });
@@ -1665,15 +1684,15 @@ ipcMain.on('context_bridge_menu_addons', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                err.message
-              )
+              'context_bridge_menu_addons_response',
+              err.message
+            )
             : mainWindow.webContents.send(
-                'context_bridge_menu_addons_response',
-                {
-                  status: 'inserted',
-                }
-              );
+              'context_bridge_menu_addons_response',
+              {
+                status: 'inserted',
+              }
+            );
         }
       );
     });
@@ -1779,12 +1798,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_customer_info_response',
-                err.message
-              )
+              'insert_customer_info_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_customer_info_response', {
-                status: 'updated',
-              });
+              status: 'updated',
+            });
         }
       );
     });
@@ -1808,12 +1827,12 @@ ipcMain.on('insert_customer_info', (event, args) => {
         (err) => {
           err
             ? mainWindow.webContents.send(
-                'insert_customer_info_response',
-                err.message
-              )
+              'insert_customer_info_response',
+              err.message
+            )
             : mainWindow.webContents.send('insert_customer_info_response', {
-                status: 'inserted',
-              });
+              status: 'inserted',
+            });
         }
       );
     });
@@ -1921,8 +1940,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                  status: 'updated',
-                });
+                status: 'updated',
+              });
           }
         );
       });
@@ -1948,8 +1967,8 @@ function insertData(eventName, eventResponse, table, columns) {
             err
               ? mainWindow.webContents.send(eventResponse, err.message)
               : mainWindow.webContents.send(eventResponse, {
-                  status: 'inserted',
-                });
+                status: 'inserted',
+              });
           }
         );
       });
@@ -1974,11 +1993,11 @@ function deleteListItem(channel, eventResponse, table) {
       db.run(`DELETE FROM ${table} WHERE id = ?`, id, (err) => {
         err
           ? mainWindow.webContents.send(eventResponse, {
-              status: err,
-            })
+            status: err,
+          })
           : mainWindow.webContents.send(eventResponse, {
-              status: true,
-            });
+            status: true,
+          });
       });
     });
     db.close();
@@ -1990,9 +2009,8 @@ function getListItems(channelName, response, table, query = '*', condition) {
   ipcMain.on(channelName, (event, args) => {
     let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
     let { status } = args;
-    let sql = `SELECT ${query} FROM ${table} ${
-      condition && 'WHERE is_active = 1'
-    }`;
+    let sql = `SELECT ${query} FROM ${table} ${condition && 'WHERE is_active = 1'
+      }`;
 
     if (status) {
       db.serialize(() => {
