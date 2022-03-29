@@ -24,7 +24,7 @@ export const getDataFromDatabase = (event, channel) => {
         resolve(data);
       } else {
         // reject(Error('No settings found'));
-        console.log('Getting database from error');
+        console.log('Getting database error');
       }
     });
   });
@@ -134,7 +134,7 @@ export class CalculatePrice {
         ((this.getTotalPrice() * this.settings.servicecharge) / 100).toFixed(2)
       );
     } else {
-      return this.settings?.serviceCharge;
+      return this.settings?.servicecharge;
     }
   }
 

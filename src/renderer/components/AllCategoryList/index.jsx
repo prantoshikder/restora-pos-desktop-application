@@ -112,7 +112,7 @@ const AllCategoryList = () => {
       key: 'categoryImage',
       render: (text, record) => (
         <Image
-          src={record.category_image}
+          src={record.category_image ? record.category_image : ''}
           width={50}
           height={50}
           className="category_image"

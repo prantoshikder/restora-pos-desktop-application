@@ -137,7 +137,7 @@ const FoodItem = ({ item }) => {
         foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         total_price: variantPrice,
-        quantity: foodQuantity,
+        quantity: foodQuantity ? foodQuantity : item.quantity,
         date_inserted: item.date_inserted,
       };
 
@@ -221,7 +221,7 @@ const FoodItem = ({ item }) => {
         foodVariant: foodVariantName.variant_name,
         price: variantFixedPrice,
         total_price: variantPrice,
-        quantity: foodQuantity,
+        quantity: foodQuantity ? foodQuantity : item.quantity,
         date_inserted: item.date_inserted,
       };
 
