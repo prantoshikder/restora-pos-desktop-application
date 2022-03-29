@@ -44,7 +44,7 @@ export default function App() {
   useEffect(() => {
     getDataFromDatabase('get_settings_response', window.get_settings).then(
       (result) => {
-        console.log('result', result);
+        console.log('settings app', result);
 
         setSettings({
           ...settings,

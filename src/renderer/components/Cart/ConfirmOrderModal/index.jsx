@@ -24,8 +24,7 @@ const ConfirmOrderModal = (props) => {
     confirmBtn,
     printId,
     settings,
-    customerId,
-    invoiceId,
+    quickOrderAdditionalData,
   } = props;
 
   const quickOrderModal = () => {
@@ -33,8 +32,11 @@ const ConfirmOrderModal = (props) => {
     setOpenModal(true);
     window.insert_order_info.send('insert_order_info', {
       cartItems,
-      customerId,
-      invoiceId,
+      customerId: quickOrderAdditionalData.customerId,
+      grandTotal: quickOrderAdditionalData.grandTotal,
+      discount: quickOrderAdditionalData.discount,
+      serviceCharge: quickOrderAdditionalData.serviceCharge,
+      vat: quickOrderAdditionalData.vat,
     });
   };
 
@@ -42,8 +44,11 @@ const ConfirmOrderModal = (props) => {
     if (confirmBtn === eventName) {
       window.insert_order_info.send('insert_order_info', {
         cartItems,
-        invoiceId,
-        customerId,
+        customerId: quickOrderAdditionalData.customerId,
+        grandTotal: quickOrderAdditionalData.grandTotal,
+        discount: quickOrderAdditionalData.discount,
+        serviceCharge: quickOrderAdditionalData.serviceCharge,
+        vat: quickOrderAdditionalData.vat,
       });
     }
   };

@@ -48,8 +48,9 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
   const [customerId, setCustomerId] = useState(1);
-  const [invoiceId, setInvoiceId] = useState(null);
   const [cartData, setCartData] = useState({ cartItems });
+  const [quickOrderAdditionalData, setQuickOrderAdditionalData] =
+    useState(null);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -129,6 +130,15 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         setConfirmBtn(data);
         setConfirmOrder(true);
 
+        setQuickOrderAdditionalData({
+          confirmBtn,
+          customerId,
+          grandTotal: calcPrice.getGrandTotal(),
+          discount: calcPrice.getDiscountAmount(),
+          serviceCharge: calcPrice.getServiceCharge(),
+          vat: calcPrice.getVat(),
+        });
+
         if (localStorage.getItem('order_id')) {
           localStorage.removeItem('order_id');
         }
@@ -136,7 +146,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         window.insert_order_info.send('insert_order_info', {
           cartItems,
           grandTotal: calcPrice.getGrandTotal(),
-          invoiceId,
           customerId,
           discount: calcPrice.getDiscountAmount(),
           serviceCharge: calcPrice.getServiceCharge(),
@@ -629,8 +638,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         confirmBtn={confirmBtn}
         settings={settings}
         printId={'printId'}
-        customerId={customerId}
-        invoiceId={invoiceId}
+        quickOrderAdditionalData={quickOrderAdditionalData}
       />
 
       <PremiumVersion

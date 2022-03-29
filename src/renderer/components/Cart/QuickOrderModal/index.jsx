@@ -39,35 +39,39 @@ const QuickOrderModal = ({
   const handlePayBtn = () => {
     // Received on going order data
     setOnGoingOrderData(foodData);
-    console.log('foodData', foodData);
+    console.log('new foodData', foodData);
 
     getDataFromDatabase(
       'get_all_order_info_ongoing_response',
       window.get_all_order_info_ongoing
     ).then((data = []) => {
-      console.log('ongoingOrders', ongoingOrders);
-      console.log('foodItems', foodItems);
+      console.log('data', data);
+      console.log('complete order foodItems', foodItems);
       setOpenModal(false);
       setOpenInvoice(true);
 
-      window.update_order_info_ongoing.send(
-        'update_order_info_ongoing',
-        foodItems
-      );
+      // Execute when click on quick order -> complete button -> Pay now and print invoice
+      if (foodItems.order_id) {
+        window.update_order_info_ongoing.send('update_order_info_ongoing', {
+          order_id: foodItems.order_id,
+        });
+      } else {
+        // Execute when click on quick order -> Pay now and print invoice
+        window.update_order_info_ongoing.send('update_order_info_ongoing', {
+          order_id: data[data.length - 1].order_id,
+        });
+      }
 
       // Set the item to remove it from the array
-      const index = ongoingOrders.findIndex(
-        (item) => item.order_id === foodItems.order_id
-      );
-      const updateOngoingOrders = ongoingOrders.splice(index, 1);
-      console.log('ongoingOrders', ongoingOrders);
-      console.log('index', index);
-      setOngoingOrders(ongoingOrders);
-      setReRender((prevState) => !prevState);
+      if (ongoingOrders) {
+        const index = ongoingOrders.findIndex(
+          (item) => item.order_id === foodItems.order_id
+        );
+        const updateOngoingOrders = ongoingOrders.splice(index, 1);
 
-      // if (localStorage.getItem('order_id')) {
-      //   setReRender((prevState) => !prevState);
-      // }
+        setOngoingOrders(ongoingOrders);
+        setReRender((prevState) => !prevState);
+      }
     });
 
     // window.update_order_info_ongoing.once(
@@ -130,7 +134,7 @@ const QuickOrderModal = ({
                       </h3>
                       <h3>
                         {settings.currency}
-                        {item?.price}
+                        {item.quantity * item?.price}
                       </h3>
                     </div>
                   ))}
@@ -148,14 +152,14 @@ const QuickOrderModal = ({
                   Service Charge{' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {calc.getServiceCharge()}
+                    {calc.getServiceCharge() ? calc.getServiceCharge() : '0.00'}
                   </span>
                 </Title>
                 <Title level={4}>
                   GST @ {settings?.vat}%{' '}
                   <span style={{ float: 'right' }}>
                     {settings.currency}
-                    {calc.getVat()}
+                    {calc.getVat() ? calc.getVat() : '0.00'}
                   </span>
                 </Title>
               </div>
@@ -175,13 +179,13 @@ const QuickOrderModal = ({
               <div className="total_grand_item">
                 <Title level={4}>
                   Grand Total:
-                  <span style={{ float: 'right' }}>{settings.currency} {calc.getGrandTotal()}
+                  <span style={{ float: 'right' }}>
+                    {settings.currency} {calc.getGrandTotal()}
                   </span>
                 </Title>
               </div>
             </div>
           </Col>
-          
 
           <Col lg={16}>
             <div className="order_calculation">
