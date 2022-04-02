@@ -544,10 +544,16 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                   marginRight: '0.6rem',
                 }}
                 onClick={handleReset}
+                className="reset_btn"
               >
                 Reset
               </Button>
-              <Button type="primary" className="save_btn" htmlType="submit">
+              <Button
+                type="primary"
+                className="save_btn"
+                htmlType="submit"
+                className="submit_btn"
+              >
                 Submit
               </Button>
             </div>

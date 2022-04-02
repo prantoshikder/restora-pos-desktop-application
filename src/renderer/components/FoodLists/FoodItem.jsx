@@ -104,17 +104,6 @@ const FoodItem = ({ item }) => {
         ];
 
         setCartItems([...newCartItems]);
-
-        // if (item.id) {
-        //   message.info({
-        //     content: `${isCartItemExist.product_name} has already been added. That's why we just increased the amount & price.`,
-        //     duration: 1,
-        //     style: {
-        //       marginTop: '5vh',
-        //       float: 'right',
-        //     },
-        //   });
-        // }
       }
     }
   };
@@ -191,15 +180,6 @@ const FoodItem = ({ item }) => {
 
       setCartItems([...newAddons, ...checkedAddons]);
       setOpenModal(false);
-
-      // message.info({
-      //   content: `${foodVariantName.variant_name} variant has already been added, we just increased the amount.`,
-      //   duration: 1,
-      //   style: {
-      //     marginTop: '5vh',
-      //     float: 'right',
-      //   },
-      // });
     }
   };
 
@@ -274,15 +254,6 @@ const FoodItem = ({ item }) => {
       });
 
       setCartItems([...newAddons, ...checkedAddons]);
-
-      // message.info({
-      //   content: `${foodVariantName.variant_name} variant has already been added we just increased the amount`,
-      //   duration: 1,
-      //   style: {
-      //     marginTop: '5vh',
-      //     float: 'right',
-      //   },
-      // });
     }
   };
 
@@ -428,9 +399,13 @@ const FoodItem = ({ item }) => {
                     marginBottom: '0',
                     padding: '2rem 0.5rem',
                     color: '#818181',
-                    whiteSpace: 'nowrap',
+                    // whiteSpace: 'nowrap',
                     overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    wordBreak: 'break-all',
+                    lineHeight: '16px',
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    // textOverflow: 'ellipsis',
                   }}
                   level={5}
                 >

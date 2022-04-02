@@ -27,7 +27,6 @@ export const Sidebar = ({ settings }) => {
     }
   };
 
-
   const onClick = (e) => {};
 
   return (
@@ -121,7 +120,6 @@ export const Sidebar = ({ settings }) => {
             </Menu.Item>
 
             <Menu.Item key="language:2">
-              {console.log(settings)}
               {settings.appStatus === 'free' ? (
                 <Link to="#" onClick={() => setPremiumVersion(true)}>
                   Language
