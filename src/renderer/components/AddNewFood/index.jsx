@@ -189,6 +189,7 @@ const AddNewFood = ({ state, settings }) => {
   const handleReset = () => {
     form.resetFields();
     setCheckedList('');
+    setProductImage('');
 
     message.success({
       content: 'Reset done',
@@ -271,6 +272,7 @@ const AddNewFood = ({ state, settings }) => {
         setReRender((prevState) => !prevState);
 
         setCheckedList('');
+        setProductImage('');
 
         message.success({
           content: 'Foods name added successfully',
@@ -553,20 +555,21 @@ const AddNewFood = ({ state, settings }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item>
+            <div className="button_group">
               <Button
                 type="danger"
                 style={{
                   marginRight: '1rem',
                 }}
                 onClick={handleReset}
+                className="reset_btn"
               >
                 Reset
               </Button>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" className="submit_btn">
                 {state?.category_id ? 'Update' : 'Submit'}
               </Button>
-            </Form.Item>
+            </div>
           </Col>
         </Row>
       </Form>

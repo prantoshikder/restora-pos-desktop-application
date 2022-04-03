@@ -1,6 +1,7 @@
 .cart_wrapper {
   position: relative;
   padding-left: 1rem;
+  // margin-bottom: 1rem;
 
   .form_content {
     border-color: #303134;
@@ -115,6 +116,7 @@
 
     .cartBtn_wrapper {
       display: flex;
+      // flex-wrap: wrap;
 
       .cartGroup_btn {
         font-size: 17px;
@@ -140,13 +142,16 @@
         }
       }
 
-      .calculator,
-      .calculator:hover,
-      .calculator:focus {
+      .calculator_btn,
+      .calculator_btn:hover,
+      .calculator_btn:focus {
         background-color: #428bca;
         border-color: #3b7cb4;
         font-size: 1.2rem;
-        height: 3.2rem;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         @media (max-width: 1200px) {
           height: 2rem;
@@ -224,7 +229,7 @@
 .delete_icon {
   svg {
     align-items: center;
-    font-size: 1.8rem;
+    font-size: 2.3rem;
     cursor: pointer;
     color: #e5343d;
     padding: 4px;
@@ -232,10 +237,26 @@
 }
 
 .quantity_value {
-  width: 3.5rem;
-  overflow: hidden;
+  width: 5rem;
+  // overflow: hidden;
   position: relative;
   border-color: #ddd;
+  padding: 4px 0px;
+}
+
+.quantity_value .ant-input-number-handler .anticon {
+  margin-right: 5px;
+  height: 12px;
+  width: 16px;
+
+  svg {
+    font-size: 17px;
+    font-weight: 700;
+  }
+}
+
+.quantity_value .ant-input-number-handler-wrap {
+  width: 35px;
 }
 
 .quantity_increase_decrease {
@@ -265,6 +286,11 @@
   font-size: 14px;
   height: 2.5rem;
   color: #fff;
+
+  svg {
+    font-size: 20px;
+    margin-top: 5px;
+  }
 }
 
 .note_btn,

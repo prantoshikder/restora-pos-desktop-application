@@ -8,7 +8,7 @@ import {
   Select,
   Typography,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddNewAddons.style.scss';
 
@@ -162,10 +162,11 @@ const AddNewAddons = ({ state }) => {
                   marginRight: '1rem',
                 }}
                 onClick={handleReset}
+                className="reset_btn"
               >
                 Reset
               </Button>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" className="submit_btn">
                 Submit
               </Button>
             </div>

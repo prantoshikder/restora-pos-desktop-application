@@ -16,7 +16,8 @@ const ConfirmOrderModal = (props) => {
 
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openModal, setOpenModal] = useState(false);
-  const [openTokenModal, setTokenModal] = useState(false);
+  const [tokenPrint, setTokenPrint] = useState('printToken');
+  const [orderData, setOrderData] = useState({});
 
   const {
     confirmOrder,
@@ -28,6 +29,7 @@ const ConfirmOrderModal = (props) => {
   } = props;
 
   const quickOrderModal = () => {
+    console.log('quickOrderAdditionalData', quickOrderAdditionalData);
     setConfirmOrder(false);
     setOpenModal(true);
     window.insert_order_info.send('insert_order_info', {
@@ -53,8 +55,6 @@ const ConfirmOrderModal = (props) => {
     }
   };
 
-  const [orderData, setOrderData] = useState({});
-
   const placeOrderModal = () => {
     setConfirmOrder(false);
     if (cartItems.length > 0) {
@@ -64,11 +64,19 @@ const ConfirmOrderModal = (props) => {
       ).then((args) => {
         const cartData = JSON.parse(args.order_info);
         setOrderData({ ...args, order_info: cartData });
-        setTokenModal(true);
+        printToken();
       });
     }
 
     setCartItems([]);
+  };
+
+  const printToken = () => {
+    var printContents = document.getElementById(tokenPrint).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    window.location.reload();
   };
 
   return (
@@ -131,10 +139,9 @@ const ConfirmOrderModal = (props) => {
       />
 
       <TokenModal
-        openModal={openTokenModal}
-        setOpenModal={setTokenModal}
         cartItems={cartItems}
         orderData={orderData}
+        tokenPrint={tokenPrint}
       />
     </>
   );

@@ -131,7 +131,7 @@ const AllCategoryList = () => {
       title: 'Parent Menu',
       dataIndex: 'parent_cat',
       key: 'parent_cat',
-      width: '20%',
+      width: '25%',
     },
     {
       title: 'Status',
@@ -142,7 +142,7 @@ const AllCategoryList = () => {
     {
       title: 'Action',
       dataIndex: 'action',
-      width: '20%',
+      width: '15%',
       key: 'action',
       render: (text, record) => (
         <Space size="middle">

@@ -26,8 +26,6 @@ const OnGoingOrderItems = ({
     setOngoingOrders(newCards);
   }
 
-  console.log('ongoingOrders  ongoing itmes', ongoingOrders);
-
   return (
     <Row gutter={[20, 20]} style={{ display: 'flex', flexWrap: 'wrap' }}>
       {ongoingOrders.length > 0

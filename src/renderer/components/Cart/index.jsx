@@ -239,6 +239,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSelectCustomer = (value) => {
+    console.log('value', value);
     setCustomerId(value);
   };
 
@@ -508,7 +509,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               <>
                 <Button
                   onClick={handleCalculation}
-                  className="calculator cartGroup_btn flex content_center"
+                  className="calculator_btn cartGroup_btn flex content_center"
                   size="large"
                 >
                   <FontAwesomeIcon icon={faCalculator} />

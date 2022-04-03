@@ -8,6 +8,7 @@ const OnGoingOrderCart = ({
   setActiveInactiveBtn,
 }) => {
   const handleCartItem = (foodData) => {
+    console.log('foodData*****************', foodData);
     selectedItem(foodData);
     setOrderComplete(foodData);
     setActiveInactiveBtn(foodData);
