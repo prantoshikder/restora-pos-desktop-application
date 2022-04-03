@@ -47,10 +47,11 @@ export default function App() {
         setSettings({
           ...settings,
           ...result,
-          currency: {
-            icon: result.currency ? result.currency : '$',
-            position: 'Left',
-          },
+          currency: result.currency ? result.currency : '$',
+          // currency: {
+          //   icon: result.currency ? result.currency : '$',
+          //   position: 'Left',
+          // },
         });
       }
     );
@@ -125,6 +126,7 @@ export default function App() {
               <ApplicationSettings
                 settings={settings}
                 setReRenderOnSettings={setReRenderOnSettings}
+                reRenderOnSettings={reRenderOnSettings}
               />
             }
           />

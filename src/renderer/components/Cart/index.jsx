@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import Calculator from '../Calculator';
+import FoodNoteModal from '../FoodNoteModal';
 import PremiumVersion from '../partials/PremiumVersion';
 import { CalculatePrice, getDataFromDatabase } from './../../../helpers';
 import './cart.styles.scss';
@@ -243,6 +244,12 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     setCustomerId(value);
   };
 
+  const [foodNoteModal, setFoodNoteModal] = useState(false);
+
+  const handleFoodNoteModal = () => {
+    setFoodNoteModal(true);
+  };
+
   return (
     <div className="cart_wrapper">
       <Form
@@ -419,7 +426,9 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                                 style={{
                                   padding: '0rem 0.4rem 0rem 1rem',
                                   color: '#0037ff',
+                                  fontSize: '20px',
                                 }}
+                                onClick={handleFoodNoteModal}
                               />
                               {item.product_name}
                             </th>
@@ -646,6 +655,11 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       <PremiumVersion
         premiumVersion={premiumVersion}
         setPremiumVersion={setPremiumVersion}
+      />
+
+      <FoodNoteModal
+        foodNoteModal={foodNoteModal}
+        setFoodNoteModal={setFoodNoteModal}
       />
 
       <Modal
