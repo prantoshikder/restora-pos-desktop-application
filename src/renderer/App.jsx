@@ -47,7 +47,10 @@ export default function App() {
         setSettings({
           ...settings,
           ...result,
-          currency: result.currency ? result.currency : '$',
+          currency: {
+            icon: result.currency ? result.currency : '$',
+            position: 'Left',
+          },
         });
       }
     );
