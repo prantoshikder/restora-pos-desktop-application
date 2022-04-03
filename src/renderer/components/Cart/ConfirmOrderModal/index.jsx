@@ -28,30 +28,33 @@ const ConfirmOrderModal = (props) => {
     quickOrderAdditionalData,
   } = props;
 
+  const [foodItems, setFoodItems] = useState({});
+
+  const insertOrderInfo = {
+    cartItems,
+    customer_id: quickOrderAdditionalData?.customerId,
+    grandTotal: quickOrderAdditionalData?.grandTotal,
+    discount: quickOrderAdditionalData?.discount,
+    serviceCharge: quickOrderAdditionalData?.serviceCharge,
+    vat: quickOrderAdditionalData?.vat,
+  };
+
   const quickOrderModal = () => {
-    console.log('quickOrderAdditionalData', quickOrderAdditionalData);
     setConfirmOrder(false);
     setOpenModal(true);
-    window.insert_order_info.send('insert_order_info', {
-      cartItems,
-      customerId: quickOrderAdditionalData.customerId,
-      grandTotal: quickOrderAdditionalData.grandTotal,
-      discount: quickOrderAdditionalData.discount,
-      serviceCharge: quickOrderAdditionalData.serviceCharge,
-      vat: quickOrderAdditionalData.vat,
-    });
+    const invoiceData = {
+      ...insertOrderInfo,
+      order_info: cartItems,
+    };
+
+    window.insert_order_info.send('insert_order_info', insertOrderInfo);
+
+    setFoodItems(invoiceData);
   };
 
   const handleSubmitOrder = (eventName) => {
     if (confirmBtn === eventName) {
-      window.insert_order_info.send('insert_order_info', {
-        cartItems,
-        customerId: quickOrderAdditionalData.customerId,
-        grandTotal: quickOrderAdditionalData.grandTotal,
-        discount: quickOrderAdditionalData.discount,
-        serviceCharge: quickOrderAdditionalData.serviceCharge,
-        vat: quickOrderAdditionalData.vat,
-      });
+      window.insert_order_info.send('insert_order_info', insertOrderInfo);
     }
   };
 
@@ -135,7 +138,7 @@ const ConfirmOrderModal = (props) => {
         settings={settings}
         openModal={openModal}
         setOpenModal={setOpenModal}
-        foodItems={cartItems}
+        foodItems={foodItems}
       />
 
       <TokenModal

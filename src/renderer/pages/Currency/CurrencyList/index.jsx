@@ -4,20 +4,10 @@ import {
   ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  message,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Table,
-} from 'antd';
+import { Button, message, Modal, Select, Space, Table } from 'antd';
 import { getDataFromDatabase } from 'helpers';
 import { useEffect, useState } from 'react';
+import CurrencyModal from 'renderer/components/CurrencyModal';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -49,9 +39,8 @@ const CurrencyList = () => {
     status: true,
   });
 
-  const [form] = Form.useForm();
   const [checkStrictly, setCheckStrictly] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [currencyModal, setCurrencyModal] = useState(false);
   const [addCurrency, setAddCurrency] = useState(null);
   const [reRender, setReRender] = useState(false);
   const [updateCurrency, setUpdateCurrency] = useState({});
@@ -135,7 +124,7 @@ const CurrencyList = () => {
   ];
 
   const handleEditCurrency = (currencyItem) => {
-    setOpenModal(true);
+    setCurrencyModal(true);
     setReRender((prevState) => !prevState);
     setUpdateCurrency(currencyItem);
     console.log('currencyItem edit', currencyItem);
@@ -179,68 +168,6 @@ const CurrencyList = () => {
     });
   };
 
-  const handleReset = () => {
-    form.resetFields();
-  };
-
-  const handleSubmit = () => {
-    const addNewCurrencyList = {};
-
-    for (const data of addCurrency) {
-      addNewCurrencyList[data.name[0]] =
-        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
-    }
-
-    if (updateCurrency?.id) {
-      addNewCurrencyList.id = updateCurrency.id;
-    }
-
-    // Insert or update Data
-    window.insert_currency.send('insert_currency', addNewCurrencyList);
-
-    setOpenModal(false);
-
-    // Insert or update response
-    window.insert_currency.once('insert_currency_response', ({ status }) => {
-      if (status === 'updated') {
-        setReRender((prevState) => !prevState);
-        closeModal();
-
-        message.success({
-          content: 'Currency updated successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-      } else {
-        setReRender((prevState) => !prevState);
-        closeModal();
-
-        message.success({
-          content: 'Currency added successfully',
-          className: 'custom-class',
-          duration: 1,
-          style: {
-            marginTop: '5vh',
-            float: 'right',
-          },
-        });
-      }
-    });
-  };
-
-  function closeModal() {
-    form.resetFields();
-    setOpenModal(false);
-  }
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
     <>
       <div
@@ -250,7 +177,7 @@ const CurrencyList = () => {
         }}
       >
         <div className="d-flex justify-content_end mb-3">
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button type="primary" onClick={() => setCurrencyModal(true)}>
             <PlusCircleOutlined />
             Add Currency
           </Button>
@@ -265,99 +192,14 @@ const CurrencyList = () => {
         />
       </div>
 
-      <Modal
-        title="Add Currency"
-        visible={openModal}
-        onOk={() => closeModal()}
-        onCancel={() => closeModal()}
-        footer={null}
-        width={650}
-      >
-        <Row>
-          <Col lg={24}>
-            <Form
-              form={form}
-              fields={addCurrency}
-              onFinish={handleSubmit}
-              onFieldsChange={(_, allFields) => {
-                setAddCurrency(allFields);
-              }}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              layout="vertical"
-            >
-              <Form.Item
-                name="currency_name"
-                label="Currency Name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Currency Name is required',
-                  },
-                ]}
-                required
-              >
-                <Input placeholder="Currency Name" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                name="currency_icon"
-                label="Currency Icon"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Currency Icon is required',
-                  },
-                ]}
-                required
-              >
-                <Input placeholder="Currency Icon" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                name="currency_rate"
-                label="Conversion Rate"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Conversion Rate is required',
-                  },
-                ]}
-                required
-              >
-                <Input placeholder="Conversion Rate" size="large" />
-              </Form.Item>
-              <Form.Item
-                name="position"
-                label="Position"
-                rules={[
-                  { required: true, message: 'Please input your Position!' },
-                ]}
-              >
-                <Select placeholder="Select Option" size="large" allowClear>
-                  <Option value="left">Left</Option>
-                  <Option value="right">Right</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="danger"
-                  style={{
-                    marginRight: '1rem',
-                  }}
-                  onClick={handleReset}
-                >
-                  Reset
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Add
-                </Button>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </Modal>
+      <CurrencyModal
+        currencyModal={currencyModal}
+        setCurrencyModal={setCurrencyModal}
+        setReRender={setReRender}
+        addCurrency={addCurrency}
+        setAddCurrency={setAddCurrency}
+        updateCurrency={updateCurrency}
+      />
     </>
   );
 };
