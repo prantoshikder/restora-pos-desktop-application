@@ -29,11 +29,13 @@ const QuickOrderModal = ({
 
   let calc = new CalculatePrice(settings, foodData);
 
-  console.log('foodItems', foodItems);
-
   useEffect(() => {
     if (foodItems?.order_info) {
-      setFoodData(JSON.parse(foodItems?.order_info));
+      if (typeof foodItems?.order_info !== 'string') {
+        setFoodData(foodItems?.order_info);
+      } else {
+        setFoodData(JSON.parse(foodItems?.order_info));
+      }
     } else {
       setFoodData(foodItems);
     }
@@ -49,11 +51,11 @@ const QuickOrderModal = ({
         (customersId) => customersId?.id === foodItems?.customer_id
       );
 
+      console.log('filterCustomerId', filterCustomerId);
+
       if (filterCustomerId) {
-        console.log('if');
         setCustomerName(filterCustomerId?.customer_name);
       } else {
-        console.log('else');
         setCustomerName('Walk In');
       }
     });
@@ -91,8 +93,6 @@ const QuickOrderModal = ({
         setOngoingOrders(ongoingOrders);
         setReRender((prevState) => !prevState);
       }
-
-      return;
 
       printInvoice();
     });

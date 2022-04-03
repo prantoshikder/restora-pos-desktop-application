@@ -47,7 +47,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [reRender, setReRender] = useState(false);
   const [premiumVersion, setPremiumVersion] = useState(false);
   const [openCalculator, setOpenCalculator] = useState(false);
-  const [customerId, setCustomerId] = useState(1);
+  const [customerId, setCustomerId] = useState(0);
   const [cartData, setCartData] = useState({ cartItems });
   const [quickOrderAdditionalData, setQuickOrderAdditionalData] =
     useState(null);
@@ -126,6 +126,13 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     if (cartItems?.length === 0) {
       setWarmingModal(true);
     } else {
+      const orderCalculateInfo = {
+        grandTotal: calcPrice.getGrandTotal(),
+        discount: calcPrice.getDiscountAmount(),
+        serviceCharge: calcPrice.getServiceCharge(),
+        vat: calcPrice.getVat(),
+      };
+
       if (data === 'quickOrder') {
         setConfirmBtn(data);
         setConfirmOrder(true);
@@ -133,10 +140,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         setQuickOrderAdditionalData({
           confirmBtn,
           customerId,
-          grandTotal: calcPrice.getGrandTotal(),
-          discount: calcPrice.getDiscountAmount(),
-          serviceCharge: calcPrice.getServiceCharge(),
-          vat: calcPrice.getVat(),
+          ...orderCalculateInfo,
         });
 
         if (localStorage.getItem('order_id')) {
@@ -145,11 +149,8 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       } else if (data === 'placeOrder') {
         window.insert_order_info.send('insert_order_info', {
           cartItems,
-          grandTotal: calcPrice.getGrandTotal(),
-          customerId,
-          discount: calcPrice.getDiscountAmount(),
-          serviceCharge: calcPrice.getServiceCharge(),
-          vat: calcPrice.getVat(),
+          customer_id: customerId,
+          ...orderCalculateInfo,
         });
 
         setConfirmBtn(data);
@@ -239,7 +240,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleSelectCustomer = (value) => {
-    console.log('value', value);
     setCustomerId(value);
   };
 
@@ -268,6 +268,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                     defaultValue={'Walk In'}
                     onChange={handleSelectCustomer}
                   >
+                    <Option value="0">Walk In</Option>
                     {customerList?.map((customer) => (
                       <Option key={customer?.id} value={customer?.id}>
                         {customer?.customer_name}
