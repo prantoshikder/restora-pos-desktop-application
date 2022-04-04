@@ -19,6 +19,7 @@ import {
   TimePicker,
 } from 'antd';
 import { useEffect, useState } from 'react';
+import AddCustomerModal from '../AddCustomerModal';
 import Calculator from '../Calculator';
 import FoodNoteModal from '../FoodNoteModal';
 import PremiumVersion from '../partials/PremiumVersion';
@@ -38,7 +39,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [addCustomerName] = Form.useForm();
   const calcPrice = new CalculatePrice(settings, cartItems);
 
-  const [openModal, setOpenModal] = useState(false);
+  const [addCustomerModal, setAddCustomerModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
@@ -52,6 +53,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [cartData, setCartData] = useState({ cartItems });
   const [quickOrderAdditionalData, setQuickOrderAdditionalData] =
     useState(null);
+  const [foodNoteModal, setFoodNoteModal] = useState(false);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -180,46 +182,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleAddCustomer = () => {
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-    addCustomerName.resetFields();
-  };
-
-  const submitNewCustomer = () => {
-    const addCustomerInfo = {};
-
-    for (const data of addCustomer) {
-      addCustomerInfo[data.name[0]] =
-        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
-    }
-
-    // Insert through the event & channel
-    window.insert_customer_info.send('insert_customer_info', addCustomerInfo);
-
-    // Customer name insert response
-    window.insert_customer_info.once(
-      'insert_customer_info_response',
-      ({ status }) => {
-        if (status === 'inserted') {
-          setReRender((prevState) => !prevState);
-          setOpenModal(false);
-          addCustomerName.resetFields();
-
-          message.success({
-            content: 'Customer info added successfully',
-            className: 'custom-class',
-            duration: 1,
-            style: {
-              marginTop: '5vh',
-              float: 'right',
-            },
-          });
-        }
-      }
-    );
+    setAddCustomerModal(true);
   };
 
   const handleSubmit = () => {
@@ -243,8 +206,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const handleSelectCustomer = (value) => {
     setCustomerId(value);
   };
-
-  const [foodNoteModal, setFoodNoteModal] = useState(false);
 
   const handleFoodNoteModal = () => {
     setFoodNoteModal(true);
@@ -554,89 +515,15 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         </div>
       </Form>
 
-      <Modal
-        title="Add Customer"
-        visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
-        footer={null}
-        width={650}
-      >
-        <Row>
-          <Col lg={24}>
-            <Form
-              form={addCustomerName}
-              fields={addCustomer}
-              onFinish={submitNewCustomer}
-              onFieldsChange={(_, allFields) => {
-                setAddCustomer(allFields);
-              }}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              layout="vertical"
-            >
-              <Form.Item
-                label="Customer Name"
-                name="customer_name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Customer Name!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Name" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                label="Email Address"
-                name="customer_email"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Email Address!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Email" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                label="Mobile "
-                name="customer_phone"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Mobile!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Mobile" size="large" />
-              </Form.Item>
-
-              <Form.Item label="Address" name="customer_address">
-                <TextArea placeholder="Customer Address" size="large" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="danger"
-                  style={{
-                    marginRight: '1rem',
-                  }}
-                  onClick={handleClose}
-                >
-                  Close
-                </Button>
-
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </Modal>
+      <AddCustomerModal
+        customerInfo={{
+          addCustomerModal: addCustomerModal,
+          setAddCustomerModal: setAddCustomerModal,
+          addCustomer: addCustomer,
+          setAddCustomer: setAddCustomer,
+          setReRender: setReRender,
+        }}
+      />
 
       <WarmingModal
         setWarmingModal={setWarmingModal}
