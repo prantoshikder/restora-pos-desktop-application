@@ -102,6 +102,8 @@ const AddNewCategory = ({ state }) => {
 
   const handleReset = () => {
     form.resetFields();
+    setCategoryImage('');
+    setCategoryIcon('');
 
     message.success({
       content: 'Reset done',
@@ -199,6 +201,8 @@ const AddNewCategory = ({ state }) => {
         navigate('/category_list');
       } else {
         setReRender((prevState) => !prevState);
+        setCategoryImage('');
+        setCategoryIcon('');
 
         message.success({
           content: 'Food category added successfully',
@@ -423,13 +427,13 @@ const AddNewCategory = ({ state }) => {
                 style={{
                   marginRight: '1rem',
                 }}
-                // className="resetBtn"
+                className="reset_btn"
                 onClick={handleReset}
               >
                 Reset
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" className="submit_btn">
                 Submit
               </Button>
             </div>

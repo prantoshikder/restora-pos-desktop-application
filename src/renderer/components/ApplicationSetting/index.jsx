@@ -1,4 +1,4 @@
-import { PictureOutlined } from '@ant-design/icons';
+import { PictureOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import {
   Button,
   Col,
@@ -9,27 +9,40 @@ import {
   message,
   Row,
   Select,
+  TimePicker,
   Upload,
 } from 'antd';
 import { getDataFromDatabase } from 'helpers';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
+import CurrencyModal from 'renderer/components/CurrencyModal';
 import './ApplicationSetting.style.scss';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const ApplicationSetting = ({ setReRenderOnSettings }) => {
+const ApplicationSetting = ({ setReRenderOnSettings, reRenderOnSettings }) => {
   window.get_app_settings.send('get_app_settings', { status: true });
   window.get_currency_lists.send('get_currency_lists', {
     status: true,
   });
 
+  const format = 'HH:mm';
   const [form] = Form.useForm();
   const [appSettingsData, setAppSettingsData] = useState(null);
+  const [currencyLists, setCurrencyLists] = useState([]);
   const [defaultData, setDefaultData] = useState([]);
+  const [reRender, setReRender] = useState(false);
   const [favIcon, setFavIcon] = useState(null);
   const [appLogo, setAppLogo] = useState(null);
-  const [currencyLists, setCurrencyLists] = useState([]);
+
+  const [currencyModal, setCurrencyModal] = useState(false);
+  const [addCurrency, setAddCurrency] = useState(null);
+
+  const [restaurantTime, setRestaurantTime] = useState({
+    openingTime: '',
+    closingTime: '',
+  });
 
   useEffect(() => {
     getDataFromDatabase(
@@ -37,7 +50,13 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
       window.get_app_settings
     ).then((data) => {
       const response = data[0];
+
       setAppSettingsData(response);
+
+      // setRestaurantTime({
+      //   openingTime: response.opentime,
+      //   closingTime: response.closetime,
+      // });
 
       setDefaultData([
         {
@@ -62,11 +81,11 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
         {
           name: ['opentime'],
-          value: response?.opentime,
+          // value: response?.opentime,
         },
         {
           name: ['closetime'],
-          value: response?.closetime,
+          // value: response?.closetime,
         },
         {
           name: ['discount_type'],
@@ -131,7 +150,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         },
       ]);
     });
-  }, []);
+  }, [reRenderOnSettings]);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -142,7 +161,7 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         Array.isArray(res) && res?.length && setCurrencyLists(res);
       })
       .catch((err) => console.log('Getting menu types error', err));
-  }, []);
+  }, [reRender]);
 
   const handleFavicon = (e) => {
     console.log('hanlde file', e);
@@ -153,6 +172,13 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
+  };
+
+  const handleAvailableOn = (time, timeString) => {
+    setRestaurantTime({ ...restaurantTime, openingTime: timeString });
+  };
+  const handleClosingTime = (time, timeString) => {
+    setRestaurantTime({ ...restaurantTime, closingTime: timeString });
   };
 
   const handleSubmit = (e) => {
@@ -191,6 +217,9 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         ? 2
         : 2;
 
+    settingsValue.opentime = restaurantTime?.openingTime;
+    settingsValue.closetime = restaurantTime?.closingTime;
+
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);
 
@@ -219,6 +248,10 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
         float: 'right',
       },
     });
+  };
+
+  const handleCurrencyModal = () => {
+    setCurrencyModal(true);
   };
 
   return (
@@ -371,13 +404,25 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
             <Row gutter={20}>
               <Col lg={12}>
                 <Form.Item label="Available On" name="opentime">
-                  <Input placeholder="Available On" size="large" />
+                  {/* <Input placeholder="Available On" size="large" /> */}
+                  <TimePicker
+                    defaultValue={moment('12:08', format)}
+                    format={format}
+                    size="large"
+                    onChange={handleAvailableOn}
+                  />
                 </Form.Item>
               </Col>
 
               <Col lg={12}>
                 <Form.Item label="Closing Time" name="closetime">
-                  <Input placeholder="Closing Time" size="large" />
+                  {/* <Input placeholder="Closing Time" size="large" /> */}
+                  <TimePicker
+                    // defaultValue={moment('12:08', format)}
+                    format={format}
+                    size="large"
+                    onChange={handleClosingTime}
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -445,18 +490,38 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
 
             <Row gutter={20}>
               <Col lg={12}>
-                <Form.Item label="Currency" name="currency">
-                  <Select placeholder="Select Currency" size="large" allowClear>
-                    {currencyLists?.map((currencyItem) => (
-                      <Option
-                        key={currencyItem?.id}
-                        value={currencyItem?.currency_icon}
+                <Row gutter={20}>
+                  <Col lg={20}>
+                    <Form.Item label="Currency" name="currency">
+                      <Select
+                        placeholder="Select Currency"
+                        size="large"
+                        allowClear
                       >
-                        {currencyItem?.currency_name}{' '}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+                        {currencyLists?.map((currencyItem) => (
+                          <Option
+                            key={currencyItem?.id}
+                            value={currencyItem?.currency_icon}
+                          >
+                            {currencyItem?.currency_name}{' '}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={4}>
+                    <Form.Item label=" ">
+                      <Button
+                        type="primary"
+                        size="large"
+                        onClick={handleCurrencyModal}
+                      >
+                        <PlusCircleOutlined />
+                      </Button>
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Col>
 
               <Col lg={12}>
@@ -544,16 +609,30 @@ const ApplicationSetting = ({ setReRenderOnSettings }) => {
                   marginRight: '0.6rem',
                 }}
                 onClick={handleReset}
+                className="reset_btn"
               >
                 Reset
               </Button>
-              <Button type="primary" className="save_btn" htmlType="submit">
+              <Button
+                type="primary"
+                className="save_btn"
+                htmlType="submit"
+                className="submit_btn"
+              >
                 Submit
               </Button>
             </div>
           </Col>
         </Row>
       </Form>
+
+      <CurrencyModal
+        currencyModal={currencyModal}
+        setCurrencyModal={setCurrencyModal}
+        addCurrency={addCurrency}
+        setAddCurrency={setAddCurrency}
+        setReRender={setReRender}
+      />
     </div>
   );
 };

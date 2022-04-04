@@ -51,7 +51,11 @@ const SystemMenu = ({ settings }) => {
             <Menu.Item key="submenu_help:1">
               <Link to="/contact">Contact</Link>
             </Menu.Item>
-            {/* <Menu.Item key="submenu_help:2">About</Menu.Item> */}
+            <Menu.Item key="submenu_help:2">
+              <a href="https://restorapos.com" target="_blank">
+                Premium
+              </a>
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </Header>

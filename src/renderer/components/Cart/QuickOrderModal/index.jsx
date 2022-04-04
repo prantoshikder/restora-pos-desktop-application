@@ -19,36 +19,57 @@ const QuickOrderModal = ({
   window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
     status: true,
   });
-  const [foodData, setFoodData] = useState(null);
+  window.get_customer_names.send('get_customer_names', { status: true });
 
   const { cartItems, setCartItems } = useContext(ContextData);
-  const [openInvoice, setOpenInvoice] = useState(false);
   const [printInvoiceData, setPrintInvoiceData] = useState(null);
   const [onGoingOrderData, setOnGoingOrderData] = useState(null);
+  const [customerName, setCustomerName] = useState('');
+  const [foodData, setFoodData] = useState(null);
 
   let calc = new CalculatePrice(settings, foodData);
 
   useEffect(() => {
     if (foodItems?.order_info) {
-      setFoodData(JSON.parse(foodItems.order_info));
+      if (typeof foodItems?.order_info !== 'string') {
+        setFoodData(foodItems?.order_info);
+      } else {
+        setFoodData(JSON.parse(foodItems?.order_info));
+      }
     } else {
       setFoodData(foodItems);
     }
   }, [foodItems]);
 
+  // TODO: print customer name
+  useEffect(() => {
+    getDataFromDatabase(
+      'get_customer_names_response',
+      window.get_customer_names
+    ).then((data = []) => {
+      const filterCustomerId = data.find(
+        (customersId) => customersId?.id === foodItems?.customer_id
+      );
+
+      console.log('filterCustomerId', filterCustomerId);
+
+      if (filterCustomerId) {
+        setCustomerName(filterCustomerId?.customer_name);
+      } else {
+        setCustomerName('Walk In');
+      }
+    });
+  }, [foodData]);
+
   const handlePayBtn = () => {
     // Received on going order data
     setOnGoingOrderData(foodData);
-    console.log('new foodData', foodData);
 
     getDataFromDatabase(
       'get_all_order_info_ongoing_response',
       window.get_all_order_info_ongoing
     ).then((data = []) => {
-      console.log('data', data);
-      console.log('complete order foodItems', foodItems);
       setOpenModal(false);
-      setOpenInvoice(true);
 
       // Execute when click on quick order -> complete button -> Pay now and print invoice
       if (foodItems.order_id) {
@@ -72,6 +93,8 @@ const QuickOrderModal = ({
         setOngoingOrders(ongoingOrders);
         setReRender((prevState) => !prevState);
       }
+
+      printInvoice();
     });
 
     // window.update_order_info_ongoing.once(
@@ -80,6 +103,16 @@ const QuickOrderModal = ({
     //     console.log('))))))))))))))))))))))))))))))))))))))', args);
     //   }
     // );
+  };
+
+  const [invoicePrint, setInvoicePrint] = useState('invoicePrint');
+
+  const printInvoice = () => {
+    var printContents = document.getElementById(invoicePrint).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    window.location.reload();
   };
 
   return (
@@ -281,13 +314,11 @@ const QuickOrderModal = ({
 
       <InVoiceGenerate
         settings={settings}
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        openInvoice={openInvoice}
-        setOpenInvoice={setOpenInvoice}
         setPrintInvoiceData={setPrintInvoiceData}
         foodItems={onGoingOrderData}
         foodData={foodItems}
+        invoicePrint={invoicePrint}
+        customerName={customerName}
       />
     </>
   );

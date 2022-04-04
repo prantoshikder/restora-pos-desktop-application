@@ -16,7 +16,8 @@ const ConfirmOrderModal = (props) => {
 
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openModal, setOpenModal] = useState(false);
-  const [openTokenModal, setTokenModal] = useState(false);
+  const [tokenPrint, setTokenPrint] = useState('printToken');
+  const [orderData, setOrderData] = useState({});
 
   const {
     confirmOrder,
@@ -27,33 +28,35 @@ const ConfirmOrderModal = (props) => {
     quickOrderAdditionalData,
   } = props;
 
+  const [foodItems, setFoodItems] = useState({});
+
+  const insertOrderInfo = {
+    cartItems,
+    customer_id: quickOrderAdditionalData?.customerId,
+    grandTotal: quickOrderAdditionalData?.grandTotal,
+    discount: quickOrderAdditionalData?.discount,
+    serviceCharge: quickOrderAdditionalData?.serviceCharge,
+    vat: quickOrderAdditionalData?.vat,
+  };
+
   const quickOrderModal = () => {
     setConfirmOrder(false);
     setOpenModal(true);
-    window.insert_order_info.send('insert_order_info', {
-      cartItems,
-      customerId: quickOrderAdditionalData.customerId,
-      grandTotal: quickOrderAdditionalData.grandTotal,
-      discount: quickOrderAdditionalData.discount,
-      serviceCharge: quickOrderAdditionalData.serviceCharge,
-      vat: quickOrderAdditionalData.vat,
-    });
+    const invoiceData = {
+      ...insertOrderInfo,
+      order_info: cartItems,
+    };
+
+    window.insert_order_info.send('insert_order_info', insertOrderInfo);
+
+    setFoodItems(invoiceData);
   };
 
   const handleSubmitOrder = (eventName) => {
     if (confirmBtn === eventName) {
-      window.insert_order_info.send('insert_order_info', {
-        cartItems,
-        customerId: quickOrderAdditionalData.customerId,
-        grandTotal: quickOrderAdditionalData.grandTotal,
-        discount: quickOrderAdditionalData.discount,
-        serviceCharge: quickOrderAdditionalData.serviceCharge,
-        vat: quickOrderAdditionalData.vat,
-      });
+      window.insert_order_info.send('insert_order_info', insertOrderInfo);
     }
   };
-
-  const [orderData, setOrderData] = useState({});
 
   const placeOrderModal = () => {
     setConfirmOrder(false);
@@ -64,11 +67,19 @@ const ConfirmOrderModal = (props) => {
       ).then((args) => {
         const cartData = JSON.parse(args.order_info);
         setOrderData({ ...args, order_info: cartData });
-        setTokenModal(true);
+        printToken();
       });
     }
 
     setCartItems([]);
+  };
+
+  const printToken = () => {
+    var printContents = document.getElementById(tokenPrint).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    window.location.reload();
   };
 
   return (
@@ -127,14 +138,13 @@ const ConfirmOrderModal = (props) => {
         settings={settings}
         openModal={openModal}
         setOpenModal={setOpenModal}
-        foodItems={cartItems}
+        foodItems={foodItems}
       />
 
       <TokenModal
-        openModal={openTokenModal}
-        setOpenModal={setTokenModal}
         cartItems={cartItems}
         orderData={orderData}
+        tokenPrint={tokenPrint}
       />
     </>
   );

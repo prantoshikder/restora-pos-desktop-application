@@ -5,7 +5,11 @@ import Heading from 'renderer/components/Heading';
 import ApplicationSetting from './../../../components/ApplicationSetting';
 import Sidebar from './../../../components/partials/Sidebar';
 
-const ApplicationSettings = ({ settings, setReRenderOnSettings }) => {
+const ApplicationSettings = ({
+  settings,
+  setReRenderOnSettings,
+  reRenderOnSettings,
+}) => {
   let navigate = useNavigate();
 
   const [isRedirect, setRedirect] = useState(false);
@@ -32,6 +36,7 @@ const ApplicationSettings = ({ settings, setReRenderOnSettings }) => {
 
                 <ApplicationSetting
                   setReRenderOnSettings={setReRenderOnSettings}
+                  reRenderOnSettings={reRenderOnSettings}
                 />
               </Col>
             </Row>
