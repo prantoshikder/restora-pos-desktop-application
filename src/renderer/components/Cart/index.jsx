@@ -19,6 +19,7 @@ import {
   TimePicker,
 } from 'antd';
 import { useEffect, useState } from 'react';
+import AddCustomerModal from '../AddCustomerModal';
 import Calculator from '../Calculator';
 import FoodNoteModal from '../FoodNoteModal';
 import PremiumVersion from '../partials/PremiumVersion';
@@ -38,7 +39,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [addCustomerName] = Form.useForm();
   const calcPrice = new CalculatePrice(settings, cartItems);
 
-  const [openModal, setOpenModal] = useState(false);
+  const [addCustomerModal, setAddCustomerModal] = useState(false);
   const [confirmBtn, setConfirmBtn] = useState('');
   const [quantityValue, setQuantityValue] = useState(1);
   const [warmingModal, setWarmingModal] = useState(false);
@@ -52,6 +53,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const [cartData, setCartData] = useState({ cartItems });
   const [quickOrderAdditionalData, setQuickOrderAdditionalData] =
     useState(null);
+  const [foodNoteModal, setFoodNoteModal] = useState(false);
 
   useEffect(() => {
     getDataFromDatabase(
@@ -160,13 +162,25 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     }
   };
 
-  const handleUpdateOrder = () => {
+  const handleUpdateOrder = (orderBtn) => {
+    console.log('state', state);
     if (localStorage.getItem('order_id')) {
+      setConfirmBtn(orderBtn);
+      setConfirmOrder(true);
+      const orderCalculateInfo = {
+        grand_total: calcPrice.getGrandTotal(),
+        discount: calcPrice.getDiscountAmount(),
+        serviceCharge: calcPrice.getServiceCharge(),
+        vat: calcPrice.getVat(),
+      };
+
       window.update_order_info_after_edit.send('update_order_info_after_edit', {
         ...state,
         order_info: cartItems,
+        ...orderCalculateInfo,
       });
       localStorage.removeItem('order_id');
+      // localStorage.setItem("token_no", state.token_no)
     }
 
     message.success({
@@ -176,50 +190,13 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       style: { marginTop: '5vh', float: 'right' },
     });
 
-    setCartItems([]);
+    // setCartItems([]);
   };
+
+  console.log('cartItems', cartItems);
 
   const handleAddCustomer = () => {
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-    addCustomerName.resetFields();
-  };
-
-  const submitNewCustomer = () => {
-    const addCustomerInfo = {};
-
-    for (const data of addCustomer) {
-      addCustomerInfo[data.name[0]] =
-        typeof data?.value === 'string' ? data?.value?.trim() : data?.value;
-    }
-
-    // Insert through the event & channel
-    window.insert_customer_info.send('insert_customer_info', addCustomerInfo);
-
-    // Customer name insert response
-    window.insert_customer_info.once(
-      'insert_customer_info_response',
-      ({ status }) => {
-        if (status === 'inserted') {
-          setReRender((prevState) => !prevState);
-          setOpenModal(false);
-          addCustomerName.resetFields();
-
-          message.success({
-            content: 'Customer info added successfully',
-            className: 'custom-class',
-            duration: 1,
-            style: {
-              marginTop: '5vh',
-              float: 'right',
-            },
-          });
-        }
-      }
-    );
+    setAddCustomerModal(true);
   };
 
   const handleSubmit = () => {
@@ -243,8 +220,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   const handleSelectCustomer = (value) => {
     setCustomerId(value);
   };
-
-  const [foodNoteModal, setFoodNoteModal] = useState(false);
 
   const handleFoodNoteModal = () => {
     setFoodNoteModal(true);
@@ -472,8 +447,19 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               </Col>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
-                {settings?.service_chargeType === 'amount' && settings.currency}
-                {settings?.servicecharge ? settings?.servicecharge : 0}
+                {settings?.service_chargeType === 'amount' &&
+                  settings.currency}{' '}
+                <span
+                  contentEditable
+                  style={{
+                    width: '35px',
+                    display: 'inline-block',
+                    textAlign: 'center',
+                    border: '1px solid #ddd',
+                  }}
+                >
+                  {settings?.servicecharge ? settings?.servicecharge : 0}
+                </span>
                 {settings?.service_chargeType !== 'amount' && '(%)'}
               </Col>
 
@@ -481,8 +467,18 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               {settings?.discount_type && (
                 <Col lg={6}>
                   <b>Discount: </b>
-                  {settings?.discount_type === 1 && settings.currency}
-                  {settings?.discountrate ? settings?.discountrate : 0}
+                  {settings?.discount_type === 1 && settings.currency}{' '}
+                  <span
+                    contentEditable
+                    style={{
+                      width: '35px',
+                      display: 'inline-block',
+                      textAlign: 'center',
+                      border: '1px solid #ddd',
+                    }}
+                  >
+                    {settings?.discountrate ? settings?.discountrate : 0}
+                  </span>{' '}
                   {settings?.discount_type === 2 && '(%)'}
                 </Col>
               )}
@@ -509,7 +505,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
           <div className="cartBtn_wrapper">
             {state?.order_id ? (
               <Button
-                onClick={handleUpdateOrder}
+                onClick={() => handleUpdateOrder('updateOrder')}
                 type="primary"
                 className="update_order_btn cartGroup_btn"
               >
@@ -554,89 +550,15 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         </div>
       </Form>
 
-      <Modal
-        title="Add Customer"
-        visible={openModal}
-        onOk={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
-        footer={null}
-        width={650}
-      >
-        <Row>
-          <Col lg={24}>
-            <Form
-              form={addCustomerName}
-              fields={addCustomer}
-              onFinish={submitNewCustomer}
-              onFieldsChange={(_, allFields) => {
-                setAddCustomer(allFields);
-              }}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              layout="vertical"
-            >
-              <Form.Item
-                label="Customer Name"
-                name="customer_name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Customer Name!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Name" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                label="Email Address"
-                name="customer_email"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Email Address!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Email" size="large" />
-              </Form.Item>
-
-              <Form.Item
-                label="Mobile "
-                name="customer_phone"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Mobile!',
-                  },
-                ]}
-              >
-                <Input placeholder="Customer Mobile" size="large" />
-              </Form.Item>
-
-              <Form.Item label="Address" name="customer_address">
-                <TextArea placeholder="Customer Address" size="large" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="danger"
-                  style={{
-                    marginRight: '1rem',
-                  }}
-                  onClick={handleClose}
-                >
-                  Close
-                </Button>
-
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </Modal>
+      <AddCustomerModal
+        customerInfo={{
+          addCustomerModal: addCustomerModal,
+          setAddCustomerModal: setAddCustomerModal,
+          addCustomer: addCustomer,
+          setAddCustomer: setAddCustomer,
+          setReRender: setReRender,
+        }}
+      />
 
       <WarmingModal
         setWarmingModal={setWarmingModal}
@@ -650,6 +572,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         settings={settings}
         printId={'printId'}
         quickOrderAdditionalData={quickOrderAdditionalData}
+        state={state}
       />
 
       <PremiumVersion

@@ -198,9 +198,18 @@ const QuickOrderModal = ({
               </div>
 
               <div className="total_order_discount">
-                <Title level={4}>
+                <Title level={4} style={{ marginTop: '10px' }}>
                   Discount:
-                  <span style={{ float: 'right' }}>
+                  <span
+                    contentEditable
+                    style={{
+                      width: '80px',
+                      display: 'inline-block',
+                      textAlign: 'center',
+                      border: '1px solid #ddd',
+                      float: 'right',
+                    }}
+                  >
                     {settings.currency}
                     {calc.getDiscountAmount()
                       ? calc.getDiscountAmount()
@@ -261,7 +270,7 @@ const QuickOrderModal = ({
               <div
                 style={{
                   background: '#ddd',
-                  minHeight: '280px',
+                  minHeight: '290px',
                   padding: '1.5rem',
                 }}
               >

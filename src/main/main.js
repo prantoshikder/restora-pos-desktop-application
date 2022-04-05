@@ -1028,17 +1028,26 @@ ipcMain.on('insert_order_info', (event, args) => {
 
 // Update order info after edit
 ipcMain.on('update_order_info_after_edit', (event, args) => {
-  let { order_info, order_id } = args;
-  console.log('order_infoorder_info', order_info);
+  console.log('args******', args);
+  let { order_info, order_id, discount, serviceCharge, vat, grand_total } =
+    args;
   let order_info_to_string = JSON.stringify(order_info);
 
   let db = new sqlite3.Database(`${dbPath}/restora-pos.db`);
   db.serialize(() => {
     db.run(
       `UPDATE orders
-       SET order_info = ?
+       SET order_info = ?, discount = ?, serviceCharge = ?, vat = ?, grand_total = ?, creation_date = ?
        WHERE order_id = ?`,
-      [order_info_to_string, order_id]
+      [
+        order_info_to_string,
+        discount,
+        serviceCharge,
+        vat,
+        grand_total,
+        Date.now(),
+        order_id,
+      ]
     );
   });
   db.close();

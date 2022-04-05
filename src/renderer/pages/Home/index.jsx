@@ -11,7 +11,6 @@ import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
-  const { state } = useLocation();
   // Get all food list as an array
   window.get_food_list_pos.send('get_food_list_pos', {
     status: true,
@@ -32,13 +31,15 @@ const Home = ({ settings }) => {
   });
 
   let navigate = useNavigate();
+  const { state } = useLocation();
+
   const { cartItems, setCartItems } = useContext(ContextData);
   const [addonNames, setAddonNames] = useState(null);
   const [addonsList, setAddonsList] = useState(null);
-  const [foodNames, setFoodNames] = useState(null);
-  const [foodLists, setFoodLists] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState();
   const [isRedirect, setRedirect] = useState(false);
+  const [foodNames, setFoodNames] = useState(null);
+  const [foodLists, setFoodLists] = useState([]);
 
   useEffect(() => {
     Promise.all([
@@ -57,6 +58,7 @@ const Home = ({ settings }) => {
     ])
       .then(([foodNames, variants, addons]) => {
         let newFoods = [];
+
         foodNames?.forEach((food, index) => {
           const newAddons = addons.filter((addon) => addon.food_id === food.id);
 
@@ -91,7 +93,6 @@ const Home = ({ settings }) => {
   }, []);
 
   const loadAfterDomLoaded = (e) => {
-    // console.log('Loaded');
     setTimeout(() => {
       if (settings && settings?.isAppSetupDone) {
         // console.log('if home');
