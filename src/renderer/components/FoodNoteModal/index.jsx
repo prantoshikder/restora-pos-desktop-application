@@ -1,12 +1,28 @@
 import { Button, Form, Input, Modal } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const FoodNoteModal = ({ foodNoteModal, setFoodNoteModal }) => {
   const [form] = Form.useForm();
-  const [foodNote, setFoodNote] = useState();
+  const [foodNote, setFoodNote] = useState([]);
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  useEffect(() => {
+    setFoodNote([
+      {
+        name: ['food_note'],
+        // value: state?.category_name,
+      },
+    ]);
+  }, []);
+
+  const handleSubmit = () => {
+    const itemFoodNote = {};
+
+    for (const data of foodNote) {
+      itemFoodNote[data.name[0]] =
+        typeof data.value === 'string' ? data?.value?.trim() : data?.value;
+    }
+
+    console.log('itemFoodNote:', itemFoodNote);
     setFoodNoteModal(false);
   };
 
@@ -27,10 +43,10 @@ const FoodNoteModal = ({ foodNoteModal, setFoodNoteModal }) => {
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        // fields={defaultData}
-        // onFieldsChange={(_, allFields) => {
-        //   setDefaultData(allFields);
-        // }}
+        fields={foodNote}
+        onFieldsChange={(_, allFields) => {
+          setFoodNote(allFields);
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
