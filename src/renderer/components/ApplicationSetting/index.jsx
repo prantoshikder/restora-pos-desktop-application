@@ -406,8 +406,7 @@ const ApplicationSetting = ({ setReRenderOnSettings, reRenderOnSettings }) => {
                 <Form.Item label="Available On" name="opentime">
                   {/* <Input placeholder="Available On" size="large" /> */}
                   <TimePicker
-                    // defaultValue={moment('12:08', format)}
-                    onSelect={moment(appSettingsData?.opentime)}
+                    defaultValue={moment('12:08', format)}
                     format={format}
                     size="large"
                     onChange={handleAvailableOn}
@@ -419,7 +418,7 @@ const ApplicationSetting = ({ setReRenderOnSettings, reRenderOnSettings }) => {
                 <Form.Item label="Closing Time" name="closetime">
                   {/* <Input placeholder="Closing Time" size="large" /> */}
                   <TimePicker
-                    defaultValue={moment('12:08', format)}
+                    // defaultValue={moment('12:08', format)}
                     format={format}
                     size="large"
                     onChange={handleClosingTime}
