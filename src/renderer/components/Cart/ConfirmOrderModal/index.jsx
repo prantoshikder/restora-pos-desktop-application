@@ -26,7 +26,10 @@ const ConfirmOrderModal = (props) => {
     printId,
     settings,
     quickOrderAdditionalData,
+    state,
   } = props;
+
+  console.log('confirmBtn', confirmBtn);
 
   const [foodItems, setFoodItems] = useState({});
 
@@ -50,6 +53,25 @@ const ConfirmOrderModal = (props) => {
     window.insert_order_info.send('insert_order_info', insertOrderInfo);
 
     setFoodItems(invoiceData);
+  };
+
+  const updateOrderModal = () => {
+    console.log('state confirm', state);
+    setConfirmOrder(false);
+    if (cartItems.length > 0) {
+      getDataFromDatabase(
+        'get_data_to_create_token_response',
+        window.get_data_to_create_token
+      ).then((args) => {
+        console.log('args', args);
+        const cartData = JSON.parse(args.order_info);
+        setOrderData({ ...args, order_info: cartData });
+        return;
+        printToken();
+      });
+    }
+
+    setCartItems([]);
   };
 
   const handleSubmitOrder = (eventName) => {
@@ -124,9 +146,17 @@ const ConfirmOrderModal = (props) => {
                     Yes
                   </Button>
                 ) : (
-                  <Button type="primary" onClick={placeOrderModal}>
-                    Yes
-                  </Button>
+                  <>
+                    {confirmBtn === 'updateOrder' ? (
+                      <Button type="primary" onClick={updateOrderModal}>
+                        Yes
+                      </Button>
+                    ) : (
+                      <Button type="primary" onClick={placeOrderModal}>
+                        Yes
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
