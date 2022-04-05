@@ -166,8 +166,11 @@ const QuickOrderModal = ({
                         </span>
                       </h3>
                       <h3>
-                        {settings.currency}
-                        {item.quantity * item?.price}
+                        {settings?.position === 'left' &&
+                          settings.currency_icon}{' '}
+                        {item.quantity * item?.price}{' '}
+                        {settings?.position === 'right' &&
+                          settings.currency_icon}
                       </h3>
                     </div>
                   ))}
@@ -177,22 +180,25 @@ const QuickOrderModal = ({
                 <Title level={4}>
                   Subtotal{' '}
                   <span style={{ float: 'right' }}>
-                    {settings.currency}
-                    {calc.getTotalPrice()}
+                    {settings?.position === 'left' && settings.currency_icon}{' '}
+                    {calc.getTotalPrice()}{' '}
+                    {settings?.position === 'right' && settings.currency_icon}
                   </span>
                 </Title>
                 <Title level={4}>
                   Service Charge{' '}
                   <span style={{ float: 'right' }}>
-                    {settings.currency}
-                    {calc.getServiceCharge() ? calc.getServiceCharge() : '0.00'}
+                    {settings?.position === 'left' && settings.currency_icon}{' '}
+                    {calc.getServiceCharge() ? calc.getServiceCharge() : '0.00'}{' '}
+                    {settings?.position === 'right' && settings.currency_icon}
                   </span>
                 </Title>
                 <Title level={4}>
                   GST @ {settings?.vat}%{' '}
                   <span style={{ float: 'right' }}>
-                    {settings.currency}
-                    {calc.getVat() ? calc.getVat() : '0.00'}
+                    {settings?.position === 'left' && settings.currency_icon}{' '}
+                    {calc.getVat() ? calc.getVat() : '0.00'}{' '}
+                    {settings?.position === 'right' && settings.currency_icon}
                   </span>
                 </Title>
               </div>
@@ -201,10 +207,11 @@ const QuickOrderModal = ({
                 <Title level={4}>
                   Discount:
                   <span style={{ float: 'right' }}>
-                    {settings.currency}
+                    {settings?.position === 'left' && settings.currency_icon}{' '}
                     {calc.getDiscountAmount()
                       ? calc.getDiscountAmount()
-                      : '0.00'}
+                      : '0.00'}{' '}
+                    {settings?.position === 'right' && settings.currency_icon}
                   </span>
                 </Title>
               </div>
@@ -213,7 +220,9 @@ const QuickOrderModal = ({
                 <Title level={4}>
                   Grand Total:
                   <span style={{ float: 'right' }}>
-                    {settings.currency} {calc.getGrandTotal()}
+                    {settings?.position === 'left' && settings.currency_icon}{' '}
+                    {calc.getGrandTotal()}{' '}
+                    {settings?.position === 'right' && settings.currency_icon}
                   </span>
                 </Title>
               </div>
@@ -253,8 +262,9 @@ const QuickOrderModal = ({
               >
                 <Title level={4}>Total Payable Amount</Title>
                 <h3>
-                  {settings.currency}
-                  {calc.getGrandTotal()}
+                  {settings?.position === 'left' && settings.currency_icon}{' '}
+                  {calc.getGrandTotal()}{' '}
+                  {settings?.position === 'right' && settings.currency_icon}
                 </h3>
               </div>
 

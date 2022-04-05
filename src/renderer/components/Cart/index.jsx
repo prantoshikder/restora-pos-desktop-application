@@ -493,15 +493,18 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
             <div>
               <span>Grand Total</span>
             </div>
-
             <div>
               {cartItems?.length !== 0 ? (
                 <span>
-                  {settings.currency}
-                  {calcPrice.getGrandTotal()}
+                  {settings?.position === 'left' && settings.currency_icon}{' '}
+                  {calcPrice.getGrandTotal()}{' '}
+                  {settings?.position === 'right' && settings.currency_icon}
                 </span>
               ) : (
-                <span>{settings.currency} 0.00</span>
+                <span>
+                  {settings?.position === 'left' && settings.currency_icon} 0.00{' '}
+                  {settings?.position === 'right' && settings.currency_icon}
+                </span>
               )}
             </div>
           </div>

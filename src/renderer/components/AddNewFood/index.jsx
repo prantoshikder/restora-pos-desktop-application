@@ -114,6 +114,7 @@ const AddNewFood = ({ state, settings }) => {
     window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args = []) => {
+      console.log('cats args', args);
       const categoryFilter =
         Array.isArray(args) &&
         args?.filter(
