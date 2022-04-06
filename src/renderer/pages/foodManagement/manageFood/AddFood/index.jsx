@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import Heading from 'renderer/components/Heading';
 import AddNewFood from './../../../../components/AddNewFood';
 import Sidebar from './../../../../components/partials/Sidebar';
-import './AddFood.style.scss';
 
 const { Text } = Typography;
 
@@ -35,14 +34,16 @@ const AddFood = ({ settings }) => {
                     <Heading title=" Add Food" />
                   )}
 
-                  <Button
-                    type="primary"
-                    className="bulk_upload_btn"
-                    onClick={handleShow}
-                  >
-                    <PlusCircleOutlined />
-                    Bulk Upload
-                  </Button>
+                  <div className="d-flex justify-content_end mb-3">
+                    <Button
+                      type="primary"
+                      className="bulk_upload_btn"
+                      onClick={handleShow}
+                    >
+                      <PlusCircleOutlined />
+                      Bulk Upload
+                    </Button>
+                  </div>
                 </div>
 
                 <AddNewFood state={state} settings={settings} />

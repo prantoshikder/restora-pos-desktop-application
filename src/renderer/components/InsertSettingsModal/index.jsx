@@ -15,8 +15,6 @@ const InsertSettingsModal = ({
   return (
     <Modal
       visible={insertSettingsModal}
-      // onOk={() => setInsertSettingsModal(false)}
-      // onCancel={() => setInsertSettingsModal(false)}
       centered
       footer={null}
       width={500}

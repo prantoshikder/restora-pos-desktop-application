@@ -1,7 +1,6 @@
 import { Col, ConfigProvider, Row } from 'antd';
 import Heading from 'renderer/components/Heading';
 import Sidebar from './../../components/partials/Sidebar';
-import './Currency.styles.scss';
 import CurrencyList from './CurrencyList';
 
 const Currency = ({ settings }) => {
