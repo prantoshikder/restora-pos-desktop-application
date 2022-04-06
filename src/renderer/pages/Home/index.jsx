@@ -6,6 +6,7 @@ import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
 import Search from 'renderer/components/Search';
+import InsertSettingsModal from './../../components/InsertSettingsModal';
 import PosSidebar from './../../components/PosSidebar';
 import { ContextData } from './../../contextApi';
 import './Home.style.scss';
@@ -40,6 +41,8 @@ const Home = ({ settings }) => {
   const [isRedirect, setRedirect] = useState(false);
   const [foodNames, setFoodNames] = useState(null);
   const [foodLists, setFoodLists] = useState([]);
+
+  const [insertSettingsModal, setInsertSettingsModal] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -90,6 +93,12 @@ const Home = ({ settings }) => {
         setFoodLists(foods);
       })
       .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    if (!settings.storename) {
+      setInsertSettingsModal(true);
+    }
   }, []);
 
   const loadAfterDomLoaded = (e) => {
@@ -166,6 +175,11 @@ const Home = ({ settings }) => {
           </ConfigProvider>
         </div>
       </div>
+
+      <InsertSettingsModal
+        insertSettingsModal={insertSettingsModal}
+        setInsertSettingsModal={setInsertSettingsModal}
+      />
     </>
   );
 };

@@ -29,6 +29,7 @@ export default function App() {
 
   const [cartItems, setCartItems] = useState([]);
   const [reRenderOnSettings, setReRenderOnSettings] = useState(false);
+
   const [settings, setSettings] = useState({
     appStatus: 'free',
     site_align: 'ltr',
@@ -47,11 +48,7 @@ export default function App() {
         setSettings({
           ...settings,
           ...result,
-          currency: result.currency ? result.currency : '$',
-          // currency: {
-          //   icon: result.currency ? result.currency : '$',
-          //   position: 'Left',
-          // },
+          currency_icon: result.currency_icon ? result.currency_icon : '$',
         });
       }
     );
