@@ -208,7 +208,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     setCustomerId(value);
   };
 
-  const handleFoodNoteModal = () => {
+  const [addFoodNoteToItem, setAddFoodNoteToItem] = useState({});
+
+  const handleFoodNoteModal = (cartData) => {
+    setAddFoodNoteToItem(cartData);
     setFoodNoteModal(true);
   };
 
@@ -390,7 +393,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                                   color: '#0037ff',
                                   fontSize: '20px',
                                 }}
-                                onClick={handleFoodNoteModal}
+                                onClick={() => handleFoodNoteModal(item)}
                               />
                               {item.product_name}
                             </th>
@@ -570,6 +573,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       <FoodNoteModal
         foodNoteModal={foodNoteModal}
         setFoodNoteModal={setFoodNoteModal}
+        addFoodNoteToItem={addFoodNoteToItem}
       />
 
       <Modal
