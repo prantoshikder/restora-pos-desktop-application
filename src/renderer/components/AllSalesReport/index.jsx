@@ -239,7 +239,7 @@ const AllSalesReport = ({ settings }) => {
             columns={columns}
             bordered
             dataSource={allSalesReports}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record.key}
             scroll={{ x: 1500 }}
           />

@@ -5,8 +5,6 @@ import AllSalesReport from './../../../components/AllSalesReport';
 import './SalesReport.style.scss';
 
 const SalesReport = ({ settings }) => {
-  console.log('settings sales', settings);
-
   return (
     <div className="main_wrapper">
       <div className="pos_system">

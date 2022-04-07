@@ -187,7 +187,7 @@ const CurrencyList = () => {
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={currencyLists}
-          pagination={false}
+          pagination={true}
           rowKey={(record) => record?.id}
         />
       </div>

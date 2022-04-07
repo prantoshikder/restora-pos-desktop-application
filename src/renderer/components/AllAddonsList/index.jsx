@@ -4,7 +4,7 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Button, message, Modal, Space, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDataFromDatabase } from './../../../helpers';
 
@@ -139,7 +139,7 @@ const AllAddonsList = () => {
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={addonsLists}
-        pagination={false}
+        pagination={true}
         rowKey={(record) => record?.add_on_id}
       />
     </div>

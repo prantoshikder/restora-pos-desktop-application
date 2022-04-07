@@ -1,4 +1,12 @@
-import { DatePicker, Select, Table, Typography } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Select,
+  Space,
+  Table,
+  Typography,
+} from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { getDataFromDatabase } from './../../../helpers';
@@ -23,7 +31,6 @@ const AllItemSalesReport = ({ settings }) => {
       window.get_order_info_for_item_sales_report
     ).then((args = []) => {
       setItemSalesReports(args);
-      console.log('%%%%%%%%%%%%%%%%', args);
     });
   }, []);
 
@@ -73,7 +80,7 @@ const AllItemSalesReport = ({ settings }) => {
 
   return (
     <>
-      {/* <div
+      <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
@@ -119,7 +126,7 @@ const AllItemSalesReport = ({ settings }) => {
         <div className="group_btn">
           <Button className="search_btn">Search</Button>
         </div>
-      </div> */}
+      </div>
 
       <div
         style={{
@@ -154,7 +161,7 @@ const AllItemSalesReport = ({ settings }) => {
             columns={columns}
             bordered
             dataSource={itemSalesReports}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record.id}
           />
         </div>

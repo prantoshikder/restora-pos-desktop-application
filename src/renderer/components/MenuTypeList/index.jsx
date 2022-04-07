@@ -29,8 +29,7 @@ const { Dragger } = Upload;
 const { confirm } = Modal;
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-  },
+  onChange: (selectedRowKeys, selectedRows) => {},
   onSelect: (record, selected, selectedRows) => {
     console.log(record, selected, selectedRows);
   },
@@ -52,7 +51,7 @@ const MenuTypeList = () => {
   const [menuTypes, setMenuTypes] = useState();
   const [menuTypesList, setMenuTypesList] = useState(null);
   const [reRender, setReRender] = useState(false);
-  const [menuTypeIcon, setMenuTypeIcon] = useState(null)
+  const [menuTypeIcon, setMenuTypeIcon] = useState(null);
 
   useEffect(() => {
     setMenuTypes([
@@ -93,7 +92,6 @@ const MenuTypeList = () => {
   };
 
   const fileList = [];
-
 
   const columns = [
     {
@@ -219,7 +217,6 @@ const MenuTypeList = () => {
       newMenuType.menu_icon = updateMenuType?.menu_icon;
     }
 
-
     // Insert Data
     window.context_bridge_menu_type.send(
       'context_bridge_menu_type',
@@ -297,7 +294,7 @@ const MenuTypeList = () => {
           columns={columns}
           rowSelection={{ ...rowSelection, checkStrictly }}
           dataSource={menuTypesList}
-          pagination={false}
+          pagination={true}
           rowKey={(record) => record.id}
         />
       </div>
@@ -347,41 +344,42 @@ const MenuTypeList = () => {
                 }}
               >
                 <Row gutter={20}>
-
-                <Col lg={17}>
-                    <Upload.Dragger name="files"
+                  <Col lg={17}>
+                    <Upload.Dragger
+                      name="files"
                       customRequest={(imageObj) => {
                         setMenuTypeIcon(imageObj.file);
                       }}
                       accept=".jpg, .png, .jpeg, .gif"
-                      showUploadList={false}>
-                        <p className="ant-upload-drag-icon">
-                          <PictureOutlined />
-                        </p>
-                        <p className="ant-upload-hint">
-                          Click or drag file to this area to upload
-                        </p>
+                      showUploadList={false}
+                    >
+                      <p className="ant-upload-drag-icon">
+                        <PictureOutlined />
+                      </p>
+                      <p className="ant-upload-hint">
+                        Click or drag file to this area to upload
+                      </p>
                     </Upload.Dragger>
                   </Col>
 
-                    <Col lg={7}>
-                      <h3>Preview</h3>
-                      {menuTypeIcon ? (
+                  <Col lg={7}>
+                    <h3>Preview</h3>
+                    {menuTypeIcon ? (
+                      <Image
+                        width={125}
+                        src={URL.createObjectURL(menuTypeIcon)}
+                        preview={false}
+                      />
+                    ) : (
+                      updateMenuType?.menu_icon && (
                         <Image
                           width={125}
-                          src={URL.createObjectURL(menuTypeIcon)}
+                          src={`file://${updateMenuType?.menu_icon}`}
                           preview={false}
                         />
-                      ) : (
-                        updateMenuType?.menu_icon && (
-                          <Image
-                            width={125}
-                            src={`file://${updateMenuType?.menu_icon}`}
-                            preview={false}
-                          />
-                        )
-                      )}
-                    </Col>
+                      )
+                    )}
+                  </Col>
                 </Row>
               </Form.Item>
 
