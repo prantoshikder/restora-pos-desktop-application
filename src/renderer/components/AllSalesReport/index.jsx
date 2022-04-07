@@ -22,6 +22,8 @@ const AllSalesReport = ({ settings }) => {
   const [endDate, setEndDate] = useState('');
   const [isFormSubmitted, setFormSubmitted] = useState(false);
 
+  console.log('settings', settings);
+
   window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
     status: true,
   });
@@ -242,6 +244,30 @@ const AllSalesReport = ({ settings }) => {
             pagination={true}
             rowKey={(record) => record.key}
             scroll={{ x: 1500 }}
+            summary={(pageData) => {
+              let totalRepayment = 0;
+
+              pageData.forEach(({ grandTotal }) => {
+                totalRepayment += grandTotal;
+              });
+
+              return (
+                <>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell>Total</Table.Summary.Cell>
+                    <Table.Summary.Cell>
+                      <Text>
+                        {settings?.position === 'left' &&
+                          settings.currency_icon}
+                        {totalRepayment.toFixed(2)}
+                        {settings?.position === 'right' &&
+                          settings.currency_icon}
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </>
+              );
+            }}
           />
         </div>
       </div>
