@@ -29,8 +29,6 @@ const ConfirmOrderModal = (props) => {
     state,
   } = props;
 
-  console.log('confirmBtn', confirmBtn);
-
   const [foodItems, setFoodItems] = useState({});
 
   const insertOrderInfo = {

@@ -122,6 +122,11 @@ const AddNewFood = ({ state, settings }) => {
             category.category_is_active !== 0 &&
             category.category_is_active !== null
         );
+
+      // args.map(category => {
+      //   if(category.parent_id !== null) {}
+      // })
+
       setParentCategory(categoryFilter);
     });
   }, [reRender]);

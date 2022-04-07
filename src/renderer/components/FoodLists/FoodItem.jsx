@@ -18,12 +18,11 @@ const { Title } = Typography;
 
 const FoodItem = ({ item }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [food, setFood] = useState(null);
-  const [foodQuantity, setFoodQuantity] = useState(1);
+  const [addonsAdd, setAddonsAdd] = useState(null);
+  const [foodQuantity, setFoodQuantity] = useState(null);
   const [variantPrice, setVariantPrice] = useState(0);
   const [variantFixedPrice, setVariantFixedPrice] = useState(0);
-  const [foodVariantName, setFoodVariantName] = useState(null);
-  const [variantNames, setVariantNames] = useState([]);
+  const [foodVariantName, setFoodVariantName] = useState('');
 
   // Only for addons
   const [addonForCartItem, setAddonForCartItem] = useState([]);
@@ -40,61 +39,35 @@ const FoodItem = ({ item }) => {
       (cartItem) => cartItem.id === item.id
     );
 
-    const checkItemExist = cartItems.find(
-      (cartItem) => cartItem.cartId === item.date_inserted
-    );
-
     if (Array.isArray(item?.variants) && item?.variants?.length > 1) {
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
-      setFood(item);
+      setAddonsAdd(item);
       setOpenModal(true);
-      console.log('if first', foodVariantName);
-      setVariantNames(item.variants);
+      console.log('clicked if', item?.variants[0]?.quantity);
 
       // if (foodQuantity) {
       //   setFoodQuantity((prevState) => prevState);
       // } else {
       // }
-
       setFoodQuantity(item?.variants[0]?.quantity);
       setFoodVariantName(item?.variants[0]);
+
       // if (foodVariantName) {
       //   setFoodVariantName((prevState) => ({ ...prevState }));
       // } else {
       // }
     } else if (Array.isArray(item?.addons) && item?.addons?.length > 0) {
-      console.log('sec');
-
       setVariantPrice(item.variants[0].price);
       setVariantFixedPrice(item.variants[0].price);
-
-      // if (checkItemExist) {
-      //   setFoodQuantity(checkItemExist.quantity);
-
-      //   setFood({ ...item, quantity: checkItemExist.quantity });
-      // } else {
-      //   console.log(2);
-      //   setFood({ ...item });
-      // }
+      setAddonsAdd(item);
       setOpenModal(true);
+      console.log('clicked else if', item?.variants[0]?.quantity);
 
       setFoodQuantity(item?.variants[0]?.quantity);
       setFoodVariantName(item?.variants[0]);
-
-      // if (foodQuantity) {
-      //   setFoodQuantity((prevState) => prevState);
-      // } else {
-      //   setFoodQuantity(item?.variants[0]?.quantity);
-      // }
-
-      // if (foodVariantName) {
-      //   setFoodVariantName((prevState) => ({ ...prevState }));
-      // } else {
-      // setFoodVariantName(item?.variants[0]);
-      // }
     } else {
-      console.log('else thi');
+      console.log('clicked else', item?.variants[0]?.quantity);
 
       if (!isCartItemExist) {
         const cartItem = {
@@ -128,42 +101,49 @@ const FoodItem = ({ item }) => {
         setCartItems([...newCartItems]);
       }
     }
-    console.log('last item clicked ');
   };
 
   const handleAddToCart = (e, item) => {
+    console.log('foodVariantName', foodVariantName);
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.id === item.id
     );
 
     const isVariantExist = cartItems.find(
-      (cartItem) => cartItem.foodVariant === foodVariantName?.variant_name
+      (cartItem) => cartItem.date_inserted === foodVariantName.date_inserted
     );
 
+    console.log('isVariantExist f', isVariantExist);
+
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
+    console.log('checkedAddons', checkedAddons);
+    console.log('cartItems', cartItems);
 
     if (!isCartItemExist) {
+      console.log('first');
+
       const cartItem = {
         id: item.id,
-        cartId: item.date_inserted,
         isSelected: true,
         product_name: item.product_name,
-        foodVariant: foodVariantName?.variant_name,
+        foodVariant: foodVariantName.variant_name,
+        variantID: foodVariantName.id,
         price: variantFixedPrice,
         total_price: variantPrice,
         quantity: foodQuantity ? foodQuantity : item.quantity,
-        date_inserted: foodVariantName?.date_inserted,
+        date_inserted: foodVariantName.date_inserted,
       };
 
-      setCartItems([...cartItems, { ...cartItem }, ...checkedAddons]);
+      setCartItems([...cartItems, { ...cartItem }, { addons: checkedAddons }]);
       setOpenModal(false);
     } else {
       let updateExistingCart = [];
 
       if (isVariantExist) {
-        console.log('if', isVariantExist);
+        console.log('isVariantExist else if', isVariantExist);
+
         const variantIndex = cartItems.findIndex(
-          (cartItem) => cartItem.foodVariant === isVariantExist.foodVariant
+          (cartItem) => cartItem.date_inserted === isVariantExist.date_inserted
         );
 
         updateExistingCart = [
@@ -171,19 +151,19 @@ const FoodItem = ({ item }) => {
           {
             ...isVariantExist,
             quantity: isVariantExist.quantity + foodQuantity,
-            total_price: isVariantExist.total_price + variantPrice,
+            total_price:
+              (isVariantExist.quantity + foodQuantity) * isVariantExist.price,
           },
           ...cartItems.slice(variantIndex + 1),
         ];
       } else {
-        console.log('else ', isVariantExist);
-        console.log('else foodVariantName', foodVariantName);
+        console.log('isVariantExist else else', isVariantExist);
 
         updateExistingCart = [
           ...cartItems,
           {
             ...foodVariantName,
-            foodVariant: foodVariantName?.variant_name,
+            foodVariant: foodVariantName.variant_name,
             quantity: foodQuantity,
             total_price: variantPrice,
           },
@@ -194,11 +174,13 @@ const FoodItem = ({ item }) => {
 
       const newCartItems = updateExistingCart.map((cartItem, index) => {
         const isExistAddon = checkedAddons.find(
-          (addonItem) => addonItem.food_id === cartItem.food_id
+          (addonItem) => addonItem.date_inserted === cartItem.date_inserted
         );
 
+        console.log('isExistAddon', isExistAddon);
+
         if (isExistAddon && isExistAddon.food_id === cartItem.food_id) {
-          if (isExistAddon.food_id === foodVariantName?.date_inserted) {
+          if (isExistAddon.food_id === foodVariantName.date_inserted) {
             // updateExistingCart.splice(index, 1);
           }
         } else {
@@ -210,30 +192,18 @@ const FoodItem = ({ item }) => {
       setOpenModal(false);
     }
 
-    setFoodQuantity(null);
-    setVariantPrice(null);
-
-    setVariantFixedPrice(null);
-    setFoodVariantName(null);
-
-    setAddonForCartItem([]);
-    setAddonsQuantity(1);
-    setAddonsPrice(0);
-    setVariantNames(null);
-
-    setFood(null);
-    console.log('added');
+    setFoodQuantity(0);
   };
-  console.log('food variantNames', variantNames);
 
-  const handleMultipleItemAdd = (e, item) => {
+  const handleAddMultipleVariant = (e, item) => {
     const isCartItemExist = cartItems.find(
       (cartItem) => cartItem.id === item.id
     );
 
     const isVariantExist = cartItems.find(
-      (cartItem) => cartItem.foodVariant === foodVariantName.variant_name
+      (cartItem) => cartItem.date_inserted === foodVariantName.date_inserted
     );
+    console.log('first isVariantExist', isVariantExist);
 
     const checkedAddons = addonForCartItem.filter((item) => item.isSelected);
 
@@ -243,6 +213,7 @@ const FoodItem = ({ item }) => {
         isSelected: true,
         product_name: item.product_name,
         foodVariant: foodVariantName.variant_name,
+        variantID: foodVariantName.id,
         price: variantFixedPrice,
         total_price: variantPrice,
         quantity: foodQuantity ? foodQuantity : item.quantity,
@@ -255,15 +226,18 @@ const FoodItem = ({ item }) => {
 
       if (isVariantExist) {
         const variantIndex = cartItems.findIndex(
-          (cartItem) => cartItem.foodVariant === isVariantExist.foodVariant
+          (cartItem) => cartItem.date_inserted === isVariantExist.date_inserted
         );
+
+        console.log('else isVariantExist', isVariantExist);
 
         updateExistingCart = [
           ...cartItems.slice(0, variantIndex),
           {
             ...isVariantExist,
-            quantity: foodQuantity ? foodQuantity : item.quantity,
-            total_price: variantPrice,
+            quantity: isVariantExist.quantity + foodQuantity,
+            total_price:
+              (isVariantExist.quantity + foodQuantity) * isVariantExist.price,
           },
           ...cartItems.slice(variantIndex + 1),
         ];
@@ -303,9 +277,8 @@ const FoodItem = ({ item }) => {
   // Addons list if check & uncheck
   function handleAddonsCheck(e, addonItem) {
     const addonObj = {
-      id: addonItem.add_on_id,
       add_on_id: addonItem.add_on_id,
-      food_id: addonItem.date_inserted,
+      date_inserted: addonItem.date_inserted,
       price: addonItem.price,
       total_price:
         addonsPrice === 0 ? addonsQuantity * addonItem.price : addonsPrice,
@@ -352,7 +325,7 @@ const FoodItem = ({ item }) => {
     }
   }
 
-  const handleVariant = (variant) => {
+  const handleVariantPrice = (variant) => {
     const variantObj = JSON.parse(variant);
     const fixedPrice = variantObj.price;
 
@@ -402,24 +375,24 @@ const FoodItem = ({ item }) => {
       ]);
     }
 
-    const updateItemPrice = food?.addons.find(
+    const updateItemPrice = addonsAdd?.addons.find(
       (item) => item.add_on_id === addonsItem.add_on_id
     );
 
-    const index = food?.addons.findIndex(
+    const index = addonsAdd?.addons.findIndex(
       (item) => item.add_on_id === updateItemPrice.add_on_id
     );
 
     const newAddons = [
-      ...food?.addons.slice(0, index),
+      ...addonsAdd?.addons.slice(0, index),
       { ...updateItemPrice, total_price: totalPrice, quantity },
-      ...food?.addons.slice(index + 1),
+      ...addonsAdd?.addons.slice(index + 1),
     ];
 
-    // setFood((prevState) => ({
-    //   ...prevState,
-    //   addons: newAddons,
-    // }));
+    setAddonsAdd((prevState) => ({
+      ...prevState,
+      addons: newAddons,
+    }));
   };
 
   return (
@@ -467,38 +440,14 @@ const FoodItem = ({ item }) => {
       <Modal
         title="Add food variant or addons"
         visible={openModal}
-        onOk={() => {
-          setOpenModal(false);
-          setFood(null);
-          setFoodQuantity(null);
-          setVariantPrice(null);
-
-          setVariantFixedPrice(null);
-          setFoodVariantName(null);
-
-          setAddonForCartItem([]);
-          setAddonsQuantity(1);
-          setAddonsPrice(0);
-        }}
-        onCancel={() => {
-          setOpenModal(false);
-          setFood(null);
-          setFoodQuantity(null);
-          setVariantPrice(null);
-
-          setVariantFixedPrice(null);
-          setFoodVariantName(null);
-
-          setAddonForCartItem([]);
-          setAddonsQuantity(1);
-          setAddonsPrice(0);
-        }}
+        onOk={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
         footer={null}
         width={650}
       >
         <Row>
           <Col lg={24}>
-            {food?.variants?.length > 0 && (
+            {addonsAdd?.variants?.length > 0 && (
               <div className="select_item">
                 <table>
                   <thead>
@@ -512,38 +461,38 @@ const FoodItem = ({ item }) => {
 
                   <tbody>
                     <tr>
-                      <td>{food?.product_name}</td>
+                      <td>{addonsAdd?.product_name}</td>
                       <td>
                         <select
                           name=""
-                          onChange={(e) => handleVariant(e.target.value)}
+                          onChange={(e) => handleVariantPrice(e.target.value)}
                           style={{
                             height: '1.9rem',
                             width: '5.5rem',
                             borderColor: '#ddd',
                           }}
                         >
-                          {variantNames.length > 0 &&
-                            variantNames?.map((addonItem, index) => (
-                              <option
-                                key={addonItem.id}
-                                value={JSON.stringify(addonItem)}
-                              >
-                                {addonItem?.variant_name}
-                              </option>
-                            ))}
+                          {addonsAdd?.variants?.map((addonItem, index) => (
+                            <option
+                              key={addonItem.id}
+                              value={JSON.stringify(addonItem)}
+                            >
+                              {addonItem?.variant_name}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td>
                         <InputNumber
                           min={1}
                           max={100}
+                          // defaultValue={foodQuantity}
                           value={foodQuantity}
                           bordered={true}
                           onChange={calculateVariantQuantity}
                         />
                       </td>
-                      {/* <td>{food?.price}</td> */}
+                      {/* <td>{addonsAdd?.price}</td> */}
                       <td>{variantPrice}</td>
                     </tr>
                   </tbody>
@@ -551,7 +500,7 @@ const FoodItem = ({ item }) => {
               </div>
             )}
 
-            {food?.addons?.length > 0 && (
+            {addonsAdd?.addons?.length > 0 && (
               <div className="select_item" style={{ marginTop: '1rem' }}>
                 <table>
                   <thead>
@@ -564,7 +513,7 @@ const FoodItem = ({ item }) => {
                   </thead>
 
                   <tbody>
-                    {food?.addons?.map((addonsItem) => (
+                    {addonsAdd?.addons?.map((addonsItem) => (
                       <tr key={addonsItem?.add_on_name}>
                         <td>
                           <Checkbox
@@ -581,7 +530,7 @@ const FoodItem = ({ item }) => {
                           <InputNumber
                             min={1}
                             max={100}
-                            defaultValue={food?.quantity}
+                            defaultValue={addonsAdd?.quantity}
                             bordered={true}
                             onChange={(quantity) =>
                               handleAddons(quantity, addonsItem)
@@ -602,7 +551,7 @@ const FoodItem = ({ item }) => {
               </Button>
               <Button
                 type="primary"
-                onClick={(e) => handleMultipleItemAdd(e, item)}
+                onClick={(e) => handleAddMultipleVariant(e, item)}
               >
                 Add Multiple Variant
               </Button>

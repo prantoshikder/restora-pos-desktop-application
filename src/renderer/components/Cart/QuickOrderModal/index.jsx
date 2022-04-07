@@ -206,22 +206,23 @@ const QuickOrderModal = ({
               <div className="total_order_discount">
                 <Title level={4} style={{ marginTop: '10px' }}>
                   Discount:
-                  <span
-                    contentEditable
-                    style={{
-                      width: '80px',
-                      display: 'inline-block',
-                      textAlign: 'center',
-                      border: '1px solid #ddd',
-                      float: 'right',
-                    }}
-                  >
+                  <div style={{ float: 'right' }}>
                     {settings?.position === 'left' && settings.currency_icon}{' '}
-                    {calc.getDiscountAmount()
-                      ? calc.getDiscountAmount()
-                      : '0.00'}{' '}
+                    <span
+                      contentEditable
+                      style={{
+                        width: '80px',
+                        display: 'inline-block',
+                        textAlign: 'center',
+                        border: '1px solid #ddd',
+                      }}
+                    >
+                      {calc.getDiscountAmount()
+                        ? calc.getDiscountAmount()
+                        : '0.00'}{' '}
+                    </span>
                     {settings?.position === 'right' && settings.currency_icon}
-                  </span>
+                  </div>
                 </Title>
               </div>
 

@@ -55,7 +55,13 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     useState(null);
   const [foodNoteModal, setFoodNoteModal] = useState(false);
 
+  const [customDiscount, setCustomDiscount] = useState('');
+  const [customServiceCharge, setCustomServiceCharge] = useState('');
+
   useEffect(() => {
+    setCustomDiscount(settings?.discountrate);
+    setCustomServiceCharge(settings?.servicecharge);
+
     getDataFromDatabase(
       'get_customer_names_response',
       window.get_customer_names
@@ -82,6 +88,14 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   useEffect(() => {
     setCartData({ ...cartData, cartItems });
   }, [cartItems]);
+
+  const handleDiscount = (e) => {
+    setCustomDiscount(e.target.value);
+  };
+
+  const handleServiceCharge = (e) => {
+    setCustomServiceCharge(e.target.value);
+  };
 
   const selectTime = (time, timeString) => {
     console.log('Cooking time', timeString);
@@ -131,10 +145,12 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     } else {
       const orderCalculateInfo = {
         grandTotal: calcPrice.getGrandTotal(),
-        discount: calcPrice.getDiscountAmount(),
+        discount: calcPrice.getDiscountAmount(customDiscount),
         serviceCharge: calcPrice.getServiceCharge(),
         vat: calcPrice.getVat(),
       };
+
+      console.log(customDiscount);
 
       if (data === 'quickOrder') {
         setConfirmBtn(data);
@@ -193,8 +209,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     // setCartItems([]);
   };
 
-  console.log('cartItems', cartItems);
-
   const handleAddCustomer = () => {
     setAddCustomerModal(true);
   };
@@ -209,6 +223,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
 
   const handleFoodQuantity = (quantity, item) => {
     const index = cartItems.findIndex((cartItem) => cartItem.id === item.id);
+    console.log('quantity', item);
 
     setCartItems([
       ...cartItems.slice(0, index),
@@ -447,9 +462,18 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
               </Col>
               <Col lg={settings?.discount_type ? 9 : 12}>
                 <b>Service Charge: </b>
-                {settings?.service_chargeType === 'amount' &&
-                  settings.currency}{' '}
-                <span
+                {settings?.position === 'left' && settings.currency_icon}{' '}
+                <input
+                  type="text"
+                  value={customServiceCharge}
+                  onChange={handleServiceCharge}
+                  style={{
+                    width: '35px',
+                    border: '1px solid #ddd',
+                    padding: 4,
+                  }}
+                />
+                {/* <span
                   contentEditable
                   style={{
                     width: '35px',
@@ -457,9 +481,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                     textAlign: 'center',
                     border: '1px solid #ddd',
                   }}
-                >
-                  {settings?.servicecharge ? settings?.servicecharge : 0}
-                </span>
+                > */}
+                {/* {settings?.servicecharge ? settings?.servicecharge : 0} */}
+                {/* </span> */}
+                {settings?.position === 'right' && settings.currency_icon}{' '}
                 {settings?.service_chargeType !== 'amount' && '(%)'}
               </Col>
 
@@ -468,17 +493,26 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                 <Col lg={6}>
                   <b>Discount: </b>
                   {settings?.discount_type === 1 && settings.currency}{' '}
-                  <span
-                    contentEditable
+                  <input
+                    type="text"
+                    value={customDiscount}
+                    onChange={handleDiscount}
                     style={{
                       width: '35px',
+                      border: '1px solid #ddd',
+                      padding: 4,
+                    }}
+                  />
+                  {/* <span
+                    contentEditable
+                    style={{
                       display: 'inline-block',
                       textAlign: 'center',
                       border: '1px solid #ddd',
                     }}
-                  >
-                    {settings?.discountrate ? settings?.discountrate : 0}
-                  </span>{' '}
+                  > */}
+                  {/* {settings?.discountrate ? settings?.discountrate : 0} */}
+                  {/* </span>{' '} */}
                   {settings?.discount_type === 2 && '(%)'}
                 </Col>
               )}
