@@ -220,6 +220,9 @@ const ApplicationSetting = ({ setReRenderOnSettings, reRenderOnSettings }) => {
     settingsValue.opentime = restaurantTime?.openingTime;
     settingsValue.closetime = restaurantTime?.closingTime;
 
+    console.log('settingsValue', settingsValue);
+    // return;
+
     // send data to the main process
     window.insert_settings.send('insert_settings', settingsValue);
 
@@ -501,7 +504,7 @@ const ApplicationSetting = ({ setReRenderOnSettings, reRenderOnSettings }) => {
                         {currencyLists?.map((currencyItem) => (
                           <Option
                             key={currencyItem?.id}
-                            value={currencyItem?.currency_icon}
+                            value={currencyItem?.id}
                           >
                             {currencyItem?.currency_name}{' '}
                           </Option>

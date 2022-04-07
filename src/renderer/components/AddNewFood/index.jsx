@@ -114,6 +114,7 @@ const AddNewFood = ({ state, settings }) => {
     window.parent_category.send('parent_category', { status: true });
 
     window.parent_category.once('parent_category', (args = []) => {
+      console.log('cats args', args);
       const categoryFilter =
         Array.isArray(args) &&
         args?.filter(
@@ -121,6 +122,11 @@ const AddNewFood = ({ state, settings }) => {
             category.category_is_active !== 0 &&
             category.category_is_active !== null
         );
+
+      // args.map(category => {
+      //   if(category.parent_id !== null) {}
+      // })
+
       setParentCategory(categoryFilter);
     });
   }, [reRender]);

@@ -138,7 +138,8 @@ export class CalculatePrice {
     }
   }
 
-  getDiscountAmount() {
+  getDiscountAmount(disco) {
+    // console.log('disco', this.disco);
     // calculate if it has discount type & amount
     // 1 = amount (fixed), 2 = percent (%)
     if (this.settings.discount_type && this.settings.discountrate) {
