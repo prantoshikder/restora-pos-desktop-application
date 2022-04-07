@@ -1,4 +1,12 @@
-import { DatePicker, Select, Table, Typography } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Select,
+  Space,
+  Table,
+  Typography,
+} from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { getDataFromDatabase } from './../../../helpers';
@@ -16,6 +24,9 @@ const AllItemSalesReport = ({ settings }) => {
   );
 
   const [itemSalesReports, setItemSalesReports] = useState(null);
+  const [isFormSubmitted, setFormSubmitted] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     getDataFromDatabase(
@@ -23,7 +34,6 @@ const AllItemSalesReport = ({ settings }) => {
       window.get_order_info_for_item_sales_report
     ).then((args = []) => {
       setItemSalesReports(args);
-      console.log('%%%%%%%%%%%%%%%%', args);
     });
   }, []);
 
@@ -33,14 +43,6 @@ const AllItemSalesReport = ({ settings }) => {
 
   const handleChangeStatus = (value) => {
     console.log('value', value);
-  };
-
-  const handleOfferStart = (value, dateString) => {
-    console.log('dateString', dateString);
-  };
-
-  const handleOfferEnd = (value, dateString) => {
-    console.log('dateString', dateString);
   };
 
   const columns = [
@@ -71,9 +73,13 @@ const AllItemSalesReport = ({ settings }) => {
     },
   ];
 
+  const handleSearchData = () => {
+    setFormSubmitted((isFormSubmitted) => !isFormSubmitted);
+  };
+
   return (
     <>
-      {/* <div
+      <div
         style={{
           padding: '1rem',
           marginTop: '1rem',
@@ -89,7 +95,7 @@ const AllItemSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="From"
-                onChange={handleOfferStart}
+                onChange={(value, dateString) => setStartDate(dateString)}
               />
             </Form.Item>
 
@@ -97,13 +103,13 @@ const AllItemSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="To"
-                onChange={handleOfferEnd}
+                onChange={(value, dateString) => setEndDate(dateString)}
               />
             </Form.Item>
           </Space>
         </div>
 
-        <div style={{ marginLeft: '1rem' }}>
+        {/* <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
             onChange={handleChangeStatus}
@@ -114,12 +120,18 @@ const AllItemSalesReport = ({ settings }) => {
             <Option value="burger">Burger</Option>
             <Option value="pizza">Pizza</Option>
           </Select>
-        </div>
+        </div> */}
 
         <div className="group_btn">
-          <Button className="search_btn">Search</Button>
+          <Button
+            type="primary"
+            className="search_btn"
+            onClick={handleSearchData}
+          >
+            Search
+          </Button>
         </div>
-      </div> */}
+      </div>
 
       <div
         style={{
@@ -154,7 +166,7 @@ const AllItemSalesReport = ({ settings }) => {
             columns={columns}
             bordered
             dataSource={itemSalesReports}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record.id}
           />
         </div>

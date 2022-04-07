@@ -17,14 +17,14 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllSalesReport = ({ settings }) => {
+  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
+    status: true,
+  });
+
   const [allSalesReports, setAllSalesReports] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isFormSubmitted, setFormSubmitted] = useState(false);
-
-  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
-    status: true,
-  });
 
   useEffect(() => {
     getDataFromDatabase(
@@ -66,14 +66,6 @@ const AllSalesReport = ({ settings }) => {
 
   const handleChangeStatus = (value) => {
     console.log('value', value);
-  };
-
-  const handleFromDate = (value, dateString) => {
-    setStartDate(dateString);
-  };
-
-  const handleEndDate = (value, dateString) => {
-    setEndDate(dateString);
   };
 
   const columns = [
@@ -160,7 +152,7 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="From"
-                onChange={handleFromDate}
+                onChange={(value, dateString) => setStartDate(dateString)}
               />
             </Form.Item>
 
@@ -168,7 +160,7 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="To"
-                onChange={handleEndDate}
+                onChange={(value, dateString) => setEndDate(dateString)}
               />
             </Form.Item>
           </Space>
@@ -239,9 +231,33 @@ const AllSalesReport = ({ settings }) => {
             columns={columns}
             bordered
             dataSource={allSalesReports}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record.key}
             scroll={{ x: 1500 }}
+            summary={(pageData) => {
+              let totalRepayment = 0;
+
+              pageData.forEach(({ grandTotal }) => {
+                totalRepayment += grandTotal;
+              });
+
+              return (
+                <>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell>Total</Table.Summary.Cell>
+                    <Table.Summary.Cell>
+                      <Text>
+                        {settings?.position === 'left' &&
+                          settings.currency_icon}
+                        {totalRepayment.toFixed(2)}
+                        {settings?.position === 'right' &&
+                          settings.currency_icon}
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </>
+              );
+            }}
           />
         </div>
       </div>

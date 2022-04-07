@@ -105,7 +105,7 @@ const TodaysOrder = ({ settings }) => {
           <Table
             columns={columns}
             dataSource={todaysOrders}
-            pagination={false}
+            pagination={true}
             rowKey={(record) => record?.order_id}
           />
         </div>

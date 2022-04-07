@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { faCogs } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, message, Space, Table } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -96,7 +96,7 @@ const LanguageList = () => {
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
         dataSource={data}
-        pagination={false}
+        pagination={true}
         rowKey={(record) => record.key}
       />
     </div>
