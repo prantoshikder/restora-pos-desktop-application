@@ -17,16 +17,14 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const AllSalesReport = ({ settings }) => {
+  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
+    status: true,
+  });
+
   const [allSalesReports, setAllSalesReports] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isFormSubmitted, setFormSubmitted] = useState(false);
-
-  console.log('settings', settings);
-
-  window.get_all_order_for_sales_report.send('get_all_order_for_sales_report', {
-    status: true,
-  });
 
   useEffect(() => {
     getDataFromDatabase(
@@ -68,14 +66,6 @@ const AllSalesReport = ({ settings }) => {
 
   const handleChangeStatus = (value) => {
     console.log('value', value);
-  };
-
-  const handleFromDate = (value, dateString) => {
-    setStartDate(dateString);
-  };
-
-  const handleEndDate = (value, dateString) => {
-    setEndDate(dateString);
   };
 
   const columns = [
@@ -162,7 +152,7 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="From"
-                onChange={handleFromDate}
+                onChange={(value, dateString) => setStartDate(dateString)}
               />
             </Form.Item>
 
@@ -170,7 +160,7 @@ const AllSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="To"
-                onChange={handleEndDate}
+                onChange={(value, dateString) => setEndDate(dateString)}
               />
             </Form.Item>
           </Space>

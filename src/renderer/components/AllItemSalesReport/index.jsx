@@ -24,6 +24,9 @@ const AllItemSalesReport = ({ settings }) => {
   );
 
   const [itemSalesReports, setItemSalesReports] = useState(null);
+  const [isFormSubmitted, setFormSubmitted] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     getDataFromDatabase(
@@ -40,14 +43,6 @@ const AllItemSalesReport = ({ settings }) => {
 
   const handleChangeStatus = (value) => {
     console.log('value', value);
-  };
-
-  const handleOfferStart = (value, dateString) => {
-    console.log('dateString', dateString);
-  };
-
-  const handleOfferEnd = (value, dateString) => {
-    console.log('dateString', dateString);
   };
 
   const columns = [
@@ -78,6 +73,10 @@ const AllItemSalesReport = ({ settings }) => {
     },
   ];
 
+  const handleSearchData = () => {
+    setFormSubmitted((isFormSubmitted) => !isFormSubmitted);
+  };
+
   return (
     <>
       <div
@@ -96,7 +95,7 @@ const AllItemSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="From"
-                onChange={handleOfferStart}
+                onChange={(value, dateString) => setStartDate(dateString)}
               />
             </Form.Item>
 
@@ -104,13 +103,13 @@ const AllItemSalesReport = ({ settings }) => {
               <DatePicker
                 format="YYYY-MM-DD"
                 placeholder="To"
-                onChange={handleOfferEnd}
+                onChange={(value, dateString) => setEndDate(dateString)}
               />
             </Form.Item>
           </Space>
         </div>
 
-        <div style={{ marginLeft: '1rem' }}>
+        {/* <div style={{ marginLeft: '1rem' }}>
           <Select
             placeholder="Select an Option"
             onChange={handleChangeStatus}
@@ -121,10 +120,16 @@ const AllItemSalesReport = ({ settings }) => {
             <Option value="burger">Burger</Option>
             <Option value="pizza">Pizza</Option>
           </Select>
-        </div>
+        </div> */}
 
         <div className="group_btn">
-          <Button className="search_btn">Search</Button>
+          <Button
+            type="primary"
+            className="search_btn"
+            onClick={handleSearchData}
+          >
+            Search
+          </Button>
         </div>
       </div>
 
