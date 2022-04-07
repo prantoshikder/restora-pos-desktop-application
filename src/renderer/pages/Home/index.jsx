@@ -6,15 +6,16 @@ import Cart from 'renderer/components/Cart';
 import FoodLists from 'renderer/components/FoodLists';
 import Header from 'renderer/components/partials/Header';
 import Search from 'renderer/components/Search';
+import InsertSettingsModal from './../../components/InsertSettingsModal';
 import PosSidebar from './../../components/PosSidebar';
 import { ContextData } from './../../contextApi';
 import './Home.style.scss';
 
 const Home = ({ settings }) => {
+  window.get_settings.send('get_settings', { status: true });
+
   // Get all food list as an array
-  window.get_food_list_pos.send('get_food_list_pos', {
-    status: true,
-  });
+  window.get_food_list_pos.send('get_food_list_pos', { status: true });
 
   // Get all food variant lists as an array
   window.variant_lists_channel.send('variant_lists_channel', { status: true });
@@ -33,11 +34,11 @@ const Home = ({ settings }) => {
   let navigate = useNavigate();
   const { state } = useLocation();
 
+  const [insertSettingsModal, setInsertSettingsModal] = useState(false);
   const { cartItems, setCartItems } = useContext(ContextData);
   const [addonNames, setAddonNames] = useState(null);
   const [addonsList, setAddonsList] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState();
-  const [isRedirect, setRedirect] = useState(false);
   const [foodNames, setFoodNames] = useState(null);
   const [foodLists, setFoodLists] = useState([]);
 
@@ -92,29 +93,18 @@ const Home = ({ settings }) => {
       .catch((err) => console.log(err));
   }, []);
 
-  const loadAfterDomLoaded = (e) => {
-    setTimeout(() => {
-      if (settings && settings?.isAppSetupDone) {
-        // console.log('if home');
-        // setRedirect(false);
-      } else {
-        // console.log('else home');
-        // setRedirect(true);
-      }
-    }, 500);
-  };
-
   useEffect(() => {
-    window.addEventListener('DOMContentLoaded', loadAfterDomLoaded);
-
-    return () =>
-      window.removeEventListener('DOMContentLoaded', loadAfterDomLoaded);
+    getDataFromDatabase('get_settings_response', window.get_settings).then(
+      (result) => {
+        if (!result.storename) {
+          setInsertSettingsModal(true);
+        }
+      }
+    );
   }, []);
 
   return (
     <>
-      {isRedirect && navigate('/application_setting')}
-
       <div className="main_wrapper">
         <Header settings={settings} />
 
@@ -166,6 +156,11 @@ const Home = ({ settings }) => {
           </ConfigProvider>
         </div>
       </div>
+
+      <InsertSettingsModal
+        insertSettingsModal={insertSettingsModal}
+        setInsertSettingsModal={setInsertSettingsModal}
+      />
     </>
   );
 };

@@ -179,7 +179,6 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
   };
 
   const handleUpdateOrder = (orderBtn) => {
-    console.log('state', state);
     if (localStorage.getItem('order_id')) {
       setConfirmBtn(orderBtn);
       setConfirmOrder(true);
@@ -196,17 +195,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
         ...orderCalculateInfo,
       });
       localStorage.removeItem('order_id');
-      // localStorage.setItem("token_no", state.token_no)
     }
-
-    message.success({
-      content: 'Successfully Updated Order',
-      className: 'custom-class',
-      duration: 1,
-      style: { marginTop: '5vh', float: 'right' },
-    });
-
-    // setCartItems([]);
   };
 
   const handleAddCustomer = () => {
@@ -236,7 +225,10 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
     setCustomerId(value);
   };
 
-  const handleFoodNoteModal = () => {
+  const [addFoodNoteToItem, setAddFoodNoteToItem] = useState({});
+
+  const handleFoodNoteModal = (cartData) => {
+    setAddFoodNoteToItem(cartData);
     setFoodNoteModal(true);
   };
 
@@ -418,7 +410,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
                                   color: '#0037ff',
                                   fontSize: '20px',
                                 }}
-                                onClick={handleFoodNoteModal}
+                                onClick={() => handleFoodNoteModal(item)}
                               />
                               {item.product_name}
                             </th>
@@ -620,6 +612,7 @@ const Cart = ({ settings, cartItems, setCartItems, state }) => {
       <FoodNoteModal
         foodNoteModal={foodNoteModal}
         setFoodNoteModal={setFoodNoteModal}
+        addFoodNoteToItem={addFoodNoteToItem}
       />
 
       <Modal

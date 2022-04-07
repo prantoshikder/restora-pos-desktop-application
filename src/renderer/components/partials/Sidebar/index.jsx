@@ -43,7 +43,6 @@ export const Sidebar = ({ settings }) => {
           style={{
             height: '100%',
           }}
-          // onClick={onClick}
           mode="inline"
           openKeys={openKeys}
           onOpenChange={onOpenChange}

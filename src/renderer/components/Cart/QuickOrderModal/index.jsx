@@ -51,8 +51,6 @@ const QuickOrderModal = ({
         (customersId) => customersId?.id === foodItems?.customer_id
       );
 
-      console.log('filterCustomerId', filterCustomerId);
-
       if (filterCustomerId) {
         setCustomerName(filterCustomerId?.customer_name);
       } else {

@@ -1,12 +1,27 @@
 import { Button, Form, Input, Modal } from 'antd';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { ContextData } from './../../contextApi';
 
-const FoodNoteModal = ({ foodNoteModal, setFoodNoteModal }) => {
+const FoodNoteModal = ({
+  foodNoteModal,
+  setFoodNoteModal,
+  addFoodNoteToItem,
+}) => {
   const [form] = Form.useForm();
-  const [foodNote, setFoodNote] = useState();
+  const { cartItems, setCartItems } = useContext(ContextData);
 
-  const handleSubmit = (values) => {
-    console.log('Success:', values);
+  const handleFoodNote = (value) => {
+    const index = cartItems.findIndex(
+      (item) => item.id === addFoodNoteToItem.id
+    );
+
+    setCartItems([
+      ...cartItems.slice(0, index),
+      { ...addFoodNoteToItem, note: value.food_note },
+      ...cartItems.slice(index + 1),
+    ]);
+
+    form.resetFields();
     setFoodNoteModal(false);
   };
 
@@ -26,11 +41,7 @@ const FoodNoteModal = ({ foodNoteModal, setFoodNoteModal }) => {
       <Form
         form={form}
         layout="vertical"
-        onFinish={handleSubmit}
-        // fields={defaultData}
-        // onFieldsChange={(_, allFields) => {
-        //   setDefaultData(allFields);
-        // }}
+        onFinish={handleFoodNote}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >

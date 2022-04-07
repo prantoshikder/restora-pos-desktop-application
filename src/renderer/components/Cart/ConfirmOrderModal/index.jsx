@@ -14,6 +14,11 @@ const ConfirmOrderModal = (props) => {
     status: true,
   });
 
+  // Get all orders data
+  window.get_all_order_info_ongoing.send('get_all_order_info_ongoing', {
+    status: true,
+  });
+
   const { cartItems, setCartItems } = useContext(ContextData);
   const [openModal, setOpenModal] = useState(false);
   const [tokenPrint, setTokenPrint] = useState('printToken');
@@ -49,26 +54,29 @@ const ConfirmOrderModal = (props) => {
     };
 
     window.insert_order_info.send('insert_order_info', insertOrderInfo);
-
     setFoodItems(invoiceData);
   };
 
   const updateOrderModal = () => {
-    console.log('state confirm', state);
     setConfirmOrder(false);
-    if (cartItems.length > 0) {
+
+    if (state?.order_id) {
       getDataFromDatabase(
-        'get_data_to_create_token_response',
-        window.get_data_to_create_token
-      ).then((args) => {
-        console.log('args', args);
-        const cartData = JSON.parse(args.order_info);
-        setOrderData({ ...args, order_info: cartData });
-        return;
-        printToken();
+        'get_all_order_info_ongoing_response',
+        window.get_all_order_info_ongoing
+      ).then((data = []) => {
+        const findData =
+          Array.isArray(data) &&
+          data?.length > 0 &&
+          data.find((item) => {
+            if (item.order_id === state?.order_id) {
+              const cartData = JSON.parse(item.order_info);
+              setOrderData({ ...item, order_info: cartData });
+              printToken();
+            }
+          });
       });
     }
-
     setCartItems([]);
   };
 

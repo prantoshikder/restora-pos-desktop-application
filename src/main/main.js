@@ -1033,7 +1033,6 @@ ipcMain.on('insert_order_info', (event, args) => {
 
 // Update order info after edit
 ipcMain.on('update_order_info_after_edit', (event, args) => {
-  console.log('args******', args);
   let { order_info, order_id, discount, serviceCharge, vat, grand_total } =
     args;
   let order_info_to_string = JSON.stringify(order_info);
