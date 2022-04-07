@@ -296,6 +296,7 @@ const MenuTypeList = () => {
           dataSource={menuTypesList}
           pagination={true}
           rowKey={(record) => record.id}
+          locale={{ emptyText: 'No menu type data found.' }}
         />
       </div>
 

@@ -107,6 +107,7 @@ const TodaysOrder = ({ settings }) => {
             dataSource={todaysOrders}
             pagination={true}
             rowKey={(record) => record?.order_id}
+            locale={{ emptyText: 'No todays data found.' }}
           />
         </div>
       </div>

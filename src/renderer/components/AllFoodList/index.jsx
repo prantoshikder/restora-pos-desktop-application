@@ -162,6 +162,7 @@ const AllFoodList = () => {
         dataSource={foodData}
         pagination={true}
         rowKey={(record) => record.id}
+        locale={{ emptyText: 'No food data found.' }}
       />
     </div>
   );

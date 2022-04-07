@@ -189,6 +189,7 @@ const CurrencyList = () => {
           dataSource={currencyLists}
           pagination={true}
           rowKey={(record) => record?.id}
+          locale={{ emptyText: 'No currency data found.' }}
         />
       </div>
 

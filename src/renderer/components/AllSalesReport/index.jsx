@@ -234,6 +234,7 @@ const AllSalesReport = ({ settings }) => {
             pagination={true}
             rowKey={(record) => record.key}
             scroll={{ x: 1500 }}
+            locale={{ emptyText: 'No sales data found. Please, search again.' }}
             summary={(pageData) => {
               let totalRepayment = 0;
 
@@ -244,9 +245,9 @@ const AllSalesReport = ({ settings }) => {
               return (
                 <>
                   <Table.Summary.Row>
-                    <Table.Summary.Cell>Total</Table.Summary.Cell>
+                    <Table.Summary.Cell colSpan={8}>Total</Table.Summary.Cell>
                     <Table.Summary.Cell>
-                      <Text>
+                      <Text style={{ float: 'right' }}>
                         {settings?.position === 'left' &&
                           settings.currency_icon}
                         {totalRepayment.toFixed(2)}

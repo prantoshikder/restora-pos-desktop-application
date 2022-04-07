@@ -167,6 +167,7 @@ const AllItemSalesReport = ({ settings }) => {
             bordered
             dataSource={itemSalesReports}
             pagination={true}
+            locale={{ emptyText: 'No sales data found. Please, search again.' }}
             rowKey={(record) => record.id}
           />
         </div>

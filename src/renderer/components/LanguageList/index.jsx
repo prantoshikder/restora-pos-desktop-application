@@ -98,6 +98,7 @@ const LanguageList = () => {
         dataSource={data}
         pagination={true}
         rowKey={(record) => record.key}
+        locale={{ emptyText: 'No language data found.' }}
       />
     </div>
   );
